@@ -9,20 +9,22 @@ repository with a dedicated README, tests, and (where relevant) CI. The projects
 ordered as a deliberate progression: each one adds a new layer of skills and builds on
 the previous.
 
-## 🚧 Currently working on
+## ✅ Live now
 
-**[`wroclaw-air-insights`](https://github.com/P0w3r223/wroclaw-air-insights)** — data
-analysis of Wrocław air quality + first ML model (24h PM2.5 forecast).
+- **A1 · [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights)** — Wrocław air quality analysis + 24h PM2.5 forecast · [**live site**](https://p0w3r223.github.io/wroclaw-air-insights/)
+- **A2 · [it-job-radar](https://github.com/P0w3r223/it-job-radar)** — Polish IT job market: tech trends & salary ranges · [**live site**](https://p0w3r223.github.io/it-job-radar/)
+
+🚧 Next: **A3 car-price-ml** (full ML cycle end-to-end).
 
 ## Level A — data / AI projects
 
-| # | Project | What it demonstrates | Status |
-|---|---------|----------------------|--------|
-| A1 | [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights) | pandas, SQL, visualization, working with APIs, first scikit-learn model with correct methodology (time-based split) | 🚧 In progress |
-| A2 | it-job-radar | data engineering — collecting IT job offers, schema design, aggregating SQL, daily automation (GitHub Actions cron) | 📋 Planned |
-| A3 | car-price-ml | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | 📋 Planned |
-| A4 | pl-review-sense | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | 📋 Planned (optional) |
-| A5 | **studia-rag** ⭐ | flagship LLM/RAG app — embeddings, vector DB, source citation, retrieval + answer-quality evaluation | 📋 Planned |
+| # | Project | What it demonstrates | Status | Site |
+|---|---------|----------------------|--------|------|
+| A1 | [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights) | pandas, SQL, visualization, working with APIs, first scikit-learn model with correct methodology (time-based split) | ✅ Live | [🌐](https://p0w3r223.github.io/wroclaw-air-insights/) |
+| A2 | [it-job-radar](https://github.com/P0w3r223/it-job-radar) | data engineering — collecting IT job offers, schema design, aggregating SQL, normalization, respectful scraping | ✅ Live | [🌐](https://p0w3r223.github.io/it-job-radar/) |
+| A3 | car-price-ml | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | 📋 Planned | — |
+| A4 | pl-review-sense | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | 📋 Planned (optional) | — |
+| A5 | **studia-rag** ⭐ | flagship LLM/RAG app — embeddings, vector DB, source citation, retrieval + answer-quality evaluation | 📋 Planned | — |
 
 ## Level B — supporting proofs (one weekend each)
 
