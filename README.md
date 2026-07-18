@@ -32,7 +32,7 @@ the previous.
 | # | Project | Skill proven |
 |---|---------|--------------|
 | B1 | [mini-traceroute](https://github.com/P0w3r223/mini-traceroute) ✅ | C++ — traceroute on raw sockets (TTL, ICMP, CMake) |
-| B2 | auth-log-scan | Linux — SSH log parser with brute-force detection |
+| B2 | [auth-log-scan](https://github.com/P0w3r223/auth-log-scan) ✅ | Linux — SSH log parser with brute-force detection |
 | B3 | car-price-ml frontend | JavaScript — car-price form (vanilla JS + fetch to the A3 API) |
 
 ## Pinned on profile
