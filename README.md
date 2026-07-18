@@ -14,8 +14,9 @@ the previous.
 - **A1 · [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights)** — Wrocław air quality analysis + 24h PM2.5 forecast · [**live site**](https://p0w3r223.github.io/wroclaw-air-insights/)
 - **A2 · [it-job-radar](https://github.com/P0w3r223/it-job-radar)** — Polish IT job market: tech trends & salary ranges · [**live site**](https://p0w3r223.github.io/it-job-radar/)
 - **A3 · [car-price-ml](https://github.com/P0w3r223/car-price-ml)** — used-car price model: bake-off, SHAP, FastAPI + Docker · [**live site**](https://p0w3r223.github.io/car-price-ml/)
+- **A4 · [pl-review-sense](https://github.com/P0w3r223/pl-review-sense)** — Polish review sentiment: TF-IDF vs HerBERT (PolEmo 2.0) · [**live site**](https://p0w3r223.github.io/pl-review-sense/)
 
-🚧 Next: **A4 pl-review-sense** (Polish NLP) or the flagship **A5 studia-rag** (RAG).
+🚧 Next: the flagship **A5 studia-rag** (RAG).
 
 ## Level A — data / AI projects
 
@@ -24,7 +25,7 @@ the previous.
 | A1 | [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights) | pandas, SQL, visualization, working with APIs, first scikit-learn model with correct methodology (time-based split) | ✅ Live | [🌐](https://p0w3r223.github.io/wroclaw-air-insights/) |
 | A2 | [it-job-radar](https://github.com/P0w3r223/it-job-radar) | data engineering — collecting IT job offers, schema design, aggregating SQL, normalization, respectful scraping | ✅ Live | [🌐](https://p0w3r223.github.io/it-job-radar/) |
 | A3 | [car-price-ml](https://github.com/P0w3r223/car-price-ml) | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | ✅ Live | [🌐](https://p0w3r223.github.io/car-price-ml/) |
-| A4 | pl-review-sense | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | 📋 Planned (optional) | — |
+| A4 | [pl-review-sense](https://github.com/P0w3r223/pl-review-sense) | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | ✅ Live | [🌐](https://p0w3r223.github.io/pl-review-sense/) |
 | A5 | **studia-rag** ⭐ | flagship LLM/RAG app — embeddings, vector DB, source citation, retrieval + answer-quality evaluation | 📋 Planned | — |
 
 ## Level B — supporting proofs (one weekend each)
