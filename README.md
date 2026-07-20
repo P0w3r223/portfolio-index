@@ -15,6 +15,7 @@ the previous.
 - **A2 · [it-job-radar](https://github.com/P0w3r223/it-job-radar)** — Polish IT job market: tech trends & salary ranges · [**live site**](https://p0w3r223.github.io/it-job-radar/)
 - **A3 · [car-price-ml](https://github.com/P0w3r223/car-price-ml)** — used-car price model: bake-off, SHAP, FastAPI + Docker · [**live site**](https://p0w3r223.github.io/car-price-ml/)
 - **A4 · [pl-review-sense](https://github.com/P0w3r223/pl-review-sense)** — Polish review sentiment: TF-IDF vs HerBERT (PolEmo 2.0) · [**live site**](https://p0w3r223.github.io/pl-review-sense/)
+- **A6 · [token-budget](https://github.com/P0w3r223/token-budget)** — developer tooling: track Claude Code token spend against a milestone budget (standard library only)
 
 🚧 Next: the flagship **A5 studia-rag** (RAG).
 
@@ -27,6 +28,7 @@ the previous.
 | A3 | [car-price-ml](https://github.com/P0w3r223/car-price-ml) | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | ✅ Live | [🌐](https://p0w3r223.github.io/car-price-ml/) |
 | A4 | [pl-review-sense](https://github.com/P0w3r223/pl-review-sense) | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | ✅ Live | [🌐](https://p0w3r223.github.io/pl-review-sense/) |
 | A5 | **studia-rag** ⭐ | flagship LLM/RAG app — embeddings, vector DB, source citation, retrieval + answer-quality evaluation | 📋 Planned | — |
+| A6 | [token-budget](https://github.com/P0w3r223/token-budget) | developer tooling — parse Claude Code transcripts, attribute token cost to milestones, enforce a budget (stdlib-only) | ✅ Live | — |
 
 ## Level B — supporting proofs (one weekend each)
 
