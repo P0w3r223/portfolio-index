@@ -16,8 +16,9 @@ the previous.
 - **A3 · [car-price-ml](https://github.com/P0w3r223/car-price-ml)** — used-car price model: bake-off, SHAP, FastAPI + Docker · [**live site**](https://p0w3r223.github.io/car-price-ml/)
 - **A4 · [pl-review-sense](https://github.com/P0w3r223/pl-review-sense)** — Polish review sentiment: TF-IDF vs HerBERT (PolEmo 2.0) · [**live site**](https://p0w3r223.github.io/pl-review-sense/)
 - **A6 · [token-budget](https://github.com/P0w3r223/token-budget)** — developer tooling: track Claude Code token spend against a milestone budget (standard library only)
+- **P2 · [ab-lab](https://github.com/P0w3r223/ab-lab)** — A/B experiment statistics: power, SRM, peeking correction — every method validated by simulation
 
-🚧 Next: the flagship **A5 studia-rag** (RAG).
+🚧 Next: **P1 mlops-car-price** (model in production) and the flagship **P3 apply-scout** (LLM agent with trajectory evaluation).
 
 ## Level A — data / AI projects
 
@@ -27,7 +28,7 @@ the previous.
 | A2 | [it-job-radar](https://github.com/P0w3r223/it-job-radar) | data engineering — collecting IT job offers, schema design, aggregating SQL, normalization, respectful scraping | ✅ Live | [🌐](https://p0w3r223.github.io/it-job-radar/) |
 | A3 | [car-price-ml](https://github.com/P0w3r223/car-price-ml) | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | ✅ Live | [🌐](https://p0w3r223.github.io/car-price-ml/) |
 | A4 | [pl-review-sense](https://github.com/P0w3r223/pl-review-sense) | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | ✅ Live | [🌐](https://p0w3r223.github.io/pl-review-sense/) |
-| A5 | **studia-rag** ⭐ | flagship LLM/RAG app — embeddings, vector DB, source citation, retrieval + answer-quality evaluation | 📋 Planned | — |
+| A5 | **studia-rag** | LLM/RAG app — embeddings, vector DB, source citation, retrieval evaluation | ⏸ Paused | — |
 | A6 | [token-budget](https://github.com/P0w3r223/token-budget) | developer tooling — parse Claude Code transcripts, attribute token cost to milestones, enforce a budget (stdlib-only) | ✅ Live | — |
 
 ## Level B — supporting proofs (one weekend each)
@@ -38,9 +39,22 @@ the previous.
 | B2 | [auth-log-scan](https://github.com/P0w3r223/auth-log-scan) ✅ | Linux — SSH log parser with brute-force detection |
 | B3 | car-price-ml frontend | JavaScript — car-price form (vanilla JS + fetch to the A3 API) |
 
+## Level P — stage 2: engineering and methodology
+
+Level A proved I can *build*. Stage 2 is about maintaining and measuring what I build —
+targeting AI Engineer and Data Scientist roles.
+
+| # | Project | What it demonstrates | Status |
+|---|---------|----------------------|--------|
+| P1 | **mlops-car-price** | MLOps on top of A3 — MLflow tracking and model registry, data drift monitoring, champion/challenger retraining, versioned API | 📋 Planned |
+| P2 | [ab-lab](https://github.com/P0w3r223/ab-lab) | applied statistics — power and sample size, Welch/proportion/Mann-Whitney/bootstrap, SRM, mSPRT sequential testing; every method validated on thousands of simulated experiments | ✅ Live |
+| P3 | **apply-scout** ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | 📋 Planned |
+| P4 | **pl-jobs-lora** | QLoRA fine-tuning of a small Polish LLM on a self-built dataset from A2, compared honestly against zero-shot and few-shot API baselines | 📋 Planned |
+| P5 | **doc-extract** | structured extraction from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy | 📋 Optional |
+
 ## Pinned on profile
 
-⭐ **A5 studia-rag** (flagship RAG) · **A3 car-price-ml** (full ML cycle) · **A1 wroclaw-air-insights** (solid analysis)
+⭐ **P3 apply-scout** (flagship agent) · **P1 mlops-car-price** (model in production) · **A3 car-price-ml** (full ML cycle)
 
 ## Conventions
 
