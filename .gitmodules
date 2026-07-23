@@ -1,0 +1,36 @@
+[submodule "wroclaw-air-insights"]
+	path = wroclaw-air-insights
+	url = https://github.com/P0w3r223/wroclaw-air-insights.git
+	branch = main
+[submodule "it-job-radar"]
+	path = it-job-radar
+	url = https://github.com/P0w3r223/it-job-radar.git
+	branch = main
+[submodule "car-price-ml"]
+	path = car-price-ml
+	url = https://github.com/P0w3r223/car-price-ml.git
+	branch = main
+[submodule "pl-review-sense"]
+	path = pl-review-sense
+	url = https://github.com/P0w3r223/pl-review-sense.git
+	branch = main
+[submodule "token-budget"]
+	path = token-budget
+	url = https://github.com/P0w3r223/token-budget.git
+	branch = main
+[submodule "ab-lab"]
+	path = ab-lab
+	url = https://github.com/P0w3r223/ab-lab.git
+	branch = main
+[submodule "mlops-car-price"]
+	path = mlops-car-price
+	url = https://github.com/P0w3r223/mlops-car-price.git
+	branch = main
+[submodule "mini-traceroute"]
+	path = mini-traceroute
+	url = https://github.com/P0w3r223/mini-traceroute.git
+	branch = main
+[submodule "auth-log-scan"]
+	path = auth-log-scan
+	url = https://github.com/P0w3r223/auth-log-scan.git
+	branch = main
