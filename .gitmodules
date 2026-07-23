@@ -34,3 +34,7 @@
 	path = auth-log-scan
 	url = https://github.com/P0w3r223/auth-log-scan.git
 	branch = main
+[submodule "apply-scout"]
+	path = apply-scout
+	url = https://github.com/P0w3r223/apply-scout.git
+	branch = main
