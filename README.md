@@ -32,7 +32,7 @@ the previous.
 | A5 | **studia-rag** | LLM/RAG app — embeddings, vector DB, source citation, retrieval evaluation | ⏸ Paused | — |
 | A6 | [token-budget](https://github.com/P0w3r223/token-budget) | developer tooling — parse Claude Code transcripts, attribute token cost to milestones, enforce a budget (stdlib-only) | ✅ Live | — |
 
-## Level B — supporting proofs (one weekend each)
+## Level B — supporting proofs
 
 | # | Project | Skill proven |
 |---|---------|--------------|
