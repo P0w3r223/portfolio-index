@@ -18,8 +18,7 @@ the previous.
 - **A6 · [token-budget](https://github.com/P0w3r223/token-budget)** — developer tooling: track Claude Code token spend against a milestone budget (standard library only)
 - **P2 · [ab-lab](https://github.com/P0w3r223/ab-lab)** — A/B experiment statistics: power, SRM, peeking correction — every method validated by simulation
 - **P1 · [mlops-car-price](https://github.com/P0w3r223/mlops-car-price)** — the A3 model kept alive: versioned data, MLflow registry, an *evaluated* drift detector, and promotion decided by a paired bootstrap
-
-🚧 Next: the flagship **P3 apply-scout** (LLM agent with trajectory evaluation).
+- **P3 · [apply-scout](https://github.com/P0w3r223/apply-scout)** ⭐ — flagship LLM agent: a from-scratch tool loop with safety budgets, guardrails, and a trajectory-evaluation harness (success rate, citation fidelity, cost per task)
 
 ## Level A — data / AI projects
 
@@ -49,7 +48,7 @@ targeting AI Engineer and Data Scientist roles.
 |---|---------|----------------------|--------|
 | P1 | [mlops-car-price](https://github.com/P0w3r223/mlops-car-price) | MLOps on top of A3 — MLflow tracking and registry, drift monitoring whose detector is itself measured (false alarms, power), champion/challenger promotion decided by a paired bootstrap, API serving the champion alias | ✅ Live |
 | P2 | [ab-lab](https://github.com/P0w3r223/ab-lab) | applied statistics — power and sample size, Welch/proportion/Mann-Whitney/bootstrap, SRM, mSPRT sequential testing; every method validated on thousands of simulated experiments | ✅ Live |
-| P3 | **apply-scout** ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | 📋 Planned |
+| P3 | [apply-scout](https://github.com/P0w3r223/apply-scout) ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | ✅ Live |
 | P4 | **pl-jobs-lora** | QLoRA fine-tuning of a small Polish LLM on a self-built dataset from A2, compared honestly against zero-shot and few-shot API baselines | 📋 Planned |
 | P5 | **doc-extract** | structured extraction from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy | 📋 Optional |
 
