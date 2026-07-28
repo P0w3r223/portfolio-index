@@ -1,6 +1,6 @@
 # Portfolio — Python · Data · AI
 
-> **Telecommunications student building complete, defensible data and AI projects in Python** —
+> **Telecommunications student building complete, data and AI projects in Python** —
 > from data acquisition, through models, to deployed applications and their evaluation.
 > Targeting AI Engineer and Data Scientist roles (open to Junior Python / ML Engineer).
 
