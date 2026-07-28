@@ -45,13 +45,13 @@ the previous.
 Level A proved I can *build*. Stage 2 is about maintaining and measuring what I build —
 targeting AI Engineer and Data Scientist roles.
 
-| # | Project | What it demonstrates | Status |
-|---|---------|----------------------|--------|
-| P1 | [mlops-car-price](https://github.com/P0w3r223/mlops-car-price) | MLOps on top of A3 — MLflow tracking and registry, drift monitoring whose detector is itself measured (false alarms, power), champion/challenger promotion decided by a paired bootstrap, API serving the champion alias | ✅ Live · [🌐](https://p0w3r223.github.io/mlops-car-price/) |
-| P2 | [ab-lab](https://github.com/P0w3r223/ab-lab) | applied statistics — power and sample size, Welch/proportion/Mann-Whitney/bootstrap, SRM, mSPRT sequential testing; every method validated on thousands of simulated experiments | ✅ Live · [🌐](https://p0w3r223.github.io/ab-lab/) |
-| P3 | [apply-scout](https://github.com/P0w3r223/apply-scout) ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | ✅ Live · [🌐](https://p0w3r223.github.io/apply-scout/) |
-| P4 | [pl-jobs-lora](https://github.com/P0w3r223/pl-jobs-lora) | QLoRA fine-tuning of a small Polish LLM on a self-built dataset from A2, compared honestly against zero-shot and few-shot API baselines | 🚧 In progress · [🌐](https://p0w3r223.github.io/pl-jobs-lora/) |
-| P5 | **doc-extract** | structured extraction from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy | 📋 Optional |
+| # | Project | What it demonstrates | Status | Site |
+|---|---------|----------------------|--------|------|
+| P1 | [mlops-car-price](https://github.com/P0w3r223/mlops-car-price) | MLOps on top of A3 — MLflow tracking and registry, drift monitoring whose detector is itself measured (false alarms, power), champion/challenger promotion decided by a paired bootstrap, API serving the champion alias | ✅ Live | [🌐](https://p0w3r223.github.io/mlops-car-price/) |
+| P2 | [ab-lab](https://github.com/P0w3r223/ab-lab) | applied statistics — power and sample size, Welch/proportion/Mann-Whitney/bootstrap, SRM, mSPRT sequential testing; every method validated on thousands of simulated experiments | ✅ Live | [🌐](https://p0w3r223.github.io/ab-lab/) |
+| P3 | [apply-scout](https://github.com/P0w3r223/apply-scout) ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | ✅ Live | [🌐](https://p0w3r223.github.io/apply-scout/) |
+| P4 | [pl-jobs-lora](https://github.com/P0w3r223/pl-jobs-lora) | QLoRA fine-tuning of a small Polish LLM on a self-built dataset from A2, compared honestly against zero-shot and few-shot API baselines | 🚧 In progress | [🌐](https://p0w3r223.github.io/pl-jobs-lora/) |
+| P5 | **doc-extract** | structured extraction from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy | 📋 Optional | — |
 
 ## Pinned on profile
 
