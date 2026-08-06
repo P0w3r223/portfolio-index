@@ -46,3 +46,7 @@
 	path = student-wellbeing-pwr
 	url = https://github.com/P0w3r223/student-wellbeing-pwr.git
 	branch = main
+[submodule "infra-docker-workmate"]
+	path = infra-docker-workmate
+	url = https://github.com/P0w3r223/infra-docker-workmate.git
+	branch = master
