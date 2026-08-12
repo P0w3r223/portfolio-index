@@ -12,7 +12,7 @@ the previous.
 ## ✅ Live now
 
 - **A1 · [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights)** — Wrocław air quality analysis + 24h PM2.5 forecast · [**live site**](https://p0w3r223.github.io/wroclaw-air-insights/)
-- **A2 · [it-job-radar](https://github.com/P0w3r223/it-job-radar)** — Polish IT job market: tech trends & salary ranges · [**live site**](https://p0w3r223.github.io/it-job-radar/)
+- **A2 · [it-job-radar](https://github.com/P0w3r223/it-job-radar)** — Polish IT job market: a sampling design that separates free presence from costly attributes, a data contract that refuses to publish data failing it, and one SQL definition per metric — shown verbatim beside the figure it produced, over a Parquet dataset the reader can download · [**live site**](https://p0w3r223.github.io/it-job-radar/)
 - **A3 · [car-price-ml](https://github.com/P0w3r223/car-price-ml)** — used-car price model: model comparison, SHAP, FastAPI + Docker · [**live site**](https://p0w3r223.github.io/car-price-ml/)
 - **A4 · [pl-review-sense](https://github.com/P0w3r223/pl-review-sense)** — Polish review sentiment: TF-IDF vs HerBERT (PolEmo 2.0) · [**live site**](https://p0w3r223.github.io/pl-review-sense/)
 - **A6 · [token-budget](https://github.com/P0w3r223/token-budget)** — developer tooling: track Claude Code token spend against a milestone budget (standard library only)
@@ -27,7 +27,7 @@ the previous.
 | # | Project | What it demonstrates | Status | Site |
 |---|---------|----------------------|--------|------|
 | A1 | [wroclaw-air-insights](https://github.com/P0w3r223/wroclaw-air-insights) | pandas, SQL, visualization, working with APIs, first scikit-learn model with correct methodology (time-based split) | ✅ Live | [🌐](https://p0w3r223.github.io/wroclaw-air-insights/) |
-| A2 | [it-job-radar](https://github.com/P0w3r223/it-job-radar) | data engineering — collecting IT job offers, schema design, aggregating SQL, normalization, respectful scraping | ✅ Live | [🌐](https://p0w3r223.github.io/it-job-radar/) |
+| A2 | [it-job-radar](https://github.com/P0w3r223/it-job-radar) | data engineering — one sitemap request observes the whole population, so presence is never sampled and only attributes cost a fetch (bounded budget, at most once per offer); versioned schema migrations; normalization whose dictionary fixes reach data already stored; a data contract enforced before anything is published; one SQL definition per published metric, run in DuckDB over a redacted Parquet artifact and shown to the reader verbatim; every figure carries its `n`, and metrics are recorded dated so trends are measurable rather than asserted | ✅ Live | [🌐](https://p0w3r223.github.io/it-job-radar/) |
 | A3 | [car-price-ml](https://github.com/P0w3r223/car-price-ml) | full ML cycle end-to-end — EDA, feature engineering, model comparison, FastAPI prediction API with Docker | ✅ Live | [🌐](https://p0w3r223.github.io/car-price-ml/) |
 | A4 | [pl-review-sense](https://github.com/P0w3r223/pl-review-sense) | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | ✅ Live | [🌐](https://p0w3r223.github.io/pl-review-sense/) |
 | A5 | **studia-rag** | LLM/RAG app — embeddings, vector DB, source citation, retrieval evaluation | ⏸ Paused | — |
