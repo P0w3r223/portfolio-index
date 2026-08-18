@@ -20,6 +20,7 @@ the previous.
 - **P1 · [mlops-car-price](https://github.com/P0w3r223/mlops-car-price)** — the A3 model kept alive: versioned data, MLflow registry, an *evaluated* drift detector, and promotion decided by a paired bootstrap · [**live site**](https://p0w3r223.github.io/mlops-car-price/)
 - **P3 · [apply-scout](https://github.com/P0w3r223/apply-scout)** ⭐ — flagship LLM agent: a from-scratch tool loop with safety budgets, guardrails, and a trajectory-evaluation harness (success rate, citation fidelity, cost per task) · [**live site**](https://p0w3r223.github.io/apply-scout/)
 - **P4 · [pl-jobs-lora](https://github.com/P0w3r223/pl-jobs-lora)** — QLoRA fine-tune of a small Polish LLM: prose → structured JSON, compared against API baselines (results pending the training run) · [**live site**](https://p0w3r223.github.io/pl-jobs-lora/)
+- **P5 · [doc-extract](https://github.com/P0w3r223/doc-extract)** — invoice extraction that knows when it is wrong: the national e-invoicing schema contains zero assertions, so the arithmetic every invoice already satisfies becomes a label-free error detector (domain layer and corpus only — milestones 3–7, the detector study among them, are not built) · [**live site**](https://p0w3r223.github.io/doc-extract/)
 
 ## Level A — data / AI projects
 
@@ -51,7 +52,7 @@ targeting AI Engineer and Data Scientist roles.
 | P2 | [ab-lab](https://github.com/P0w3r223/ab-lab) | applied statistics — power and sample size, Welch/proportion/Mann-Whitney/bootstrap, SRM, mSPRT sequential testing; every method validated on thousands of simulated experiments | ✅ Live | [🌐](https://p0w3r223.github.io/ab-lab/) |
 | P3 | [apply-scout](https://github.com/P0w3r223/apply-scout) ⭐ | flagship — an LLM agent written from scratch (tool loop, budgets, guardrails) with a trajectory-evaluation harness: success rate, citation fidelity, cost per task | ✅ Live | [🌐](https://p0w3r223.github.io/apply-scout/) |
 | P4 | [pl-jobs-lora](https://github.com/P0w3r223/pl-jobs-lora) | QLoRA fine-tuning of a small Polish LLM on a self-built dataset from A2, compared honestly against zero-shot and few-shot API baselines | 🚧 In progress | [🌐](https://p0w3r223.github.io/pl-jobs-lora/) |
-| P5 | **doc-extract** | structured extraction from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy | 📋 Optional | — |
+| P5 | [doc-extract](https://github.com/P0w3r223/doc-extract) | structured extraction from Polish invoices where the point is not the extraction but the **error detection**: the Ministry's KSeF FA(3) schema is 183 798 bytes of XSD carrying 328 enumerations and **zero assertions**, so *net + VAT = gross* is unenforced by the national standard; 15 consistency rules fill that gap and are reported as data rather than raised, arithmetic identities counted apart from heuristics because a heuristic's false positives would otherwise be indistinguishable from a real miss; the corpus is generated so the gold needs no annotation step — KSeF-conformant XML *is* the ground truth, rendered to PDF across 9 difficulty tiers × 3 layouts and reproducible from one seed | 🚧 M2 of 7 | [🌐](https://p0w3r223.github.io/doc-extract/) |
 
 ## Pinned on profile
 
