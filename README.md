@@ -16,7 +16,6 @@ the previous.
 - **A3 · [car-price-ml](https://github.com/P0w3r223/car-price-ml)** — used-car price model that refuses the cars it cannot price, runs in the reader's browser, and quotes the error measured for each price band · [**live site**](https://p0w3r223.github.io/car-price-ml/) · [**valuation form**](https://p0w3r223.github.io/car-price-ml/app/)
 - **A4 · [pl-review-sense](https://github.com/P0w3r223/pl-review-sense)** — Polish review sentiment: TF-IDF vs HerBERT (PolEmo 2.0) · [**live site**](https://p0w3r223.github.io/pl-review-sense/)
 - **A6 · [token-budget](https://github.com/P0w3r223/token-budget)** — developer tooling: track Claude Code token spend against a milestone budget (standard library only)
-- **A7 · [student-wellbeing-pwr](https://github.com/P0w3r223/student-wellbeing-pwr)** — student wellbeing survey (N=396): non-parametric statistics with FDR correction over the full test family, multivariate models, schema-driven data preparation
 - **P2 · [ab-lab](https://github.com/P0w3r223/ab-lab)** — A/B experiment statistics: power, SRM, peeking correction — every method validated by simulation · [**live site**](https://p0w3r223.github.io/ab-lab/)
 - **P1 · [mlops-car-price](https://github.com/P0w3r223/mlops-car-price)** — the A3 model kept alive: versioned data, MLflow registry, an *evaluated* drift detector, and promotion decided by a paired bootstrap · [**live site**](https://p0w3r223.github.io/mlops-car-price/)
 - **P3 · [apply-scout](https://github.com/P0w3r223/apply-scout)** ⭐ — flagship LLM agent: a from-scratch tool loop with safety budgets, guardrails, and a trajectory-evaluation harness (success rate, citation fidelity, cost per task) · [**live site**](https://p0w3r223.github.io/apply-scout/)
@@ -32,7 +31,6 @@ the previous.
 | A4 | [pl-review-sense](https://github.com/P0w3r223/pl-review-sense) | NLP in Polish — TF-IDF baseline vs. HerBERT transformer fine-tuning (Hugging Face) | ✅ Live | [🌐](https://p0w3r223.github.io/pl-review-sense/) |
 | A5 | **studia-rag** | LLM/RAG app — embeddings, vector DB, source citation, retrieval evaluation | ⏸ Paused | — |
 | A6 | [token-budget](https://github.com/P0w3r223/token-budget) | developer tooling — parse Claude Code transcripts, attribute token cost to milestones, enforce a budget (stdlib-only) | ✅ Live | — |
-| A7 | [student-wellbeing-pwr](https://github.com/P0w3r223/student-wellbeing-pwr) | survey analysis end-to-end — non-parametric methods (Spearman, Mann-Whitney, Kruskal-Wallis + Dunn), Benjamini-Hochberg correction applied to the full test family, multivariate regression; questionnaire schema as a single source of truth, with preparation that fails loudly instead of silently narrowing the analysis | ✅ Live | — |
 
 ## Level B — supporting proofs
 
