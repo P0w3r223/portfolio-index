@@ -216,6 +216,43 @@ address.
 This is on the repository §5 promotes to AI Engineer flagship, and the address itself names the
 tool. A reader who opens its history sees forty commits, thirty-seven of them from nobody.
 
+### 6.2 + 6.3 resolved, and the one surface a rewrite cannot reach
+
+Both were settled on 2026-09-02 by removing the attribution rather than by disclosing it. The
+history of all thirteen repositories was rewritten with `git filter-repo`. The census found **471
+trailer lines** in four variants; **446** of them sat on branches and tags and were removed, and
+three stray identities — including the two this triage never saw, `Piotr Cząstkiewicz` and a
+machine hostname — were folded onto the registered address. `doc-extract` is now credited to the
+account for all of its commits, and the *cause* was a local `user.email` in that one repository's
+config, so it cannot recur. 126 pull-request bodies and one comment were edited for the
+"Generated with Claude Code" line. Verified against mirror backups taken first: every commit pairs
+1:1 with identical tree, dates and parents.
+
+**Two things moved that were not meant to.** The remaining **25** trailer lines were never
+reachable from a branch, and that is the larger of the two. GitHub serves each pull request's
+commits from `refs/pull/*`, which is read-only — no push can overwrite it. **380 commits** carrying
+the trailer, 38 of them still on the unregistered address, remain reachable there and render on
+every PR's *Commits* tab. Clearing them would mean deleting and recreating the repositories, which
+would destroy every pull request, issue and star; the record of working on branches with a reasoned
+description is itself part of what this portfolio argues, so the residue was accepted rather than
+paid for at that price.
+
+The second is a straight loss. A rewritten commit invalidates its signature, so the rewrite
+stripped every one: **153 commits carried GitHub's signature before it and 4 do now** — the four
+merges made since. Roughly a hundred and fifty public merge commits lost their *Verified* badge,
+and nothing brings them back. It bought the consistency this section is about, and a portfolio
+arguing about provenance should say what the consistency cost rather than let a reader notice the
+missing badges on their own.
+
+Both are recorded here so a reader who finds an old trailer, or an unsigned merge, meets an
+explanation instead of a contradiction.
+
+A second, narrower rewrite followed on the same day. GitHub's squash-merge writes a `---------`
+rule above the co-author block; the block went and the rule stayed, leaving seven messages — four
+in `wroclaw-air-insights`, including the tip of `main`, and three here — ending in a separator with
+nothing under it. All seven were confirmed against the pre-rewrite backup to be artifacts of a
+removed block rather than authored punctuation.
+
 ### 6.4 The three most-promoted pages have no social metadata, and A1's best claim is invisible
 
 `apply-scout`, `mlops-car-price` and `pl-jobs-lora` carry **no `meta description`, no `og:*`, no
@@ -278,18 +315,23 @@ the only item in this review that changes what a convinced reader can *do*.
 
 ## 9. Open items
 
-- Whether the two Level B pages (`auth-log-scan`, `mini-traceroute`) get promoted into the profile
-  README's demo table, now that one of them presents better than the flagship. Carried from
-  `0003` § 6 and still open.
+- ~~Whether the two Level B pages (`auth-log-scan`, `mini-traceroute`) get promoted into the
+  profile README's demo table~~ — **done**, both are in it.
 - Whether Level B survives as a tier at all once `token-budget` and `pl-review-sense` join it —
   it will then hold five items of three quite different kinds.
-- `infra-docker-workmate`, per § 5.
-- **Whether the `Co-Authored-By: Claude` trailers stay** (§ 6.2). An author's decision, not a
-  reviewer's. What is not optional is picking one answer: today the documents say one thing and
-  533 commits say another.
-- **The git identity on `doc-extract`** (§ 6.3) — new commits keep landing unattributed while it
-  is unconfigured, so this decays further with every push.
-- Three findings from `0002` (2026-08-14) that no later document re-checked and that are still
-  true: `car-price-ml`'s page says "13.9 MB" five times while its About and the index say "14 MB";
-  every project is listed **twice** in the index README; and A6 is marked "✅ Live" with its Site
-  column empty.
+- `infra-docker-workmate`, per § 5. It is also the one submodule the rewrite did not cover, so if
+  the answer is ever "promote it", the attribution question comes back with it.
+- ~~**Whether the `Co-Authored-By: Claude` trailers stay** (§ 6.2)~~ — **decided and executed**;
+  see § 6.2 + 6.3 resolved. The residue in `refs/pull/*` is accepted, not overlooked.
+- ~~**The git identity on `doc-extract`** (§ 6.3)~~ — **fixed at the cause**, not just in history.
+- ~~Three findings from `0002`~~ — all three **fixed**: the index says 13.9 MB, no project is
+  listed twice, and A6 is now B5 with its missing page stated rather than implied by an empty
+  column.
+- **Provenance inside the published `it-job-radar` dataset.** `docs/data/snapshots.parquet` has a
+  `git_sha` column recording which commit produced each of its 25 snapshots — **15 distinct
+  hashes, every one now dangling**. The page stamp was repaired; this column was not, because
+  rewriting it edits a published data artifact rather than a claim about one, and the manifest's
+  contract covers the file. The consequence is sharper than the deferral sounds: `manifest.json`
+  now names snapshot 25 as `de4d944` while the parquet still calls the same event `ea6c199`, so
+  the dataset disagrees with itself about one build. The remap is mechanical — the old-to-new
+  mapping is recoverable from the backups — so this is a choice, not a difficulty.
