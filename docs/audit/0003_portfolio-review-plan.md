@@ -1,6 +1,7 @@
 # Portfolio Review — Multi-Session Plan
 
-Date: 2026-09-02 (updated 2026-09-02 — fix track closed, three assumptions corrected)
+Date: 2026-09-02 (updated twice the same day — fix track closed, then corrected against a
+verification pass: see the boxes in §4 and §5, and `0004` §6)
 Status: accepted
 Author: P0w3r223
 Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, 13 submodules
@@ -85,23 +86,42 @@ Everything in this section was measured on 2026-09-02, not assumed.
   Family B is P3 (the flagship), P1 and P4 — the three projects the index sells hardest.
   Two Level B side projects present better than the flagship does.
 - **Outliers inside family A**: `wroclaw-air-insights` has the eyebrow and the dark theme
-  but no KPI tiles and a six-line lead; `mini-traceroute` and `wroclaw` use a descriptive
+  ~~but no KPI tiles~~ — **corrected: it has four**, under a third class name (`.stat`, against
+  `.kpi` on six pages and `li.tile` on `ab-lab`). It was recorded as lacking tiles because the
+  survey looked for one convention. Three naming conventions is itself the finding, and it is
+  what the Session 4 spec has to unify — and a six-line lead;
+  `mini-traceroute` and `wroclaw` use a descriptive
   `h1` rather than a claim; `auth-log-scan` runs five KPI tiles where the rest run four.
 - **Mobile, measured at a 375 px viewport.** Four pages force horizontal scrolling:
   `apply-scout` **+518 px** (an 852 px table), `mlops-car-price` +140 px, `auth-log-scan`
-  +119 px, `doc-extract` +93 px. `apply-scout` and `mlops-car-price` carry **zero** media
-  queries. The fix already exists in the portfolio — `pl-jobs-lora` has an 826 px table
+  +119 px, `doc-extract` +93 px. ~~`apply-scout` and `mlops-car-price` carry **zero** media
+  queries.~~ **Corrected: nine of eleven pages carry no width-based breakpoint at all** — only
+  `ab-lab` and `wroclaw-air-insights` have any; every other `@media` in the portfolio is
+  `prefers-color-scheme`, `print` or `prefers-reduced-motion`. Naming two pages made this look
+  like an outlier when it is the norm, which would have mis-scoped the Session 4 spec.
+  The fix already exists in the portfolio — `pl-jobs-lora` has an 826 px table
   and does *not* overflow, because it wraps it in `overflow-x`.
-- **About descriptions overflow the pinned card**, which truncates near 150 characters.
-  8 of 12 repos exceed it; `ab-lab` (281 chars) is cut at "each m…", `car-price-ml` (279)
-  at "Every …". `doc-extract` carries **zero topics**, against the index's own convention.
+- **About descriptions overflow the pinned card.** ~~which truncates near 150 characters.
+  8 of 12 repos exceed it~~ **Corrected: the truncation point is 191 characters**, which is
+  where both worked examples actually cut — `ab-lab` (281 chars) at "each m…" and
+  `car-price-ml` (279) at "Every …". At 191 the count is **4 of 12**, not 8. The document's own
+  two examples contradicted its stated threshold.
+  `doc-extract` carries **zero topics**, against the index's own convention.
 - **`doc-extract` is described by three different numbers**: the index says `M2 of 7` and
   "milestones 3–7 … are not built", the page eyebrow says "milestones 1–6 of 7, and most
   of the seventh", the KPI tile says "5 / 7". The index understates the project.
-- **Index submodule pointers lag origin** by 32 (`doc-extract`), 27 (`apply-scout`), 18,
-  14, 14, 12 commits. The live pages are current — the pointers are not. Separately,
+- **Index submodule pointers lag origin.** ~~by 32 (`doc-extract`), 27 (`apply-scout`), 18,
+  14, 14, 12 commits~~ — **corrected: twelve of thirteen lag**, not six. Only `token-budget` is
+  current. Measured 2026-09-02: `doc-extract` 38, `apply-scout` 34, `pl-review-sense` 18,
+  `it-job-radar` 12, `ab-lab` 7, `pl-jobs-lora` 5, `car-price-ml` 4, `mlops-car-price` 4,
+  `auth-log-scan` 3, `mini-traceroute` 2, `wroclaw` 1, `infra-docker-workmate` 200.
+  The live pages are current — the pointers are not. Separately,
   **`pl-jobs-lora` has 7 commits that were never pushed**, plus 1–2 each in `wroclaw`,
   `ab-lab`, `apply-scout`, `pl-review-sense` and `doc-extract`.
+  **Pushed is not merged.** Those commits are all on origin now, but `pl-jobs-lora`'s seven sit
+  on `feat/raise-decoding-cap` with **no pull request**, and its `main` has not moved since
+  `4890f75`; `pl-review-sense` and `wroclaw` are the same shape. §6 recorded this as done, which
+  was true of the push and false of the visibility.
 - `infra-docker-workmate` is a private submodule with a Polish description, absent from
   the index, 200 commits behind its own origin.
 
@@ -162,7 +182,17 @@ Fixed on their own track, ahead of triage.
 5. **Defect 4** — measure on a real phone first; do not change code on the strength of a
    screenshot timeout.
 
-### Fix status — **this track is closed** (2026-09-02)
+### Fix status — **the track was closed too early** (2026-09-02)
+
+> **Correction, same day.** A verification pass found this track was closed on four pages while its
+> own diagnosis predicted more. Measured live: `pl-review-sense` has **7 tables and 0 wrappers**,
+> `it-job-radar` 1 and 0, `mini-traceroute` 2 and 0. They do not overflow *today* only because they
+> happen to be narrow — the exact condition this document warns about two paragraphs below. The
+> generalisation was written down and then not applied. Also reopened: `apply-scout`'s 75 % caption,
+> at the end of this section.
+>
+> Four numbers in §4 are wrong and are corrected there. The measurements in the table below were
+> re-checked and stand.
 
 Every fix carries a test or a before/after measurement, because a fix without evidence that
 it catches the regression is only a hope.
@@ -228,7 +258,13 @@ would have sent the next person the wrong way:
   re-recorded run may not. Verified GitHub serves the file byte-identical, 20 frames,
   animated; **not** verified visually in a browser, where screenshots on that page timed
   out repeatedly and canvas reads are blocked cross-origin.
-- ~~`apply-scout`'s published table still reads 75% completion.~~ **Done** — PR #20 merged.
+- ~~~~`apply-scout`'s published table still reads 75% completion.~~ **Done** — PR #20 merged.~~
+  **Reopened 2026-09-02.** PR #20 corrected the *table* — all three rows read 62 %. It did not
+  correct the **prose beneath it**, which still reads *"Completion is 75% rather than 100% because
+  **two** of the eight advertisements were taken down"*, against the README's corrected "Three of
+  the eight postings produce no deliverable". Verified on the live page. **The flagship's page
+  contradicts itself in public**, and marking this done was checking the artifact that was named
+  rather than the page.
 
 ## 6. Open items
 
@@ -236,7 +272,8 @@ would have sent the next person the wrong way:
   with no visual representation.
 - Whether the two unlinked Level B pages get promoted into the profile README, and whether
   Level B stays a separate tier at all now that its pages outclass the flagship's.
-- ~~Push the six repos holding unpushed commits.~~ **Done** — all pushed.
+- ~~Push the six repos holding unpushed commits.~~ **Pushed, not merged** — see §4. Three repos
+  hold work on origin branches with no pull request, `pl-jobs-lora`'s seven commits included.
 - **`doc-extract` has no CI.** A public repo with 803 tests that run on no push, and the
   one repo where a reader who looks would find no green check at all. Cheap to add; belongs
   in Session 2's proposals rather than in the closed fix track, because the same question —
