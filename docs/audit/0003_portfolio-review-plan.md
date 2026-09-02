@@ -119,9 +119,12 @@ Everything in this section was measured on 2026-09-02, not assumed.
   **`pl-jobs-lora` has 7 commits that were never pushed**, plus 1–2 each in `wroclaw`,
   `ab-lab`, `apply-scout`, `pl-review-sense` and `doc-extract`.
   **Pushed is not merged.** Those commits are all on origin now, but `pl-jobs-lora`'s seven sit
-  on `feat/raise-decoding-cap` with **no pull request**, and its `main` has not moved since
-  `4890f75`; `pl-review-sense` and `wroclaw` are the same shape. §6 recorded this as done, which
-  was true of the push and false of the visibility.
+  on `feat/raise-decoding-cap` with **no pull request**, and its `main` has not moved since the
+  metric-corrections merge; `pl-review-sense` and `wroclaw` are the same shape. §6 recorded this
+  as done, which was true of the push and false of the visibility. *(That commit was named here
+  by hash. The hash is not repeated: on 2026-09-02 the history of all thirteen repositories was
+  rewritten to unify the commit identity, so every
+  pre-rewrite hash in this portfolio resolves to nothing. Tree contents are unchanged.)*
 - `infra-docker-workmate` is a private submodule with a Polish description, absent from
   the index, 200 commits behind its own origin.
 
