@@ -1,6 +1,6 @@
 # Portfolio Review — Multi-Session Plan
 
-Date: 2026-09-02
+Date: 2026-09-02 (updated 2026-09-02 — fix track closed, three assumptions corrected)
 Status: accepted
 Author: P0w3r223 + Claude
 Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, 13 submodules
@@ -107,7 +107,11 @@ Everything in this section was measured on 2026-09-02, not assumed.
 
 Second pass, over the layers the first pass skipped:
 
-- **CI is green on all 12 repos.** Every link in the profile README resolves (15/15). The
+- ~~**CI is green on all 12 repos.**~~ **Corrected 2026-09-02: `doc-extract` has no CI at
+  all** — no `.github/workflows/` exists, so its 803 tests run on no push and the only
+  Actions runs are the automatic `pages-build-deployment`. Green was read off a repo list
+  without checking whether a workflow was there to be green. The other eleven stand.
+  Every link in the profile README resolves (15/15). The
   index's single 404 points into the private repo, so no reader can reach it anyway.
 - **Only one page has a JavaScript error** — the valuation form. Verified rather than
   assumed: the console-reading method was first proven against that known exception, then
@@ -115,6 +119,14 @@ Second pass, over the layers the first pass skipped:
 - **No page links anywhere else in the portfolio.** Zero of eleven link to the profile;
   two link to one sibling project. Every live site is a dead end, so a recruiter who
   arrives at one has no route to the rest.
+
+  Re-measured 2026-09-02 over the published pages only — a survey of the whole `docs/`
+  tree produces false hits, because `apply-scout`'s ADRs discuss a *hallucinated* profile
+  URL its guardrail caught. Confirmed: `doc-extract` → `current_projects` and
+  `pl-jobs-lora` → `it-job-radar`, and nothing else. **`doc-extract`'s link was a 404** —
+  it pointed at the index repository, which is private, so the one route off that page
+  answered every visitor with an error. A dead way back is worse than none; it reads as a
+  portfolio that has been taken down. Fixed to the profile in `doc-extract#3`.
 - **Two repos carry no licence** (`wroclaw-air-insights`, `it-job-radar`); the other ten
   are MIT. Without one, a repo is formally all-rights-reserved.
 - **`car-price-ml` reports its main language as Jupyter Notebook** — visible on the pinned
@@ -144,21 +156,40 @@ Fixed on their own track, ahead of triage.
 3. **Defect 3** — `overflow-x` on the four overflowing pages; the pattern already exists in
    `pl-jobs-lora` and only needs copying.
 4. **Defect 5** — a shared footer linking back to the profile. Cheap, and it is the piece
-   that turns twelve pages into one portfolio.
+   that turns twelve pages into one portfolio. *(Note the fix named here is the profile
+   link only; sibling-project navigation is diagnosed above but never specified. See §7 —
+   "Back-navigation: what was planned, and what was not".)*
 5. **Defect 4** — measure on a real phone first; do not change code on the strength of a
    screenshot timeout.
 
-### Fix status (2026-09-02)
+### Fix status — **this track is closed** (2026-09-02)
 
-Committed locally, **nothing pushed**. Each carries a test or a measurement, because a fix
-without evidence that it catches the regression is only a hope.
+Every fix carries a test or a before/after measurement, because a fix without evidence that
+it catches the regression is only a hope.
 
-| Defect | Repo / branch | Evidence |
-|--------|---------------|----------|
-| 1 | `car-price-ml` / `fix/valuation-form-absent-backend` | the guard fails on the unfixed source and names `absent`; 164 tests, ruff clean |
-| 2 | `apply-scout` / `fix/page-defects` | animation confirmed playing in Chrome; a test now reads the embed |
-| 3 | `apply-scout` / `fix/page-defects` | measured 518 px → 0 px at 375 px |
-| 3 | `mlops-car-price` / `fix/table-overflow-on-phones` | measured 140 px → 0 px; 111 tests, ruff clean |
+| Defect | Repo | PR | Evidence |
+|--------|------|----|----------|
+| 1 | `car-price-ml` | #18 ✅ merged | the guard fails on the unfixed source and names `absent`; 164 tests, ruff clean |
+| 2 | `apply-scout` | #21 ✅ merged | animation confirmed playing in Chrome; a test now reads the embed |
+| 2 | `apply-scout` | #22 ✅ merged | the README's GIF, rendered from the same cast as the SVG |
+| 3 | `apply-scout` | #21 ✅ merged | measured 518 px → 0 px at 375 px |
+| 3 | `mlops-car-price` | #15 ✅ merged | measured 140 px → 0 px; 111 tests, ruff clean |
+| 3 | `auth-log-scan` | #1 — open | measured 119 px → 0 px; 40 tests, CI green |
+| 3 | `doc-extract` | #3 — open | measured 93 px → 0 px; 806 tests, ruff clean |
+| 5 | `doc-extract` | #3 — open | the footer's 404 replaced by the profile; partial — see below |
+
+**One diagnosis, three repos.** `auth-log-scan` and `doc-extract` were scoped below as
+having a cause *different* from `apply-scout`'s, on the grounds that both "already have
+`overflow-x`". They do not differ — the cause is identical. In all three the two existing
+`overflow-x` are `.chart-wrap` and `pre`, and **no table was ever wrapped**. This is one gap
+in the pattern family A's pages are generated from, not three independent bugs, and it
+belongs in the Session 4 spec rather than being re-derived per repo. Family B pages will
+have it too wherever their tables happen to be narrow enough not to show it yet.
+
+`doc-extract` applies the wrapper to the *assembled page* in `build()` rather than at each of
+thirteen call sites, and asserts the two premises that makes safe (bare `<table>`, no
+nesting) — the tables are literal strings scattered through a 2000-line generator, and the
+fourteenth would otherwise be written unwrapped.
 
 Two corrections worth keeping, both cases of a method lying rather than a page:
 
@@ -169,12 +200,24 @@ Two corrections worth keeping, both cases of a method lying rather than a page:
   widened the tables ~40% for no gain, because one column holds a sentence rather than a
   number. The shape transfers between the sibling pages; the detail does not.
 
-Still open on this track:
+Two measurement defects found while closing this track, both worth keeping because both
+would have sent the next person the wrong way:
 
-- `doc-extract` (+93 px) and `auth-log-scan` (+119 px) both **already have** `overflow-x`,
-  so their cause differs from `apply-scout`'s and neither was touched without diagnosing
-  it. `auth-log-scan` generates its page from `site/build.py`, so the fix belongs in the
-  generator; `doc-extract` sits on a branch with work in progress.
+- **The 384 px reading for `doc-extract` was a probe defect, not a mystery.** The note below
+  was right that 384 px cannot account for a 468 px scroll width. The reason is that 384 px
+  is the *fifth* table; the probe stopped at the first one over the threshold and never
+  reached the 448 px one below it. `20 px` of body padding plus 448 is 468 exactly, with
+  nothing left to explain. Filtering on `getBoundingClientRect().right` rather than on
+  element width is necessary but was not sufficient — the probe also has to keep looking.
+- **A survey of `docs/` is not a survey of the page.** See §4.
+
+~~Still open on this track:~~ **resolved.**
+
+- ~~`doc-extract` (+93 px) and `auth-log-scan` (+119 px) both **already have** `overflow-x`,
+  so their cause differs from `apply-scout`'s.~~ They do not — see above. `auth-log-scan`'s
+  fix went into `site/build.py` as expected; `doc-extract`'s branch was settled first
+  (`doc-extract#2`, merged: M7k plus the generalisation of `tier`/`template` into
+  corpus-declared `facets`, which is groundwork M7's real held-out set needs).
 - ~~The flagship's README shows the same black rectangle.~~ **Done** — `apply-scout`
   `feat/demo-gif`, PR #22. The same cast now renders twice: `demo_gif.py` imports the
   layout, timing and palette from `demo_svg` rather than restating them, so the two
@@ -185,8 +228,7 @@ Still open on this track:
   re-recorded run may not. Verified GitHub serves the file byte-identical, 20 frames,
   animated; **not** verified visually in a browser, where screenshots on that page timed
   out repeatedly and canvas reads are blocked cross-origin.
-- `apply-scout`'s published table still reads 75% completion; the correction to 62% sits
-  in open PR #20, unmerged since 2026-08-21.
+- ~~`apply-scout`'s published table still reads 75% completion.~~ **Done** — PR #20 merged.
 
 ## 6. Open items
 
@@ -194,6 +236,109 @@ Still open on this track:
   with no visual representation.
 - Whether the two unlinked Level B pages get promoted into the profile README, and whether
   Level B stays a separate tier at all now that its pages outclass the flagship's.
-- Push the six repos holding unpushed commits, `pl-jobs-lora` first.
+- ~~Push the six repos holding unpushed commits.~~ **Done** — all pushed.
+- **`doc-extract` has no CI.** A public repo with 803 tests that run on no push, and the
+  one repo where a reader who looks would find no green check at all. Cheap to add; belongs
+  in Session 2's proposals rather than in the closed fix track, because the same question —
+  *what does each repo prove to someone who opens it* — is what that session is for.
 - Session 4 needs a real device or a proper emulator: `resize_window` is ignored while the
   Chrome window is maximised, so the 375 px measurements came from same-origin iframes.
+
+## 7. Next session
+
+Start here. The reconnaissance does not need repeating — everything below is measured.
+
+### Before anything else — **done**
+
+~~Five PRs are open and none is merged.~~ All merged 2026-09-02, including
+**`apply-scout#20`**, which had been open since 2026-08-21 and left the published table
+overstating completion at 75% instead of 62%.
+
+### The three remaining fixes — **two done, one deliberately split**
+
+1. ~~**`auth-log-scan` — +119 px.**~~ **Done**, PR #1. The premise was wrong: it does have
+   `overflow-x` twice, but on `.chart-wrap` and `pre` — *no* table was wrapped, so there was
+   no table that had "fallen out of a rule". Both tables wrapped, not only the overflowing
+   one; the second fits in exactly 335 px, which is a property of the demo log rather than
+   of the layout. 119 → 0 px. The five-KPI-tile divergence was left alone: that is a
+   Session 4 question, not a defect.
+
+2. ~~**`doc-extract` — +93 px.**~~ **Done**, PR #3. Same cause, same fix. See §5 for the
+   probe defect behind the 384 px reading.
+
+3. **Back-navigation — split, and only the broken half is done.** See below.
+
+Deferred on purpose: `mini-traceroute`'s `requestAnimationFrame` autostart. It repeatedly
+froze screenshot injection, but that is a tooling symptom. Measure it on a real phone
+before touching the code.
+
+### Back-navigation: what was planned, and what was not
+
+Worth stating plainly, because the plan was vaguer here than it looks. Project-to-project
+navigation — *from `it-job-radar`'s page to another project's page* — appears in this
+document exactly twice, and is **specified in neither**:
+
+- §5 names it in the *diagnosis*: "No page links to the profile **or to any sibling
+  project**."
+- §5's fix order then drops it: "a shared footer linking back to **the profile**."
+- §7 restored it only as a wish: "linking to the profile, **and ideally** to the sibling
+  projects."
+
+No target list, no pattern, no answer to what happens when triage cuts a project. So: it is
+**recorded as a goal and never designed**. That gap is what the rest of this section closes.
+
+**What is done.** Only the defect: `doc-extract`'s footer pointed at the *private* index
+repo, so its one outbound link was a 404 for every reader. Now the profile. Nothing else
+was touched.
+
+**Why the rest waits for the spec.** Three reasons, in order of weight:
+
+1. **The content depends on triage.** A sibling link written now names a project Session 1
+   may demote or cut, and the page carrying it is not the page that changes — eleven others
+   are.
+2. **A mesh is shared state across twelve independent repositories.** Twelve pages each
+   naming eleven siblings is 132 links with no single source of truth, in a portfolio whose
+   documented failure mode is exactly this: stale submodule pointers, three different
+   numbers for `doc-extract`'s progress, a completion figure that stayed wrong for twelve
+   days. Hand-maintained cross-links would drift the same way, and a cut project would
+   leave eleven 404s.
+3. **Session 5+ touches every repo anyway.** Doing it now means eleven PRs, then eleven more
+   when the spec lands.
+
+**The shape recommended for the spec — hub and spoke, not mesh.** Every page carries one
+link back to the **profile**, whose README is the index. One target, one string per repo,
+nothing to drift, and it survives triage untouched: cutting a project changes the profile
+README and no page. That is the cheap piece the plan always meant, and it is what turns
+twelve artifacts into one body of work.
+
+Project-to-project links stay **editorial, not navigational** — used only where two projects
+genuinely bear on each other and the link says why. That pattern already exists and reads
+well: `pl-jobs-lora` → `it-job-radar` (the job data it fine-tunes on), `mlops-car-price` ↔
+`car-price-ml`, `mlops-car-price` → `ab-lab`'s paired-bootstrap decision record. Those are
+arguments, not a menu, and they do not rot when a *different* project is cut.
+
+If Session 4 wants a genuine "next project" control anyway, the open question it must answer
+first is **where the list lives** — a hand-written strip in twelve repos will drift, so it
+needs generating from one declaration, and the repos have no shared build step. That is a
+real design problem and it should not be solved by pasting a list eleven times.
+
+### How the mobile numbers were taken
+
+`resize_window` reports success and does nothing while the Chrome window is maximised —
+`window.innerWidth` stays put, so anything measured that way is worthless. What worked was
+a same-origin iframe at 390 px, comparing `documentElement.scrollWidth` against
+`clientWidth`. The same harness applied the fix live and re-measured, which is where the
+518 px → 0 and 140 px → 0 figures come from.
+
+### Then: Session 1, the triage — **this is where the next session starts**
+
+The fix track is closed. Two PRs await review (`auth-log-scan#1`, `doc-extract#3`) and
+nothing blocks the triage.
+
+With one piece of context the plan did not start with — the flagship carries a security
+debt. A review of `apply-scout` at HEAD found the evaluation harness genuinely holds up
+(both published tables replay byte-identical offline, 188 tests, rate card correct), but
+the loop has four real holes, the worst being that it ingests untrusted web content,
+reads a model-chosen path with no confinement, and can fetch an arbitrary URL — with the
+README's fifteen-item limitations list not naming it. That belongs in the triage's reading
+of P3, and in Session 2's extension proposals.
