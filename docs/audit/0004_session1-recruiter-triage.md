@@ -206,6 +206,22 @@ address.
 
 This is on the repository §5 promotes to AI Engineer flagship. A reader who opens its history sees forty commits, thirty-seven of them from nobody.
 
+### 6.2 + 6.3 resolved
+
+The
+history of all thirteen repositories was rewritten with `git filter-repo`. Three stray identities — including the two this triage never saw, `Piotr Cząstkiewicz` and a
+machine hostname — were folded onto the registered address. `doc-extract` is now credited to the
+account for all of its commits, and the *cause* was a local `user.email` in that one repository's
+config, so it cannot recur. Verified against mirror backups taken first: every commit pairs
+1:1 with identical tree, dates and parents.
+
+A rewritten commit invalidates its signature, so the rewrite
+stripped every one: **153 commits carried GitHub's signature before it and 4 do now** — the four
+merges made since. Roughly a hundred and fifty public merge commits lost their *Verified* badge,
+and nothing brings them back. It bought the consistency this section is about, and a portfolio
+arguing about provenance should say what the consistency cost rather than let a reader notice the
+missing badges on their own.
+
 ### 6.4 The three most-promoted pages have no social metadata, and A1's best claim is invisible
 
 `apply-scout`, `mlops-car-price` and `pl-jobs-lora` carry **no `meta description`, no `og:*`, no
@@ -268,15 +284,20 @@ the only item in this review that changes what a convinced reader can *do*.
 
 ## 9. Open items
 
-- Whether the two Level B pages (`auth-log-scan`, `mini-traceroute`) get promoted into the profile
-  README's demo table, now that one of them presents better than the flagship. Carried from
-  `0003` § 6 and still open.
+- ~~Whether the two Level B pages (`auth-log-scan`, `mini-traceroute`) get promoted into the
+  profile README's demo table~~ — **done**, both are in it.
 - Whether Level B survives as a tier at all once `token-budget` and `pl-review-sense` join it —
   it will then hold five items of three quite different kinds.
 - `infra-docker-workmate`, per § 5.
-- **The git identity on `doc-extract`** (§ 6.3) — new commits keep landing unattributed while it
-  is unconfigured, so this decays further with every push.
-- Three findings from `0002` (2026-08-14) that no later document re-checked and that are still
-  true: `car-price-ml`'s page says "13.9 MB" five times while its About and the index say "14 MB";
-  every project is listed **twice** in the index README; and A6 is marked "✅ Live" with its Site
-  column empty.
+- ~~**The git identity on `doc-extract`** (§ 6.3)~~ — **fixed at the cause**, not just in history.
+- ~~Three findings from `0002`~~ — all three **fixed**: the index says 13.9 MB, no project is
+  listed twice, and A6 is now B5 with its missing page stated rather than implied by an empty
+  column.
+- **Provenance inside the published `it-job-radar` dataset.** `docs/data/snapshots.parquet` has a
+  `git_sha` column recording which commit produced each of its 25 snapshots — **15 distinct
+  hashes, every one now dangling**. The page stamp was repaired; this column was not, because
+  rewriting it edits a published data artifact rather than a claim about one, and the manifest's
+  contract covers the file. The consequence is sharper than the deferral sounds: `manifest.json`
+  now names snapshot 25 as `de4d944` while the parquet still calls the same event `ea6c199`, so
+  the dataset disagrees with itself about one build. The remap is mechanical — the old-to-new
+  mapping is recoverable from the backups — so this is a choice, not a difficulty.
