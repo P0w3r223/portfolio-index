@@ -1,7 +1,9 @@
 # Portfolio Review — Multi-Session Plan
 
 Date: 2026-09-02 (updated twice the same day — fix track closed, then corrected against a
-verification pass: see the boxes in §4 and §5, and `0004` §6)
+verification pass: see the boxes in §4 and §5, and `0004` §6). **Reconciled 2026-09-03** against
+the repositories: four statements below had gone stale because the work landed and the document
+did not follow — see §8.
 Status: accepted
 Author: P0w3r223 + Claude
 Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, 13 submodules
@@ -130,10 +132,13 @@ Everything in this section was measured on 2026-09-02, not assumed.
 
 Second pass, over the layers the first pass skipped:
 
-- ~~**CI is green on all 12 repos.**~~ **Corrected 2026-09-02: `doc-extract` has no CI at
-  all** — no `.github/workflows/` exists, so its 803 tests run on no push and the only
-  Actions runs are the automatic `pages-build-deployment`. Green was read off a repo list
-  without checking whether a workflow was there to be green. The other eleven stand.
+- ~~**CI is green on all 12 repos.**~~ ~~**Corrected 2026-09-02: `doc-extract` has no CI at
+  all**~~ — no `.github/workflows/` existed, so its 803 tests ran on no push and the only
+  Actions runs were the automatic `pages-build-deployment`. Green was read off a repo list
+  without checking whether a workflow was there to be green. The other eleven stood.
+  **Closed 2026-09-03** by `doc-extract#6` (`ae0353d`), so the original statement is true again
+  — and now verified rather than inferred: all twelve public repositories run a `test` job on
+  both `push` and `pull_request`, checked by reading every workflow file rather than a repo list.
   Every link in the profile README resolves (15/15). The
   index's single 404 points into the private repo, so no reader can reach it anyway.
 - **Only one page has a JavaScript error** — the valuation form. Verified rather than
@@ -207,9 +212,10 @@ it catches the regression is only a hope.
 | 2 | `apply-scout` | #22 ✅ merged | the README's GIF, rendered from the same cast as the SVG |
 | 3 | `apply-scout` | #21 ✅ merged | measured 518 px → 0 px at 375 px |
 | 3 | `mlops-car-price` | #15 ✅ merged | measured 140 px → 0 px; 111 tests, ruff clean |
-| 3 | `auth-log-scan` | #1 — open | measured 119 px → 0 px; 40 tests, CI green |
-| 3 | `doc-extract` | #3 — open | measured 93 px → 0 px; 806 tests, ruff clean |
-| 5 | `doc-extract` | #3 — open | the footer's 404 replaced by the profile; partial — see below |
+| 3 | `auth-log-scan` | #1 ✅ merged | measured 119 px → 0 px; 40 tests, CI green |
+| 3 | `doc-extract` | #3 ✅ merged | measured 93 px → 0 px; 806 tests, ruff clean |
+| 5 | `doc-extract` | #3 ✅ merged | the footer's 404 replaced by the profile; partial — see below |
+| — | `apply-scout` | #23 ✅ merged | the caption reopened below; 62 % on the page, verified live |
 
 **One diagnosis, three repos.** `auth-log-scan` and `doc-extract` were scoped below as
 having a cause *different* from `apply-scout`'s, on the grounds that both "already have
@@ -262,12 +268,19 @@ would have sent the next person the wrong way:
   animated; **not** verified visually in a browser, where screenshots on that page timed
   out repeatedly and canvas reads are blocked cross-origin.
 - ~~~~`apply-scout`'s published table still reads 75% completion.~~ **Done** — PR #20 merged.~~
-  **Reopened 2026-09-02.** PR #20 corrected the *table* — all three rows read 62 %. It did not
-  correct the **prose beneath it**, which still reads *"Completion is 75% rather than 100% because
+  ~~**Reopened 2026-09-02.**~~ PR #20 corrected the *table* — all three rows read 62 %. It did not
+  correct the **prose beneath it**, which still read *"Completion is 75% rather than 100% because
   **two** of the eight advertisements were taken down"*, against the README's corrected "Three of
   the eight postings produce no deliverable". Verified on the live page. **The flagship's page
-  contradicts itself in public**, and marking this done was checking the artifact that was named
+  contradicted itself in public**, and marking this done was checking the artifact that was named
   rather than the page.
+
+  **Closed 2026-09-02** by `apply-scout#23`, *"the page explained a completion rate its own table
+  stopped reporting"*. Re-verified on the live site 2026-09-03: `docs/index.html` reads
+  *"Completion is 62% rather than 100% because three of the eight postings produce no
+  deliverable"*, and `curl` against `p0w3r223.github.io/apply-scout/` returns the same. The
+  remaining `75%` occurrences in that repository are all historical — decision records and the
+  README's own account of the re-record that moved the number — which is what they should be.
 
 ## 6. Open items
 
@@ -277,12 +290,20 @@ would have sent the next person the wrong way:
   Level B stays a separate tier at all now that its pages outclass the flagship's.
 - ~~Push the six repos holding unpushed commits.~~ **Pushed, not merged** — see §4. Three repos
   hold work on origin branches with no pull request, `pl-jobs-lora`'s seven commits included.
-- **`doc-extract` has no CI.** A public repo with 803 tests that run on no push, and the
-  one repo where a reader who looks would find no green check at all. Cheap to add; belongs
-  in Session 2's proposals rather than in the closed fix track, because the same question —
-  *what does each repo prove to someone who opens it* — is what that session is for.
+- ~~**`doc-extract` has no CI.**~~ **Closed 2026-09-03**, `doc-extract#6` — 806 passed, 22
+  skipped, `ruff` clean. It did not go the siblings' "rebuild the page and fail on any diff"
+  route: that check already existed here as `tests/test_site_committed.py`, and a blunt diff
+  would have been worse, because the page has two parts that legitimately differ from a rebuild
+  — the footer's commit stamp, and the blocks that need a corpus on disk. Simulating a runner
+  found the staleness check passes on **no** checkout without `data/`, which is every CI
+  checkout; the suite had simply never run where the corpus was absent, because there was no CI.
 - Session 4 needs a real device or a proper emulator: `resize_window` is ignored while the
   Chrome window is maximised, so the 375 px measurements came from same-origin iframes.
+- **Action versions lag in eleven repositories** — `checkout@v4` and `setup-python@v5` run on
+  Node 20 and annotate every run with a deprecation warning. `wroclaw-air-insights` is already
+  on the current majors, so the portfolio contradicts itself here too. **Decided 2026-09-03:**
+  bump all eleven to match it, unpinned, because the tokens are read-only and no secret is
+  exposed — pinning here alone would diverge from the sibling that has already migrated.
 
 ## 7. Next session
 
@@ -372,8 +393,10 @@ a same-origin iframe at 390 px, comparing `documentElement.scrollWidth` against
 
 ### Then: Session 1, the triage — **this is where the next session starts**
 
-The fix track is closed. Two PRs await review (`auth-log-scan#1`, `doc-extract#3`) and
-nothing blocks the triage.
+The fix track is closed. ~~Two PRs await review (`auth-log-scan#1`, `doc-extract#3`)~~ — both
+merged 2026-09-02, and nothing blocked the triage. **Session 1 has since been delivered as
+`0004` and executed on both public surfaces** (`#38`, `P0w3r223#1`); this section is kept for
+the record rather than as a live handoff. The current handoff is §8.
 
 With one piece of context the plan did not start with — the flagship carries a security
 debt. A review of `apply-scout` at HEAD found the evaluation harness genuinely holds up
@@ -382,3 +405,70 @@ the loop has four real holes, the worst being that it ingests untrusted web cont
 reads a model-chosen path with no confinement, and can fetch an arbitrary URL — with the
 README's fifteen-item limitations list not naming it. That belongs in the triage's reading
 of P3, and in Session 2's extension proposals.
+
+---
+
+## 8. Reconciliation, 2026-09-03
+
+This document was read back against the repositories before any new work began, on the
+principle that a plan nobody can trust is worse than no plan. **Four of its statements were
+stale, all in the same direction: the work had landed and the document had not followed.**
+
+| Statement | Was | Is |
+|---|---|---|
+| `apply-scout`'s 75 % caption (§5) | "Reopened 2026-09-02" | closed by `#23`, verified live |
+| `auth-log-scan#1`, `doc-extract#3` (§5 table, §7) | "open", "await review" | merged 2026-09-02 |
+| "`doc-extract` has no CI" (§4, §6) | open item for Session 2 | closed by `#6`, `ae0353d` |
+| Session 1 (§7) | "this is where the next session starts" | delivered as `0004`, executed |
+
+**The mechanism is worth naming, because it is the same one this review keeps finding in the
+portfolio itself.** Every one of these was fixed by a pull request whose description said so,
+and none of the fixes updated the document that tracked it. That is exactly the failure behind
+`doc-extract`'s four conflicting progress figures and `apply-scout`'s twelve-day-stale
+completion rate — one fact, several surfaces, and no rule about which one leads. A plan
+document is a surface like any other. **Reconcile it before starting a session, not after.**
+
+Nothing found here was wrong when written; §4's measurements and §5's diagnoses all stand.
+
+### Decisions taken 2026-09-03
+
+Four, each with the reasoning that decided it.
+
+1. **`it-job-radar`'s parquet gets the full remap.** The `git_sha` column carries 15 distinct
+   hashes across 25 rows and every one dangles after the rewrite, while `manifest.json` names
+   snapshot 25 as `de4d944` and the parquet still calls the same event `ea6c199` — so the
+   published dataset disagrees with itself about one build. The alternative on the table was
+   dropping the column, since the manifest carries the file's contract. Rejected: a portfolio
+   whose argument is provenance does not answer a provenance defect by deleting the provenance.
+   All 15 were confirmed resolvable in the pre-rewrite mirror before this was agreed, so the
+   mapping is recoverable rather than hoped for, and the method is the one already used for the
+   four page stamps — pair by tree plus both dates.
+2. **Action versions bump in all eleven lagging repositories**, to what `wroclaw-air-insights`
+   already runs. Not pinned to SHAs: the tokens are read-only and hold no secret, so pinning
+   buys little, and doing it in eleven repos while the twelfth stays unpinned would replace one
+   inconsistency with another.
+3. **§6.5's table wrapping stays with Session 4** — `pl-review-sense` 7 tables and 0 wrappers,
+   `it-job-radar` 1 and 0, `mini-traceroute` 2 and 0. Session 4 owns the family-wide rule and
+   Session 5+ touches every repository anyway, so acting now costs three PRs and then three
+   more. **Condition attached:** it is carried as a bound checklist item of the Session 4 spec,
+   not as prose. The generalisation was written down once and not applied, and deferring it a
+   second time without a binding is how it would be lost for good.
+4. **`infra-docker-workmate` is unpinned from the portfolio, and its repository is kept.**
+   The proposal was to move its contents somewhere safe; the survey found there is nowhere to
+   move them *to*, because they already live in their own private repository —
+   `P0w3r223/infra-docker-workmate`, 1.17 MB, last pushed 2026-08-21, **200 commits ahead** of
+   the pointer this index holds. The portfolio references it in `.gitmodules` and nowhere else;
+   `README.md` has never mentioned it. So the submodule is the only thing removed, the
+   repository is untouched, and the drift §4 recorded stops being the portfolio's problem.
+   This also settles `0004` §9's conditional: the one submodule the rewrite did not cover is no
+   longer a submodule, so the attribution question does not come back with it.
+
+### The handoff
+
+In order, and the first is a precondition rather than a step: **this section.** Then the
+`doc-extract` submodule pointer, which still names the merged PR's branch; then decisions 4, 1
+and 2 above; then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics,
+`car-price-ml`'s reported language, and `apply-scout`'s security debt.
+
+Two items are the author's and are not blocked by any of it: the contact details (`0004` §6.1)
+and the profile pin.

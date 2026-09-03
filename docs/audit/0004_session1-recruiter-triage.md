@@ -86,10 +86,14 @@ with the eyebrow.
 
 ### 3.4 Two hygiene facts on the repository cards
 
-`doc-extract` carries **zero topics**, against 6–14 on every other repository, and has **no
-authored CI** — 806 passing tests that run on no push. (GitHub's implicit
+`doc-extract` carries **zero topics**, against 6–14 on every other repository, and ~~has **no
+authored CI** — 806 passing tests that run on no push~~. (GitHub's implicit
 `pages-build-deployment` workflow does run, so "no CI at all" overstates it; there is no test or
-lint workflow. The other eleven repos each have one, green on `main`.)
+lint workflow. The other eleven repos each have one, green on `main`.) **The CI half closed
+2026-09-03**, `doc-extract#6` — 806 passed, 22 skipped, `ruff` clean, on `push` and
+`pull_request`. All twelve public repositories now run a test job, verified by reading every
+workflow file rather than by listing repositories, which is the mistake that produced the
+original false all-clear. **The zero topics stand**, and stay with Session 2.
 
 `car-price-ml` reports its primary language as **Jupyter Notebook**, which says "notebooks" about a
 project with a FastAPI service and a Docker image. That one **is** on a pinned card.
@@ -98,6 +102,15 @@ project with a FastAPI service and a Docker image. That one **is** on a pinned c
 not pinned** — the six pinned repos are `ab-lab`, `apply-scout`, `car-price-ml`, `it-job-radar`,
 `mlops-car-price`, `wroclaw-air-insights`. Which is itself the point of §3.1 restated: the project
 this session promotes to flagship is neither pinned nor mentioned.
+
+*Added 2026-09-03, because "pin it" turns out not to be a free action.* **All six slots are full**
+— re-read from the GraphQL API, the list above is unchanged — so pinning the flagship means
+unpinning something. The recommendation is **`car-price-ml`**, for two reasons that point the same
+way: the portfolio currently spends **two of its six pins on the same dataset** (`car-price-ml` and
+`mlops-car-price` are both the car-price problem), and `car-price-ml` is the one whose card
+actively misreports the project — *Jupyter Notebook*, per this section. Neither demoted project is
+pinned, so the demotions free nothing; this is a swap between two Level A projects or it does not
+happen. Pinning is an account setting with no public API, so it is the author's action.
 
 ## 4. The ranking
 
@@ -275,6 +288,20 @@ tables and zero wrappers**, `it-job-radar` one and zero, `mini-traceroute` two a
 overflow today only because they happen to be narrow enough, which is precisely the risk that
 document names.
 
+**Deferred to Session 4 on 2026-09-03, with a condition.** Session 4 owns the family-wide rule and
+Session 5+ opens every repository anyway, so fixing three pages now means three PRs and then three
+more when the spec changes their shape. That is the argument `0003` § 7 already made about
+back-navigation, and it holds here. The condition exists because this finding is *itself* a case of
+a generalisation being written down and not applied — deferring it again on the same terms would be
+the second occurrence of the failure it describes. So it is carried as a **bound checklist item of
+the Session 4 spec**, with the three counts above as its acceptance test, rather than as prose that
+a later reader has to notice.
+
+**Session 4 checklist item.** Every `<table>` on every published page sits inside an
+`overflow-x` box, asserted by a test in the repository that generates the page — not by a
+measurement taken once. Acceptance: `pl-review-sense` 7/7, `it-job-radar` 1/1,
+`mini-traceroute` 2/2, and the four already-fixed pages stay fixed.
+
 ## 7. The gap in the stack
 
 One, and it is clear: **RAG and retrieval evaluation**. Everything else a reader would look for is
@@ -305,10 +332,11 @@ is not a description but is found in the same pass.
 presentation change identified: it converts three repo names into three findings. Table wrapping is
 already established as a family-wide rule rather than a per-repo fix.
 
-**Session 2 (extensions)** — the RAG gap; `doc-extract`'s missing CI and zero topics;
+**Session 2 (extensions)** — the RAG gap; ~~`doc-extract`'s missing CI and~~ its zero topics;
 `car-price-ml`'s reported language; and `apply-scout`'s security debt, which belongs in an
 extension proposal rather than in a presentation pass, because naming it in the README is the
-minimum and confining the loop is the real fix.
+minimum and confining the loop is the real fix. *(The CI landed ahead of the session, 2026-09-03
+— see §3.4.)*
 
 **Ahead of all of them** — § 6.1, the contact details. It is a single edit to one README and it is
 the only item in this review that changes what a convinced reader can *do*.
@@ -319,8 +347,15 @@ the only item in this review that changes what a convinced reader can *do*.
   profile README's demo table~~ — **done**, both are in it.
 - Whether Level B survives as a tier at all once `token-budget` and `pl-review-sense` join it —
   it will then hold five items of three quite different kinds.
-- `infra-docker-workmate`, per § 5. It is also the one submodule the rewrite did not cover, so if
-  the answer is ever "promote it", the attribution question comes back with it.
+- ~~`infra-docker-workmate`, per § 5. It is also the one submodule the rewrite did not cover, so if
+  the answer is ever "promote it", the attribution question comes back with it.~~ **Decided
+  2026-09-03: unpinned from the portfolio, repository kept.** § 5 recorded the removal as declined
+  and the drift as continuing; both are now settled without deleting anything. The contents were
+  never portfolio-only — they live in `P0w3r223/infra-docker-workmate`, private, 1.17 MB, last
+  pushed 2026-08-21, **200 commits ahead** of the pointer the index held. The index named it in
+  `.gitmodules` and nowhere else; `README.md` never mentioned it. So only the submodule link goes.
+  The conditional above resolves with it: it is no longer a submodule, so the attribution question
+  does not come back.
 - ~~**Whether the `Co-Authored-By: Claude` trailers stay** (§ 6.2)~~ — **decided and executed**;
   see § 6.2 + 6.3 resolved. The residue in `refs/pull/*` is accepted, not overlooked.
 - ~~**The git identity on `doc-extract`** (§ 6.3)~~ — **fixed at the cause**, not just in history.
@@ -335,3 +370,20 @@ the only item in this review that changes what a convinced reader can *do*.
   now names snapshot 25 as `de4d944` while the parquet still calls the same event `ea6c199`, so
   the dataset disagrees with itself about one build. The remap is mechanical — the old-to-new
   mapping is recoverable from the backups — so this is a choice, not a difficulty.
+
+  **Chosen 2026-09-03: remap.** "Recoverable from the backups" was checked rather than repeated —
+  all 15 hashes resolve as commits in
+  `_rewrite-backups-2026-09-02/round1-pre-trailer-strip/it-job-radar.git`, so the pairing has a
+  source. The alternative considered was dropping the `git_sha` column outright, on the grounds
+  that `manifest.json` carries the file's contract. It was rejected on the portfolio's own
+  argument: a defect in provenance is not answered by deleting the provenance. Method is the one
+  already used for the four page stamps — pair by tree plus both dates, disambiguate by
+  reachability.
+
+- **Contact details (§ 6.1) — decided 2026-09-03.** `name`, `bio`, a public `email`, the URL
+  field and *Available for hire* are being filled by the author; they are account settings, not
+  files, and no token this project holds carries the `user` scope needed to write them. The URL
+  field points at the `doc-extract` live site rather than at the profile, because the profile
+  README already *is* the portfolio index on that same page — so the one link in the sidebar
+  should be the thing a README cannot be, a live artifact one click away. If a single landing
+  page for the portfolio is ever built, that link moves there.
