@@ -47,10 +47,14 @@ targeting AI Engineer and Data Scientist roles.
 
 ## Pinned on profile
 
-**P3 apply-scout** (agent + evaluation harness) · **P1 mlops-car-price** (MLOps) · **P2 ab-lab** (a 5% test is only 5% if you look once) · **A3 car-price-ml** (full ML cycle) · **A1 wroclaw-air-insights** (data + forecast) · **A2 it-job-radar** (data engineering)
+Six slots, led by the AI Engineer flagship and the Data Scientist headline:
 
-P5 `doc-extract` is not among them. The pins are a GitHub account setting and have not been
-changed here.
+**P5 doc-extract** (extraction that knows when it is wrong) · **P2 ab-lab** (a 5% test is only 5% if you look once) · **P3 apply-scout** (agent + evaluation harness) · **P1 mlops-car-price** (MLOps) · **A1 wroclaw-air-insights** (data + forecast) · **A2 it-job-radar** (data engineering)
+
+<sub>The pins are a GitHub **account setting**, not a file — nothing in this repository can read or
+write them, so this list is a copy and the profile is the original. `A3 car-price-ml` was the slot
+`doc-extract` took: the six were spending two of them on the same dataset. Reasoning in
+[`docs/audit/0004_session1-recruiter-triage.md`](docs/audit/0004_session1-recruiter-triage.md) § 3.4.</sub>
 
 ## Conventions
 
