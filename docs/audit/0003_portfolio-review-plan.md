@@ -533,19 +533,24 @@ mlops-car-price, wroclaw-air-insights, it-job-radar`.
 - ~~**The published bio reads *"Open to AI/ ML engineer"***~~ — the wording is the author's and the
   topic is **closed by their decision**. Recorded here only so a later reader does not reopen it as
   a defect: the field is filled and reads as intended.
-- **The profile README still carries no contact line.** Written and **open as `P0w3r223#2`, not
-  merged** — checked against `main` rather than against the pull request, which is the distinction
-  §8 exists to enforce. Placed under the opening paragraph rather than in a `Contact` section at
+- ~~**The profile README still carries no contact line.**~~ **`P0w3r223#2`, merged** — and
+  verified on `main`, not on the pull request, which is the distinction §8 exists to enforce and
+  the one this line got wrong once already. The live file now opens
+  `# Piotr Cząstkiewicz — AI Engineer / Data Scientist` with the address two lines under it.
+  Placed under the opening paragraph rather than in a `Contact` section at
   the foot: the argument is about a reader with sixty seconds, and at the bottom of the file it is
   found only by someone who already scrolled to the end, which is someone who would have gone
   looking anyway. One line, because there is no LinkedIn and no published CV, and it does not
   restate the roles named directly above it. The heading takes the surname for the same reason the
   `name` field now carries it.
 
-**So §6.1 is closed on the account and open on the index.** The account side is done — `name`,
-`bio`, `email`, the URL field, *Available for hire*, and the pins. Zero social accounts remains
-true and is not a gap; there are no accounts to link. What is left is the one surface a reader
-actually reads, and it is one merge away.
+**So §6.1 is closed on every surface** — the account (`name`, `bio`, `email`, the URL field,
+*Available for hire*), the pins, and the index a reader actually reads. Zero social accounts
+remains true and is not a gap; there are no accounts to link.
+
+*This paragraph has now been written three times: as open, as closed on the strength of a pull
+request that had not merged, and as closed against `main`. The middle one is why §9 says what it
+says, and it is left visible in the history rather than tidied away.*
 
 ### Decisions taken on the second pass
 
@@ -581,10 +586,10 @@ Three, each on a finding the day's green checks did not cover.
 
 ### The handoff — **spent, and this line is the point of §9**
 
-~~In order:~~ Items 1–3 landed on 2026-09-03; item 4 is written and open. **The list is struck
-rather than deleted, because §9 exists to say that a handoff which quietly becomes a record of
-finished work is how the other six statements in this document went stale.** Reconciled in the
-same pass that re-pointed the two submodules, rather than in the session after.
+~~In order:~~ **All five landed on 2026-09-03.** The list is struck rather than deleted, because
+§9 exists to say that a handoff which quietly becomes a record of finished work is how the other
+six statements in this document went stale. Reconciled in the same pass that re-pointed the
+submodules, rather than in the session after.
 
 *Each line below is marked against the repository's **default branch**, not against a merged-looking
 pull request. That distinction is not pedantry here: item 4 was first written up as landed on the
@@ -604,12 +609,15 @@ later, that this section was created to name.*
 3. ~~**Decision 1** — one PR per repo, `auth-log-scan` and `it-job-radar`.~~ `auth-log-scan#3`,
    `it-job-radar#27`. **Verified live rather than reasoned about**: both `.nojekyll` answered 404
    before and answer 200 after, and both pages still serve.
-4. **The profile README's contact line** — written, **open as `P0w3r223#2`, awaiting merge.** The
-   one item on this list not yet on a default branch, and the only one that changes what a
-   convinced reader can *do*.
+4. ~~**The profile README's contact line**~~ — `P0w3r223#2`, **merged and verified on `main`.**
+   The only item in this review that changes what a convinced reader can *do*.
 5. Then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics, `car-price-ml`'s reported
-   language, and `apply-scout`'s security debt. **This is where the next session starts**, once
-   item 4 merges.
+   language, and `apply-scout`'s security debt. **This is where the next session starts.**
+   The licence is off that list: `it-job-radar#28` and `wroclaw-air-insights#28` shipped the file
+   each README and `pyproject.toml` already claimed, and all twelve now report `spdx_id: MIT`.
+   What that leaves unowned is the *copyright holder* — every `LICENSE` here names the handle
+   `P0w3r223` while the profile now carries a legal name. It applies to all twelve equally, so it
+   was deliberately not settled by fixing two.
 
 ~~Two account fields are the author's and block nothing: `name`, and the bio's stray space.~~
 Both settled by the author; see above.

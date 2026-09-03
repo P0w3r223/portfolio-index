@@ -134,7 +134,8 @@ Ordered by what sixty seconds buys a reader hiring for AI Engineer or Data Scien
 | 4 | **car-price-ml** (A3) | DS | **keep.** Full cycle, model running in the reader's browser, and it refuses the cars it cannot price rather than guessing |
 | 5 | **apply-scout** (P3) | AI Eng | **keep, loses the ⭐.** The evaluation harness holds up — 194 tests, and CI replays the expected tables byte-identical. The presentation is the worst in the portfolio, the loop carries an unnamed security debt, and ~~**the page still contradicts itself in public**: its table reads 62 % completion and the caption beneath it still reads 75 %~~ — **closed by `#23`**, verified live: table and caption both read 62 % |
 | 6 | **mlops-car-price** (P1) | AI Eng / MLOps | **keep.** A drift detector that is itself measured, promotion by paired bootstrap. Family B presentation |
-| 7 | **wroclaw-air-insights** (A1) | DS | **keep.** The one piece of evidence in the portfolio fixed *in advance* of its outcome — though a page reader cannot see that (§ 6.4). Weak `h1`, **no licence**. It does have four KPI tiles; `0003`'s "no KPI tiles" was wrong, and it uses a third naming convention (`.stat`) rather than lacking them |
+| 7 | **wroclaw-air-insights** (A1) | DS | **keep.** The one piece of evidence in the portfolio fixed *in advance* of its outcome — though a page reader cannot see that (§ 6.4). Weak `h1`, ~~**no licence**~~ — *shipped 2026-09-03, `#28`; the README and `pyproject.toml` had
+claimed MIT all along and the file GitHub reads was missing.* It does have four KPI tiles; `0003`'s "no KPI tiles" was wrong, and it uses a third naming convention (`.stat`) rather than lacking them |
 | 8 | **auth-log-scan** (B2) | — | **keep at Level B.** Its page is better than the flagship's; the subject is not the target role |
 | 9 | **pl-jobs-lora** (P4) | AI Eng | **keep.** Sound after the metric corrections; family B presentation |
 | 10 | **pl-review-sense** (A4) | NLP | **demote to Level B** — see §5 |
@@ -228,8 +229,8 @@ about. Re-read from the API:
   *Piotr Cząstkiewicz*, so the profile no longer renders as the bare handle `P0w3r223`, which was
   the specific complaint above.
 - ~~`bio` null~~ — **set**; its wording is the author's and settled.
-- **The 45-line profile README still carries no contact line** — written and **open as
-  `P0w3r223#2`, not merged**, verified against `main`. The address reached the sidebar and not the
+- ~~**The 45-line profile README carries no contact line**~~ — **`P0w3r223#2`, merged**, verified
+  on `main`. The address had reached the sidebar and not the
   index, and a reader working down the README need never look at the sidebar — so this half was
   never an account setting, and it is the half that decides whether a convinced reader can *act*.
   Placed under the opening paragraph rather than in a `Contact` section
@@ -239,7 +240,7 @@ about. Re-read from the API:
 
 Zero social accounts stands and is **not** a gap: there are no accounts to link.
 
-**So: closed on the account, one merge from closed on the index.**
+**So § 6.1 is closed on every surface** — the account, the pins, and the index a reader reads.
 
 ### 6.2 Seventy-two percent of public commits are attributed to an AI
 
@@ -373,10 +374,10 @@ extension proposal rather than in a presentation pass, because naming it in the 
 minimum and confining the loop is the real fix. *(The CI landed ahead of the session, 2026-09-03
 — see §3.4.)*
 
-**Ahead of all of them** — § 6.1, the contact details. **The account half is done** (2026-09-03);
-the README edit is open as `P0w3r223#2`. It is a single edit to one file and it is the only item in
-this review that changes what a convinced reader can *do*; see § 6.1 for why the file is the half
-that matters.
+~~**Ahead of all of them** — § 6.1, the contact details.~~ **Done 2026-09-03**: the account
+fields, then `P0w3r223#2` for the README. It was a single edit to one file and it was the only item
+in this review that changes what a convinced reader can *do*; see § 6.1 for why the file was the
+half that mattered.
 
 ## 9. Open items
 
@@ -427,8 +428,8 @@ that matters.
   already used for the four page stamps — pair by tree plus both dates, disambiguate by
   reachability.
 
-- ~~**Contact details (§ 6.1) — decided 2026-09-03.**~~ **Account fields closed the same day; the
-  README edit is open as `P0w3r223#2`.** See § 6.1. `name`, `bio`, a public `email`, the URL
+- ~~**Contact details (§ 6.1) — decided 2026-09-03.**~~ **Closed the same day on every surface**
+  — account fields, then `P0w3r223#2`. See § 6.1. `name`, `bio`, a public `email`, the URL
   field and *Available for hire* were filled by the author; they are account settings, not
   files, and no token this project holds carries the `user` scope needed to write them. The URL
   field points at the `doc-extract` live site rather than at the profile, because the profile
