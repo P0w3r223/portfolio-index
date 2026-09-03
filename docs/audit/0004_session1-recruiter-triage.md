@@ -132,7 +132,7 @@ Ordered by what sixty seconds buys a reader hiring for AI Engineer or Data Scien
 | 2 | **doc-extract** (P5) | AI Eng | **keep — the AI flagship.** The strongest engineering here, and today invisible |
 | 3 | **it-job-radar** (A2) | DS / DE | **keep.** 39 % of adverts are one role republished city by city — which had put azure third in the demand ranking instead of seventh. A real finding produced by the data work itself |
 | 4 | **car-price-ml** (A3) | DS | **keep.** Full cycle, model running in the reader's browser, and it refuses the cars it cannot price rather than guessing |
-| 5 | **apply-scout** (P3) | AI Eng | **keep, loses the ⭐.** The evaluation harness holds up — 194 tests, and CI replays the expected tables byte-identical. The presentation is the worst in the portfolio, the loop carries an unnamed security debt, and ~~**the page still contradicts itself in public**: its table reads 62 % completion and the caption beneath it still reads 75 %~~ — **closed by `#23`**, verified live: table and caption both read 62 % |
+| 5 | **apply-scout** (P3) | AI Eng | **keep, loses the ⭐.** The evaluation harness holds up — ~~194~~ **195** tests *(corrected 2026-09-03: measured by running the suite. The repository's own README claimed 188 in two places, so one number had three surfaces and no two agreed — `apply-scout#25` corrects its half)*, and CI replays the expected tables byte-identical. The presentation is the worst in the portfolio, the loop carries an ~~unnamed~~ security debt **named 2026-09-03 by `apply-scout#25` and not yet fixed**, and ~~**the page still contradicts itself in public**: its table reads 62 % completion and the caption beneath it still reads 75 %~~ — **closed by `#23`**, verified live: table and caption both read 62 % |
 | 6 | **mlops-car-price** (P1) | AI Eng / MLOps | **keep.** A drift detector that is itself measured, promotion by paired bootstrap. Family B presentation |
 | 7 | **wroclaw-air-insights** (A1) | DS | **keep.** The one piece of evidence in the portfolio fixed *in advance* of its outcome — though a page reader cannot see that (§ 6.4). Weak `h1`, ~~**no licence**~~ — *shipped 2026-09-03, `#28`; the README and `pyproject.toml` had
 claimed MIT all along and the file GitHub reads was missing.* It does have four KPI tiles; `0003`'s "no KPI tiles" was wrong, and it uses a third naming convention (`.stat`) rather than lacking them |
@@ -182,25 +182,43 @@ plan's own end state (*a project with no page is not finished*). Rather than bui
 stdlib CLI that proves nothing the other twelve do not, it moves to Level B, where a small proof is
 what the tier is for. The rule stops being broken because the tier no longer promises an exhibit.
 
-**A4 `pl-review-sense`** — TF-IDF against HerBERT on PolEmo 2.0 is a textbook exercise. Done
+**A4 `pl-review-sense`** — ~~TF-IDF against HerBERT on PolEmo 2.0 is a textbook exercise. Done
 properly, but it distinguishes nothing, and standing in Level A it implies a textbook exercise is
-one of the portfolio's pillars. Page and repository are untouched.
+one of the portfolio's pillars.~~ Page and repository are untouched.
+
+**Reason rewritten 2026-09-03 (`0005` § 7, C1). The demotion stands; the sentence above did not
+describe this repository.** What is in it: 5 607 lines of Python, a paired **McNemar** test on the
+reviews the two models disagree on rather than two accuracies side by side, bootstrap intervals on
+every score, an **80-sentence Polish adversarial set written for this project** — negation, irony,
+contrastive pivots, a control cell, plus diacritics-stripped and typo-injected variants — with its
+own ADR, a cascade cost model that prices routing the least-confident share to the GPU, a learning
+curve separating corpus from model, and per-class coefficient extraction. That is not a textbook
+exercise, and calling it one is a claim the first reader to open the repository disproves.
+
+**Why it is still Level B**, stated so that it survives that reader: the ranking question is what
+sixty seconds buys someone hiring for *AI Engineer* or *Data Scientist*, and **the opening is what
+gets ranked**. "Three-class sentiment on a public Polish benchmark" is a weaker sixty seconds than
+"an agent with an evaluation harness" or "extraction that knows when it is wrong", however good the
+work beneath it is. The demotion is about the *headline*, and the headline is fixable — `0005` § 7
+C3 proposes leading with the adversarial set instead of the benchmark, scheduled into Session 3
+where descriptions are owned.
+
+Recorded against the demotion, and sharper than when it was taken: this project's page opens with a
+**claim as its title** — `HerBERT reaches 0.986 against the baseline's 0.944` — the family A pattern
+§ 3.2 above identifies as the good one, while `apply-scout`, `mlops-car-price` and `pl-jobs-lora`,
+three Level A projects, still open with a repository name. A demoted project presents better than
+three promoted ones, which is § 3.2's finding turning up inside § 5's decision.
 
 *Recorded against this one:* it is the only purely NLP project here, and HerBERT/PolEmo is a
 specific Polish-language competence nothing else demonstrates. The demotion is a presentation
 judgment, not a claim that the work is weak.
 
-**Contested 2026-09-03 — the caveat above was carrying more weight than it looked.** `0005` § 3.2
-read the repository rather than the row: 5 607 lines of Python, a paired **McNemar** test, bootstrap
-intervals, an **80-sentence hand-written Polish adversarial set** with its own ADR (negation, irony,
-contrastive pivots, stripped diacritics, injected typos), a cascade cost model and a learning curve
-— and a live page that opens with a **claim as its title**, the family A pattern § 3.2 of this
-document names as the good one, while three Level A projects still open with a repository name.
-The **ranking** stands: "sentiment classification on a public Polish benchmark" is a weaker sixty
-seconds than an agent with an evaluation harness, whatever is underneath it. **The reason recorded
-above does not describe this repository**, and a reason the first reader to open the project will
-contradict is not one this review should be leaving in place. Options and costs in `0005` § 7;
-the decision is open.
+~~**Contested 2026-09-03** — `0005` § 3.2 read the repository rather than the row, and found the
+recorded reason did not describe it. Options and costs in `0005` § 7; the decision is open.~~
+**Decided and carried out the same day**: C1, the rewrite above. The contest is left visible rather
+than deleted, because the gap between *marking a claim as wrong* and *making it right* is one this
+review has now crossed twice in two days, and the second crossing should be as legible as the
+first.
 
 ### Considered and not taken
 
