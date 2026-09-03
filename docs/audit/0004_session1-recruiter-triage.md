@@ -190,6 +190,18 @@ one of the portfolio's pillars. Page and repository are untouched.
 specific Polish-language competence nothing else demonstrates. The demotion is a presentation
 judgment, not a claim that the work is weak.
 
+**Contested 2026-09-03 — the caveat above was carrying more weight than it looked.** `0005` § 3.2
+read the repository rather than the row: 5 607 lines of Python, a paired **McNemar** test, bootstrap
+intervals, an **80-sentence hand-written Polish adversarial set** with its own ADR (negation, irony,
+contrastive pivots, stripped diacritics, injected typos), a cascade cost model and a learning curve
+— and a live page that opens with a **claim as its title**, the family A pattern § 3.2 of this
+document names as the good one, while three Level A projects still open with a repository name.
+The **ranking** stands: "sentiment classification on a public Polish benchmark" is a weaker sixty
+seconds than an agent with an evaluation harness, whatever is underneath it. **The reason recorded
+above does not describe this repository**, and a reason the first reader to open the project will
+contradict is not one this review should be leaving in place. Options and costs in `0005` § 7;
+the decision is open.
+
 ### Considered and not taken
 
 ~~**`infra-docker-workmate` stays a submodule.** Proposed for removal — private, absent from the
@@ -368,11 +380,16 @@ is not a description but is found in the same pass.
 presentation change identified: it converts three repo names into three findings. Table wrapping is
 already established as a family-wide rule rather than a per-repo fix.
 
-**Session 2 (extensions)** — the RAG gap; ~~`doc-extract`'s missing CI and~~ its zero topics;
-`car-price-ml`'s reported language; and `apply-scout`'s security debt, which belongs in an
+**Session 2 (extensions)** — the RAG gap; ~~`doc-extract`'s missing CI and~~ ~~its zero topics~~;
+~~`car-price-ml`'s reported language~~; and `apply-scout`'s security debt, which belongs in an
 extension proposal rather than in a presentation pass, because naming it in the README is the
 minimum and confining the loop is the real fix. *(The CI landed ahead of the session, 2026-09-03
-— see §3.4.)*
+— see §3.4.)* **Held 2026-09-03 as [`0005_session2-extensions.md`](0005_session2-extensions.md):**
+the topics are set (0 → 13) and the language is `car-price-ml#21`, both closed ahead of the
+document; the RAG gap and the security debt are **costed proposals awaiting a decision**, which is
+what `0003` §3 commissions this session to produce. `0005` §3.1 also finds that three quarters of
+the RAG machinery is already inside `apply-scout` — and that its `evidence_grounding` treats its own
+retriever's output as ground truth, so a retrieval miss is invisible to every metric in the project.
 
 ~~**Ahead of all of them** — § 6.1, the contact details.~~ **Done 2026-09-03**: the account
 fields, then `P0w3r223#2` for the README. It was a single edit to one file and it was the only item
