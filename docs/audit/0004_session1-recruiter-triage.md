@@ -1,9 +1,13 @@
 # Session 1 — Recruiter Triage
 
-Date: 2026-09-02 (revised the same day after an adversarial verification pass — see § 6)
+Date: 2026-09-02 (revised the same day after an adversarial verification pass — see § 6).
+**Reconciled 2026-09-03** against the repositories and the account: §5's `infra-docker-workmate`
+decision, §4's `apply-scout` caption, §9's parquet bullet, §3.4's pins and §6.1's contact fields
+had all been superseded and none of them said so. The rule that catches this, and why one document
+is not the record, is `0003` § 9.
 Status: accepted
 Author: P0w3r223 + Claude
-Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3, `README.md`, the profile README
+Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3 and § 9, `README.md`, the profile README
 
 ---
 
@@ -112,6 +116,12 @@ actively misreports the project — *Jupyter Notebook*, per this section. Neithe
 pinned, so the demotions free nothing; this is a swap between two Level A projects or it does not
 happen. Pinning is an account setting with no public API, so it is the author's action.
 
+**Done, as recommended.** Read back from the API 2026-09-03: `doc-extract, ab-lab, apply-scout,
+mlops-car-price, wroclaw-air-insights, it-job-radar` — `car-price-ml` swapped out. *So the
+flagship is pinned and the second sentence of §3.4 above is now history rather than a finding.*
+`car-price-ml`'s misreported language stays open on its own account (Session 2); it is simply no
+longer on a pinned card.
+
 ## 4. The ranking
 
 Ordered by what sixty seconds buys a reader hiring for AI Engineer or Data Scientist.
@@ -122,7 +132,7 @@ Ordered by what sixty seconds buys a reader hiring for AI Engineer or Data Scien
 | 2 | **doc-extract** (P5) | AI Eng | **keep — the AI flagship.** The strongest engineering here, and today invisible |
 | 3 | **it-job-radar** (A2) | DS / DE | **keep.** 39 % of adverts are one role republished city by city — which had put azure third in the demand ranking instead of seventh. A real finding produced by the data work itself |
 | 4 | **car-price-ml** (A3) | DS | **keep.** Full cycle, model running in the reader's browser, and it refuses the cars it cannot price rather than guessing |
-| 5 | **apply-scout** (P3) | AI Eng | **keep, loses the ⭐.** The evaluation harness holds up — 194 tests, and CI replays the expected tables byte-identical. The presentation is the worst in the portfolio, the loop carries an unnamed security debt, and **the page still contradicts itself in public**: its table reads 62 % completion and the caption beneath it still reads 75 % |
+| 5 | **apply-scout** (P3) | AI Eng | **keep, loses the ⭐.** The evaluation harness holds up — 194 tests, and CI replays the expected tables byte-identical. The presentation is the worst in the portfolio, the loop carries an unnamed security debt, and ~~**the page still contradicts itself in public**: its table reads 62 % completion and the caption beneath it still reads 75 %~~ — **closed by `#23`**, verified live: table and caption both read 62 % |
 | 6 | **mlops-car-price** (P1) | AI Eng / MLOps | **keep.** A drift detector that is itself measured, promotion by paired bootstrap. Family B presentation |
 | 7 | **wroclaw-air-insights** (A1) | DS | **keep.** The one piece of evidence in the portfolio fixed *in advance* of its outcome — though a page reader cannot see that (§ 6.4). Weak `h1`, **no licence**. It does have four KPI tiles; `0003`'s "no KPI tiles" was wrong, and it uses a third naming convention (`.stat`) rather than lacking them |
 | 8 | **auth-log-scan** (B2) | — | **keep at Level B.** Its page is better than the flagship's; the subject is not the target role |
@@ -181,9 +191,14 @@ judgment, not a claim that the work is weak.
 
 ### Considered and not taken
 
-**`infra-docker-workmate` stays a submodule.** Proposed for removal — private, absent from the
+~~**`infra-docker-workmate` stays a submodule.** Proposed for removal — private, absent from the
 index, Polish description against the convention, 200 commits behind its own origin — and declined.
-It remains an item nobody reading the portfolio can see, and it is still drifting.
+It remains an item nobody reading the portfolio can see, and it is still drifting.~~
+
+**Reversed 2026-09-03, and unpinned by `#42`** — §9 records why, and this is where a reader looks
+for the decision. The proposal had been to move its contents somewhere safe; the survey found
+there is nowhere to move them *to*, because they already live in their own private repository. So
+the submodule link is the only thing removed and the repository is untouched.
 
 ## 6. What this triage missed, found by verifying it
 
@@ -205,6 +220,19 @@ other improvement in this review raises the probability of a reader wanting to m
 none of them gives them a way to.
 
 This is the cheapest high-value item identified in the entire review.
+
+**Half closed 2026-09-03, by the author.** Re-read from the API: `email` is
+`p0w3r2243@gmail.com`, `bio` is set, the URL field points at the `doc-extract` live site, and
+*Available for hire* is on. What is still open, and why the other half is not the author's:
+
+- ~~`email` null~~, ~~`blog` empty~~, ~~`hireable` null~~ — **set**.
+- **`name` is still null**, so the profile still renders as the bare handle. An account field.
+- **The bio as published reads *"Open to AI/ ML engineer"*** — a stray space and a truncated final
+  clause, against the agreed *"Open to AI/ML engineering roles."* An account field.
+- **The 45-line profile README still carries no contact line.** The address reached the sidebar
+  and not the index, and a reader working down the README need never look at the sidebar. This one
+  is a *file*, so it is not blocked on the account at all — which is why §8 below moves it out of
+  "ahead of all of them, and the author's" and into the work queue (`0003` §9).
 
 ### 6.2 Seventy-two percent of public commits are attributed to an AI
 
@@ -339,7 +367,9 @@ minimum and confining the loop is the real fix. *(The CI landed ahead of the ses
 — see §3.4.)*
 
 **Ahead of all of them** — § 6.1, the contact details. It is a single edit to one README and it is
-the only item in this review that changes what a convinced reader can *do*.
+the only item in this review that changes what a convinced reader can *do*. *(Half done
+2026-09-03: the account fields are set, the README edit is not — and it was always the half that
+is a file. It is item 4 of the handoff in `0003` §9.)*
 
 ## 9. Open items
 
@@ -362,14 +392,24 @@ the only item in this review that changes what a convinced reader can *do*.
 - ~~Three findings from `0002`~~ — all three **fixed**: the index says 13.9 MB, no project is
   listed twice, and A6 is now B5 with its missing page stated rather than implied by an empty
   column.
-- **Provenance inside the published `it-job-radar` dataset.** `docs/data/snapshots.parquet` has a
+- ~~**Provenance inside the published `it-job-radar` dataset.**~~ **Closed by `it-job-radar#23`.**
+  `docs/data/snapshots.parquet` had a
   `git_sha` column recording which commit produced each of its 25 snapshots — **15 distinct
-  hashes, every one now dangling**. The page stamp was repaired; this column was not, because
-  rewriting it edits a published data artifact rather than a claim about one, and the manifest's
-  contract covers the file. The consequence is sharper than the deferral sounds: `manifest.json`
-  now names snapshot 25 as `de4d944` while the parquet still calls the same event `ea6c199`, so
-  the dataset disagrees with itself about one build. The remap is mechanical — the old-to-new
-  mapping is recoverable from the backups — so this is a choice, not a difficulty.
+  hashes, every one dangling** after the rewrite. The page stamp had been repaired; this column had
+  not, because rewriting it edits a published data artifact rather than a claim about one, and the
+  manifest's contract covers the file. The consequence was sharper than the deferral sounded:
+  `manifest.json` named snapshot 25 as `de4d944` while the parquet called the same event
+  `ea6c199`, so the dataset disagreed with itself about one build.
+
+  **Remapped.** All 15 paired by tree plus both dates against the pre-rewrite mirror, each landing
+  on exactly one commit reachable from `origin/main`; the map is injective and reproduces
+  `ea6c199 → de4d944`, which the page-stamp repair had reached independently by hand. Snapshot 1
+  keeps its null — mapping every value would fabricate provenance for a row that has none. The
+  page rebuilds byte-identical, so the `drift` job is the proof rather than a formality, and three
+  new tests read `docs/data/` directly, which **no test in the suite did** — which is exactly how
+  the dangling column survived a suite that otherwise builds a synthetic database for everything.
+  Those tests carry three gaps of their own, and the artifact was written by an unsupported
+  `pyarrow`; both are on the queue in `0003` §9.
 
   **Chosen 2026-09-03: remap.** "Recoverable from the backups" was checked rather than repeated —
   all 15 hashes resolve as commits in
@@ -380,7 +420,9 @@ the only item in this review that changes what a convinced reader can *do*.
   already used for the four page stamps — pair by tree plus both dates, disambiguate by
   reachability.
 
-- **Contact details (§ 6.1) — decided 2026-09-03.** `name`, `bio`, a public `email`, the URL
+- ~~**Contact details (§ 6.1) — decided 2026-09-03.**~~ **Filled the same day, except `name` and
+  a typo in the bio — and except the README, which is not an account setting at all.** See § 6.1.
+  `name`, `bio`, a public `email`, the URL
   field and *Available for hire* are being filled by the author; they are account settings, not
   files, and no token this project holds carries the `user` scope needed to write them. The URL
   field points at the `doc-extract` live site rather than at the profile, because the profile

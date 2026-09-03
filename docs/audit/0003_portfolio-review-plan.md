@@ -3,10 +3,11 @@
 Date: 2026-09-02 (updated twice the same day — fix track closed, then corrected against a
 verification pass: see the boxes in §4 and §5, and `0004` §6). **Reconciled 2026-09-03** against
 the repositories: four statements below had gone stale because the work landed and the document
-did not follow — see §8.
+did not follow — see §8. **Reconciled again later the same day** — see §9, which is what §8 asked
+for and did not itself achieve.
 Status: accepted
 Author: P0w3r223 + Claude
-Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, 13 submodules
+Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, ~~13~~ **12** submodules (`infra-docker-workmate` unpinned 2026-09-03, §8 decision 4)
 
 ---
 
@@ -65,7 +66,9 @@ Each row is a separate session with its own context. Sessions 5+ are several ses
 
 Everything in this section was measured on 2026-09-02, not assumed.
 
-- **13 submodules; 12 published pages** — not 10. `mini-traceroute` and `auth-log-scan`
+- **~~13~~ 12 submodules; 12 published pages** — not 10. *(13 when measured; `infra-docker-workmate`
+  was unpinned 2026-09-03, §8 decision 4. It was the one with no page, so the page count stands.)*
+  `mini-traceroute` and `auth-log-scan`
   both shipped sites (`feat(docs): add an interactive live site for the trace`,
   `feat(site): publish a generated demo page on GitHub Pages`) that **neither the index
   nor the profile README links**. `token-budget` returns 404 — it is the one project with
@@ -299,11 +302,14 @@ would have sent the next person the wrong way:
   checkout; the suite had simply never run where the corpus was absent, because there was no CI.
 - Session 4 needs a real device or a proper emulator: `resize_window` is ignored while the
   Chrome window is maximised, so the 375 px measurements came from same-origin iframes.
-- **Action versions lag in eleven repositories** — `checkout@v4` and `setup-python@v5` run on
-  Node 20 and annotate every run with a deprecation warning. `wroclaw-air-insights` is already
-  on the current majors, so the portfolio contradicts itself here too. **Decided 2026-09-03:**
+- ~~**Action versions lag in eleven repositories**~~ — `checkout@v4` and `setup-python@v5` ran on
+  Node 20 and annotated every run with a deprecation warning. `wroclaw-air-insights` was already
+  on the current majors, so the portfolio contradicted itself here too. **Decided 2026-09-03:**
   bump all eleven to match it, unpinned, because the tokens are read-only and no secret is
   exposed — pinning here alone would diverge from the sibling that has already migrated.
+  **Closed the same day:** all eleven bumped and merged, `it-job-radar` last (`#24`) because
+  `#23` already touched its workflow. Twelve of twelve green on `main`. The unpinned half of that
+  rationale turned out to be wrong about the one job it applies to most — see §9.
 
 ## 7. Next session
 
@@ -463,12 +469,118 @@ Four, each with the reasoning that decided it.
    This also settles `0004` §9's conditional: the one submodule the rewrite did not cover is no
    longer a submodule, so the attribution question does not come back with it.
 
-### The handoff
+### The handoff — **spent**
 
-In order, and the first is a precondition rather than a step: **this section.** Then the
+~~In order, and the first is a precondition rather than a step: **this section.** Then the
 `doc-extract` submodule pointer, which still names the merged PR's branch; then decisions 4, 1
 and 2 above; then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics,
-`car-price-ml`'s reported language, and `apply-scout`'s security debt.
+`car-price-ml`'s reported language, and `apply-scout`'s security debt.~~
 
-Two items are the author's and are not blocked by any of it: the contact details (`0004` §6.1)
-and the profile pin.
+All four landed the same day: the pointer in `#41`, decision 4 in `#42`, decision 1 in
+`it-job-radar#23`, decision 2 in eleven repositories, and every pointer re-checked in `#43`.
+~~Two items are the author's and are not blocked by any of it: the contact details (`0004` §6.1)
+and the profile pin.~~ **Both done by the author** — see §9. Session 2 has not started; the
+live handoff is §9.
+
+---
+
+## 9. Second reconciliation, 2026-09-03
+
+**§8 has a worked example against itself.** It said reconcile the plan before starting a session,
+and the same four-commit series that wrote it reconciled *this* document and left `0004`
+asserting two things the repositories contradict. So the rule needs its second half stated:
+**reconciling one document is not reconciling the record.** A fact lives on every surface that
+names it, and the pass is finished when all of them agree — not when the file you had open does.
+
+### What was stale on the second pass
+
+| Statement | Was | Is |
+|---|---|---|
+| `0004` §5 — `infra-docker-workmate` "stays a submodule … declined" | unmarked, while §9 of the same file records the reversal | unpinned by `#42` |
+| `0004` §4 l. 125 — `apply-scout` "the page still contradicts itself in public … 75 %" | present tense | closed by `#23`, re-verified live |
+| `0004` §9 — the parquet's fifteen dangling hashes | present tense | remapped by `it-job-radar#23` |
+| §6 above — "Action versions lag in eleven repositories" | present tense | all eleven bumped, twelve green |
+| §8's handoff | four next steps | all four landed in `#41`–`#43` |
+| Header — "13 submodules" | 13 | 12 |
+| `README.md` — "Pinned on profile" | the old six, and "`doc-extract` is not among them" | the pins moved; `car-price-ml` was swapped out |
+
+**The last row is a different failure from the other six and worth separating.** The others went
+stale because a pull request landed and the document did not follow. That one went stale because
+the *account* changed: the pins are a GitHub setting with no public API, the author set them, and
+no commit anywhere records it. A surface that tracks state it cannot see has no mechanism to stay
+true — so it should say where the truth lives rather than restate it. `README.md` now names the
+set and says it is read from the account, not maintained here.
+
+### What the author closed, and what is left of §6.1
+
+`0004` §6.1 called the contact route the cheapest high-value item in the review, and this document
+carried it as blocked on the author. Re-read from the API on 2026-09-03: `email`
+(`p0w3r2243@gmail.com`), `bio`, the URL field (the `doc-extract` live site) and *Available for
+hire* are **set**, and the pins are the agreed set — `doc-extract, ab-lab, apply-scout,
+mlops-car-price, wroclaw-air-insights, it-job-radar`.
+
+Three pieces of it are still open, and none is blocked on the author's account alone:
+
+- **`name` is still null**, so the profile renders as the bare handle `P0w3r223`. An account field.
+- **The published bio reads *"Open to AI/ ML engineer"*** — a stray space and a truncated final
+  clause, against the agreed *"Open to AI/ML engineering roles."* An account field.
+- **The profile README carries no contact line at all.** The address exists only in the sidebar,
+  which a reader scrolling a 45-line index need never look at. This one is a *file*, so it is the
+  portfolio's problem rather than the account's, and §6.1's finding is only half closed until it
+  is there.
+
+### Decisions taken on the second pass
+
+Three, each on a finding the day's green checks did not cover.
+
+1. **`.nojekyll` is restored to the Pages artifact** in `auth-log-scan` and `it-job-radar`, by
+   `include-hidden-files: true` on `upload-pages-artifact`. `v4` stopped including hidden files, so
+   the bump silently dropped both — the artifact shrank by exactly their 61 bytes. It is inert
+   today, because Pages serving an artifact never runs Jekyll at all; the fix is chosen anyway
+   because it restores the artifact byte-for-byte and needs no argument about whether the file is
+   necessary, whereas deleting it needs that argument to stay true if the source is ever flipped
+   back to the legacy branch. Seven siblings serve Pages that way, where the file does matter.
+   **The reference repo documents this exact check in a comment** and the check was not repeated
+   per repo, which is the reuse error the bump's own rationale invited.
+2. **The unpinned rationale in §8 decision 2 is corrected rather than the workflows.** It reads
+   "the tokens are read-only and hold no secret". Job-level `permissions:` *replaces* the
+   workflow-level set, so the two `deploy` jobs run with `pages: write` + `id-token: write` and
+   three unpinned actions inside — the recorded reasoning is wrong about the one job it most
+   applies to, and the live site is the asset. This is **not** a regression: `v3`/`v4`/`v5` floated
+   too, and pinning two repos while ten stay unpinned trades one inconsistency for another. So the
+   record is fixed and the pinning question is reopened on true premises rather than answered on
+   false ones. Recorded with it: that job is skipped on pull requests, so `configure-pages@v6` and
+   `setup-node@v7` first ran on `main` with no in-portfolio precedent — they were guesses the
+   stated rationale did not cover, and they went green.
+3. **The published parquet is rewritten by the pinned toolchain, and CI is taught to notice.**
+   `created_by` reads `parquet-cpp-arrow 25.0.1`; the project declares `pyarrow>=17,<21` and pins
+   `20.0.0`. Benign — same schema, SNAPPY, format 2.6, and the pinned readers parse it — but the
+   fixing PR's own premise is that defects enter artifacts *after* they are written, and it was
+   itself applied by a writer outside the supported range with nothing able to see it. Widening
+   the declared range was the cheaper option and was rejected: it makes the document chase the
+   accident. A test asserting `created_by` falls inside the declared range is the same shape as
+   `tests/test_committed_dataset.py` and closes the class, not the instance.
+
+### The handoff
+
+In order:
+
+1. **This section**, and `0004`'s matching corrections — the two documents are one record.
+2. **`it-job-radar`** — the three gaps in the new tests (a missing `git` binary raises
+   `FileNotFoundError` where the guard exists to skip; the skip and `fetch-depth: 0` are coupled
+   only by a YAML comment, so dropping the block leaves a green skip; the manifest is asserted to
+   agree with the row it names but not to name the *newest* row), then decision 3 above, then its
+   two hygiene gaps: `build/` is not gitignored though `drift` writes there, and there is no ruff
+   configuration, unlike its siblings.
+3. **Decision 1** — one PR per repo, `auth-log-scan` and `it-job-radar`.
+4. **The profile README's contact line** — §6.1's remaining half, and the only item here that
+   changes what a convinced reader can *do*.
+5. Then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics, `car-price-ml`'s reported
+   language, and `apply-scout`'s security debt. Found while reconciling and belonging with them:
+   `wroclaw-air-insights` and `it-job-radar` still carry **no licence**, so both are formally
+   all-rights-reserved.
+
+Two account fields are the author's and block nothing: `name`, and the bio's stray space.
+
+Known and deliberately not acted on: `ab-lab`'s `refresh.yml` was bumped but runs weekly on a
+schedule — last run 2026-08-31, before the bump — so no check has exercised it yet.
