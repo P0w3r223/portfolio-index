@@ -221,18 +221,25 @@ none of them gives them a way to.
 
 This is the cheapest high-value item identified in the entire review.
 
-**Half closed 2026-09-03, by the author.** Re-read from the API: `email` is
-`p0w3r2243@gmail.com`, `bio` is set, the URL field points at the `doc-extract` live site, and
-*Available for hire* is on. What is still open, and why the other half is not the author's:
+**Closed 2026-09-03.** It went in two steps, and the second is the one this finding was really
+about. Re-read from the API:
 
-- ~~`email` null~~, ~~`blog` empty~~, ~~`hireable` null~~ — **set**.
-- **`name` is still null**, so the profile still renders as the bare handle. An account field.
-- **The bio as published reads *"Open to AI/ ML engineer"*** — a stray space and a truncated final
-  clause, against the agreed *"Open to AI/ML engineering roles."* An account field.
-- **The 45-line profile README still carries no contact line.** The address reached the sidebar
-  and not the index, and a reader working down the README need never look at the sidebar. This one
-  is a *file*, so it is not blocked on the account at all — which is why §8 below moves it out of
-  "ahead of all of them, and the author's" and into the work queue (`0003` §9).
+- ~~`email` null~~, ~~`blog` empty~~, ~~`hireable` null~~, ~~`name` null~~ — **all set**. `name` is
+  *Piotr Cząstkiewicz*, so the profile no longer renders as the bare handle `P0w3r223`, which was
+  the specific complaint above.
+- ~~`bio` null~~ — **set**; its wording is the author's and settled.
+- **The 45-line profile README still carries no contact line** — written and **open as
+  `P0w3r223#2`, not merged**, verified against `main`. The address reached the sidebar and not the
+  index, and a reader working down the README need never look at the sidebar — so this half was
+  never an account setting, and it is the half that decides whether a convinced reader can *act*.
+  Placed under the opening paragraph rather than in a `Contact` section
+  at the foot: the argument is about sixty seconds, and at the bottom of the file it is found only
+  by someone who already scrolled to the end. One line, because there is no LinkedIn and no
+  published CV, and it does not restate the roles named directly above it.
+
+Zero social accounts stands and is **not** a gap: there are no accounts to link.
+
+**So: closed on the account, one merge from closed on the index.**
 
 ### 6.2 Commit metadata
 
@@ -335,10 +342,10 @@ extension proposal rather than in a presentation pass, because naming it in the 
 minimum and confining the loop is the real fix. *(The CI landed ahead of the session, 2026-09-03
 — see §3.4.)*
 
-**Ahead of all of them** — § 6.1, the contact details. It is a single edit to one README and it is
-the only item in this review that changes what a convinced reader can *do*. *(Half done
-2026-09-03: the account fields are set, the README edit is not — and it was always the half that
-is a file. It is item 4 of the handoff in `0003` §9.)*
+**Ahead of all of them** — § 6.1, the contact details. **The account half is done** (2026-09-03);
+the README edit is open as `P0w3r223#2`. It is a single edit to one file and it is the only item in
+this review that changes what a convinced reader can *do*; see § 6.1 for why the file is the half
+that matters.
 
 ## 9. Open items
 
@@ -384,10 +391,9 @@ is a file. It is item 4 of the handoff in `0003` §9.)*
   already used for the four page stamps — pair by tree plus both dates, disambiguate by
   reachability.
 
-- ~~**Contact details (§ 6.1) — decided 2026-09-03.**~~ **Filled the same day, except `name` and
-  a typo in the bio — and except the README, which is not an account setting at all.** See § 6.1.
-  `name`, `bio`, a public `email`, the URL
-  field and *Available for hire* are being filled by the author; they are account settings, not
+- ~~**Contact details (§ 6.1) — decided 2026-09-03.**~~ **Account fields closed the same day; the
+  README edit is open as `P0w3r223#2`.** See § 6.1. `name`, `bio`, a public `email`, the URL
+  field and *Available for hire* were filled by the author; they are account settings, not
   files, and no token this project holds carries the `user` scope needed to write them. The URL
   field points at the `doc-extract` live site rather than at the profile, because the profile
   README already *is* the portfolio index on that same page — so the one link in the sidebar

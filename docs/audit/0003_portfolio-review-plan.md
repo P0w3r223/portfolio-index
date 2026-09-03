@@ -160,6 +160,11 @@ Second pass, over the layers the first pass skipped:
   portfolio that has been taken down. Fixed to the profile in `doc-extract#3`.
 - **Two repos carry no licence** (`wroclaw-air-insights`, `it-job-radar`); the other ten
   are MIT. Without one, a repo is formally all-rights-reserved.
+  *Sharpened 2026-09-03: both **declare MIT in `pyproject.toml`**, and `wroclaw`'s README has a
+  `## License` section saying MIT outright. Neither ships a `LICENSE` file, which is the only
+  surface GitHub reads and the only one that is legally operative. So this is not an omission —
+  it is one fact on three surfaces where the silent one is the one that counts, which is this
+  review's recurring shape with a legal consequence instead of a presentational one.*
 - **`car-price-ml` reports its main language as Jupyter Notebook** — visible on the pinned
   card. For an ML/AI Engineer reader it says "notebooks" about a project that has a
   FastAPI service and a Docker image.
@@ -517,15 +522,28 @@ carried it as blocked on the author. Re-read from the API on 2026-09-03: `email`
 hire* are **set**, and the pins are the agreed set — `doc-extract, ab-lab, apply-scout,
 mlops-car-price, wroclaw-air-insights, it-job-radar`.
 
-Three pieces of it are still open, and none is blocked on the author's account alone:
+~~Three pieces of it are still open, and none is blocked on the author's account alone:~~
+**All three settled the same day.**
 
-- **`name` is still null**, so the profile renders as the bare handle `P0w3r223`. An account field.
-- **The published bio reads *"Open to AI/ ML engineer"*** — a stray space and a truncated final
-  clause, against the agreed *"Open to AI/ML engineering roles."* An account field.
-- **The profile README carries no contact line at all.** The address exists only in the sidebar,
-  which a reader scrolling a 45-line index need never look at. This one is a *file*, so it is the
-  portfolio's problem rather than the account's, and §6.1's finding is only half closed until it
-  is there.
+- ~~**`name` is still null**, so the profile renders as the bare handle `P0w3r223`.~~ **Set** to
+  *Piotr Cząstkiewicz*. The profile no longer renders as a bare handle, which was the last part of
+  §6.1's original finding still true of the account.
+- ~~**The published bio reads *"Open to AI/ ML engineer"***~~ — the wording is the author's and the
+  topic is **closed by their decision**. Recorded here only so a later reader does not reopen it as
+  a defect: the field is filled and reads as intended.
+- **The profile README still carries no contact line.** Written and **open as `P0w3r223#2`, not
+  merged** — checked against `main` rather than against the pull request, which is the distinction
+  §8 exists to enforce. Placed under the opening paragraph rather than in a `Contact` section at
+  the foot: the argument is about a reader with sixty seconds, and at the bottom of the file it is
+  found only by someone who already scrolled to the end, which is someone who would have gone
+  looking anyway. One line, because there is no LinkedIn and no published CV, and it does not
+  restate the roles named directly above it. The heading takes the surname for the same reason the
+  `name` field now carries it.
+
+**So §6.1 is closed on the account and open on the index.** The account side is done — `name`,
+`bio`, `email`, the URL field, *Available for hire*, and the pins. Zero social accounts remains
+true and is not a gap; there are no accounts to link. What is left is the one surface a reader
+actually reads, and it is one merge away.
 
 ### Decisions taken on the second pass
 
@@ -559,26 +577,50 @@ Three, each on a finding the day's green checks did not cover.
    accident. A test asserting `created_by` falls inside the declared range is the same shape as
    `tests/test_committed_dataset.py` and closes the class, not the instance.
 
-### The handoff
+### The handoff — **spent, and this line is the point of §9**
 
-In order:
+~~In order:~~ Items 1–3 landed on 2026-09-03; item 4 is written and open. **The list is struck
+rather than deleted, because §9 exists to say that a handoff which quietly becomes a record of
+finished work is how the other six statements in this document went stale.** Reconciled in the
+same pass that re-pointed the two submodules, rather than in the session after.
 
-1. **This section**, and `0004`'s matching corrections — the two documents are one record.
-2. **`it-job-radar`** — the three gaps in the new tests (a missing `git` binary raises
+*Each line below is marked against the repository's **default branch**, not against a merged-looking
+pull request. That distinction is not pedantry here: item 4 was first written up as landed on the
+strength of its PR existing, and `main` said otherwise — which is the same error, one document
+later, that this section was created to name.*
+
+1. ~~**This section**, and `0004`'s matching corrections.~~ `#44`.
+2. ~~**`it-job-radar`** — the three gaps in the new tests (a missing `git` binary raises
    `FileNotFoundError` where the guard exists to skip; the skip and `fetch-depth: 0` are coupled
    only by a YAML comment, so dropping the block leaves a green skip; the manifest is asserted to
-   agree with the row it names but not to name the *newest* row), then decision 3 above, then its
+   agree with the row it names but not to name the *newest* row), then decision 3 above~~ — `#25`,
+   each gap proven red first, 229 passed and the page byte-identical. ~~then its
    two hygiene gaps: `build/` is not gitignored though `drift` writes there, and there is no ruff
-   configuration, unlike its siblings.
-3. **Decision 1** — one PR per repo, `auth-log-scan` and `it-job-radar`.
-4. **The profile README's contact line** — §6.1's remaining half, and the only item here that
-   changes what a convinced reader can *do*.
+   configuration, unlike its siblings.~~ `build/` in `#25`, ruff in `#26` — the portfolio set
+   (`E,F,I,UP,B,SIM,RUF` at 100), 24 lines rewrapped by hand and six ambiguous-unicode findings
+   ignored per file with the reason, because `×` and `–` are the glyphs the page prints.
+3. ~~**Decision 1** — one PR per repo, `auth-log-scan` and `it-job-radar`.~~ `auth-log-scan#3`,
+   `it-job-radar#27`. **Verified live rather than reasoned about**: both `.nojekyll` answered 404
+   before and answer 200 after, and both pages still serve.
+4. **The profile README's contact line** — written, **open as `P0w3r223#2`, awaiting merge.** The
+   one item on this list not yet on a default branch, and the only one that changes what a
+   convinced reader can *do*.
 5. Then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics, `car-price-ml`'s reported
-   language, and `apply-scout`'s security debt. Found while reconciling and belonging with them:
-   `wroclaw-air-insights` and `it-job-radar` still carry **no licence**, so both are formally
-   all-rights-reserved.
+   language, and `apply-scout`'s security debt. **This is where the next session starts**, once
+   item 4 merges.
 
-Two account fields are the author's and block nothing: `name`, and the bio's stray space.
+~~Two account fields are the author's and block nothing: `name`, and the bio's stray space.~~
+Both settled by the author; see above.
+
+### One finding carried into Session 2, sharpened
+
+`wroclaw-air-insights` and `it-job-radar` carry **no licence on GitHub** — `spdx_id` is null on
+both, so each is formally all-rights-reserved. That much the earlier note had. What it missed is
+that **both declare MIT in `pyproject.toml`, and `wroclaw`'s README has a `## License` section
+saying MIT outright.** Neither ships a `LICENSE` file, which is the only surface that is legally
+operative. One fact, three surfaces, and the silent one is the one that counts — the same shape
+this review has been finding everywhere else, and here it has a legal consequence rather than a
+presentational one. The fix is one file per repository.
 
 Known and deliberately not acted on: `ab-lab`'s `refresh.yml` was bumped but runs weekly on a
 schedule — last run 2026-08-31, before the bump — so no check has exercised it yet.
