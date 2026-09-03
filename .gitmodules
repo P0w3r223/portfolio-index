@@ -42,10 +42,6 @@
 	path = pl-jobs-lora
 	url = https://github.com/P0w3r223/pl-jobs-lora.git
 	branch = main
-[submodule "infra-docker-workmate"]
-	path = infra-docker-workmate
-	url = https://github.com/P0w3r223/infra-docker-workmate.git
-	branch = master
 [submodule "doc-extract"]
 	path = doc-extract
 	url = https://github.com/P0w3r223/doc-extract.git
