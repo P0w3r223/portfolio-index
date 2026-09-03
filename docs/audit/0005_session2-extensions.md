@@ -79,12 +79,34 @@ returned* — so **the retrieval is the ground truth**. If `find_evidence` misse
 proves a requirement, nothing in the harness notices: the report cannot cite what it was never
 given, and a report citing nothing scores `n/a`, not zero.
 
-That matters because the retriever is weaker than the rest of the project:
+> **Corrected the same day, before any of this was acted on.** The paragraph below originally
+> presented the retriever's weakness as something nobody had noticed. That is wrong, and the source
+> of the error is the one this review keeps naming: I read the code and not the project's own
+> account of itself. `apply-scout`'s README names it as limitation **#3 of 18**, calls it *"the
+> bigger miss"*, and **measures it** — *63 of 72 probes (87 %) return no evidence, and 48 of those 63
+> contain a distinctive keyword that **is** present in one of the READMEs* (`qlora`, `mlflow`,
+> `langchain`, `transformer`, `guardrails`, `docker`, `sentiment` among them). It even explains why
+> it was not fixed: a sharper probe changes what the tool returns, which changes the conversation
+> every cassette entry is keyed on, so it costs a full paid re-record.
+>
+> **What survives the correction is sharper than what it replaces.** The project has *measured* its
+> retrieval defect and put the number **in prose only** — it is in no metric, no table, no test and
+> no CI check. So the harness cannot see it, cannot score it, and cannot fail on a regression of it,
+> while scoring five other things to three decimal places. And the 48-of-63 keyword analysis is
+> already most of a relevance judgment set, which makes § 4's variant B cheaper rather than
+> redundant. The three statements below were re-checked against the README after the correction and
+> none of them is named there.
+
+That matters because the retriever is weaker than the rest of the project. Of the three below, the
+first is the one the README names and measures; the second and third are not in the limitations list
+at all:
 
 - **It matches the whole requirement string as one literal substring** — `needle in
   readme.text.lower()` (`github_evidence.py:46`), where `needle` is the requirement lowercased and
   stripped. A requirement phrased *"experience with retrieval-augmented generation"* matches only a
-  README containing that exact sentence.
+  README containing that exact sentence. **This one the README names and measures** (87 % of probes
+  return nothing; three quarters of those misses are recoverable) — and the measurement lives in
+  prose, not in the harness.
 - **It does not rank.** Everything that matched is returned in repository-list order. There is no
   score, no top-*k*, and therefore nothing that recall@*k* or MRR could be computed over today.
 - **The portfolio's better matcher is not wired to it.** `matching.tokens()` / `mentions()` — the
@@ -92,10 +114,14 @@ That matters because the retriever is weaker than the rest of the project:
   **guardrail and the eval harness**, not by the retriever. The smarter function scores the output;
   the blunter one finds the evidence.
 
-So the honest statement is not *"the portfolio has no RAG"*. It is: **the portfolio has a
-retrieval-augmented pipeline whose retrieval step is the only unmeasured link in a chain where
-every other link is measured.** That reframes the gap from *build something new* to *finish
-something already three quarters built* — and it is what makes variant B in § 4 cheap.
+So the honest statement is not *"the portfolio has no RAG"*, and — after the correction above — it
+is not *"nobody noticed the retriever"* either. It is: **the portfolio has a retrieval-augmented
+pipeline whose retrieval step is the only link in the chain that is diagnosed in prose and scored by
+nothing.** Every other link has a column in a published table and a test that can redden. This one
+has a paragraph.
+
+That reframes the gap from *build something new* to *finish something already three quarters built*
+— and it is what makes variant B in § 4 cheap.
 
 ### 3.2 `pl-review-sense` was demoted on its headline, and the repository is larger than the headline
 
@@ -163,13 +189,13 @@ vs `matching.tokens` containment vs embeddings — on retrieval metrics, entirel
 
 | | |
 |---|---|
-| **Cost** | **5–8 days** |
-| relevance judgments over the recorded corpus | 1–2 d — the corpus, the postings and the requirement lists are already recorded and committed |
+| **Cost** | **4–7 days** — revised down from 5–8 by § 3.1's correction, which found the annotation half already largely done |
+| relevance judgments over the recorded corpus | **1 d** — revised down after § 3.1's correction. The corpus, the postings and the requirement lists are already recorded and committed, **and the README's 48-of-63 keyword analysis is most of a judgment set already**: it names, per missed probe, the README that should have matched |
 | ranking + top-*k* in `find_evidence`, behind the existing pure-function seam | 1–2 d |
 | retrieval metrics (recall@*k*, MRR, nDCG) beside the existing eval table | 1–2 d |
 | a second and third retriever to compare against | 1–2 d |
 | ADR + README + page | 1 d |
-| **Payoff** | Closes the gap **and** closes a real defect: the one unmeasured link in a chain whose other links are all measured. Runs at **$0** — the cassette replays with no network and no key, which is machinery this project already has and a new repository would have to build. Also repairs `apply-scout`'s standing: `0004` kept it and took its ⭐ partly because *the presentation is the worst in the portfolio*; a second measured result is the cheapest thing that changes that |
+| **Payoff** | Closes the gap **and** turns the project's own prose diagnosis into a scored one. After § 3.1's correction this is the sharper claim: `apply-scout` has *already found* its retrieval defect and quantified it at 87 %, and that number sits in a README bullet where nothing can regress on it, beside five other properties scored to three decimals in a published table. Variant B moves it into the table, which is the difference between a project that knows its weakness and one that measures it. Runs at **$0** — the cassette replays with no network and no key, machinery this project already has and a new repository would have to build. Also repairs `apply-scout`'s standing: `0004` kept it and took its ⭐ partly because *the presentation is the worst in the portfolio* |
 | **Risk** | **Discoverability.** A recruiter searching "RAG" or "retrieval" does not find a repository called `apply-scout` unless the topics, the description and the page `h1` say so. That is a real objection and a cheap one to answer — § 2.1 has just demonstrated that topics cost minutes |
 
 ### Variant C — retrieval over `doc-extract`'s corpora
@@ -275,29 +301,58 @@ not recommended: the ranking was about what an opening buys, and nothing in § 3
 
 Ordered by value per day inside the 1–2 month budget:
 
-| | item | cost | why here |
-|---|---|---|---|
-| 1 | **§ 5 B1** — name `apply-scout`'s three security legs | 0.5 d | An eighteen-item limitations list that omits the three that matter is a false completeness, and it is public today |
-| 2 | **§ 7 C1** — rewrite the `pl-review-sense` demotion reason | 0.5 d | Same shape, same cost, and it is a claim in this review's own documents |
-| 3 | **§ 5 B2** — confine the loop | 3–4 d | The real fix, and the thing B1 is a stopgap for |
-| 4 | **§ 4 variant B** — measure the retriever | 5–8 d | Closes the stack's only gap and the pipeline's only unmeasured link at once |
-| 5 | **§ 5 B3** — score the attack surface | +3–5 d | Makes the safety property measured rather than asserted, which is the standard the flagship decision was made on |
-| 6 | **§ 7 C3** — repackage `pl-review-sense`'s headline | 2–3 d | Real value, but it belongs to Session 3's pass |
+| | item | cost | status | why here |
+|---|---|---|---|---|
+| 1 | **§ 5 B1** — name `apply-scout`'s three security legs | 0.5 d | **`apply-scout#25`** | An eighteen-item limitations list that omits the three that matter is a false completeness, and it is public today |
+| 2 | **§ 7 C1** — rewrite the `pl-review-sense` demotion reason | 0.5 d | **this PR** | Same shape, same cost, and it is a claim in this review's own documents |
+| 3 | **§ 5 B2** — confine the loop | 3–4 d | next | The real fix, and the thing B1 is a stopgap for |
+| 4 | **§ 4 variant B** — measure the retriever | 4–7 d | after B2 | Moves a diagnosis the project has already made in prose into the table where it can regress |
+| 5 | **§ 5 B3** — score the attack surface | +3–5 d | after B2 | Makes the safety property measured rather than asserted, which is the standard the flagship decision was made on |
+| 6 | **§ 7 C3** — repackage `pl-review-sense`'s headline | 2–3 d | Session 3 | Real value, but it belongs to Session 3's pass |
 
-**Total for items 1–5: 12–18 days.** That fits the budget with room, which is the point of leaving
-variant A and variant C on the table rather than in the plan — either would consume most of it
-alone.
+**Total for items 1–5: 11–17 days**, revised from 12–18 by § 3.1's correction. That fits the budget
+with room, which is the point of leaving variant A and variant C on the table rather than in the
+plan — either would consume most of it alone.
 
 ## 9. Open items
 
-- **Which RAG variant** (§ 4). Recommendation is B; A is the fallback if a repository *named* for
-  retrieval is judged necessary for a recruiter scan.
-- **Which security level** (§ 5). Recommendation is B3 staged, starting with B1 the same day.
-- **`pl-review-sense`** (§ 7). Recommendation is C1 now, C3 into Session 3.
+### Decisions taken 2026-09-03, all as recommended
+
+1. ~~**Which RAG variant** (§ 4).~~ **Variant B** — measure `apply-scout`'s retriever rather than
+   build a thirteenth repository. The discoverability objection is answered as part of it (topics,
+   repository description, and the page `h1` that family B needs rewritten in Session 4 anyway),
+   not left as a residual risk.
+2. ~~**Which security level** (§ 5).~~ **B3, staged** — B1 the same day, B2 as one pull request,
+   B3's measurement as a second.
+3. ~~**`pl-review-sense`** (§ 7).~~ **C1 now, C3 scheduled into Session 3.**
+
+### Executed against those decisions
+
+- **B1 — `apply-scout#25`.** The three legs named in the README's Limitations and in `CLAUDE.md`,
+  the latter as a *rule* rather than as prose, because the failure it guards against is a fourth
+  unbounded tool argument being added by someone reading the existing two as precedent. Found in
+  the same pass: the README claimed **188 tests** in two places against a measured **195**, and
+  `0004` § 4 said **194** — one number, three surfaces, none of them right.
+- **C1 — this pull request.** `0004` § 5's reason rewritten rather than merely marked contested.
+
+### Still open
+
+- **B2 — confine the loop.** The next change, and the thing B1 is explicitly a stopgap for. Not
+  started; `apply-scout#25` says so in the README rather than implying a fix that has not landed.
 - **Carried from `0003` § 9, unowned:** every `LICENSE` names the handle `P0w3r223` while the
   profile now carries a legal name. Applies to all twelve equally; deliberately not settled by
   fixing a subset.
 - **Carried:** `ab-lab`'s `refresh.yml` was bumped to the current action majors but runs weekly on a
   schedule and has not fired since — next firing ~2026-09-07, so no check has exercised it.
-- **`car-price-ml#21`** is green and awaiting merge. The language bar only re-computes once the
-  change is on the default branch, so that verification belongs on `main`, not on the PR.
+- ~~**`car-price-ml#21`** is green and awaiting merge. The language bar only re-computes once the
+  change is on the default branch, so that verification belongs on `main`, not on the PR.~~
+  **Merged as `6e6019f`, and the check was run where it had to be.** `Jupyter Notebook` is gone
+  from the languages API entirely, `.language` reads `Python`, and the other five figures are
+  byte-identical to the pre-merge reading (207 665 / 11 071 / 8 624 / 1 844 / 798) — so the notebook
+  left the language bar and nothing else moved. `#48` re-points the submodule.
+- **Found while reading `apply-scout`, not yet owned:** its README and `CLAUDE.md` both still open
+  *"Portfolio project **P3** (the flagship)"*, which `0004` § 5 withdrew when `doc-extract` took the
+  role and `apply-scout` lost the ⭐. The decision is merged into the index and the repository that
+  is subject to it still asserts the old status. Left for a decision rather than fixed in `#25`,
+  because rewriting how a project introduces itself is a presentation call and Session 3 owns those
+  — but it is a false statement in the meantime, not a stylistic one.
