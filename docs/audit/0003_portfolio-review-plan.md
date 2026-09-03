@@ -609,8 +609,14 @@ later, that this section was created to name.*
    before and answer 200 after, and both pages still serve.
 4. ~~**The profile README's contact line**~~ — `P0w3r223#2`, **merged and verified on `main`.**
    The only item in this review that changes what a convinced reader can *do*.
-5. Then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics, `car-price-ml`'s reported
-   language, and `apply-scout`'s security debt. **This is where the next session starts.**
+5. ~~Then **Session 2 proper** — the RAG gap, `doc-extract`'s zero topics, `car-price-ml`'s reported
+   language, and `apply-scout`'s security debt. **This is where the next session starts.**~~
+   **Held 2026-09-03 as [`0005_session2-extensions.md`](0005_session2-extensions.md)**, and marked
+   here in the same pass that produced it rather than in the session after — which is the whole
+   content of §9. Two of the four are closed: the topics are set (0 → 13) and the language is
+   `car-price-ml#21`. The other two are **proposals**, not merged work, which is what §3 commissions
+   Session 2 to produce; §10 below records what the survey found on the way and what is still a
+   decision.
    The licence is off that list: `it-job-radar#28` and `wroclaw-air-insights#28` shipped the file
    each README and `pyproject.toml` already claimed, and all twelve now report `spdx_id: MIT`.
    What that leaves unowned is the *copyright holder* — every `LICENSE` here names the handle
@@ -632,3 +638,51 @@ presentational one. The fix is one file per repository.
 
 Known and deliberately not acted on: `ab-lab`'s `refresh.yml` was bumped but runs weekly on a
 schedule — last run 2026-08-31, before the bump — so no check has exercised it yet.
+
+## 10. Session 2, 2026-09-03
+
+Delivered as [`0005_session2-extensions.md`](0005_session2-extensions.md). §3's contract for this
+row — *extend / repackage / remove, with cost and payoff, inside the 1–2 month budget* — is met with
+six prioritised items totalling **12–18 days** against that ceiling, plus two variants deliberately
+left costed-but-unrecommended rather than dropped, because either would consume most of the budget
+alone.
+
+**Reconciliation before it started, per §9.** Every open item this document and `0004` carried was
+re-read against the repositories, not against the documents. Nothing was stale this time — the first
+pass since §8 was written where that is true — and the one thing the record did not know was that
+`current_projects#46` had merged. The merged branch is deleted, and its content was verified present
+on `main` by tree equality (`298c13a`) before deleting, because a squash-merge makes `git branch -d`
+warn in exactly the way a genuinely unmerged branch does.
+
+### Two findings that came out of reading source the earlier sessions described from outside
+
+- **`apply-scout` already contains three quarters of a retrieval evaluation, and it cannot see its
+  own retriever.** Corpus, retriever, generator, grounding metrics and an offline replay harness are
+  all present. What is missing is that `evidence_grounding` scores citations *against what the
+  retriever returned* — so **the retrieval is the ground truth**, and a miss by `find_evidence` is
+  invisible to every metric in the project. The retriever is also the weakest component in it: it
+  matches the whole requirement as one literal substring, it does not rank, and the portfolio's
+  better matcher (`matching.tokens`, fixed in milestone 17) is wired to the guardrail and the
+  harness but **not** to the retriever. This reframes the RAG gap from *build something new* to
+  *finish something three quarters built*, and it is why `0005` § 4 recommends the cheap variant.
+- **`pl-review-sense` was demoted on its headline.** `0004` § 5 records "TF-IDF against HerBERT on
+  PolEmo 2.0 is a textbook exercise". The repository holds 5 607 lines of Python, a paired McNemar
+  test, bootstrap intervals, an 80-sentence hand-written Polish adversarial set with its own ADR,
+  a cascade cost model and a learning curve — and its page opens with a **claim as the title**,
+  the family A pattern, while three Level A projects still open with a repository name. Session 1
+  flagged its own uncertainty here in the next paragraph; this makes it concrete. The ranking is
+  still defensible; **the recorded reason is not**, and `0005` § 7 puts the options.
+
+### Three items closed ahead of the document
+
+`doc-extract` 0 → 13 topics (it was the only repository with none, and the one the portfolio most
+wants found); `auth-log-scan`'s empty `homepage` set, which makes all twelve consistent —
+`token-budget` is the one exception and correctly so; and `car-price-ml#21` for the reported
+language, green and awaiting merge.
+
+### What is now a decision rather than a finding
+
+Three, all in `0005` § 9: which RAG variant, which security level for `apply-scout`, and what
+happens to `pl-review-sense`. **This is where the next session starts** — but unlike every previous
+handoff in this document, it starts from a decision the author has to make and not from work waiting
+to be done.
