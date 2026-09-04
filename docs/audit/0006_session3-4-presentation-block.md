@@ -146,9 +146,13 @@ most-read surface in the portfolio.
   figures.*
   `apply-scout/docs/index.html:18-20` declares its own choice *provisional pending this spec*, so a shipped
   page's source comment now depends on this block resolving it.
-- **M3 — `mini-traceroute`: two tables, no `overflow-x`.** The last open third of `0004` §6.5's bound checklist;
-  the other two thirds (`pl-review-sense` 7/7, `it-job-radar` 1/1) closed on 2026-09-02, within a minute of the
-  commit recording them as open.
+- ~~**M3 — `mini-traceroute`: two tables, no `overflow-x`.**~~ **False, and it had been false for three
+  sessions.** That page is the only one in the portfolio whose CSS is not inlined; `docs/assets/styles.css`
+  carries `.scroll-x { overflow-x: auto }` and `.ledger-wrap { … overflow: auto }`. Every check, `0004` §6.5's
+  and this one's, grepped `index.html`. **What survives is smaller and real:** `.ledger-wrap` wraps one of its
+  two tables, and the second sits in a bare `<figure>` with no scrolling ancestor — it passes because it fits
+  (+77 px at 375 px), not because it is wrapped. So §6.5's acceptance criterion of *both* tables wrapped is
+  still not met, on one table rather than two. See [`0007`](0007_divergence-and-the-page-spec.md) §8.
 - **M4 — `pl-review-sense` was repaired in the audit, not on the surfaces.** `CLAUDE.md` still opens *"Portfolio
   project A4"* against the index's `B4`, and the README still leads with the headline `0005` §7 C1 ruled does not
   describe the repository. C1 rewrote the *reason* in `0004` §5; the reader-facing copy is untouched, and C3
@@ -215,8 +219,14 @@ the exemption as sloppiness.
 `wroclaw-air-insights/.claude/skills/verify-published-page/measure_page.py` drives CDP
 `Emulation.setDeviceMetricsOverride`, measures tables at `width: min-content`, reads its marker from the
 **fetched** HTML with `--expect` as a gate, and accepts a URL *or a local path* — so a page can be checked before
-it ships. `--widths`, `--marker`, `--expect` and `--browser` are all flags; the only `wroclaw`-specific thing in
-it is `--winter`, and that is opt-in.
+it ships. `--widths`, `--marker`, `--expect` and `--browser` are all flags.
+
+> ~~the only `wroclaw`-specific thing in it is `--winter`, and that is opt-in.~~ **Wrong, and it mattered.**
+> The second was `data-scroll="by-design"`, the attribute the tool read to decide whether a wide table was
+> acceptable — and only `wroclaw` sets it. Pointed at the eleven pages it called **seventeen** wide tables
+> defects; every one was already inside a box that scrolls. `wroclaw-air-insights#29` generalises it to walk
+> the DOM for a scrolling ancestor, after two review passes that found it walking past a clipping box and
+> unable to see `wroclaw`'s *own* rule. [`0007`](0007_divergence-and-the-page-spec.md) §2.
 
 Two mismatches to settle before B2 runs it against eleven pages:
 
@@ -243,8 +253,8 @@ descriptions pass and then rewriting that page's whole head in a spec pass.
 |---|---|---|---|
 | **B0** | Reconcile `0003`, `0004` and `0005` against the repositories | 0.5 d | eight stale statements across three files; no code |
 | **B1** | Fix `doc-extract`'s page (H1) | 0.5 d | deciding what the tile should *say*; the edit is generator + regenerated artifact + the committed-site test |
-| **B2** | Divergence table, eleven live pages at 375 and 390 px | 0.5–1 d | generalising the marker default and reading 22 runs; §4.2 removed the blocker |
-| **B3** | The spec, including its carrier (§4) and the tile rule (§4.1) | 2–3 d | the two pages with no artifact to quote need a per-repo answer, not a rule |
+| ~~**B2**~~ | ~~Divergence table, eleven live pages at 375 and 390 px~~ | ~~0.5–1 d~~ | **Delivered** as [`0007`](0007_divergence-and-the-page-spec.md) §3 |
+| ~~**B3**~~ | ~~The spec, including its carrier (§4) and the tile rule (§4.1)~~ | ~~2–3 d~~ | **Delivered** as `0007` §5. It cost less than estimated for a reason worth recording: the spec did not have to be *chosen*. Ten of the eleven pages already implement one design system, seven of them in named tokens with identical values, and the other three as hand-typed literals of the same values — so the document describes what exists before it instructs |
 | **B4** | The two family-B conversions, as the spec's first proof (H2) | 1.5–2 d | both hand-written with no generator; `pl-jobs-lora`'s headline must be true of a fine-tune that has not run |
 | **B5** | Back-link (H4) + card metadata (M1) + `mini-traceroute` wrappers (M3) | 1–1.5 d | **ten** repositories × one PR — nine need the back-link (**six** generated, three hand-written) and `apply-scout` needs card metadata while already having the link. The six generated ones each need the page regenerated under its byte-diff |
 | **B6** | The three text description layers (H3, M4, §2.3's four codes) | 2–3 d | the About convention, and `pl-review-sense`'s C3 repackaging |
