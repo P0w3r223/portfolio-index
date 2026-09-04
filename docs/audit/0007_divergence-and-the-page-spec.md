@@ -20,7 +20,8 @@ the measurement turned out to answer the spec rather than merely to motivate it.
 system is already implemented across **all eleven** published pages. **Eight** hold it in named CSS custom
 properties; three hold the same values as hand-typed literals and have drifted on three roles. The spec's
 job is therefore to *name what exists*, reconcile the naming variants inside it, and move three pages onto
-it — not to choose a house style. Six pages have something to change; three of them have only a name.
+it — not to choose a house style. Six pages have something to change, and only some of it is naming: one
+of the six carries a live WCAG failure (§9 row 5) and one a table with no scroller at all (§9 row 6).
 
 **And the rule for resolving a divergence is not the majority.** Of the ten house tokens, eight hold one
 value everywhere and two do not — and **both** of those splits are **measured accessibility fixes** that
@@ -62,31 +63,56 @@ committed `docs/index.html` — verified by hashing the fetched bytes against th
 is the check, and it needs the page to print nothing. `wroclaw` is the exception by design: CI rebuilds it
 daily, it publishes `reports/site/` as a Pages artifact and **commits no HTML at all** (`.gitignore:25`; `git ls-files '*.html'` is empty), so its build stamp is the only handle.
 
-## 3. The divergence table
+## 3. The conformance table
 
-Measured 2026-09-04 against the live pages at **375 px** (the plan's gate) and **390 px**, with every CSS
-answer read from the complete stylesheet, and the geometry taken with `measure_page.py` as it stands on
-`wroclaw-air-insights#29` — **open at the time of writing**, so a later reader re-running this table should
-check which version of that instrument they have.
+**This is the one place the per-page facts live.** §5's clauses state rules and point here; §9's rollout
+scopes itself from here. One measured value in one place is the whole reason this table exists — §8.2 and
+§8.4 are what happens when the same fact is kept in five.
 
-| page | `h1` | eyebrow | tiles | scroller | tokens | dark | card meta | back-link | webfont |
-|---|---|:-:|---|---|:-:|:-:|:-:|:-:|:-:|
-| `doc-extract` | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | **yes** | — |
-| `it-job-radar` | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | no | — |
-| `car-price-ml` | claim | yes | `.kpi` ×4 | `.table-wrap` | **11** | yes | yes | no | — |
-| `auth-log-scan` | claim | yes | `.kpi` ×5 | `.table-wrap` | **11** | yes | yes | no | — |
-| `pl-review-sense` | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | no | — |
-| `mini-traceroute` | **descriptive** | yes | `.kpi` ×4 | **`.ledger-wrap`** | **13** | yes | yes | no | — |
-| `ab-lab` | claim | yes | **`.tile`** ×4 | **`.scroll`** | **11** | yes | yes | no | — |
-| `apply-scout` | claim | yes | `.kpi` ×4 | **`.tablewrap`** | **0** | **no** | **no** | **yes** | Inter |
-| `mlops-car-price` | **repo name** | **no** | **none** | **`.tablewrap`** | **0** | **no** | **no** | no | Inter |
-| `pl-jobs-lora` | **repo name** | **no** | **none** | **`.tablewrap`** | **0** | **no** | **no** | no | Inter |
-| `wroclaw-air-insights` | claim | yes | **`.stat`** ×4 | `.chart-wrap` + *the table itself* | **9, two aliased** | yes | yes | no | — |
+Measured 2026-09-04 against the **live** pages, every CSS answer read from the complete stylesheet, the
+`<title>` and separator columns from the page's rendered text, and the geometry with `measure_page.py` at
+`wroclaw-air-insights` `fae496e` — merged, so a later reader has a fixed instrument to re-run rather than a
+branch to find.
 
-Geometry, both widths: **no page scrolls sideways.** 42 tables; **17 are wider than the space their card
-gives them at 375 px** (16 at 390 — a count of wide tables that does not name its width is not a
-measurement), and **every one of the 17 is inside something that scrolls**. There is no unhandled table
-overflow anywhere in the portfolio.
+| page | `h1` | `<title>` | eyebrow | tiles | scroller | tokens | dark | card meta | back-link | webfont | separator |
+|---|---|---|:-:|---|---|:-:|:-:|:-:|:-:|:-:|---|
+| `doc-extract` | claim | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | **yes** | — | `U+202F` 3, `U+00A0` 1 |
+| `it-job-radar` | claim | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | no | — | **space** 40 |
+| `car-price-ml` | claim | claim | yes | `.kpi` ×4 | `.table-wrap` | **11** | yes | yes | no | — | **space** 16, `U+202F` 12 |
+| `auth-log-scan` | claim | **repo name** | yes | `.kpi` ×5 | `.table-wrap` | **11** | yes | yes | no | — | none |
+| `pl-review-sense` | claim | claim | yes | `.kpi` ×4 | `.table-wrap` | **10** | yes | yes | no | — | **space** 4 |
+| `mini-traceroute` | **descriptive** | **repo name** | yes | `.kpi` ×4 | **`.ledger-wrap`** | **13** | yes | yes | no | — | none |
+| `ab-lab` | claim | claim | yes | **`.tile`** ×4 | **`.scroll`** | **11** | yes | yes | no | — | **comma** 2, **space** 1 |
+| `apply-scout` | claim | **repo name** | yes | `.kpi` ×4 | **`.tablewrap`** | **0** | **no** | **no** | **yes** | Inter | none |
+| `mlops-car-price` | **repo name** | **repo name** | **no** | **none** | **`.tablewrap`** | **0** | **no** | **no** | no | Inter | **comma** 3 |
+| `pl-jobs-lora` | **repo name** | **repo name** | **no** | **none** | **`.tablewrap`** | **0** | **no** | **no** | no | Inter | none |
+| `wroclaw-air-insights` | claim | **repo name** | yes | **`.stat`** ×4 | `.chart-wrap` + *the table itself* | **9, two aliased** | yes | yes | no | — | **comma** 3 |
+
+`car-price-ml` publishes a **twelfth surface** this table does not measure — `docs/app/index.html`, the
+valuation form (§7).
+
+### 3.1 Geometry, at every width the commission named
+
+`0003` §3 commissioned this *"at desktop and at 375 px"*, and the first draft delivered 375 and 390 only.
+Closing that gap needed no new tool — `DEFAULT_WIDTHS` already carried all five — only the tabulation. Run
+in one pass so that every row describes one state of the pages.
+
+| width | tables wider than their card | unhandled | document scrolls sideways |
+|---|---|---|---|
+| 375 px | **17** | 0 | no page |
+| 390 px | 16 | 0 | no page |
+| 414 px | 14 | 0 | no page |
+| 768 px | 4 | 0 | no page |
+| 1200 px | 3 | 0 | no page |
+
+42 tables. **Every wide table, at every width, is inside something that scrolls** — `.scroll` ×2,
+`.tablewrap` ×7, `.table-wrap` ×4, `.ledger-wrap` ×1 at 414 px, which is §4.4's four names for one job seen
+from the side. *A count of wide tables that does not name its width is not a measurement.*
+
+The three that survive 1200 px are `apply-scout`'s two and `pl-jobs-lora`'s one, and they surface something
+the phone widths hid: **beyond about 768 px the card stops growing.** It gives 671 px of room at 768 and
+only 778 px at 1200, so `apply-scout`'s 1268 px table scrolls on every viewport that exists. Desktop is not
+the width at which these tables come right; there is no such width.
 
 ## 4. What the divergence is
 
@@ -210,6 +236,8 @@ must always be taken from the live URL.
 
 ### 4.4 Three names for one job, inside the house style
 
+*Derived from §3's tiles and scroller columns — the counts live there and this is the shape of them.*
+
 | tiles | pages | scroller | pages |
 |---|---|---|---|
 | `.kpi` | 7 | `.table-wrap` (+`.chart-wrap`) | 5, and `.chart-wrap` on `wroclaw` |
@@ -242,19 +270,24 @@ it is an instruction.
    `--positive` is painted as body text on one page and as a `fill:`/`stroke:` mark on three (§4.1), so a
    page painting it as text is held to AA's 4.5:1 and a page painting it as a mark to the non-text 3:1.
    `--accent-soft` is only ever a mark, on every page that paints it.
-   *True of seven pages. `wroclaw` holds **eight** of the ten — five by name and value, `--accent-soft` by
-   name only, two under aliases (`--ink` for `--text`, `--line` for `--border`) — **lacks `--positive` and
-   `--radius` entirely** (it inlines `border-radius: 10px` as a literal) and carries a **third**
-   `--accent-soft`, `#dbe7ff` light and `#1e2c45` dark, on neither side of the split below. Those two are
-   1.24:1 and 1.33:1 against their own page grounds, but **nothing paints them** — the token is declared
-   twice and used nowhere — so no threshold applies today and this is a naming item, not a defect. The
-   three literal-colour pages carry no tokens and no dark override at all.*
-2. **A tile is `.kpi`.** *True of seven of the nine pages that have tiles.*
+   *The tokens and dark columns of §3 — where the tokens column counts **declared** properties, so
+   `wroclaw`'s `9` and the `8` house tokens below are two different quantities.* Two rows need a word the
+   table cannot hold. `wroclaw` reaches it
+   eight under two aliases (`--ink` for `--text`, `--line` for `--border`), **lacks `--positive` and
+   `--radius` entirely** — it inlines `border-radius: 10px` as a literal — and carries a **third**
+   `--accent-soft`, `#dbe7ff` light and `#1e2c45` dark, on neither side of the split below; those measure
+   1.24:1 and 1.33:1 against their own grounds, but **nothing paints them** — declared twice in `page.css`
+   and used nowhere — so no threshold applies today
+   and it is a naming item rather than a defect. And the three pages reading `0` carry no dark override
+   either, which is the same fact twice and is why those two columns move together.
+2. **A tile is `.kpi`.** *The tiles column of §3: two of the nine pages that have tiles use another name.*
 3. **Every `<table>` sits in `.table-wrap`, which computes to `overflow-x: auto`.** The wrapper must
    actually have somewhere to scroll when the table needs it; a wrapper that clips, or one outside the
-   card, does not count. *Five pages use that name; `.tablewrap`, `.scroll` and `.ledger-wrap` are the
-   same rule under **three more names across five more pages**, and `wroclaw` additionally makes the
-   table itself the scroller under `max-width: 640px`.*
+   card, does not count. *The scroller column of §3: one rule under four names, plus `wroclaw` making the
+   table itself the scroller under `max-width: 640px`. §3.1 measures the **wide** tables and finds none
+   unhandled at any of the five widths — so on ten pages a rollout changes the name and not the behaviour.
+   On `mini-traceroute` it changes the behaviour: its second table sits in a bare `<figure>` with no
+   scroller and passes on margin, which is why this clause keeps `0004` §6.5's* every *table (§9 row 6).*
 
    **The checkable form**, which is what `measure_page.py` already tests: *every `<table>` has an ancestor
    at or below its card whose computed `overflow-x` is `auto` or `scroll` and which has somewhere to
@@ -268,43 +301,43 @@ it is an instruction.
    lost, and gave the reason: *"they do not overflow today only because they happen to be narrow
    enough."*
 4. **The page opens with an eyebrow and an `h1` that states a claim, not the repository's name — and the
-   `<title>` follows the `h1` rather than the directory.** *Today: **eight** `h1`s state a claim — including `wroclaw`'s
-   *"Live 24-hour PM2.5 forecast"*, which an earlier draft called the project's name because it read the
-   local build, where it was — `mini-traceroute`'s is descriptive (*"A traceroute, one TTL at a time"*),
-   and two are the repository's. The `<title>` half is further behind and is a **different surface
-   with a different reader** — the search result and the shared link. **Five** titles lead with the
-   directory name, including `apply-scout`, whose `h1` was fixed in `#32` and whose title was not, and
-   `auth-log-scan` and `mini-traceroute`, whose `h1`s were never in question.*
+   `<title>` follows the `h1` rather than the directory.** *The `h1`, eyebrow and `<title>` columns of §3.*
+   The two halves are **different surfaces with different readers** — the page, and the search result or
+   the shared link — and the `<title>` half is further behind, which is why it is a column of its own.
+   `apply-scout` is the case that makes the point: its `h1` was fixed in `#32` and its title was not.
+   *`wroclaw`'s `h1` was called the project's name by an earlier draft, which had read the local build,
+   where it was.*
 5. **The page carries `description`, `og:type`, `og:title`, `og:description`, `og:url`, `twitter:card`
    and a favicon** — the property list, named, because `og:*` passes on any single tag and a checker needs
-   to know which. *True of seven pages exactly; `wroclaw` carries three of the four `og:` properties and
-   is missing `og:description`; the three literal-colour pages carry none of it.*
-6. **The page carries exactly one link back to the profile.** *True of two pages; `0003` §7 settled the
-   shape (hub-and-spoke, one link) and it has never been rolled out.*
-7. **Type is the system stack.** No third-party font request. *True of eight pages; **three** fetch Inter
-   from `fonts.googleapis.com` — a request to a third party from a page whose subject is provenance.
-   `wroclaw` is not among them: it dropped the webfont in `#27` and the stale committed copy is why an
-   earlier draft said four.*
+   to know which. *The card-meta column of §3. `wroclaw`'s `yes` is the one that is not whole: it carries
+   three of the four `og:` properties and is missing `og:description`.*
+6. **The page carries exactly one link back to the profile.** *The back-link column of §3. `0003` §7
+   settled the shape — hub-and-spoke, one link — and it has never been rolled out.*
+7. **Type is the system stack.** No third-party font request. *The webfont column of §3; the three that
+   fetch Inter from `fonts.googleapis.com` are making a request to a third party from a page whose subject
+   is provenance. `wroclaw` is not among them — it dropped the webfont in `#27`, and the stale committed
+   copy is why an earlier draft said four.*
 8. **Thousands are separated by `U+202F`, the narrow no-break space** — the codepoint, not an HTML
    entity, so a checker can test for it.
 
-   *Measured from the decoded text of every page, over **whole grouped figures** — `1-3 digits, then one
-   or more (separator + exactly three digits)`, with nothing numeric and no `:` or `.` touching either
-   end. **Eight pages print a grouped figure at all**; `apply-scout`, `auth-log-scan` and
-   `mini-traceroute` print none. Of the eight: a plain space on **six** (`it-job-radar` 40 occurrences,
-   `car-price-ml` 16, `pl-review-sense` 7, `doc-extract` 5, `ab-lab` 1, `pl-jobs-lora` 1), a comma on
-   **three** (`mlops-car-price` 3, `wroclaw` 3, `ab-lab` 2), `U+202F` on **two** (`car-price-ml` 9,
-   `doc-extract` 3), `U+00A0` on one (`doc-extract`). `ab-lab` uses two of them.*
+   *Scored over **whole grouped figures** in each page's rendered text — `1-3 digits, then one or more
+   (separator + exactly three digits)`, with nothing numeric and no `:` or `.` touching either end. The
+   per-page inventory is the separator column of §3.* **Seven pages print a grouped figure at all**; four
+   print none. A plain space on **four**, a comma on **three**, `U+202F` on **two**, `U+00A0` on one.
+   `doc-extract`, `car-price-ml` and `ab-lab` each use two — though no single figure mixes them.
 
-   *Two earlier counts of this were wrong in the same way and are worth the warning: a pattern of
-   `digit SEP digit digit digit` matches **across two adjacent numbers**, so `07:00 203.0.113.42` scored
-   as a grouped figure and gave `auth-log-scan` nineteen it does not have. The bound on the whole token
-   is what makes this a measurement.*
+   *The bound on the whole token is what makes this a measurement, and it is stated here because
+   **three** earlier tallies were wrong. Twice the pattern matched across two adjacent numbers, so
+   `07:00 203.0.113.42` scored as a grouped figure and gave `auth-log-scan` nineteen it does not have. The
+   third was wrong differently and is the subject of §8.5: it disagreed with the pages on four rows, and
+   three of those four pages had not changed since it was taken.*
 
    An earlier draft claimed this clause had "no majority to appeal to" and named `&nbsp;`, an HTML entity
-   a checker cannot test for. There **is** a majority — six of the eight pages that group at all — and it
-   loses to the governing rule anyway: `car-price-ml` and `doc-extract`, the two that print the most
-   figures, had already left it, because a plain space breaks across a line and cuts a number in half.
+   a checker cannot test for. There **is** a majority — the plain space, on four of the seven pages that
+   group at all, and by volume a larger one still: **61 of the portfolio's 85 grouped figures carry it**.
+   It loses to the governing rule anyway. **`doc-extract` is the one page that has left it entirely**, and
+   **`car-price-ml` is mid-migration in public** — 16 figures with a plain space against 12 with `U+202F`,
+   on one page. The reason is in the glyph: a plain space breaks across a line and cuts a number in half.
    The majority here is the unconsidered choice and `U+202F` is the considered one.
 
 ### 5.1 The tile rule, against ADR-0012
@@ -391,9 +424,11 @@ Stated because the instrument that produced §3 has now been wrong three times, 
   **2.11:1** dark `--accent-soft` still live on five, and a `--positive` that fails AA as text on one page.
   Clause 1 pins both corrected values; it checks no other pair, and no page's *usage* is checked against the
   threshold that usage implies, which is the step that found the `--positive` failure at all.
-- **Desktop.** `0003` §3 commissions the table *"at desktop and at 375 px"*, and §3 delivers 375 and 390
-  only. 414, 768 and 1200 were observed and are not in the table. **That is a gap against the commission,
-  not a scoping decision**, and it is the first thing a later reader should re-run.
+- ~~**Desktop.**~~ **Closed** — §3.1 carries 414, 768 and 1200 alongside 375 and 390, measured in one pass
+  so every row describes one state of the pages. `0003` §3 commissioned the table *"at desktop and at
+  375 px"* and the first draft delivered two phone widths, which was a gap against the commission rather
+  than a scoping decision. The finding it produced is in §3.1: **desktop is not the width at which the wide
+  tables come right**, because the card stops growing at about 768 px.
 - **The twelfth page.** The commission says twelve; there are eleven. `token-budget` has no page and
   returns 404, which is the fact that demoted it.
 - **The twelfth surface.** A *page* here is a row of §3; a *surface* is any published HTML. `car-price-ml`
@@ -495,6 +530,38 @@ own failures and the table names them separately — a figure carried across the
 asserted where no reader can reach it, a sweep deleting what it did not mean to touch, and a miscount. The
 rule earned here is the one rows 1 and 2 pay for: *a finding names the file it was read in, and a claim
 about a class is a claim that has to be checked in every member of it.*
+
+### 8.5 And the separator tally, wrong a third time
+
+§8 warned about this table twice. The third version was wrong differently, and it is recorded here because
+the previous two warnings did not prevent it — which says the warning was not the useful part.
+
+Re-measured 2026-09-04 from each page's rendered text in a real engine, and independently from the fetched
+HTML, both giving the same answer on all eleven pages. Four rows disagreed with the recorded inventory:
+
+| page | recorded | measured |
+|---|---|---|
+| `pl-review-sense` | space 7 | **4** |
+| `pl-jobs-lora` | space 1 | **0** — it groups no figures at all |
+| `car-price-ml` | `U+202F` 9 | **12** |
+| `doc-extract` | space 5 | **0** |
+
+**Three of the four are decisive.** `pl-review-sense`, `pl-jobs-lora` and `car-price-ml` last changed their
+page on 2026-09-02, 2026-08-21 and 2026-09-02 — before the recorded tally — and each live page is
+byte-identical to its committed file today. The page measured then and the page measured now are the same
+bytes, so the difference is the measurement. `doc-extract` is not decisive: its page changed the same day,
+in `05ed544`.
+
+Nor is it a counting convention. Per figure, per separator occurrence, and with the whole-token bound
+removed entirely, all three variants return the measured numbers.
+
+**What it changes:** seven pages group a figure, not eight; the plain space is on four pages, not six; and
+`pl-jobs-lora` joins the three that print none. Clause 8's **conclusion** is unaffected — `U+202F` still
+wins as the value with a reason behind it — but its **supporting example was not**, and this correction did
+not reach it either: the closing sentence still appealed to *"the two that print the most figures"*, which
+the new column refutes. It is rewritten there. That is also the honest verdict on §3: the inventory now
+lives in one cell, but **a clause that argues from a tally still has to be swept**, and this one was not
+until review found it.
 
 ## 9. Rollout
 
