@@ -162,10 +162,10 @@ most-read surface in the portfolio.
 
 ### Low
 
-- **L1 — the twelve `LICENSE` files.** **Decided, not applied** — see §6 decision 2. All twelve still read
-  `Copyright (c) 2026 P0w3r223` on their default branches, re-read from the API 2026-09-04. It is closed on an
-  intention, which is not the same as closed, and this line says so because §6 decision 3 earns the stronger
-  word by carrying a run number.
+- **L1 — the twelve `LICENSE` files.** ~~**Decided, not applied**~~ — **closed 2026-09-04** on twelve
+  squash merges and an API read of every default branch afterwards; see §6 decision 2 for the merge SHAs.
+  All twelve now read `Copyright (c) 2026 Piotr Cząstkiewicz`, and GitHub still detects MIT on all twelve.
+  It is no longer closed on an intention.
 - **L2 — the action-pinning question**, reopened on true premises by `0003` §9 decision 2, still unanswered.
 - **L3 — whether Level B survives as a tier** (`0004` §9). A ranking decision, not a presentation one; excluded
   here, see §7.
@@ -273,9 +273,16 @@ without blocking anything — is last.
    one-line commits; deliberately not settled by fixing a subset, which is why it was carried unowned from
    `0003` §9 rather than done piecemeal.
 
-   **The twelve commits have not been made.** L1 is therefore *decided* and not *closed*, and the record says so
-   on every surface that mentions it — a first draft of this block struck the matching bullet in `0005` §9 as
-   though the files already read the new name, which is the precise failure this document is written to stop.
+   ~~**The twelve commits have not been made.** L1 is therefore *decided* and not *closed*~~ — **applied
+   2026-09-04**, twelve squash merges: `ab-lab` 802dd78, `apply-scout` 1051682, `auth-log-scan` 3ee3105, `car-price-ml` e1112f9, `doc-extract` 9878e0c, `it-job-radar` 4c77007, `mini-traceroute` 9a51d88, `mlops-car-price` ade3a5c, `pl-jobs-lora` 87b5b07, `pl-review-sense` 87f43db, `token-budget` d3e663a, `wroclaw-air-insights` 98b3051. Re-read from the API on the default branches
+   afterwards, all twelve carry `Copyright (c) 2026 Piotr Cząstkiewicz` and all twelve still report
+   `spdx_id: MIT`. The twelve committed blobs are byte-identical, one object `6a34fcf`.
+
+   The guard this paragraph carried was built against the *premature* strike — the record saying done
+   while the files said otherwise, which a first draft of this block did to `0005` §9. Closing it exposes
+   the **inverse**: a record that keeps saying not-done after the work lands. Same class, opposite sign,
+   and the wording above did not catch it. That is why the closure carries twelve SHAs and an API read
+   rather than a sentence.
 3. **`ab-lab`'s `refresh.yml` was dispatched by hand** rather than waited on. It last ran 2026-08-31 and
    2026-08-24, both *before* its action-major bump, and its cron (`0 6 * * 1`) would not have fired until
    ~2026-09-07 — so the bump had been carried across two sessions as unexercised. The workflow already declares

@@ -635,9 +635,10 @@ later, that this section was created to name.*
    decision.
    The licence is off that list: `it-job-radar#28` and `wroclaw-air-insights#28` shipped the file
    each README and `pyproject.toml` already claimed, and all twelve now report `spdx_id: MIT`.
-   What that leaves unowned is the *copyright holder* — every `LICENSE` here names the handle
-   `P0w3r223` while the profile now carries a legal name. It applies to all twelve equally, so it
-   was deliberately not settled by fixing two.
+   What that leaves unowned is the *copyright holder* — ~~every `LICENSE` here names the handle
+   `P0w3r223` while the profile now carries a legal name~~. **Closed 2026-09-04**: all twelve name the
+   person, applied together rather than by fixing a subset, and read back from the API afterwards. See
+   [`0006`](0006_session3-4-presentation-block.md) § 6 decision 2.
 
 ~~Two account fields are the author's and block nothing: `name`, and the bio's stray space.~~
 Both settled by the author; see above.
