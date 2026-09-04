@@ -23,8 +23,8 @@ job is therefore to *name what exists*, reconcile the naming variants inside it,
 it — not to choose a house style. Six pages have something to change; three of them have only a name.
 
 **And the rule for resolving a divergence is not the majority.** Of the ten house tokens, eight hold one
-value everywhere and two do not — and the larger of those two splits is a **measured accessibility fix**
-that reached two pages of seven, with the contrast ratio written in the source beside it. A spec that
+value everywhere and two do not — and **both** of those splits are **measured accessibility fixes** that
+reached some pages and not others, each with its contrast ratio written in the source beside it. A spec that
 unified on the count would revert it. So: *where a page has measured a reason and recorded it, that value
 wins; the majority decides only where nobody measured.* §5 is built on that, and §4.1 is why.
 
@@ -104,7 +104,7 @@ and none of the ten is missing anywhere. Six carry the `.kpi` rule byte-for-byte
 pair the block with a `prefers-color-scheme: dark` override redefining the same names, so the pages are
 light by default and follow the reader's preference.
 
-**Two tokens split, and the larger split is not drift.** An earlier draft of this section claimed all ten
+**Two tokens split, and neither split is drift.** An earlier draft of this section claimed all ten
 were identical; it had measured seven of them. The two it had not:
 
 | token | value | pages | is it drift? |
@@ -112,7 +112,7 @@ were identical; it had measured seven of them. The two it had not:
 | `--accent-soft` | `#93c5fd` | `doc-extract`, `car-price-ml`, `auth-log-scan`, `mini-traceroute` | — |
 | | `#5b93e4` | `it-job-radar`, `pl-review-sense`, `ab-lab` | — |
 | `--positive` | `#059669` | five pages | — |
-| | `#047857` | `car-price-ml`, `ab-lab` | undocumented, but darker — the same direction |
+| | `#047857` | `car-price-ml`, `ab-lab` | **no — a documented, measured fix.** `ab-lab/sitegen/theme.py:13`; **5.15:1** against `#059669`'s **3.54:1** on `--surface`, and both holders paint it as text |
 
 And in the **dark** override, `it-job-radar` and `pl-review-sense` carry the reason in the source:
 
@@ -131,10 +131,26 @@ would revert the fix on those two and freeze the failing ratio on the other five
 | light `--accent-soft` | `#93c5fd` — **1.80:1** ✗ | `#5b93e4` — **3.12:1** ✓ |
 | dark `--accent-soft` | `#2c4a7c` — **2.11:1** ✗ | `#4167a6` — **3.30:1** ✓ |
 
-In both schemes the **majority value is the failing one**. The dark row was found because two pages wrote
-the ratio in a comment; the light row had no comment and was found only by computing it, which is the
-governing rule's own argument for not counting pages. `--positive`'s split runs the same direction
-(`#047857` is the darker on white) but is never used as a non-text mark, so it stays a candidate in §7.
+In both schemes the **majority value is the failing one**. Both rows were commented, and **both comments are
+in stylesheets** — `it-job-radar` and `pl-review-sense` carry the light `--accent-soft` reason directly above
+the declaration, and **both ship it in the published page**; `car-price-ml` carries
+`--positive`'s the same way, published page included. `ab-lab`'s generator records both a third time. So the
+governing rule's argument is **not** that the reason lived somewhere unreadable: the sweep read those very
+files and read past the comment. `pl-review-sense/tests/test_palette.py` asserts the `--accent-soft`
+threshold as a test, which is a fourth surface — and the only one that fails when the value drifts.
+
+**`--positive` is the same finding a second time, and it is not a clean split by role.** Recomputed:
+`#047857` is **5.48:1** on `--bg` and **5.15:1** on `--surface`; `#059669` is **3.77:1** and **3.54:1**.
+Five pages hold the failing majority; four of them never paint it as text — `it-job-radar` `fill:`,
+`auth-log-scan` `stroke:`, `doc-extract` and `pl-review-sense` declare it and never use it — where the 3:1
+non-text rule applies and `#059669` passes. **`mini-traceroute` paints it as text**: `.ledger td.probe-ok`
+at 0.86 rem / weight 600 and `.verdict .ok` at 0.85 rem / weight 700. Parsed rather than inferred from the
+stylesheet, both sit at `html > body > div` — outside every card, so the ground is `body`'s `--bg`
+`#ffffff` and the ratio is **3.77:1**. At ~13.8 px, weight 600 is *normal* text under WCAG — large starts
+at 18.66 px bold — so the threshold is 4.5:1 and the page fails it.
+The two pages holding `#047857` are the two that paint it as text and pass. So this is not a candidate for §7:
+it is a measured accessibility fix that reached two pages of three, exactly like `--accent-soft`, and the
+dark side (`#34d399`, 8.90:1 on `--surface`) is uniform and safe.
 
 **This is the document's own thesis occurring inside the family it holds up as the original** — which
 strengthens the case for a checker and destroys the case for stating identity. It is also why §5's
@@ -218,13 +234,21 @@ it is an instruction.
    redefining the same **colour** names** — `--radius` does not vary by scheme and no page redefines it. Additive extensions are allowed and must be named in the page's own
    `:root`. No literal hex outside the token block. The eight settled values are as printed; for the two
    that split, the spec takes the **measured** one — `--accent-soft: #5b93e4` light (3.12:1 against
-   `#93c5fd`'s 1.80:1) and `#4167a6` dark (3.30:1 against `#2c4a7c`'s 2.11:1). `--positive` is left open
-   in §7: it splits the same direction and is never painted as a non-text mark, so nothing decides it.
-   *True of seven pages. `wroclaw` holds **eight** of the ten — six by name and value, two under aliases
-   (`--ink` for `--text`, `--line` for `--border`) — **lacks `--positive` and `--radius` entirely** (it
-   inlines `border-radius: 10px` as a literal) and carries a **third** `--accent-soft`, `#dbe7ff`, on
-   neither side of the split below. The three literal-colour pages carry no tokens and no dark override at
-   all.*
+   `#93c5fd`'s 1.80:1) and `#4167a6` dark (3.30:1 against `#2c4a7c`'s 2.11:1) — and `--positive: #047857`
+   light, which clears AA as text on both grounds a page paints on (**5.48:1** on `--bg`, **5.15:1** on
+   `--surface`) where `#059669` clears neither (**3.77:1** and **3.54:1**), and `#34d399` dark, which every
+   page holds and which clears both thresholds on either ground (8.90:1 on `--surface`, 9.69:1 on `--bg`).
+   **The threshold is the one the page's own usage implies, and it is read per page, not per token**:
+   `--positive` is painted as body text on one page and as a `fill:`/`stroke:` mark on three (§4.1), so a
+   page painting it as text is held to AA's 4.5:1 and a page painting it as a mark to the non-text 3:1.
+   `--accent-soft` is only ever a mark, on every page that paints it.
+   *True of seven pages. `wroclaw` holds **eight** of the ten — five by name and value, `--accent-soft` by
+   name only, two under aliases (`--ink` for `--text`, `--line` for `--border`) — **lacks `--positive` and
+   `--radius` entirely** (it inlines `border-radius: 10px` as a literal) and carries a **third**
+   `--accent-soft`, `#dbe7ff` light and `#1e2c45` dark, on neither side of the split below. Those two are
+   1.24:1 and 1.33:1 against their own page grounds, but **nothing paints them** — the token is declared
+   twice and used nowhere — so no threshold applies today and this is a naming item, not a defect. The
+   three literal-colour pages carry no tokens and no dark override at all.*
 2. **A tile is `.kpi`.** *True of seven of the nine pages that have tiles.*
 3. **Every `<table>` sits in `.table-wrap`, which computes to `overflow-x: auto`.** The wrapper must
    actually have somewhere to scroll when the table needs it; a wrapper that clips, or one outside the
@@ -362,15 +386,22 @@ Stated because the instrument that produced §3 has now been wrong three times, 
 - **That two pages agree on a shared fact** — see §6.
 - **Whether an `h1` states a claim.** Clause 4's `<title>` half is checkable; *"states a claim"* is a
   human judgement, and it is the one normative clause a vendored checker cannot carry.
-- **Contrast, beyond the one pair clause 1 now pins.** Nothing in §5 computes a ratio, and §4.1 shows the portfolio already
-  carries a measured contrast finding that only two pages act on — including a **2.11:1** dark
-  `--accent-soft` still live on five. Clause 1 pins the corrected value; it does not check the others, and
-  `--positive`'s split has no measurement at all behind it.
+- **Contrast, beyond the two pairs clause 1 now pins.** Nothing in §5 computes a ratio, and §4.1 shows the
+  portfolio carries **two** measured contrast findings that reached some pages and not others — including a
+  **2.11:1** dark `--accent-soft` still live on five, and a `--positive` that fails AA as text on one page.
+  Clause 1 pins both corrected values; it checks no other pair, and no page's *usage* is checked against the
+  threshold that usage implies, which is the step that found the `--positive` failure at all.
 - **Desktop.** `0003` §3 commissions the table *"at desktop and at 375 px"*, and §3 delivers 375 and 390
   only. 414, 768 and 1200 were observed and are not in the table. **That is a gap against the commission,
   not a scoping decision**, and it is the first thing a later reader should re-run.
 - **The twelfth page.** The commission says twelve; there are eleven. `token-budget` has no page and
   returns 404, which is the fact that demoted it.
+- **The twelfth surface.** A *page* here is a row of §3; a *surface* is any published HTML. `car-price-ml`
+  publishes two surfaces and §3 measures one: the report and
+  `docs/app/index.html`, the in-browser valuation form, linked from the report and in no row of §3. It is
+  the only hand-written HTML in a repository whose page is otherwise generated and byte-diffed in CI, so
+  clauses 4, 5 and 6 apply to it with nothing regenerating it. Every acceptance condition for
+  `car-price-ml` must name both surfaces.
 - **`wroclaw`'s local build**, which is gitignored, published as a Pages artifact rather than committed,
   and 24 days behind its own site on this machine. Its row in §3 must be — and now is — taken from the
   live URL. A later reader will not find a committed page to distrust; there is none.
@@ -417,8 +448,53 @@ keeps growing rather than closing.
 
 **One finding of the review was not an error but a gap in the rule**: the governing rule was applied to
 the dark `--accent-soft` split, because two pages had written the ratio in a comment, and not to the light
-one, which nobody had commented. Computed, the light majority fails at **1.80:1**. A rule that only fires
-where somebody left a note is a rule that fires by luck; clause 1 now pins both.
+one — whose comment is in the stylesheets and in the published pages too, and which the sweep read past
+(§8.3, §8.4). Computed, the light majority fails at **1.80:1**. A rule that fires only where a reader
+happens to notice the reason is a rule that fires by luck; clause 1 now pins both, and `--positive` besides.
+
+### 8.3 And five more, from reading what consumes the values
+
+Found while designing the rollout, by reading generators, usage sites, and the comments already sitting in
+the stylesheets. The first three are one claim wearing several faces, which is §8.2's class again — a
+correction that did not propagate — arriving before the correction did.
+
+| claim | the repositories |
+|---|---|
+| `--positive` *"undocumented"* (§4.1), *"left open in §7 … nothing decides it"* (clause 1), *"no measurement at all behind it"* (§7) | **three surfaces of one wrong claim.** It is measured in `car-price-ml`'s `tokens.css:21` and in its published `docs/index.html`, and again in `ab-lab/sitegen/theme.py:13`: *"3.5:1 on `--surface` — below AA for text this size"*. Recomputed 3.54:1 on `--surface` and 3.77:1 on `--bg`, against `#047857`'s 5.15 and 5.48 |
+| *"the light row had no comment"*, and §8.2's closing argument built on it | it has one in `it-job-radar` and `pl-review-sense`, directly above the declaration, and `it-job-radar` publishes it in the page's inline `<style>`. `pl-review-sense/tests/test_palette.py` asserts the threshold besides. The conclusion — pin the measured value — is unchanged; the reason is not that nobody wrote it down but that **the sweep read the file and read past the comment** |
+| `--positive` *"is never painted as a non-text mark, so it stays a candidate"* | **false twice over.** It *is* painted as a non-text mark, on three pages — `it-job-radar` `fill:`, `auth-log-scan` `stroke:`, `mini-traceroute` both — where it passes at 3:1. And on a fourth usage it is painted as **body text**: `mini-traceroute`'s `.ledger td.probe-ok` and `.verdict .ok`, 0.86 and 0.85 rem, both `html > body > div` and so on `--bg`, at **3.77:1** against AA's 4.5:1. A second live accessibility defect, of the same shape as the `--accent-soft` one, and now in §9 row 5 |
+| clause 1's *"a **third** `--accent-soft`, `#dbe7ff`"* — named, never measured | **1.24:1** on `--bg` and **1.17:1** on `--surface`; the dark half `#1e2c45` is **1.33:1** and was not named at all. But `page.css` declares the token twice and **nothing paints it**, so no threshold applies today — it is a naming item, not a live defect, and the distinction is the one this document's own closing paragraph insists on |
+| §3 measures eleven pages | **there are twelve surfaces.** `car-price-ml/docs/app/index.html` is a second published page, linked from the report at `docs/index.html:268` and in no row of §3. It is also the only **hand-written** HTML in that repository: `form.py` generates `docs/app/styles.css` and `config.json`, and CI's byte-diff covers those two and `docs/index.html` — **not** the page itself |
+
+**What the five have in common is narrower than a method.** Three came from reading the *usage* sites — which
+threshold applies is decided by how a value is painted, not by its declaration — and that half of the thesis
+survives review. The other half did not: an earlier draft of this section said the reasons lived only in a
+generator, *"a surface a sweep that reads CSS cannot see"*. They do not. Two of the three `--accent-soft`
+holders and both `--positive` holders carry the measurement as a CSS comment above the declaration, published
+inline in the page. The sweep read those files and read past the comment, which is a duller finding and the
+true one. §8.4 records what that draft cost.
+
+### 8.4 And six from the review of §8.3, which committed the class §8.3 was written to name
+
+The section that named *a claim wider than the measurement under it* made five of them. Recorded because
+the shape is now three rounds old and the lesson has moved: §8.2's cause was a correction that failed to
+propagate; §8.3's was a correction that propagated a **generalisation the evidence did not carry**.
+
+| claim | the repositories |
+|---|---|
+| *"neither comment was in a stylesheet … the note and the value are not on the same surface"* | false on both halves. `it-job-radar/src/it_job_radar/site/assets/styles.css:12`, `pl-review-sense`'s equivalent, `car-price-ml/src/car_price_ml/site/assets/tokens.css:21` — and all three ship it in the published page. The generalisation was built from one holder and stated of all |
+| the `mini-traceroute` failure at **3.54:1**, *"inside `.card`"* | parsed, `.ledger-wrap` and `.verdict` are `html > body > div`. The ground is `--bg`, so the ratio is **3.77:1**. The 3.54 was `car-price-ml`'s comment describing `car-price-ml`'s ground, carried across to a page it does not describe — in the one row the document calls the item a reader can be harmed by |
+| `#dbe7ff` *"1.22:1 on `--surface`"* | **1.17:1**. 1.22 is `#1e2c45` on the *dark* surface — the other half's second ratio, attached to the first half |
+| `wroclaw`'s pair as *"the worst pair in the portfolio"* | true as arithmetic, wrong as a finding: `page.css` declares the token twice and nothing paints it. Asserting a defect no reader can reach is the mirror of missing one, and §8.3's own closing rule forbids it |
+| clause 1 left ending *"…and on / all."* | the sweep of clause 1 deleted the sentence recording that the three literal-colour pages carry no tokens and no dark override — a correction damaging what it did not intend to touch, inside the normative spec |
+| clause 1's *"six by name and value"* | five; `--accent-soft` matches by name only, as the clause now says two lines later. Eight of ten still holds |
+
+**Two of the six are the correction that generalises**, which is this round's signature: rows 1 and 2 each
+began as a true observation about one repository and were then stated of a class. The other four are their
+own failures and the table names them separately — a figure carried across the halves of one page, a defect
+asserted where no reader can reach it, a sweep deleting what it did not mean to touch, and a miscount. The
+rule earned here is the one rows 1 and 2 pay for: *a finding names the file it was read in, and a claim
+about a class is a claim that has to be checked in every member of it.*
 
 ## 9. Rollout
 
@@ -430,5 +506,5 @@ Ordered so the spec is proved before it is applied widely.
 | 2 | **`mlops-car-price` + `pl-jobs-lora`** — clause 4 (claim `h1`, eyebrow), then the rest | `0004` §8 calls this *"the single highest-value presentation change identified"*, and §5.1 has to be settled per page first |
 | 3 | **§6 clause 9** on `car-price-ml` and `mlops-car-price` | A published contradiction outranks a missing convention |
 | 4 | **Back-link + card metadata** on the pages that lack them | Nine and **three** repositories, mechanical once the spec exists |
-| 5 | **The `--accent-soft` fix, light and dark, onto the pages that lack it** | The one item here a reader can be *harmed* by. Five pages declare the failing dark `#2c4a7c` and **three paint it** (`car-price-ml`, `auth-log-scan`, `mini-traceroute`); `doc-extract` and `ab-lab` declare the token and never use it. The light majority `#93c5fd` fails at 1.80:1 wherever it is painted |
+| 5 | **The contrast fixes, light and dark, onto the pages that lack them** | The one item here a reader can be *harmed* by. `--accent-soft`: five pages declare the failing dark `#2c4a7c` and **three paint it** (`car-price-ml`, `auth-log-scan`, `mini-traceroute`); `doc-extract` and `ab-lab` declare the token and never use it; the light majority `#93c5fd` fails at 1.80:1 wherever it is painted. `--positive`: **`mini-traceroute` alone** is a live failure — it is the one page painting `#059669` as body text, at 3.77:1 against AA's 4.5:1. The four other holders paint it as a mark or not at all, so their divergence from clause 1's pinned value is **conformance, not harm**, and it moves to row 6 |
 | 6 | **`ab-lab`, `mini-traceroute`, `wroclaw`** — naming (`.tile`/`.stat`→`.kpi`, `.scroll`/`.ledger-wrap`→`.table-wrap`, `--ink`/`--line`→`--text`/`--border`), `wroclaw`'s two absent tokens and third `--accent-soft`, and `mini-traceroute`'s unwrapped `<figure>` table | Lowest value: these pages are already right, only differently named. `wroclaw` moved from last to here once its row was read live, and any change to it must survive a daily rebuild |
