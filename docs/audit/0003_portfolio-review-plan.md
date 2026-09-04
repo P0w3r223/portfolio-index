@@ -586,7 +586,8 @@ Three, each on a finding the day's green checks did not cover.
    applies to, and the live site is the asset. This is **not** a regression: `v3`/`v4`/`v5` floated
    too, and pinning two repos while ten stay unpinned trades one inconsistency for another. So the
    record is fixed and the pinning question is reopened on true premises rather than answered on
-   false ones. Recorded with it: that job is skipped on pull requests, so `configure-pages@v6` and
+   false ones. **Answered 2026-09-04 — do not pin; see [`0006`](0006_session3-4-presentation-block.md)
+   §3 L2 for the measurement and the reason.** Recorded with it: that job is skipped on pull requests, so `configure-pages@v6` and
    `setup-node@v7` first ran on `main` with no in-portfolio precedent — they were guesses the
    stated rationale did not cover, and they went green.
 3. **The published parquet is rewritten by the pinned toolchain, and CI is taught to notice.**

@@ -36,6 +36,10 @@ committed artifacts under `eval/expected/`.
 
 ### 2.2 The eleven published pages
 
+*Corrected 2026-09-04 against the live pages; `wroclaw` and `mini-traceroute` were read from a stale local
+build and from HTML that skipped an external stylesheet. [`0007`](0007_divergence-and-the-page-spec.md) §3
+is the current table and this one is kept for the session it describes.*
+
 | page | `h1` | eyebrow | tiles | tables | card meta | back-link | source |
 |---|---|:-:|---|---:|:-:|:-:|---|
 | `ab-lab` | claim | yes | `.tile` ×4 | 5 | yes | no | generated |
@@ -44,14 +48,17 @@ committed artifacts under `eval/expected/`.
 | `car-price-ml` | claim | yes | `.kpi` ×4 | 1 | yes | no | generated |
 | `auth-log-scan` | claim | yes | `.kpi` ×5 | 2 | yes | no | generated |
 | `pl-review-sense` | claim | yes | `.kpi` ×4 | 7 | yes | no | generated |
-| `mini-traceroute` | claim | partial | `.kpi` ×4 | 2 | yes | no | hand-written |
+| `mini-traceroute` | **descriptive** | yes | `.kpi` ×4 | 2 | yes | no | hand-written |
 | `apply-scout` | claim | yes | `.kpi` ×4 | 3 | **no** | **yes** | hand-written, test-constrained |
 | **`mlops-car-price`** | **repo name** | **no** | **none** | 2 | **no** | no | hand-written |
 | **`pl-jobs-lora`** | **repo name** | **no** | **none** | 2 | **no** | no | hand-written |
-| `wroclaw-air-insights` | descriptive | **no** | `.stat` ×4 | 4 | **no** | no | generated daily by CI |
+| `wroclaw-air-insights` | claim | yes | `.stat` ×4 | 4 | yes, bar `og:description` | no | generated daily by CI |
 
-`og:image`: **zero pages out of eleven.** `mini-traceroute` is the one page with no `overflow-x` rule at all,
-against two tables.
+`og:image`: **zero pages out of eleven.** ~~`mini-traceroute` is the one page with no `overflow-x` rule at all,
+against two tables.~~ **False, and contradicted by M3 in this same document**: its rules are in an external
+stylesheet that every earlier check read past. One of its two tables sits in `.ledger-wrap`; the other is in
+a bare `<figure>` with no scroller and passes on margin. See [`0007`](0007_divergence-and-the-page-spec.md)
+§8.
 
 `wroclaw-air-insights` is the weakest row here and is marked as such: it publishes from
 `reports/site/index.html`, rebuilt daily by `refresh.yml`, and the committed copy is stamped
@@ -157,8 +164,12 @@ most-read surface in the portfolio.
   project A4"* against the index's `B4`, and the README still leads with the headline `0005` §7 C1 ruled does not
   describe the repository. C1 rewrote the *reason* in `0004` §5; the reader-facing copy is untouched, and C3
   (lead with the 80-sentence Polish adversarial set) is scheduled here.
-- **M5 — `wroclaw` diverges on every axis at once**: descriptive `h1`, no eyebrow, a third tile convention, no
-  card metadata.
+- ~~**M5 — `wroclaw` diverges on every axis at once**: descriptive `h1`, no eyebrow, a third tile convention, no
+  card metadata.~~ **Three of the four were false, and were read from a stale local build** — see
+  [`0007`](0007_divergence-and-the-page-spec.md) §4.3 and §8.1. Live, the page's `h1` is a claim, it carries
+  an eyebrow, and it carries card metadata bar `og:description`. What survives is the tile convention
+  (`.stat`), two token aliases, two absent tokens, a third `--accent-soft` nothing paints, and the missing
+  `og:description` — which is why `0007` §9 places it in row 6 and not in row 5.
 
 ### Low
 
@@ -166,10 +177,32 @@ most-read surface in the portfolio.
   squash merges and an API read of every default branch afterwards; see §6 decision 2 for the merge SHAs.
   All twelve now read `Copyright (c) 2026 Piotr Cząstkiewicz`, and GitHub still detects MIT on all twelve.
   It is no longer closed on an intention.
-- **L2 — the action-pinning question**, reopened on true premises by `0003` §9 decision 2, still unanswered.
+- ~~**L2 — the action-pinning question**, reopened on true premises by `0003` §9 decision 2, still
+  unanswered.~~ **Answered 2026-09-04: do not pin, and record why.** Measured across all fourteen workflow
+  files: **47 `uses:` occurrences, six distinct actions, every one of them first-party `actions/*`, and
+  zero SHA pins anywhere.** Three jobs are privileged — `auth-log-scan/ci.yml:58`, `it-job-radar/ci.yml:81`
+  (`pages: write` + `id-token: write`) and `wroclaw-air-insights/refresh.yml:12`, the most privileged job in
+  the portfolio (`contents: write` **and** `pages: write` **and** `id-token: write`) — so
+  the narrowest real question was whether to pin those three and nothing else.
+
+  **The reason is maintenance, not threat modelling.** A compromised `actions/checkout` is a
+  GitHub-wide event, not a portfolio one, and the tag a first-party action floats is maintained by the
+  same party that hosts the runner. Against that, a SHA pin in a portfolio with no bot to move it decays
+  into a stale action — which is precisely the state `0003` §6 had to dig this portfolio out of, eleven
+  repositories at once. Pinning buys protection against a scenario the portfolio cannot influence, at the
+  cost of re-creating the failure it has already had. **If a third-party action is ever introduced, this
+  answer does not cover it and the question reopens on that action alone.**
 - **L3 — whether Level B survives as a tier** (`0004` §9). A ranking decision, not a presentation one; excluded
   here, see §7.
 - **L4 — `ab-lab`'s `refresh.yml`.** **Closed on a green run**, see §6 decision 3.
+- **L5 — the `license` table form is deprecated, in all twelve.** `pyproject.toml` in eleven repositories
+  declares `license = { text = "MIT" }`, and `doc-extract#10` adds the twelfth in the same form for
+  consistency. Reproduced against setuptools 84.0.0: building the metadata emits
+  *"`project.license` as a TOML table is deprecated … By 2027-Feb-18"*, and `requires = ["setuptools>=68"]`
+  floats to whatever is current, so every repository inherits that date. The replacement is the SPDX string
+  `license = "MIT"` with `requires = ["setuptools>=77"]`, verified to emit `License-Expression: MIT` and no
+  warning. **Not applied here**: it is twelve repositories and one form, so it goes the way L1 went — all
+  together, on a decision, rather than one repository quietly differing from eleven.
 
 ## 4. The decision the block turns on: where the spec lives
 
