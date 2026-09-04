@@ -1,7 +1,9 @@
 # Session 2 — Extensions
 
-Date: 2026-09-03
-Status: proposed
+Date: 2026-09-03. **Reconciled 2026-09-04** against the repositories: four of the five items § 9
+carried as open had landed or been decided, and none of them said so — see the section at the foot of
+§ 9 and `0003` § 11.
+Status: accepted — all three decisions in § 9 taken 2026-09-03 and executed by 2026-09-04
 Author: P0w3r223 + Claude
 Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3 (the commission) and § 9 (the reconciliation rule), [0004_session1-recruiter-triage.md](0004_session1-recruiter-triage.md) § 5, § 7 and § 8
 
@@ -305,10 +307,17 @@ Ordered by value per day inside the 1–2 month budget:
 |---|---|---|---|---|
 | 1 | **§ 5 B1** — name `apply-scout`'s three security legs | 0.5 d | **`apply-scout#25`** | An eighteen-item limitations list that omits the three that matter is a false completeness, and it is public today |
 | 2 | **§ 7 C1** — rewrite the `pl-review-sense` demotion reason | 0.5 d | **this PR** | Same shape, same cost, and it is a claim in this review's own documents |
-| 3 | **§ 5 B2** — confine the loop | 3–4 d | next | The real fix, and the thing B1 is a stopgap for |
-| 4 | **§ 4 variant B** — measure the retriever | 4–7 d | after B2 | Moves a diagnosis the project has already made in prose into the table where it can regress |
-| 5 | **§ 5 B3** — score the attack surface | +3–5 d | after B2 | Makes the safety property measured rather than asserted, which is the standard the flagship decision was made on |
-| 6 | **§ 7 C3** — repackage `pl-review-sense`'s headline | 2–3 d | Session 3 | Real value, but it belongs to Session 3's pass |
+| 3 | **§ 5 B2** — confine the loop | 3–4 d | ~~next~~ **on `main`** | The real fix, and the thing B1 is a stopgap for |
+| 4 | **§ 4 variant B** — measure the retriever | 4–7 d | ~~after B2~~ **on `main`** | Moves a diagnosis the project has already made in prose into the table where it can regress |
+| 5 | **§ 5 B3** — score the attack surface | +3–5 d | ~~after B2~~ **on `main`** | Makes the safety property measured rather than asserted, which is the standard the flagship decision was made on |
+| 6 | **§ 7 C3** — repackage `pl-review-sense`'s headline | 2–3 d | Session 3 → **`0006` B6** | Real value, but it belongs to Session 3's pass |
+
+> **Reconciled 2026-09-04 against the repositories, not against this table.** Items 3, 4 and 5 are
+> all on `apply-scout`'s default branch: `read_cv.py:55` resolves against a frozen set of permitted
+> paths and `fetch.py` holds a scheme allowlist with `check_resolved` on every hand-walked redirect
+> hop (B2); `src/apply_scout/retrieval/` prints `eval/expected/retrieval.md` (variant B); and
+> `src/apply_scout/attack/` prints `eval/expected/attack.md`, a 5 × 4 × 2 grid (B3). Item 6 is
+> carried into [`0006`](0006_session3-4-presentation-block.md) as B6.
 
 **Total for items 1–5: 11–17 days**, revised from 12–18 by § 3.1's correction. That fits the budget
 with room, which is the point of leaving variant A and variant C on the table rather than in the
@@ -337,22 +346,66 @@ plan — either would consume most of it alone.
 
 ### Still open
 
-- **B2 — confine the loop.** The next change, and the thing B1 is explicitly a stopgap for. Not
-  started; `apply-scout#25` says so in the README rather than implying a fix that has not landed.
-- **Carried from `0003` § 9, unowned:** every `LICENSE` names the handle `P0w3r223` while the
-  profile now carries a legal name. Applies to all twelve equally; deliberately not settled by
-  fixing a subset.
-- **Carried:** `ab-lab`'s `refresh.yml` was bumped to the current action majors but runs weekly on a
-  schedule and has not fired since — next firing ~2026-09-07, so no check has exercised it.
+- ~~**B2 — confine the loop.** The next change, and the thing B1 is explicitly a stopgap for. Not
+  started; `apply-scout#25` says so in the README rather than implying a fix that has not landed.~~
+  **Landed, and so did B3.** Both are on `main` as of 2026-09-04 — see the box in § 8 for the
+  evidence in source. ADR-0012 (*the page quotes the artifacts*) was written **after** them, which
+  is the clearest single proof that this bullet had gone stale: the project produced a decision
+  record about publishing what B3 measured while this line still said B2 had not started.
+- **Carried from `0003` § 9: every `LICENSE` names the handle `P0w3r223` while the profile now
+  carries a legal name.** Applies to all twelve equally; deliberately not settled by fixing a
+  subset. **Owned 2026-09-04 and decided — `Copyright (c) 2026 Piotr Cząstkiewicz`, all twelve
+  together — but not yet applied**, so this bullet stays open and is not struck: re-read from the
+  API on 2026-09-04, all twelve `LICENSE` files on their default branches still read
+  `Copyright (c) 2026 P0w3r223`. [`0006`](0006_session3-4-presentation-block.md) § 6 decision 2 is
+  the decision; the twelve commits are the work.
+
+  *An earlier draft of this line struck the bullet on the strength of the decision. That is the
+  failure this document exists to name — a state asserted because it was agreed rather than because
+  a repository shows it — and it is left visible rather than tidied away. `0003` § 9 decision 5 was
+  correct all along and now agrees with this line again.*
+- ~~**Carried:** `ab-lab`'s `refresh.yml` was bumped to the current action majors but runs weekly on a
+  schedule and has not fired since — next firing ~2026-09-07, so no check has exercised it.~~
+  **Dispatched by hand 2026-09-04** rather than waited on: the workflow already declares
+  `workflow_dispatch`, so nothing had to change to exercise it, and waiting would have carried an
+  unexercised bump into a third session. `0006` § 6 decision 3.
 - ~~**`car-price-ml#21`** is green and awaiting merge. The language bar only re-computes once the
   change is on the default branch, so that verification belongs on `main`, not on the PR.~~
   **Merged as `6e6019f`, and the check was run where it had to be.** `Jupyter Notebook` is gone
   from the languages API entirely, `.language` reads `Python`, and the other five figures are
   byte-identical to the pre-merge reading (207 665 / 11 071 / 8 624 / 1 844 / 798) — so the notebook
   left the language bar and nothing else moved. `#48` re-points the submodule.
-- **Found while reading `apply-scout`, not yet owned:** its README and `CLAUDE.md` both still open
+- ~~**Found while reading `apply-scout`, not yet owned:** its README and `CLAUDE.md` both still open
   *"Portfolio project **P3** (the flagship)"*, which `0004` § 5 withdrew when `doc-extract` took the
   role and `apply-scout` lost the ⭐. The decision is merged into the index and the repository that
   is subject to it still asserts the old status. Left for a decision rather than fixed in `#25`,
   because rewriting how a project introduces itself is a presentation call and Session 3 owns those
-  — but it is a false statement in the meantime, not a stylistic one.
+  — but it is a false statement in the meantime, not a stylistic one.~~ **Closed on the two surfaces the finding named, and still open on a
+  third it did not.** `apply-scout#32` removed it from the README and from `CLAUDE.md`. But
+  `src/apply_scout/__init__.py:5` still opens *"Portfolio project P3 (the flagship). The public
+  surface is intentionally small in this first milestone…"*, and the same docstring still says
+  *"Real tools and the evaluation harness arrive in later milestones"* — of a repository that has
+  shipped both. **So the finding stands, on the package's own docstring**, and it carries into
+  [`0006`](0006_session3-4-presentation-block.md) B6 with the other text layers.
+
+  *A draft of this line said the only surviving occurrence of "flagship" was an unrelated comment
+  about a trajectory artifact. That was a grep over `README.md` and `CLAUDE.md` reported as a grep
+  over the repository; `git grep -i flagship` returns the docstring above. Recorded rather than
+  quietly widened, because "I checked" and "I checked everywhere" are the two statements this
+  review keeps finding substituted for one another.*
+
+  The reason in the record was corrected at the same time: the `P3` **slot** is not false — `0004` § 5 kept it — its
+  legend simply lives in a private repository, so a public README asserting it explains nothing to
+  the only reader who can see it.
+
+### Reconciliation, 2026-09-04
+
+Every bullet above was re-read against the repositories before Session 3 opened, per `0003` § 9.
+**Four of the five were stale, all because work landed and this document did not follow** — the
+direction § 8 and § 9 of the plan both named. `0003` § 11 records the pass in full, including the
+mirror-image failure this one also found: work that quietly got *done* outside the session that
+owned it, which over-states the next block rather than under-stating it.
+
+Sessions 3 and 4 are designed together as one block in
+[`0006_session3-4-presentation-block.md`](0006_session3-4-presentation-block.md). **That is where
+the next session starts.**

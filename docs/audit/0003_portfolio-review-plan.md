@@ -161,7 +161,9 @@ Second pass, over the layers the first pass skipped:
 - **Two repos carry no licence** (`wroclaw-air-insights`, `it-job-radar`); the other ten
   are MIT. Without one, a repo is formally all-rights-reserved.
   *Sharpened 2026-09-03: both **declare MIT in `pyproject.toml`**, and `wroclaw`'s README has a
-  `## License` section saying MIT outright. Neither ships a `LICENSE` file, which is the only
+  `## License` section saying MIT outright. ~~Neither ships a `LICENSE` file~~ — **both do since
+  2026-09-03** (`it-job-radar#28`, `wroclaw-air-insights#28`); all twelve now report `spdx_id: MIT`.
+  The `LICENSE` file is the only
   surface GitHub reads and the only one that is legally operative. So this is not an omission —
   it is one fact on three surfaces where the silent one is the one that counts, which is this
   review's recurring shape with a legal consequence instead of a presentational one.*
@@ -292,10 +294,16 @@ would have sent the next person the wrong way:
 
 ## 6. Open items
 
-- Whether `token-budget` gets a page, gets demoted, or gets cut — it is the only project
-  with no visual representation.
-- Whether the two unlinked Level B pages get promoted into the profile README, and whether
-  Level B stays a separate tier at all now that its pages outclass the flagship's.
+- ~~Whether `token-budget` gets a page, gets demoted, or gets cut — it is the only project
+  with no visual representation.~~ **Settled: demoted, and no page.** `0004` § 5 rejected building
+  one — *"a stdlib CLI that proves nothing the other twelve do not"* — and `0005` § 6 declined to
+  reopen it, recording instead that its measured finding about cache-read economics is a
+  *description* problem for `0006` B6, not an extension one.
+- ~~Whether the two unlinked Level B pages get promoted into the profile README~~ — **both are
+  linked**, `mini-traceroute` and `auth-log-scan`, in the profile's *Live demos* table. ~~and whether
+  Level B stays a separate tier at all now that its pages outclass the flagship's.~~ **This half is
+  still open** and is carried as `0006` L3: it is a ranking decision on no new evidence, so `0006`
+  § 7 excludes it from the block rather than settling it in a presentation pass.
 - ~~Push the six repos holding unpushed commits.~~ **Pushed, not merged** — see §4. Three repos
   hold work on origin branches with no pull request, `pl-jobs-lora`'s seven commits included.
 - ~~**`doc-extract` has no CI.**~~ **Closed 2026-09-03**, `doc-extract#6` — 806 passed, 22
@@ -305,8 +313,16 @@ would have sent the next person the wrong way:
   — the footer's commit stamp, and the blocks that need a corpus on disk. Simulating a runner
   found the staleness check passes on **no** checkout without `data/`, which is every CI
   checkout; the suite had simply never run where the corpus was absent, because there was no CI.
-- Session 4 needs a real device or a proper emulator: `resize_window` is ignored while the
-  Chrome window is maximised, so the 375 px measurements came from same-origin iframes.
+- ~~Session 4 needs a real device or a proper emulator: `resize_window` is ignored while the
+  Chrome window is maximised, so the 375 px measurements came from same-origin iframes.~~
+  **Closed, and it had been closed since before this line was written** — found 2026-09-04,
+  see [`0006`](0006_session3-4-presentation-block.md) §4.2.
+  `wroclaw-air-insights/.claude/skills/verify-published-page/measure_page.py` (committed
+  2026-08-14) drives CDP `Emulation.setDeviceMetricsOverride`, takes a URL *or a local path*,
+  and its own docstring names the exact trap this line describes. `--widths`, `--marker` and
+  `--expect` are all flags; only `--winter` is `wroclaw`-specific and it is opt-in. **Nothing in
+  this review knew the instrument existed**, which is the §9 failure running in the unrecorded-
+  progress direction rather than the stale-debt one.
 - ~~**Action versions lag in eleven repositories**~~ — `checkout@v4` and `setup-python@v5` ran on
   Node 20 and annotated every run with a deprecation warning. `wroclaw-air-insights` was already
   on the current majors, so the portfolio contradicted itself here too. **Decided 2026-09-03:**
@@ -633,13 +649,20 @@ Both settled by the author; see above.
 `wroclaw-air-insights` and `it-job-radar` carry **no licence on GitHub** — `spdx_id` is null on
 both, so each is formally all-rights-reserved. That much the earlier note had. What it missed is
 that **both declare MIT in `pyproject.toml`, and `wroclaw`'s README has a `## License` section
-saying MIT outright.** Neither ships a `LICENSE` file, which is the only surface that is legally
-operative. One fact, three surfaces, and the silent one is the one that counts — the same shape
+saying MIT outright.** ~~Neither ships a `LICENSE` file~~ — **shipped the same day**, eleven lines
+above this one, in `it-job-radar#28` and `wroclaw-air-insights#28`. *This document therefore
+recorded a fix and left its own statement of the defect in the present tense in the same section:
+the §11 pattern, inside the section that names it.* The `LICENSE` file is the only surface that is
+legally operative. One fact, three surfaces, and the silent one is the one that counts — the same shape
 this review has been finding everywhere else, and here it has a legal consequence rather than a
 presentational one. The fix is one file per repository.
 
-Known and deliberately not acted on: `ab-lab`'s `refresh.yml` was bumped but runs weekly on a
-schedule — last run 2026-08-31, before the bump — so no check has exercised it yet.
+~~Known and deliberately not acted on: `ab-lab`'s `refresh.yml` was bumped but runs weekly on a
+schedule — last run 2026-08-31, before the bump — so no check has exercised it yet.~~ **Exercised
+2026-09-04** by `workflow_dispatch` and green — run `33857055959`, `checkout@v7`, `setup-python@v7`
+and the full-size re-measure. *This sentence and its twin in `0005` § 9 are one fact on two
+surfaces; a first draft of § 11 struck the twin and left this one standing, which is the shape § 11
+is written to prevent.*
 
 ## 10. Session 2, 2026-09-03
 
@@ -685,6 +708,88 @@ language, green and awaiting merge.
 ### What is now a decision rather than a finding
 
 Three, all in `0005` § 9: which RAG variant, which security level for `apply-scout`, and what
-happens to `pl-review-sense`. **This is where the next session starts** — but unlike every previous
-handoff in this document, it starts from a decision the author has to make and not from work waiting
-to be done.
+happens to `pl-review-sense`. ~~**This is where the next session starts**~~ — but unlike every
+previous handoff in this document, it starts from a decision the author has to make and not from work
+waiting to be done. **All three were decided 2026-09-03 and all three landed by 2026-09-04:** variant
+B, B3 staged, and C1 now with C3 into Session 3. See § 11.
+
+---
+
+## 11. Third reconciliation, 2026-09-04 — and it runs in the other direction
+
+Sessions 3 and 4 are designed as one block in
+[`0006_session3-4-presentation-block.md`](0006_session3-4-presentation-block.md). This section is
+the reconciliation § 9's rule requires before it starts.
+
+**Nine statements across this document, `0004` and `0005` were re-read against the repositories.
+Eight were stale; one was not, and the one that was not is the point of this section.**
+
+§ 8 and § 9 both diagnosed the same direction: *work lands, the document does not follow*. This pass
+found the mirror image and it is more dangerous, because nothing prompts a check for it:
+
+- **§ 6's "Session 4 needs a real device"** was written while the instrument to close it had been
+  committed in `wroclaw-air-insights` for three weeks. Nobody was tracking it, because a *capability*
+  arriving is not an item on anyone's debt list.
+- **`0004` § 6.5's table-wrapping checklist**, deliberately *bound* to the Session 4 spec by § 8
+  decision 3 so it could not be lost, was **two thirds done 43 seconds after the commit that
+  recorded it as three open pages** (`pl-review-sense#8` and `it-job-radar#21`, both written for
+  this checklist, merged 13:08:00Z and 13:08:20Z on 2026-09-02 against 13:07:17Z) and nothing
+  re-read it in the two days since —
+  `pl-review-sense` 7/7 and `it-job-radar` 1/1 are wrapped; only `mini-traceroute` 0/2 is open.
+
+**So a handoff that tracks only debt over-scopes the next block, and this one would have by about a
+third.** § 9's rule gets its third clause: reconcile in both directions — what went stale *and* what
+quietly got done.
+
+### The one statement that survived, and why it is recorded
+
+§ 4's breakpoint line — *"nine of eleven pages carry no width-based breakpoint at all; only `ab-lab`
+and `wroclaw-air-insights` have any"* — **is exactly true**, re-measured 2026-09-04: `ab-lab` has
+`@media (max-width: 34rem)`, `wroclaw` has `@media (max-width: 640px)`, every other `@media` in the
+portfolio is `prefers-color-scheme` or `print`. The architecture pass that produced `0006` reported
+this line as stale on the grounds that `wroclaw`'s query is not width-based. **It is.** The
+correction is recorded rather than absorbed, because a reconciliation that strikes a true line is
+worse than one that misses a false one — the false line is still findable, the struck true one is not.
+
+Also re-measured and standing: `apply-scout` carries **no `@media` rule of any kind** — not
+width, not `prefers-color-scheme`, not `print` — and last session measured that its page still does
+not scroll sideways at 375 px. Recorded for the § 4.2 divergence table rather than as a defect: a
+fluid layout that holds is not the same defect as a fixed one that does not, and the spec should say
+which it is asking for.
+
+### The scope of this pass, stated so the next reader knows what was not checked
+
+**Nine named statements were re-read, listed below.** The three documents' *other* open-item and
+still-open lists were then swept once for contradictions and four more were found; they are closed
+in this same pass and listed after the table. **Anything outside those two passes is unchecked** —
+notably the body prose of `0004` §§ 1–5 and of `0005` §§ 1–7, which were read for the statements
+named here and not audited line by line.
+
+### What was stale
+
+| statement | was | is |
+|---|---|---|
+| § 6 — "Session 4 needs a real device or a proper emulator" | open blocker | `measure_page.py`, committed 2026-08-14; see above |
+| § 10 / § 9 — "this is where the next session starts", three decisions pending | pending | all three decided 2026-09-03, all three landed by 2026-09-04 |
+| `0004` § 3.2 — "family B is exactly the three headline projects" | three | **two**: `apply-scout`'s `h1` has been a claim since `#32` |
+| `0004` § 6.4 — "the three most-promoted pages have no social metadata" | three | **four**: `wroclaw-air-insights` carries none either. The `<title>` half of that finding stands on all three named |
+| `0004` § 6.5 — the bound wrapping checklist | three open | **one open** (`mini-traceroute` 0/2) |
+| `0005` § 8 — priority items 3, 4 and 5 marked "next" / "after B2" | queued | all three on `main` |
+| `0005` § 9 — "B2 — confine the loop. **Not started**" | not started | B2 **and** B3 landed; ADR-0012 was written after them |
+| `0005` § 9 — `apply-scout` "still opens *Portfolio project P3 (the flagship)*" | open | closed; neither its README nor its `CLAUDE.md` says it |
+
+### One figure that is still wrong, and it is the flagship's
+
+`0004` § 3.3 found three figures for `doc-extract`'s progress: the index's `M2 of 7`, the
+README / `CLAUDE.md` / page-eyebrow *"milestones 1–6 of 7"*, and the page's KPI tile `5 / 7`. **Only
+the index's was fixed.** Re-measured 2026-09-04: the index now reads `M6 of 7`, and the tile still
+reads `5 / 7` — twenty-six lines below an eyebrow on the same page saying *"milestones 1–6 of 7, and
+most of the seventh"*. One page, two numbers for one fact.
+
+*The tile was in § 3.3's count from the start; an earlier draft of this section claimed it was a
+fourth surface nobody had counted. It was not, and the claim is corrected rather than removed — the
+finding does not need inflating, because what makes it `0006`'s H1 is not that it went unnoticed but
+that **it is a false statement on the flagship's page about the measurement that made it the
+flagship**: the tile's note reads "the gate is measured; injection and the real set are not", and
+`CLAUDE.md` carries M6's `attack/` and M7's `raster.py`, `foreign/`, `degrade/`, `place.py`,
+`joint.py` and `complete.py` as shipped.*

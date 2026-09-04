@@ -5,6 +5,9 @@ Date: 2026-09-02 (revised the same day after an adversarial verification pass �
 decision, §4's `apply-scout` caption, §9's parquet bullet, §3.4's pins and §6.1's contact fields
 had all been superseded and none of them said so. The rule that catches this, and why one document
 is not the record, is `0003` § 9.
+**Reconciled again 2026-09-04**: § 3.2's family B is two pages and not
+three, § 6.4's set is four and not three, and § 6.5's bound checklist is one open page and not three.
+See `0003` § 11.
 Status: accepted
 Author: P0w3r223 + Claude
 Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3 and § 9, `README.md`, the profile README
@@ -72,7 +75,14 @@ A Level B side project opens with a measured finding. This is not a matter of ta
 seconds: it is the difference between *this person established something* and *this is some repo*.
 
 It matches the family split the plan already recorded, and confirms that split is not cosmetic:
-family B is exactly the three headline projects.
+~~family B is exactly the three headline projects.~~
+
+> **Reconciled 2026-09-04 — family B is now two, not three.** `apply-scout#32` replaced its `h1`
+> with a claim (*"This agent's retriever finds the evidence for 8 of the 27 requirements a
+> repository can prove"*), so the finding above holds for `mlops-car-price` and `pl-jobs-lora`
+> only. What it says about *them* is unchanged and is `0006` H2. Note that `apply-scout`'s
+> `<title>` still leads with the repository name, so §6.4's half of this finding did not move
+> with the `h1` — see the box there.
 
 ### 3.3 The index understates its best project by four milestones
 
@@ -332,10 +342,21 @@ in `wroclaw-air-insights`, including the tip of `main`, and three here — endin
 nothing under it. All seven were confirmed against the pre-rewrite backup to be artifacts of a
 removed block rather than authored punctuation.
 
-### 6.4 The three most-promoted pages have no social metadata, and A1's best claim is invisible
+### 6.4 The ~~three~~ **four** pages with no social metadata, and A1's best claim is invisible
 
-`apply-scout`, `mlops-car-price` and `pl-jobs-lora` carry **no `meta description`, no `og:*`, no
-`twitter:*` and no favicon**. Pasting the flagship's link into LinkedIn, Slack or an email produces
+> **Reconciled 2026-09-04.** The count was three and is **four**: `wroclaw-air-insights` carries
+> none either, and it was missed here because §6.4 was written from the "most-promoted" list rather
+> than from a sweep of all eleven pages. Re-measured across every page: `description`, `og:*`,
+> `twitter:*` and favicon are all zero on `apply-scout`, `mlops-car-price`, `pl-jobs-lora` and
+> `wroclaw`. The `og:image` sentence below stands on **all eleven**, unchanged.
+>
+> The `<title>` half of this finding also stands on all three originally named — `apply-scout`'s
+> title still reads `apply-scout — an LLM job-matching agent…` even though its `h1` is now a claim.
+> That is worth keeping visible: §3.2's inversion was fixed on the page and **not** in the search
+> result line, which is a different surface with a different reader.
+
+`apply-scout`, `mlops-car-price`, `pl-jobs-lora` and `wroclaw-air-insights` carry **no
+`meta description`, no `og:*`, no `twitter:*` and no favicon**. Pasting the flagship's link into LinkedIn, Slack or an email produces
 a bare URL with no preview card. Their `<title>` also leads with the repository name, so the
 inversion §3.2 found in the `h1` extends to the search-result line. No page anywhere carries an
 `og:image`, so even the eight well-formed pages produce text-only cards.
@@ -368,6 +389,25 @@ a later reader has to notice.
 measurement taken once. Acceptance: `pl-review-sense` 7/7, `it-job-radar` 1/1,
 `mini-traceroute` 2/2, and the four already-fixed pages stay fixed.
 
+> **Reconciled 2026-09-04 — two thirds of this closed outside the session that owned it.**
+> Re-measured from the committed page sources: `pl-review-sense` and `it-job-radar` both now wrap,
+> and **`mini-traceroute` is the only one open** — two tables and no `overflow-x` rule anywhere in
+> the file. It carries into `0006` as M3.
+>
+> **The tracking failed, and the chronology is sharper than "it drifted".** A first draft of this
+> box said the two closures came "silently, by unrelated pull requests". Both halves are wrong, and
+> the true version is more useful. The pull requests are `pl-review-sense#8` (*"put all seven tables
+> in boxes that scroll"*) and `it-job-radar#21` (branch `fix/table-overflow-on-phones`) — **written
+> for this checklist, not unrelated to it** — and they merged at **13:08:00Z and 13:08:20Z on
+> 2026-09-02**, which is **43 and 63 seconds after** the commit that recorded the item as three open
+> pages.
+>
+> So this was never quiet drift. **The document was stale on arrival**, by a minute, and no pass in
+> the two days since reopened it — while `0003` §8 decision 3 bound it to Session 4 precisely so it
+> could not be lost. The binding held the item; nothing re-read it. A record that tracks only debt
+> over-states the next block by whatever got fixed alongside the writing of it, and `0003` §11 makes
+> that a rule: reconcile in both directions.
+
 ## 7. The gap in the stack
 
 One, and it is clear: **RAG and retrieval evaluation**. Everything else a reader would look for is
@@ -390,9 +430,13 @@ than one flagship; the ⭐ moves.
 **Index README** — A5 row struck; A6 and A4 move to Level B; `doc-extract`'s status corrected from
 `M2 of 7` to what the repository records; the "Pinned on profile" line reworked.
 
-**Session 3 (descriptions)** — `doc-extract`'s four conflicting progress figures reduced to one, at
-the source that generates the rest. `wroclaw-air-insights` and `it-job-radar` need a licence, which
-is not a description but is found in the same pass.
+**Session 3 (descriptions)** — `doc-extract`'s ~~four~~ **three** conflicting progress figures
+reduced to one, at the source that generates the rest. *(§ 3.3 corrected the count to three in this
+same document and this line kept the four.)* **One of the three closed and one did not:** the index
+now reads `M6 of 7`, and the page's KPI tile still read `5 / 7` until `0006` B1. ~~`wroclaw-air-insights` and
+`it-job-radar` need a licence, which is not a description but is found in the same pass.~~
+**Shipped 2026-09-03**, `wroclaw-air-insights#28` and `it-job-radar#28`; all twelve report
+`spdx_id: MIT`. What that leaves is the *holder*, which is `0006` § 6 decision 2 and not yet applied.
 
 **Session 4 (spec)** — the family B pages need a claim as `h1`, which is the single highest-value
 presentation change identified: it converts three repo names into three findings. Table wrapping is
