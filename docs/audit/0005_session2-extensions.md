@@ -352,13 +352,12 @@ plan — either would consume most of it alone.
   evidence in source. ADR-0012 (*the page quotes the artifacts*) was written **after** them, which
   is the clearest single proof that this bullet had gone stale: the project produced a decision
   record about publishing what B3 measured while this line still said B2 had not started.
-- **Carried from `0003` § 9: every `LICENSE` names the handle `P0w3r223` while the profile now
-  carries a legal name.** Applies to all twelve equally; deliberately not settled by fixing a
-  subset. **Owned 2026-09-04 and decided — `Copyright (c) 2026 Piotr Cząstkiewicz`, all twelve
-  together — but not yet applied**, so this bullet stays open and is not struck: re-read from the
-  API on 2026-09-04, all twelve `LICENSE` files on their default branches still read
-  `Copyright (c) 2026 P0w3r223`. [`0006`](0006_session3-4-presentation-block.md) § 6 decision 2 is
-  the decision; the twelve commits are the work.
+- ~~**Carried from `0003` § 9: every `LICENSE` names the handle `P0w3r223` while the profile now
+  carries a legal name.**~~ **Closed 2026-09-04.** Applied to all twelve together, as decided —
+  `Copyright (c) 2026 Piotr Cząstkiewicz` — and verified from the API on the default branches *after*
+  the merges, not from the pull requests. [`0006`](0006_session3-4-presentation-block.md) § 6 decision 2
+  carries the twelve SHAs. This bullet stayed open through one earlier draft that struck it on the
+  strength of the decision alone; it is struck now on the strength of twelve merges.
 
   *An earlier draft of this line struck the bullet on the strength of the decision. That is the
   failure this document exists to name — a state asserted because it was agreed rather than because
