@@ -211,3 +211,43 @@ def test_the_media_query_a_rule_sat_under_is_deliberately_not_carried():
     """
     css = "@media (min-width: 1200px) { .table-wrap { overflow-x: auto } }"
     assert cssmod.scrolling_classes(css) == {"table-wrap"}
+
+
+def test_the_two_scheme_halves_are_a_partition():
+    """`_usage_sites` walks light and dark separately, so every rule must land in exactly one
+    half, once. `palettes()` never depended on that — it only ever asked about `:root` — which
+    is why the property went unasserted until a second consumer started leaning on it.
+
+    A sheet nesting a dark query inside a dark query is the case that breaks it: `finditer`
+    resumes just past the opening brace rather than past the block, so the inner match is
+    taken again and the excision index is rewound behind itself. **It fails silently green** —
+    rules are duplicated, misattributed, or welded onto the next selector, and nothing raises.
+    """
+    sheet = ("""
+    .light-only { color: red; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #000; }
+      @media (prefers-color-scheme: dark) { .nested { color: blue; } }
+      .after-nested { color: green; }
+    }
+    .tail { color: black; }
+    """)
+    light, dark = cssmod.split_schemes(sheet)
+    light_selectors = [selector for selector, _ in cssmod.rules(light)]
+    dark_selectors = [selector for selector, _ in cssmod.rules(dark)]
+
+    assert light_selectors == [".light-only", ".tail"], light_selectors
+    assert sorted(dark_selectors) == [".after-nested", ".nested", ":root"], dark_selectors
+    both = set(light_selectors) & set(dark_selectors)
+    assert not both, f"{both} landed in both halves"
+    assert len(dark_selectors) == len(set(dark_selectors)), "a rule was emitted twice"
+
+
+def test_the_partition_keeps_a_selector_off_the_end_of_an_excised_block():
+    """The welding half of the same defect: a rewound tail carries the closing `}` of the
+    outer block into the next selector, so `.tail` is read as `}\n.tail`."""
+    sheet = ("@media (prefers-color-scheme: dark) {"
+             " @media (prefers-color-scheme: dark) { .inner { color: blue; } } }"
+             ".tail { color: black; }")
+    light, _ = cssmod.split_schemes(sheet)
+    assert [selector for selector, _ in cssmod.rules(light)] == [".tail"]

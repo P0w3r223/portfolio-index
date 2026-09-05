@@ -24,7 +24,7 @@ GRAPHIC_MINIMUM = 3.0
 #: `color-mix(in srgb, var(--x) 28%, transparent)` — the one form the portfolio uses.
 _COLOR_MIX = re.compile(
     r"color-mix\(\s*in\s+srgb\s*,\s*var\(\s*(--[\w-]+)\s*\)\s+([\d.]+)%\s*,\s*transparent\s*\)",
-    re.I,
+    re.IGNORECASE,
 )
 _VAR = re.compile(r"var\(\s*(--[\w-]+)\s*\)")
 _HEX = re.compile(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b")
@@ -42,7 +42,6 @@ def rgb(value: str) -> tuple[float, float, float]:
     if not is_opaque_hex(value):
         raise ValueError(
             f"{value!r} is not a 3- or 6-digit hex colour; alpha forms carry a "
-            "transparency this cannot resolve without knowing what is underneath"
             "transparency this cannot resolve without knowing what is underneath"
         )
     digits = value.strip().lstrip("#")
