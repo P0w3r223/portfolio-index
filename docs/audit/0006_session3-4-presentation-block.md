@@ -195,9 +195,13 @@ most-read surface in the portfolio.
 - **L3 — whether Level B survives as a tier** (`0004` §9). A ranking decision, not a presentation one; excluded
   here, see §7.
 - **L4 — `ab-lab`'s `refresh.yml`.** **Closed on a green run**, see §6 decision 3.
-- **L5 — the `license` table form is deprecated, in all twelve.** `pyproject.toml` in eleven repositories
-  declares `license = { text = "MIT" }`, and `doc-extract#10` adds the twelfth in the same form for
-  consistency. Reproduced against setuptools 84.0.0: building the metadata emits
+- **L5 — the `license` table form is deprecated, in ~~all twelve~~ *eleven of the twelve*.**
+  ~~`pyproject.toml` in eleven repositories declares `license = { text = "MIT" }`, and `doc-extract#10`
+  adds the twelfth in the same form for consistency.~~ **Corrected 2026-09-05, measured at source:**
+  **eleven** `pyproject.toml` files carry the form — `doc-extract` among them — and the twelfth
+  repository, **`mini-traceroute`, has no `pyproject.toml` at all**: it is C++/CMake. The exemption is
+  structural rather than an oversight, and it is recorded because the wrong count sends the next reader
+  looking for a twelfth file that does not exist. See [`0008`](0008_the-rollout-ledger.md) §2.1. Reproduced against setuptools 84.0.0: building the metadata emits
   *"`project.license` as a TOML table is deprecated … By 2027-Feb-18"*, and `requires = ["setuptools>=68"]`
   floats to whatever is current, so every repository inherits that date. The replacement is the SPDX string
   `license = "MIT"` with `requires = ["setuptools>=77"]`, verified to emit `License-Expression: MIT` and no
@@ -363,8 +367,16 @@ measurement rather than a milestone count and cannot go stale on the next milest
 grid read *"The **two** payloads the arithmetic never sees are …"* and then interpolated a computed list of
 **three**. The names came from the artifact; the number was typed. Both now come from the same list.
 
-**Next: B2** — the divergence table, at 375 px as the gate and 390 px alongside, with §4.2's marker question
-settled before the twenty-two runs rather than during them.
+~~**Next: B2** — the divergence table, at 375 px as the gate and 390 px alongside, with §4.2's marker question
+settled before the twenty-two runs rather than during them.~~ **B2 and B3 both landed 2026-09-04** as
+[`0007`](0007_divergence-and-the-page-spec.md), which §5's table above already records — so this
+paragraph had been stale against its own document since the day it was written. It is the class §2.4
+exists to catch, committed inside the file that names it.
 
-Open and unanswered, carried rather than closed: **L2** (action pinning, on the true premises `0003` §9
-decision 2 established) and **L3** (whether Level B survives as a tier).
+**The plan now lives in [`0008_the-rollout-ledger.md`](0008_the-rollout-ledger.md)**, and the carrier
+in [`ADR-0004`](../adr/0004_what-carries-the-page-spec.md).
+
+~~Open and unanswered, carried rather than closed: **L2** (action pinning, on the true premises `0003`
+§9 decision 2 established) and **L3** (whether Level B survives as a tier).~~ **Both answered.** L2 by
+§3 in this document — do not pin, and why. **L3 by [`0008`](0008_the-rollout-ledger.md) §4**: Level B
+survives and one row leaves it, because B3 is a *page* of an A-level project rather than a repository.

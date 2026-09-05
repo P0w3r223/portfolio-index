@@ -462,8 +462,13 @@ half that mattered.
 
 - ~~Whether the two Level B pages (`auth-log-scan`, `mini-traceroute`) get promoted into the
   profile README's demo table~~ — **done**, both are in it.
-- Whether Level B survives as a tier at all once `token-budget` and `pl-review-sense` join it —
-  it will then hold five items of three quite different kinds.
+- ~~Whether Level B survives as a tier at all once `token-budget` and `pl-review-sense` join it —
+  it will then hold five items of three quite different kinds.~~ **Answered 2026-09-05 in
+  [`0008`](0008_the-rollout-ledger.md) §4: the tier survives and one row leaves it.** The count in the
+  question was low — it holds **four** kinds, not three — and the odd one is not either repository this
+  bullet names: **B3 `car-price-ml frontend` is a *page* of an A-level project, not a repository**, which
+  is what created the "twelfth surface" no clause could bind ([`0007`](0007_divergence-and-the-page-spec.md)
+  §7). It dissolves into A3. `token-budget`'s empty Site column stands on the reasoning in §5 above.
 - ~~`infra-docker-workmate`, per § 5. It is also the one submodule the rewrite did not cover, so if
   the answer is ever "promote it", the attribution question comes back with it.~~ **Decided
   2026-09-03: unpinned from the portfolio, repository kept.** § 5 recorded the removal as declined
