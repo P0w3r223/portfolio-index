@@ -106,9 +106,9 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 
 | # | stage | scope, measured at entry | est. | status |
 |---|---|---|---|---|
-| **S0** | Split `0007`; accept §5 / §5.1 / clause 9 as normative; freeze §3; move §9 here; record §2.1's refuted figures; take the carrier decision (`ADR-0004`) | index only, no code | 0.5 d | **in progress** |
-| **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **landed, under review** |
-| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1; geometry by invoking `measure_page.py` | one module in the index | 1.5–2 d | open |
+| **S0** | Split `0007`; accept §5 / §5.1 / clause 9 as normative; freeze §3; move §9 here; record §2.1's refuted figures; take the carrier decision (`ADR-0004`) | index only, no code | 0.5 d | **closed** — `current_projects` `89a9cc2` on `main` |
+| **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
+| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1; geometry by invoking `measure_page.py` | one module in the index | 1.5–2 d | **next** |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page, constrained by `tests/test_docs_page.py` | 1 d | open |
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass | 2 hand-written pages | 1.5–2 d | open |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
@@ -178,6 +178,11 @@ live and degraded two things, so it was reverted rather than shipped with a cave
 *The general lesson, and it is sharper than "measure the ground": a token's ground can be **another element the
 same token paints**. The stage rule — read the threshold per usage site — was right and was applied one layer
 too shallow.*
+
+**This is a third constraint on S2's checker**, alongside the two in [`ADR-0004`](../adr/0004_what-carries-the-page-spec.md)
+§4.1: it must resolve a mark's ground by **paint order within the SVG**, not by the nearest card or the page.
+A checker that walked to the nearest ancestor with a background would have cleared this change, because the
+band and the marks share an ancestor and the band is a sibling drawn before them.
 
 ### 3.3 What `car-price-ml` traded, recorded rather than fixed
 
