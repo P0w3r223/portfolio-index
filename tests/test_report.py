@@ -28,6 +28,7 @@ CONFORMING_CSS = """
   :root { --bg: #0f1319; --accent-soft: #4167a6; --positive: #34d399; }
 }
 .table-wrap { overflow-x: auto; }
+.card { background: var(--surface); border: 1px solid var(--border); }
 """
 
 
@@ -168,3 +169,52 @@ def test_an_unknown_surface_name_is_refused_rather_than_answered_with_an_empty_t
     with pytest.raises(SystemExit) as raised:
         report.main(["--root", str(tree), "--only", "car-price-mI"])
     assert raised.value.code == 2
+
+
+def test_the_census_counts_references_per_family_and_names_the_minority():
+    """`0008` §3.8 leans on the census as S6's report-only observation, and nothing reached
+    it. It counts `var()` references rather than surfaces, because one sheet holding a role
+    ten times is ten voices and a per-surface tally would read it as one."""
+    palette = ":root { --bg: #fff; --surface: #eee; --border: #ddd; --warn: #b45309; }"
+    sheets = [
+        ("one", palette + ".a { background: var(--surface); }"
+                          ".b { background: var(--surface); }"
+                          ".c { border: 1px solid var(--border); }"),
+        ("two", palette + ".d { background: var(--bg); }"
+                          ".e { border-left: 3px solid var(--warn); }"),
+    ]
+    lines = report._census(sheets)
+    text = "\n".join(lines)
+    assert "background" in text and "border" in text
+    assert "--surface" in text and "--bg" in text and "--warn" in text
+    surface = next(line for line in lines if "--surface" in line)
+    assert "  2 " in surface and "one" in surface and "two" not in surface
+    warn = next(line for line in lines if "--warn" in line)
+    assert "two" in warn
+
+
+def test_a_family_no_sheet_paints_is_left_out_rather_than_printed_empty():
+    lines = report._census([("one", ":root { --bg: #fff; } .a { background: var(--bg); }")])
+    assert any("background" in line for line in lines)
+    assert not any(line.startswith("  border") for line in lines)
+
+
+def test_the_census_is_suppressed_when_one_surface_was_asked_for(tree, capsys):
+    """A distribution over one sheet is not a distribution, and printing it under `--only`
+    would invite reading a single page's choices as the portfolio's.
+
+    **Through the fixture, not the real tree.** A first draft called `main` with the default
+    root, so in the `core` CI job — which checks out no submodule and is the job that must
+    never go red — there was no page on disk, the census was empty either way, and the
+    assertion held whether or not the suppression existed.
+    """
+    report.main(["--root", str(tree), "--only", "ab-lab"])
+    out = capsys.readouterr().out
+    assert "ab-lab" in out, "the surface asked for was not reported at all"
+    assert "role census" not in out
+
+
+def test_the_census_is_printed_when_every_surface_was_read(tree, capsys):
+    """The other half: suppression that suppressed always would pass the test above."""
+    report.main(["--root", str(tree)])
+    assert "role census" in capsys.readouterr().out

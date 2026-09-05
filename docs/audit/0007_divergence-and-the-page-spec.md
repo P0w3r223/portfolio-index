@@ -1,7 +1,7 @@
 # The divergence, measured — and the page spec it turns out to describe
 
 Date: 2026-09-04
-Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement
+Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement. **§5 clause 1 amended 2026-09-05** with the role sentence — see the note below
 Author: Piotr Cząstkiewicz
 Related to: [0006_session3-4-presentation-block.md](0006_session3-4-presentation-block.md) B2 and B3,
 [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) §3 (Session 4) and §4 (the two families),
@@ -27,6 +27,14 @@ supersedes §5.2), [`0008_the-rollout-ledger.md`](0008_the-rollout-ledger.md) (t
 > something to change"*) taken on the same day and ageing the same way. Treat every section but §5, §5.1 and
 > §6 as a photograph dated 2026-09-04. §8's correction log stays as it is: a record of what was wrong is not
 > a measurement that can go stale.
+>
+> **§5 clause 1 was amended on 2026-09-05, and the amendment is what the split permits.** A document
+> stating rules can be accepted, and an accepted rule can be amended; that is the whole distinction this
+> split turns on. The added sentence — *a token is used in the role it names* — was already being enforced
+> in one repository's source comment and by nothing else, and `0008` §3.6 records what that cost. The
+> alternative was a rule living in the checker's code with no normative document stating it, which is this
+> record's own signature failure inverted. The sentence is written as a **description with its exceptions
+> counted**, in §5's stated method, so it can be re-derived from the repositories rather than believed.
 
 ---
 
@@ -291,7 +299,35 @@ it is an instruction.
 
 1. **Colour and radius are the ten tokens in §4.1, with a `prefers-color-scheme: dark` override
    redefining the same **colour** names** — `--radius` does not vary by scheme and no page redefines it. Additive extensions are allowed and must be named in the page's own
-   `:root`. No literal hex outside the token block. The eight settled values are as printed; for the two
+   `:root`. No literal hex outside the token block. **A token is used in the role it names**: `background`
+   and `background-color` take `--bg` or `--surface`; `border`, `border-color` and the four one-sided
+   borders take `--border`.
+   *Measured across the eleven surfaces on disk on 2026-09-05: **124** declarations in those two families
+   name a token; **11** of them are `color-mix()`, which clause 1's composited half already reports
+   `undecided` and this sentence does not reach. Of the **113** that remain, **97** already name the house
+   role. Every one of the remaining sixteen is one of four shapes, and they are the exception rather than a
+   tolerance — a one-sided border thicker than a hairline
+   (11 — `.card.caution`'s rail on seven pages, four more in `car-price-ml/docs/app`); a rule declaring its
+   own `color` beside its background (3 — two `button`s and `.terminal .cursor`, which have chosen a ground
+   rather than inherited the page's); a border naming the role its own background names (1 —
+   `mini-traceroute`'s `button`); and a `border-color` under `:focus` (1), which is a state and not an edge.
+   **All four hold only where the role in question is not one of the three named above** — `--bg`,
+   `--surface`, `--border` — and that condition is the whole of what makes them exceptions rather than
+   holes: each describes a surface deliberately painted *outside* the house scheme, so a house role
+   appearing there is the defect and not the exemption. Without it,
+   `.card { background: var(--surface); border: 1px solid var(--surface) }` reads as a border matching its
+   own fill; `body { background: var(--border); color: var(--text) }` as a control painting its own text;
+   and `.result.pending { border-left: 3px solid var(--surface) }` as a rail, though that declaration is
+   the box's edge and `car-price-ml/docs/app` paints it in `--border` today. Swept declaration by
+   declaration, the condition takes the rule from **55 of 97 conforming sites caught to 97 of 97**.
+   A page adding a fifth shape is stating something this sentence does not describe, and the governing rule
+   above decides it — not this list.*
+   **This sentence exists because `apply-scout` had it as a source comment and that was not enough.** One
+   literal can serve two roles: `#eef1f6` was both `code`'s background and the table separator, so a
+   migration done by *value* rather than by *role* produced a page whose tokens were all declared, all
+   resolvable, and one of them wrong. `0008` §3.6 is what that cost, and §3.6's HIGH is that neither carrier
+   could see it — both read `:root`, and this is the only clause-1 sentence that cannot be checked there.
+   The eight settled values are as printed; for the two
    that split, the spec takes the **measured** one — `--accent-soft: #5b93e4` light (3.12:1 against
    `#93c5fd`'s 1.80:1) and `#4167a6` dark (3.30:1 against `#2c4a7c`'s 2.11:1) — and `--positive: #047857`
    light, which clears AA as text on both grounds a page paints on (**5.48:1** on `--bg`, **5.15:1** on

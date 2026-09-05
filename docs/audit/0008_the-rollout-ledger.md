@@ -109,10 +109,10 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S0** | Split `0007`; accept §5 / §5.1 / clause 9 as normative; freeze §3; move §9 here; record §2.1's refuted figures; take the carrier decision (`ADR-0004`) | index only, no code | 0.5 d | **closed** — `current_projects` `89a9cc2` on `main` |
 | **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
 | **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **landed, under review** — §3.5 |
-| **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page, constrained by `tests/test_docs_page.py` | 1 d | open |
+| **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **guarded — §3.6–§3.10.** Both carriers now read a usage site. Three review passes were needed to get the role rule's four exception shapes all guarded, and §3.10 records why the corpus sweep could not find the last one |
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass | 2 hand-written pages | 1.5–2 d | open |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
-| **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | **10 repositories** — nine need the back-link, `apply-scout` needs card metadata only. By *surface* it is eleven, because `car-price-ml/docs/app/index.html` is a second published surface with neither | 1.5 d | open |
+| **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | **9 repositories once S3 lands** — the back-link is what they need; `apply-scout` was the tenth and needed card metadata only, which S3 supplies. By *surface* it is ten, because `car-price-ml/docs/app/index.html` is a second published surface with neither. **Plus that surface's `button { color: #ffffff }`** — the one live defect the new literals clause found, §3.7 | 1.5 d | **next.** The one remaining stage with no unresolved decision and no unbuilt mechanism, and the one S3 unblocks by name |
 | **S7** | **Naming, and `mini-traceroute`'s unwrapped `<figure>` table** (`0007` row 6) | `.tile`/`.stat`→`.kpi`, `.scroll`/`.ledger-wrap`/`.tablewrap`→`.table-wrap`, `--ink`/`--line`, `wroclaw`'s two absent tokens | 1.5 d | open |
 | **S8** | **The text layers** (`0006` B6) — the four About codes **and their committed README twins**, L3, H3, `pl-review-sense` C3 | 4 About + ≥6 READMEs + 5 `CLAUDE.md` | 2–3 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos | 0.5 d | open, schedulable anywhere |
@@ -226,6 +226,234 @@ It carries both live contrast failures, the unwrapped `<figure>` table, a descri
 `<title>`, the `.ledger-wrap` name and the B1 About code — and it has no `pyproject.toml`, so it can host no
 per-repo Python test and is covered by the index checker alone (`ADR-0004` §4). S1 pulls its worst item forward;
 the rest stay in S7 and S8, but it should be *planned* as one repository rather than discovered six times.
+
+### 3.6 S3 was written and was not done — the defect it fixes was unguarded by both carriers
+
+**Recorded as a blocker rather than as progress**, because the page and the checker both report it clean.
+
+S3's substantive fix was a token migrated **by value instead of by role**: `#eef1f6` carried two roles on that
+page, and the table separator was mapped to `--surface` where six sibling pages use `--border`. That is fixed.
+What is not fixed is that **nothing detects it coming back**. Reintroducing exactly that line leaves
+`apply-scout`'s 298 tests green and the checker reporting the page `clear`.
+
+Both carriers read the **`:root` block** and nothing reads a **usage site**, so the whole class is invisible to
+them: a role swapped for another declared role, `code { background: var(--border) }`, or `--radius` deleted
+while `.card` and `.kpi` still paint it.
+
+**And the commit message over-claims.** It lists the mutations that prove the new tests, and the one it names
+for this defect is *a literal creeping back into `th, td`* — a different and easier mutation than the wrong
+*token* the commit actually repaired. The easy one turns the suite red; the real one does not. *This is the
+record's own signature failure committed in the sentence asserting the opposite, and it was caught by review
+rather than by me.*
+
+**What the next session had to close, all measured — and all closed 2026-09-05:**
+
+| | | closed by |
+|---|---|---|
+| **HIGH** | Assert the token **at the usage site**, in the shape the existing wrapper test uses — behaviour, not names. That also makes the page's own CSS comment about the two roles enforceable instead of advisory | Both carriers. `1 usage refs` / `1 usage roles` in the checker, over all twelve surfaces; `tests/expected/docs_page_tokens.md` in `apply-scout`, thirteen rows approved cell by cell. §3.7 |
+| **MEDIUM** | `_resolve_chain` treats *"the chain ends at a non-hex value"* as *"the chain goes nowhere"*, so an alias ending in a length or a font stack reports `FAIL — resolves to nothing`. No page triggers it today, and **S7 is scoped to exactly the two shapes that will** — `mini-traceroute`'s extensions and `wroclaw`'s absent `--radius` | Repaired **before** S7 rather than inside it. The resolver returns the terminal value whatever its type, and carries *why* a chain failed. **Removed from S7's dependency list** |
+| **MEDIUM** | The two carriers disagree on four inputs. Sharpest: `HOUSE_PALETTE` in the per-repo test omits `--radius`, which is the one token this session singled out as accident-prone, so that test covers nine of clause 1's ten | **It was five, not four** — §3.7. `HOUSE_PALETTE` gains `--radius`; `HOUSE_TOKENS` gains `--accent-soft` and `--positive`; the checker gains the literals clause it never had; the title check is rewritten; the usage-site walk is new in both |
+| **MEDIUM** | The title test's second half passes on any title sharing one word with the `h1` | It passed on the *first* word, which on this page is *"This"*. Now: the two surfaces state the same claim, so one contains the other once whitespace is normalised |
+| **LOW** | A literal inside the dark block but outside its `:root` survives; a mutual cycle is caught with the wrong message; clause 7 passes a third-party stylesheet whose host has no *"font"* in it | First two closed. **Clause 7's stands, and is carried rather than fixed**: `sources._with_styles` already files a third-party sheet under `unreadable`, which surfaces as an `undecided` *"stylesheets"* finding, so it is quiet rather than silent |
+
+### 3.7 What closing S3 found, which is more than S3 was about
+
+**Every guard on both branches was proved red by the mutation it names**, by running each. That
+instruction came from §3.6's own HIGH — a commit message that asserted an equivalence between
+two mutations that does not hold — and it earned its keep three times.
+
+*Read on its own this section says the work was finished here. It was not: two further review
+passes each found a shape of the role rule with no guard on it at all — §3.9 and §3.10 — and a
+guard that does not exist cannot be green under its mutation, which is the gap this sentence
+does not cover. **Moving a fact into one cell does not sweep the prose that argues from it**,
+which `0007` §8.5 named and this paragraph then demonstrated.*
+
+- **Two of the twelve new guards were green under the mutation they name, and both were mine,
+  written in the commit immediately before.** The mutual-cycle test asserted `"cycle" in
+  detail`, and the direct-self-reference sentence also ends in the word *cycle*; and the
+  cycle-detection `seen` set was never exercised at all, because the fixture's second hop
+  lands back on the name the walk started from. *The guard was written for a defect and proved
+  by an easier mutation than the one it claims to stop — §3.6's finding, one layer in, in work
+  written to close §3.6.*
+- **The carriers disagreed on five inputs, not four.** The fifth is the sharpest and was in
+  neither the ledger nor the review: **the index checker implemented no literals-outside-`:root`
+  clause at all.** `0007` §5 clause 1's third sentence was enforced on **one surface of twelve,
+  in one scheme of two**. The cause is structural rather than an oversight — §3.5 records that
+  the checker reproduces `0007` §3 on every comparable cell, and §3 has no literals column,
+  because it encodes literals-versus-tokens as a page-level binary. **The checker was composed
+  from the frozen table's columns rather than from the normative clauses' sentences**, and that
+  is a thing to check for the whole of S6 and S7, not a one-off.
+- **It found a live defect on its first run**: `car-price-ml/docs/app` publishes
+  `button { color: #ffffff }` — a literal outside the token block, on a published surface, that
+  nothing in this portfolio could see. Taken in **S6**, which visits that surface anyway.
+- **`HOUSE_TOKENS` held eight of clause 1's ten**, so `--accent-soft` and `--positive` — the two
+  the clause argues hardest about — were the two whose *absence* it could not report; `PINNED`
+  answers `n/a — not declared`, which is not a miss. Every surface with a `:root` already
+  declares all ten, so the correction moves no cell.
+- **A published figure in `apply-scout/docs/index.html` was wrong**: *"Six sibling pages"* write
+  `border-bottom: 1px solid var(--border)`. The trees hold **seven**.
+
+**And a figure in this session's own work, corrected one commit later — not before it was
+committed.** The census behind `0007` §5 clause 1's new sentence was first written as *124
+declarations, 108 naming the house role* — 124 minus the sixteen exceptions, without excluding
+the eleven `color-mix()` declarations the clause does not reach. Measured: **124 total, 11
+`color-mix`, 113 remaining, 97 conforming, 16 exceptions** in four shapes. The subtraction was
+the whole error, and it is the class `0007` §8.4 names: a number nobody re-derived because it
+looked derived.
+
+*A first draft of this paragraph said "corrected before it was committed", which the branch's
+own history refutes: `d2d1af8` carries 108 in the docstring **and in its commit message**, and
+only the docstring was corrected. **A commit message is a published artifact in this record** —
+§3.6 blocks S3 partly over a claim in one — so the correction note was itself a claim the
+repository refutes, inside the paragraph written about that exact failure. Caught by review.*
+
+### 3.9 The review blocked, its HIGH was real, and its fix reached one of the two holes
+
+The guard `1 usage roles` shipped with was **proved on the one page where its weakness does not
+open.** Two of the four exception shapes were keyed on conditions that conforming rules already
+satisfy, so the exemption fired on the mutation rather than on the exception:
+
+| shape | the condition | what satisfies it after a swap |
+|---|---|---|
+| *its own fill* | the border names the role its own background names | `.card { background: var(--surface); border: 1px solid var(--surface) }` — the S3 defect itself |
+| *filled control* | the rule also declares `color` | `body { background: var(--bg); color: var(--text) }` — on every page |
+
+**Measured by sweeping every conforming declaration on disk, one at a time, each swapped to
+the other family's house role: the guard takes the checker from 55 of 97 caught to 97 of 97.**
+Unguarded it misses **42** — 31 of 56 in the border family, 11 of 41 in the ground family. The
+exemption census reads **16 either way**, because those sixteen name a non-house role today and
+`_role_exception` is never consulted for the other 97; *the census cannot show the hole and the
+sweep can*, which is worth carrying into S6 and S7.
+
+Per surface, unguarded: the border swap was silent on **eight** of the nine tokenised surfaces —
+`apply-scout` the only escape, because its `.card`, `.kpi` and `th, td` declare no background in
+the same rule — and the ground swap on **all nine**, `apply-scout` included, through its own
+`body { background: var(--bg); color: var(--text) }`. *That is §3.6's HIGH one repository over,
+in the branch written to close it, and it matters most on the four surfaces with no page test —
+`mini-traceroute`, `mlops-car-price`, `pl-jobs-lora` and `wroclaw` — where this checker is the
+only carrier there is.*
+
+*A first draft of this paragraph said **"silent on seven of the nine"** and that `apply-scout`
+was "the one page where the weakness does not open". Both are wrong, and both were **taken from
+the review rather than measured** — the figure is eight in one family and nine in the other, and
+`apply-scout`'s weakness does open, just not for the border mutation that repository ran. A
+number inherited from a reviewer is exactly as unverified as a number inherited from a document,
+and this paragraph is about publishing figures the repositories refute.*
+
+**The review's diagnosis was exact and its proposed fix reached one hole of the two.** It
+suggested `role not in _GROUND_ROLES`; `--border` is not a ground role, so
+`body { background: var(--border) }` stays exempt under it. The condition has to deny **every**
+house role, which is also the more honest statement of what the shapes describe — a surface
+painted deliberately outside the house scheme.
+
+**And the first fix put that condition on three shapes of four.** A second review pass found the
+rail unguarded: keyed on thickness alone, `.result.pending { border-left: 3px solid var(--border) }`
+in `car-price-ml/docs/app` — a thick one-sided border that *is* the box's edge — stayed exempt
+when its role was swapped. One live declaration, on the surface CI does not byte-diff, and the
+sweep stood at **96 of 97** while this document claimed all nine surfaces were covered. *A guard
+put on three shapes of four is the same defect as no guard, one instance wide, and it is the
+third appearance of this class on this branch.*
+
+Applied to all four, the corpus census is **unchanged to the cell** (124 / 11 / 113 / 97, and
+11 rail + 3 filled control + 1 own fill + 1 focus ring) and the sweep is **97 of 97**.
+
+Three smaller findings closed with it, and one carried:
+
+- **The code's focus-ring exemption was wider than the sentence licensing it** — all six border
+  properties where §5 says `border-color`, and `":focus" in selector` matched inside a quoted
+  attribute value. §3.8's argument for amending the spec was that a rule in code with no
+  normative statement is this record's failure inverted; a normative statement *narrower* than
+  the code is the same gap facing the other way. Narrowed to the spec.
+- **`_census` was 45 lines of new reporting with no test**, while §3.8 leans on it as S6's
+  report-only observation. Three tests now.
+- **Reference integrity read the light palette alone**, so a rule inside the dark block painting
+  a dark-only token would report `undeclared`. The first repair admitted such a token
+  *everywhere*, which is a rule wider than the comment licensing it — the focus-ring finding
+  facing the other way, in the commit that closed the focus-ring finding. `cssmod.split_schemes`
+  now carries which half a site is in, so the dark-only token is admitted inside the dark block
+  and still refused outside it. Latent either way — no surface holds one — and S7 rewrites nine
+  palettes, which is when it would have appeared.
+- **The `--only` census test asserted nothing in the job that runs it.** It called `main` against
+  the real working tree with no `submodules` marker, so in `core` — the job that must never go
+  red, checked out with no submodule — there was no page on disk and the census was empty
+  whether or not the suppression existed. Moved onto the fixture, *and the fixture turned out to
+  paint no token either*, so the same vacuum would have survived the move: it now paints two, and
+  a sibling test asserts the census **is** printed without `--only`, which a suppression that
+  suppressed always would fail.
+- **Carried:** the census prints 113 where the spec headline is 124, because it excludes
+  `color-mix()`. Labelled rather than reconciled; they are two different quantities and the
+  label now says which.
+
+**The pattern the passes are really about, and it is about this file.** Three of the second
+pass's four findings are *the same defect as the finding they were written to close, displaced
+by one step*: a guard on three shapes of four; a repair wider than its own comment, in the commit
+that closed a repair wider than its own comment; a test moved onto a fixture that turned out to
+be as empty as the tree it came from. **The fixes were not careless — each was verified against
+the case it names.** Verifying *the case it names* is exactly what §3.6 blocked S3 for.
+
+### 3.10 The third pass, the fourth appearance, and the limit of the sweep
+
+**A third review pass found the guard on three shapes of four again — the focus ring this
+time** — in the paragraph above, which had just declared the third instance closed. The
+condition went on the rail, the filled control and its own fill; the focus-ring branch kept a
+test on the property and the state alone, so `input:focus-visible { border-color: var(--surface) }`
+was exempt while the identical declaration without the pseudo-class failed. Both the docstring
+and `0007` §5 clause 1 stated it was on all four. *Two published statements, one of them
+normative, refuted by six lines of code beneath them.*
+
+**And this one the sweep could not have found.** No page writes a `:focus` `border-color` in a
+house role, so 97 of 97 was true and the guard was still incomplete. That is the honest limit of
+the instrument §3.9 recommends: **a corpus sweep proves the rule against the corpus, and the
+corpus is not the rule.** What found it was reading the four branches against each other — which
+is the argument for keeping them in one function rather than one per shape, and for the test that
+now walks all four together and fails when the next one is omitted.
+
+Two more from the same pass:
+
+- **`split_schemes` is not a partition when a dark query nests inside a dark query.** `finditer`
+  resumes just past the opening brace rather than past the block, so the inner match is taken
+  twice and the excision index is rewound behind itself: the inner rules are emitted twice, the
+  outer block's remaining rules land in *both* halves, and the rewound tail welds the outer `}`
+  onto the next selector. The code is byte-identical to what `palettes()` held before the
+  extraction, so the diff introduced no regression — it introduced a **second consumer whose
+  correctness depends on the split being a partition**, and clause 1's verdicts, the reported
+  site strings and the census counts all now ride on it. **It fails silently green.** Fixed, and
+  `tests/test_css.py` asserts the partition directly rather than through `palettes()`.
+- **The refuted "seven of the nine" was corrected in two documents and left standing in a third
+  place** — a test docstring. The erratum and the figure it corrects were three files apart.
+
+*The extraction was checked the way `0007` §3.5 checked the whole checker: `palettes()` after the
+refactor agrees with the pre-refactor implementation on every one of the eleven surfaces, to the
+key and the value. That is what said the refactor was safe; it is also what could not say the
+partition was, because no surface on disk nests a dark query.*
+
+**S6 and S7 should sweep, not spot-check** — and where a rule has branches, read the branches
+against each other as well, because a sweep only ever proves what the corpus happens to contain.
+
+### 3.8 `0007` §5 clause 1 gained a fourth sentence, and why that was the decision rather than the work
+
+The HIGH could not be closed by a test alone. **Nothing in the normative spec said which role
+belongs where** — clause 1 had three sentences and none of them is the rule §3.6 asks to
+enforce — so a test asserting it would have encoded a rule with no normative home, which is
+this record's signature failure inverted: not a document contradicted by the repositories, but
+a rule in code that no document states.
+
+The user took the decision to amend. `ADR-0004` §5 permits it: a document stating *measurements*
+must be frozen, a document stating *rules* can be accepted and therefore amended, and §5 is the
+normative half of `0007` rather than the frozen half. The sentence is written as a **description
+with its exceptions counted**, in §5's own stated method, so a reader can re-derive it from the
+repositories rather than believe it.
+
+**Three options were measured and two rejected on evidence rather than taste.** A contrast band
+at the usage site was refuted by measurement: the separator swap moves the row rule from
+**1.24:1 to 1.06:1** light and **1.40:1 to 1.09:1** dark, both far below any WCAG threshold —
+a table separator is decorative and SC 1.4.11 does not reach it — so any bound between 1.06 and
+1.24 is a house number with a 0.18 margin. Worse, the mirror mutation
+`code { background: var(--border) }` *raises* contrast, 1.06 → 1.24, so a lower bound misses it
+entirely. A per-repository snapshot alone was rejected as *sufficient* for the same reason
+`ADR-0004` §6 gives: its ceiling is the seven repositories with a page test, and the four that
+cannot see the rule are exactly `mini-traceroute`, `mlops-car-price`, `pl-jobs-lora` and
+`wroclaw`. It is kept as the second carrier, not as the only one.
 
 ## 4. L3 — the recommendation
 

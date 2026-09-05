@@ -32,7 +32,8 @@ COMMITTED = [surface for surface in sources.SURFACES if not surface.must_fetch]
 #: Reported for every surface whatever it holds. `1 dark` is deliberately not among them:
 #: a page declaring no custom properties gets one finding naming the cause instead of a
 #: second one restating it, which is `0007` §5 clause 1's *"the same fact twice"*.
-CLAUSES = ("1 tokens", "2 tiles", "3 tables", "4 h1", "4 title",
+CLAUSES = ("1 tokens", "1 usage refs", "1 usage roles", "1 literals",
+           "2 tiles", "3 tables", "4 h1", "4 title",
            "5 card meta", "6 back-link", "7 webfont", "8 separator")
 
 pytestmark = pytest.mark.submodules
