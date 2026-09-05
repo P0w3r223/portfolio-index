@@ -1,12 +1,32 @@
 # The divergence, measured — and the page spec it turns out to describe
 
 Date: 2026-09-04
-Status: proposed
+Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement
 Author: Piotr Cząstkiewicz
 Related to: [0006_session3-4-presentation-block.md](0006_session3-4-presentation-block.md) B2 and B3,
 [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) §3 (Session 4) and §4 (the two families),
 [0004_session1-recruiter-triage.md](0004_session1-recruiter-triage.md) §3.2, §6.4, §6.5,
-`apply-scout/docs/decisions/0012_the_page_quotes_the_artifacts.md`
+`apply-scout/docs/decisions/0012_the_page_quotes_the_artifacts.md`,
+[`../adr/0004_what-carries-the-page-spec.md`](../adr/0004_what-carries-the-page-spec.md) (the carrier, which
+supersedes §5.2), [`0008_the-rollout-ledger.md`](0008_the-rollout-ledger.md) (the plan, which supersedes §9)
+
+---
+
+> **This document was split on 2026-09-05, and the split is the point.** It mixed three things with three
+> different lifetimes, and every one of the ~26 corrections in §8–§8.5 landed in the perishable two while the
+> normative part stood untouched. **A document that states measurements cannot be accepted without freezing
+> them; a document that states rules can.** So: **§5, §5.1 and §6's clause 9 are accepted as normative** and are
+> the part later work quotes. **§3 and §3.1 are frozen** as measured 2026-09-04 — they are a photograph, not a
+> live table, and the checker of [`ADR-0004`](../adr/0004_what-carries-the-page-spec.md) takes that role at S2.
+> **§9 is superseded** by [`0008`](0008_the-rollout-ledger.md), which also corrects its row-5 scope and moves
+> that row first. §5.2's carrier is superseded by `ADR-0004`.
+>
+> **And everything else here is frozen with §3, for the same reason.** §1, §2, §4, §7 and §8 were left
+> un-dispositioned by the first pass of this split — caught by review — which mattered because §1 and §4 are
+> not narrative: they carry counts (*"**eight** hold it in named CSS custom properties"*, *"six pages have
+> something to change"*) taken on the same day and ageing the same way. Treat every section but §5, §5.1 and
+> §6 as a photograph dated 2026-09-04. §8's correction log stays as it is: a record of what was wrong is not
+> a measurement that can go stale.
 
 ---
 
@@ -22,6 +42,9 @@ properties; three hold the same values as hand-typed literals and have drifted o
 job is therefore to *name what exists*, reconcile the naming variants inside it, and move three pages onto
 it — not to choose a house style. Six pages have something to change, and only some of it is naming: one
 of the six carries a live WCAG failure (§9 row 5) and one a table with no scroller at all (§9 row 6).
+*Re-scoped 2026-09-05: **three** of the six carry a live WCAG AA failure, not one — `mini-traceroute` fails the
+text criterion and `car-price-ml` and `auth-log-scan` fail the 3:1 non-text one on a mark they paint. See
+[`0008`](0008_the-rollout-ledger.md) §2.2.*
 
 **And the rule for resolving a divergence is not the majority.** Of the ten house tokens, eight hold one
 value everywhere and two do not — and **both** of those splits are **measured accessibility fixes** that
@@ -64,6 +87,14 @@ is the check, and it needs the page to print nothing. `wroclaw` is the exception
 daily, it publishes `reports/site/` as a Pages artifact and **commits no HTML at all** (`.gitignore:25`; `git ls-files '*.html'` is empty), so its build stamp is the only handle.
 
 ## 3. The conformance table
+
+> **Frozen 2026-09-05.** Correct as measured 2026-09-04 and **not maintained past that date**. This table was
+> corrected five times across two sessions (§8.1, §8.2, §8.3, §8.4, §8.5), which is what a measurement inside a
+> normative document costs. From S2 it is replaced by the checker's computed output
+> ([`ADR-0004`](../adr/0004_what-carries-the-page-spec.md) §5); until then, re-measure before quoting a cell
+> rather than citing this one. **Its row unit is already known to mislead for one purpose:** the contrast
+> rollout scopes by *token source*, and this table's row is a *page* — `car-price-ml` has one source feeding
+> two published surfaces, so a per-page reading of it undercounts ([`0008`](0008_the-rollout-ledger.md) §2.1).
 
 **This is the one place the per-page facts live.** §5's clauses state rules and point here; §9's rollout
 scopes itself from here. One measured value in one place is the whole reason this table exists — §8.2 and
@@ -354,6 +385,14 @@ before the fine-tune exists, which is a copy decision that has to be taken befor
 
 ### 5.2 What carries the spec
 
+> **Superseded 2026-09-05 by [`ADR-0004`](../adr/0004_what-carries-the-page-spec.md).** The argument below —
+> prose plus a per-repo acceptance test, and the rejection of a shared stylesheet — **stands**. What does not
+> is *"one vendored checker"*, hash-pinned per repository: measured, that pattern cannot reach two of the
+> twelve (`pl-jobs-lora` ignores all of `.claude/`; `mini-traceroute` has no `pyproject.toml`), and it
+> re-runs the decay `0006` §3 L2 refused for action pins. It also assumed the checker was unbuilt; roughly
+> two thirds of it is already green in CI, in `apply-scout/tests/test_docs_page.py` and
+> `pl-review-sense/tests/test_palette.py`.
+
 Prose plus **a per-repo acceptance test**, computed by **one vendored checker** — the pattern `doc-extract`
 already uses for its XSDs and fonts. A prose spec applied by hand to eleven repositories is eleven copies of
 a dozen properties with no source of truth, which is the defect in §4.1 restated one layer up.
@@ -497,7 +536,7 @@ correction that did not propagate — arriving before the correction did.
 |---|---|
 | `--positive` *"undocumented"* (§4.1), *"left open in §7 … nothing decides it"* (clause 1), *"no measurement at all behind it"* (§7) | **three surfaces of one wrong claim.** It is measured in `car-price-ml`'s `tokens.css:21` and in its published `docs/index.html`, and again in `ab-lab/sitegen/theme.py:13`: *"3.5:1 on `--surface` — below AA for text this size"*. Recomputed 3.54:1 on `--surface` and 3.77:1 on `--bg`, against `#047857`'s 5.15 and 5.48 |
 | *"the light row had no comment"*, and §8.2's closing argument built on it | it has one in `it-job-radar` and `pl-review-sense`, directly above the declaration, and `it-job-radar` publishes it in the page's inline `<style>`. `pl-review-sense/tests/test_palette.py` asserts the threshold besides. The conclusion — pin the measured value — is unchanged; the reason is not that nobody wrote it down but that **the sweep read the file and read past the comment** |
-| `--positive` *"is never painted as a non-text mark, so it stays a candidate"* | **false twice over.** It *is* painted as a non-text mark, on three pages — `it-job-radar` `fill:`, `auth-log-scan` `stroke:`, `mini-traceroute` both — where it passes at 3:1. And on a fourth usage it is painted as **body text**: `mini-traceroute`'s `.ledger td.probe-ok` and `.verdict .ok`, 0.86 and 0.85 rem, both `html > body > div` and so on `--bg`, at **3.77:1** against AA's 4.5:1. A second live accessibility defect, of the same shape as the `--accent-soft` one, and now in §9 row 5 |
+| `--positive` *"is never painted as a non-text mark, so it stays a candidate"* | **false twice over.** It *is* painted as a non-text mark, on three pages — `it-job-radar` `fill:`, `auth-log-scan` `stroke:`, `mini-traceroute` both — where it passes at 3:1. And on a fourth usage it is painted as **body text**: `mini-traceroute`'s `.ledger td.probe-ok` and `.verdict .ok`, 0.86 and 0.85 rem, both `html > body > div` and so on `--bg`, at **3.77:1** against AA's 4.5:1. A second live accessibility defect, of the same shape as the `--accent-soft` one, and now in §9 row 5 — *which is [`0008`](0008_the-rollout-ledger.md) S1 since 2026-09-05* |
 | clause 1's *"a **third** `--accent-soft`, `#dbe7ff`"* — named, never measured | **1.24:1** on `--bg` and **1.17:1** on `--surface`; the dark half `#1e2c45` is **1.33:1** and was not named at all. But `page.css` declares the token twice and **nothing paints it**, so no threshold applies today — it is a naming item, not a live defect, and the distinction is the one this document's own closing paragraph insists on |
 | §3 measures eleven pages | **there are twelve surfaces.** `car-price-ml/docs/app/index.html` is a second published page, linked from the report at `docs/index.html:268` and in no row of §3. It is also the only **hand-written** HTML in that repository: `form.py` generates `docs/app/styles.css` and `config.json`, and CI's byte-diff covers those two and `docs/index.html` — **not** the page itself |
 
@@ -564,6 +603,13 @@ lives in one cell, but **a clause that argues from a tally still has to be swept
 until review found it.
 
 ## 9. Rollout
+
+> **Superseded 2026-09-05 by [`0008_the-rollout-ledger.md`](0008_the-rollout-ledger.md)**, which carries the
+> plan and its status. Two substantive changes rather than a restatement: **row 5 moves to first**, because
+> the ordering principle below (*prove the spec before applying it widely*) does not reach a row that proves
+> nothing and stops harm; and **its scope is re-derived by token source rather than by page**, which makes it
+> three repositories and four surfaces. Kept here unstruck because the reasoning in the rows is still the
+> reasoning `0008` builds on.
 
 Ordered so the spec is proved before it is applied widely.
 
