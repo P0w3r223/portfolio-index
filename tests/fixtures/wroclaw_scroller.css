@@ -1,0 +1,22 @@
+/* Reduced from https://p0w3r223.github.io/wroclaw-air-insights/, fetched 2026-09-05.
+   The table is made its own scroller, so it has no scrolling ancestor at all — the fourth
+   mechanism of 0007 §2, and the one that broke measure_page.py twice. Its palette is the
+   house one under two aliases (--ink for --text, --line for --border), which is §4.3. */
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --line: #e3e7ee;
+  --ink: #1c2430;
+  --muted: #5b6472;
+  --accent: #2563eb;
+  --accent-soft: #dbe7ff;
+  --warn: #b45309;
+  --specialist: #7c3aed;
+}
+
+.chart-wrap { overflow-x: auto; }
+
+@media (max-width: 640px) {
+  body { padding: 1.5rem 0.85rem 3rem; }
+  table { display: block; overflow-x: auto; }
+}

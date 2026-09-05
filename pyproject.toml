@@ -1,0 +1,11 @@
+# The index repository is not a package: nothing here is installed, imported by a sibling,
+# or published. This file exists so `pytest` finds the checker and its tests, which is the
+# whole of `ADR-0004` K-c's index half.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# The repository root, so `import tools.pagespec` works without an install step.
+pythonpath = ["."]
+markers = [
+    "submodules: reads a sibling working tree; skipped when that submodule is not checked out",
+]

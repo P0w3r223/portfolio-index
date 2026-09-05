@@ -108,7 +108,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 |---|---|---|---|---|
 | **S0** | Split `0007`; accept §5 / §5.1 / clause 9 as normative; freeze §3; move §9 here; record §2.1's refuted figures; take the carrier decision (`ADR-0004`) | index only, no code | 0.5 d | **closed** — `current_projects` `89a9cc2` on `main` |
 | **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
-| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1; geometry by invoking `measure_page.py` | one module in the index | 1.5–2 d | **next** |
+| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **landed, under review** — §3.5 |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page, constrained by `tests/test_docs_page.py` | 1 d | open |
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass | 2 hand-written pages | 1.5–2 d | open |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
@@ -183,6 +183,32 @@ too shallow.*
 §4.1: it must resolve a mark's ground by **paint order within the SVG**, not by the nearest card or the page.
 A checker that walked to the nearest ancestor with a background would have cleared this change, because the
 band and the marks share an ancestor and the band is a sibling drawn before them.
+
+### 3.5 What S2 settled, and the one thing it deliberately refuses to say
+
+**The checker reproduces `0007` §3 on every comparable cell** — tokens, dark, tiles, eyebrow,
+scroller, card meta, back-link, webfont, `<title>`, and the separator inventory that took four hand
+attempts to get right. §5's aggregates fall out of it too: 61 plain-space figures of 85. That is the
+freeze decision of [`ADR-0004`](../adr/0004_what-carries-the-page-spec.md) §5 vindicated — the table was
+correct as of 2026-09-04 and is now computed rather than maintained.
+
+**Two cells do not match, and both are the checker being more precise than the table.** §3 gives
+`wroclaw`'s scroller as `.chart-wrap` + the table itself; `.chart-wrap` wraps a chart, not a table, so
+only the second half is true of any table on that page. And §3 calls that page's `<title>` the
+repository name, where mechanically *"Wrocław Air Insights"* does not lead with the directory
+`wroclaw-air-insights`. Neither is a defect on either side; both are recorded so the next reader does
+not treat the difference as drift.
+
+**What it refuses to say is the part worth keeping.** Every `color-mix` or `opacity` usage is reported
+`undecided`, never as a verdict, because resolving one needs the ground the mark is *drawn over* and
+paint order inside an SVG is not recoverable from a stylesheet. That is §3.2's lesson encoded rather
+than restated. Clause 3 answers `undecided` for the same reason when a page's only scroller is the
+table itself: the rule sits inside `@media (max-width: 640px)` and the reader does not carry media
+conditions, so it cannot tell a scroller that always engages from one that engages on a phone.
+
+**Three clauses remain outside it**, and §7 rather than silence is where they belong: whether an `h1`
+states a claim, whether a scroller is *at or below the card* and *has somewhere to scroll* (both need
+geometry), and whether two pages agree on a shared fact (§6 clause 9).
 
 ### 3.3 What `car-price-ml` traded, recorded rather than fixed
 

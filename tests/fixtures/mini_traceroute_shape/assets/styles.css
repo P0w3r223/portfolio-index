@@ -1,0 +1,14 @@
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #e3e7ee;
+  --text: #1c2430;
+  --muted: #5b6472;
+  --accent: #2563eb;
+  --warn: #b45309;
+  --radius: 10px;
+}
+
+.scroll-x { overflow-x: auto; }
+
+.ledger-wrap { max-height: 20rem; overflow: auto; border: 1px solid var(--border); }
