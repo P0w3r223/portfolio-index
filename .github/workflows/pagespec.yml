@@ -1,0 +1,75 @@
+# The index half of ADR-0004's K-c: one checker, one CI, no vendored copies to drift.
+#
+# Two jobs, and the split is the same one the test suite makes. `core` proves the checker
+# without a single submodule on disk — every fixture it reads is committed here — so it stays
+# green whatever the twelve repositories do next, and it is the job that must never be
+# allowed to go red. `surfaces` points the checker at the real working trees; its tests skip
+# themselves when a submodule is absent, so a fetch that fails degrades to a green skip
+# rather than to a false failure about a page nobody touched.
+#
+# Report mode only, per 0008 S2: the checker prints and exits zero. This workflow runs its
+# tests, not the checker as a gate. Turning it into a gate is a rollout decision, and the
+# test that guards it is `test_the_checker_exits_zero_on_a_page_that_fails_every_clause_it_can`.
+
+name: pagespec
+
+on:
+  push:
+    branches: [main]
+    # The submodule gitlinks are in this list because the table is a statement about the
+    # pages, not about the checker: this repository re-points submodules constantly, and
+    # a filter naming only `tools/**` would refresh the table when the instrument changes
+    # and never when a page does.
+    paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
+            'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
+            'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
+            'pl-review-sense', 'wroclaw-air-insights']
+  pull_request:
+    paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
+            'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
+            'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
+            'pl-review-sense', 'wroclaw-air-insights']
+  schedule:
+    # `wroclaw-air-insights` rebuilds daily and commits no HTML, so its row can go stale
+    # with nothing in this repository changing at all.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: checker (no submodules)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install pytest
+        # The checker itself is standard library only; pytest is the sole test dependency.
+        run: python -m pip install --disable-pip-version-check --quiet pytest
+      - name: Run the suite without a single page on disk
+        run: python -m pytest -q -m 'not submodules'
+
+  surfaces:
+    name: checker over the published surfaces
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check --quiet pytest
+      - name: Sweep the working trees
+        run: python -m pytest -q -m submodules
+      - name: Print the conformance table
+        # The output that replaces 0007 §3. Read from the log rather than gated on, until
+        # 0008 schedules the gate. --fetch is deliberately absent: the live URL belongs to a
+        # scheduled run, not to every push, and a network failure here would read as a page
+        # regression.
+        run: python -m tools.pagespec --detail

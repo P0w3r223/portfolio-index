@@ -1,0 +1,31 @@
+/* Reduced from doc-extract/docs/index.html @ 4e42ca3 — the eight house tokens of 0007
+   §4.1 plus the two that split, and the dark override that restates only what it changes. */
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #e3e7ee;
+  --text: #1c2430;
+  --muted: #5b6472;
+  --accent: #2563eb;
+  --accent-soft: #93c5fd;
+  --positive: #059669;
+  --warn: #b45309;
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1319;
+    --surface: #161c25;
+    --border: #263041;
+    --text: #e6eaf2;
+    --muted: #98a3b6;
+    --accent: #6ea8fe;
+    --accent-soft: #2c4a7c;
+    --positive: #34d399;
+    --warn: #fbbf24;
+  }
+}
+
+.table-wrap { overflow-x: auto; }
