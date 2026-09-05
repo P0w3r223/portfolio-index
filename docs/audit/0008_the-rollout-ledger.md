@@ -108,9 +108,9 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 |---|---|---|---|---|
 | **S0** | Split `0007`; accept §5 / §5.1 / clause 9 as normative; freeze §3; move §9 here; record §2.1's refuted figures; take the carrier decision (`ADR-0004`) | index only, no code | 0.5 d | **closed** — `current_projects` `89a9cc2` on `main` |
 | **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
-| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **landed, under review** — §3.5 |
-| **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **guarded — §3.6–§3.10.** Both carriers now read a usage site. Three review passes were needed to get the role rule's four exception shapes all guarded, and §3.10 records why the corpus sweep could not find the last one |
-| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass | 2 hand-written pages | 1.5–2 d | open |
+| **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **closed** — `current_projects` `ef3d8c0` on `main`, CI green **on `main`**. §3.5 |
+| **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **closed** — `apply-scout` `33a8559`, `current_projects` `6b7d3b8`, both on `main` with CI green **on `main`**, not on the PR. Both carriers read a usage site; three review passes were needed to guard all four of the role rule's exception shapes, and §3.10 records why the corpus sweep could not find the last one |
+| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass. **`pl-jobs-lora` gets a committed artifact first** — §5 | 2 hand-written pages, plus one generator or table that does not exist yet | 2–3 d | **open, and larger than recorded** |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | **9 repositories once S3 lands** — the back-link is what they need; `apply-scout` was the tenth and needed card metadata only, which S3 supplies. By *surface* it is ten, because `car-price-ml/docs/app/index.html` is a second published surface with neither. **Plus that surface's `button { color: #ffffff }`** — the one live defect the new literals clause found, §3.7 | 1.5 d | **next.** The one remaining stage with no unresolved decision and no unbuilt mechanism, and the one S3 unblocks by name |
 | **S7** | **Naming, and `mini-traceroute`'s unwrapped `<figure>` table** (`0007` row 6) | `.tile`/`.stat`→`.kpi`, `.scroll`/`.ledger-wrap`/`.tablewrap`→`.table-wrap`, `--ink`/`--line`, `wroclaw`'s two absent tokens | 1.5 d | open |
@@ -504,6 +504,22 @@ measured one.*
 finding that a recruiter cannot decode them, and that two repositories publish a code the index contradicts.
 What L3 settles is narrower than a cost — it is *which* ranking the index holds once B3 is no longer a row,
 and S8 cannot rewrite an opening line without knowing that.
+
+### 4.2 S4's copy decision was taken, and it grew the stage
+
+`0007` §5.1 records that `pl-jobs-lora` has **no tiles, no generator and no committed table to quote**, so a
+tile mandate would make it print a figure no artifact produces — which this portfolio's own standard forbids.
+Three ways out were put to the user: an honest headline about the baselines measured before the fine-tune
+exists; dropping `pl-jobs-lora` from S4 and taking `mlops-car-price` alone; or **building the artifact first**.
+
+**The user chose to build the artifact.** So S4 is no longer two page rewrites: it is one page rewrite
+(`mlops-car-price`, the cheap case — its `examples/` scripts already regenerate its README tables) plus a
+generator or committed table in `pl-jobs-lora` that does not exist today, and *then* its page. The estimate
+moves from 1.5–2 days to 2–3, and the scope is stated here rather than discovered in the stage.
+
+*This is the one option that removes the exception instead of recording it. §5.1's fallback exists because
+two repositories cannot source a figure; after S4 only one of them cannot, and §5.1 should be re-read at that
+point rather than left standing as though nothing changed.*
 
 ## 5. What is carried, not scheduled
 
