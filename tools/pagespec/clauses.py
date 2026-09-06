@@ -273,10 +273,12 @@ def _declaration(body: str, prop: str) -> str | None:
 def _role_exception(selector: str, body: str, prop: str, role: str) -> str | None:
     """Which of the four measured shapes exempts this declaration, or `None`.
 
-    Censused over the eleven published surfaces on disk and `wroclaw`'s own source, which
-    its page is rebuilt from daily. The live page shows the pre-S7 palette until the next
-publish, so `--fetch` does not reproduce this figure until then: 141 token-naming declarations
-    in the two families, of which 11 are `color-mix()`
+    Censused **at S3 close, before S4 tokenised `mlops-car-price` and `pl-jobs-lora`**, over the
+    eleven published surfaces on disk and `wroclaw`'s own source. It is a dated snapshot rather
+    than the current tree: S4 added conforming sites to both pages and two rails to
+    `pl-jobs-lora`, so re-deriving it today gives larger numbers. The report prints a live role
+    census on every run, which is where the current figure belongs. The snapshot: 141
+    token-naming declarations in the two families, of which 11 are `color-mix()`
     and out of this walk. Of the 130 that remain, 112 already name the house role. Every one
     of the remaining eighteen is one of these four, and
     each is recognised by what the rule *does* rather than by its selector text, so a rename
@@ -410,7 +412,7 @@ def clause_1_usage(css: str) -> list[Finding]:
     **This is the half both carriers were missing.** Every other clause-1 check reads `:root`,
     so a role swapped for another *declared* role is invisible to all of them: `apply-scout`
     shipped `border-bottom: 1px solid var(--surface)` where seven sibling pages write
-    `var(--border)`, and reintroducing exactly that line left 298 repository tests green and
+    `var(--border)`, and reintroducing exactly that line left 300 repository tests green and
     this checker reporting the page `clear`. The same blind spot passes `--radius` deleted
     while `.card` and `.kpi` still paint it.
 
