@@ -69,6 +69,14 @@ _BORDER_ROLES = frozenset({"border"})
 #: than the exemption.
 _HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES
 _LENGTH = re.compile(r"(\d+(?:\.\d+)?)px")
+#: The states a border may change colour under without being the box's edge. Not a list of
+#: pseudo-classes in general: `:first-child` is not a state a reader entered.
+#:
+#: It matches inside `:not(...)` too, so `a:not(:hover)` reads as a state and is exempted. No
+#: surface writes that and the reading is wrong; it is recorded rather than handled because
+#: excluding it means parsing the selector rather than searching it, and `0008` §3.10's own
+#: conclusion is that reading the branches against each other is what catches this class.
+_INTERACTION_STATE = re.compile(r":(?:hover|focus|active)\b")
 #: Any hex literal, including the 4- and 8-digit alpha forms `colour.rgb` refuses to
 #: measure. A translucent literal outside the token block is still a literal outside the
 #: token block. Spelled the same way `apply-scout`'s own page test spells it, because the
@@ -265,14 +273,18 @@ def _declaration(body: str, prop: str) -> str | None:
 def _role_exception(selector: str, body: str, prop: str, role: str) -> str | None:
     """Which of the four measured shapes exempts this declaration, or `None`.
 
-    Censused over the eleven surfaces on disk: 124 token-naming declarations in the two
-    families, of which 11 are `color-mix()` and out of this walk. Of the 113 that remain, 97
-    already name the house role. Every one of the remaining sixteen is one of these four, and
+    Censused over the eleven published surfaces on disk and `wroclaw`'s own source, which
+    its page is rebuilt from daily. The live page shows the pre-S7 palette until the next
+publish, so `--fetch` does not reproduce this figure until then: 141 token-naming declarations
+    in the two families, of which 11 are `color-mix()`
+    and out of this walk. Of the 130 that remain, 112 already name the house role. Every one
+    of the remaining eighteen is one of these four, and
     each is recognised by what the rule *does* rather than by its selector text, so a rename
     carries the exemption along instead of breaking it:
 
-    * **a rail** (11) — `border-left: 3px solid var(--warn)` on seven `.card.caution`, plus
-      four `--accent`/`--danger`/`--positive` rails in `car-price-ml/docs/app`. A one-sided
+    * **a rail** (12) — `border-left: 3px solid var(--warn)` on seven `.card.caution`, four
+      `--accent`/`--danger`/`--positive` rails in `car-price-ml/docs/app`, and `wroclaw`'s
+      `.verdict`. A one-sided
       border thicker than a hairline, *in a role the house does not name*, is a semantic mark
       rather than the box's edge — `.result.pending` paints exactly that shape in `--border`
       and is an edge, which is why the thickness alone cannot carry this.
@@ -282,8 +294,12 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
     * **its own fill** (1) — `mini-traceroute`'s `button { border: 1px solid var(--accent) }`,
       whose border names the role its own `background` names two declarations above — again
       only where that shared role is not a house one.
-    * **a focus ring** (1) — a `border-color` under `:focus` in a role the house does not
-      name, which is a state rather than an edge.
+    * **an interaction state** (2) — a `border-color` under `:hover`, `:focus` or `:active`
+      in a role the house does not name. `car-price-ml/docs/app`'s `input:focus-visible` and
+      `wroclaw`'s `nav.toc a:hover`, whose pill lights its border and its text together. The
+      shape is a border that *signals* rather than encloses, and `:focus` was only ever the
+      instance in front of the author: `wroclaw`'s appeared the moment its `--line` was
+      renamed to `--border` and the clause could decide the family at all.
 
     **`role not in _HOUSE_ROLES` is on all four shapes, and it is the whole guard.** Without
     it every shape is a keyhole rather than an exception, because each one's condition is
@@ -299,12 +315,16 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
     * `.result.pending { border-left: 3px solid var(--border) }` is a thick one-sided border,
       so swapping its role to a ground leaves it a *"rail"*.
 
-    Swept declaration by declaration over the nine tokenised surfaces — each conforming site
-    mutated on its own, to the other family's house role — the guard takes the checker from
-    **55 of 97 to 97 of 97**. Unguarded it misses 42: **31 of 56** in the border family and
-    **11 of 41** in the ground family. *The exemption census reads 16 either way*, because
-    those sixteen sites name a non-house role today and this function is never consulted for
-    the other 97 — which is why the census cannot show the hole and the sweep can.
+    Swept declaration by declaration over the nine surfaces on disk that declare tokens — each
+    conforming site mutated on its own, to the other family's house role — the guard takes the
+    checker from **55 of 97 to 97 of 97**; over all twelve surfaces it is **112 of 112**.
+    *The 31 reproduces only when a border site is mutated to **both** ground roles; to
+    `--surface` alone it is 28, and a reader re-deriving it lands there and thinks the
+    record is wrong.*
+    Unguarded it misses 42 of the 97: **31 of 56** in the border family and **11 of 41** in the
+    ground family. *The exemption census is unmoved by the guard either way*, because those
+    sites name a non-house role today and this function is never consulted for the conforming
+    ones — which is why the census cannot show the hole and the sweep can.
 
     **Three review passes were needed and each found one layer of it.** The first found two
     shapes keyed on a sibling declaration. The fix guarded three, leaving the rail: the sweep
@@ -334,8 +354,8 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
                     and role not in _HOUSE_ROLES):
                 return "its own fill"
         if (prop == "border-color" and role not in _HOUSE_ROLES
-                and ":focus" in _unquoted(selector)):
-            return "focus ring"
+                and _INTERACTION_STATE.search(_unquoted(selector))):
+            return "interaction state"
     return None
 
 
@@ -353,6 +373,15 @@ def _usage_sites(css: str):
     the dark block and is a dangling reference outside it. Admitting it everywhere would be
     a rule wider than the sentence licensing it — the shape this same review pass found in
     the focus ring, facing the other way.
+
+    **A blind spot worth stating: this reads CSS rules, and a page can paint a token without
+    writing one.** `wroclaw`'s `charts.py` substitutes token references into the SVG it emits
+    as *presentation attributes* — `fill="var(--border)"` — which `cssmod.rules()` never sees.
+    S7 renamed two of that page's tokens and left three such attributes pointing at names that
+    no longer existed; this clause reported the page clean, and a sweep of the repository's
+    tracked files is what found it. Reading attributes here would mean parsing the document
+    rather than the stylesheet, which is a different instrument; until then, a rename in a
+    repository that paints through attributes needs the sweep.
 
     **Every property, not only the two families the role rule speaks about.** A `var()` that
     names nothing is discarded by CSS whatever property it sits in, and `0008` §3.6's third

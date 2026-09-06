@@ -302,15 +302,24 @@ it is an instruction.
    `:root`. No literal hex outside the token block. **A token is used in the role it names**: `background`
    and `background-color` take `--bg` or `--surface`; `border`, `border-color` and the four one-sided
    borders take `--border`.
-   *Measured across the eleven surfaces on disk on 2026-09-05: **124** declarations in those two families
-   name a token; **11** of them are `color-mix()`, which clause 1's composited half already reports
-   `undecided` and this sentence does not reach. Of the **113** that remain, **97** already name the house
-   role. Every one of the remaining sixteen is one of four shapes, and they are the exception rather than a
+   *Measured on 2026-09-06 across the eleven published surfaces on disk and `wroclaw`'s own source, which
+   its page is rebuilt from daily — that page commits no HTML, and `--fetch` shows the pre-S7 palette until
+   the next publish: **141** declarations in those two families name a token; **11** of
+   them are `color-mix()`, which clause 1's composited half already reports `undecided` and this sentence
+   does not reach. Of the **130** that remain, **112** already name the house role. Every one of the
+   remaining eighteen is one of four shapes, and they are the exception rather than a
    tolerance — a one-sided border thicker than a hairline
-   (11 — `.card.caution`'s rail on seven pages, four more in `car-price-ml/docs/app`); a rule declaring its
+   (12 — `.card.caution`'s rail on seven pages, four more in `car-price-ml/docs/app`, and `wroclaw`'s
+   `.verdict`; its `dd` is a 2px rail in `--border`, which is the house role, so it counts among the 112
+   rather than here — the thickness alone never carried this); a rule declaring its
    own `color` beside its background (3 — two `button`s and `.terminal .cursor`, which have chosen a ground
    rather than inherited the page's); a border naming the role its own background names (1 —
-   `mini-traceroute`'s `button`); and a `border-color` under `:focus` (1), which is a state and not an edge.
+   `mini-traceroute`'s `button`); and a `border-color` under an interaction state — `:hover`, `:focus`, `:active` — (2), which
+   signals rather than encloses. *`car-price-ml/docs/app`'s `input:focus-visible` and `wroclaw`'s
+   `nav.toc a:hover`. The second appeared only when S7 renamed that page's `--line` to `--border`:
+   until then its palette held no house border role, so the clause reported `undecided` and could
+   decide nothing. A rename made a clause able to answer, and the first thing it answered was a real
+   question — which is the argument for the `undecided` in the first place.*
    **All four hold only where the role in question is not one of the three named above** — `--bg`,
    `--surface`, `--border` — and that condition is the whole of what makes them exceptions rather than
    holes: each describes a surface deliberately painted *outside* the house scheme, so a house role
@@ -319,9 +328,17 @@ it is an instruction.
    own fill; `body { background: var(--border); color: var(--text) }` as a control painting its own text;
    and `.result.pending { border-left: 3px solid var(--surface) }` as a rail, though that declaration is
    the box's edge and `car-price-ml/docs/app` paints it in `--border` today. Swept declaration by
-   declaration, the condition takes the rule from **55 of 97 conforming sites caught to 97 of 97**.
-   A page adding a fifth shape is stating something this sentence does not describe, and the governing rule
-   above decides it — not this list.*
+   declaration over the eleven surfaces on disk, the condition takes the rule from **55 of 97 conforming
+   sites caught to 97 of 97**; over all twelve it is **112 of 112**.*
+
+   *A first draft of this census counted eleven surfaces and then reported the interaction-state shape as
+   **2**, which is its count on twelve — so the four shapes summed to seventeen under a sentence saying
+   sixteen. One cell of a six-number census was moved and the other five were left, which is `0007` §8.2's
+   own finding: a correction that does not propagate is a new error.*
+
+   **A page adding a fifth shape is stating something this sentence does not describe, and the governing
+   rule above decides it — not this list.**
+
    **This sentence exists because `apply-scout` had it as a source comment and that was not enough.** One
    literal can serve two roles: `#eef1f6` was both `code`'s background and the table separator, so a
    migration done by *value* rather than by *role* produced a page whose tokens were all declared, all
@@ -340,14 +357,23 @@ it is an instruction.
    *The tokens and dark columns of §3 — where the tokens column counts **declared** properties, so
    `wroclaw`'s `9` and the `8` house tokens below are two different quantities.* Two rows need a word the
    table cannot hold. `wroclaw` reaches it
-   eight under two aliases (`--ink` for `--text`, `--line` for `--border`), **lacks `--positive` and
-   `--radius` entirely** — it inlines `border-radius: 10px` as a literal — and carries a **third**
-   `--accent-soft`, `#dbe7ff` light and `#1e2c45` dark, on neither side of the split below; those measure
-   1.24:1 and 1.33:1 against their own grounds, but **nothing paints them** — declared twice in `page.css`
-   and used nowhere — so no threshold applies today
-   and it is a naming item rather than a defect. And the three pages reading `0` carry no dark override
-   either, which is the same fact twice and is why those two columns move together.
-2. **A tile is `.kpi`.** *The tiles column of §3: two of the nine pages that have tiles use another name.*
+   eight under two aliases (`--ink` for `--text`, `--line` for `--border`), **lacked `--positive` and
+   `--radius` entirely** — it inlined `border-radius: 10px` as a literal — and carried a **third**
+   `--accent-soft`, `#dbe7ff` light and `#1e2c45` dark, on neither side of the split below; those measured
+   1.24:1 and 1.33:1 against their own grounds, and **nothing painted them** — declared twice in `page.css`
+   and used nowhere — so no threshold applied and it was a naming item rather than a defect.
+
+   ***All of that is now past tense.*** `0008` S7 renamed both aliases, declared `--radius` and
+   `--positive` at the pinned values, and took the third `--accent-soft` to `#5b93e4`/`#4167a6`; the page
+   holds all ten house tokens under the house names. *The paragraph is left standing rather than deleted
+   because the amendment thirty lines above it describes the same rename, and a clause whose descriptive
+   notes are maintained in one place and stale in another is worse than one that is stale throughout —
+   which is `0007` §8.2's own finding, caught here by review.* And the three pages reading `0` carry no
+   dark override either, which is the same fact twice and is why those two columns move together.
+2. **A tile is `.kpi`.** *The tiles column of §3, frozen 2026-09-04: two of the nine pages that have tiles
+   use another name. Both converged in S7 — `ab-lab`'s `.tile` and `wroclaw`'s `.stat` — so every page
+   with tiles now uses `.kpi` **in its source**; `wroclaw`'s published artifact follows at its next
+   rebuild, which is the one surface where those are different things.*
 3. **Every `<table>` sits in `.table-wrap`, which computes to `overflow-x: auto`.** The wrapper must
    actually have somewhere to scroll when the table needs it; a wrapper that clips, or one outside the
    card, does not count. *The scroller column of §3: one rule under four names, plus `wroclaw` making the

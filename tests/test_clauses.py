@@ -935,14 +935,35 @@ def test_a_ground_swapped_to_a_house_role_is_not_a_filled_control():
     assert status_of(findings, "1 usage roles") == clauses.FAIL
 
 
-def test_the_focus_exemption_is_the_one_property_the_spec_names():
-    """`0007` §5 clause 1 says *a `border-color` under `:focus`*. The code exempted all six
+def test_the_interaction_exemption_is_the_one_property_the_spec_names():
+    """`0007` §5 clause 1 says *a `border-color`* under a state. The code exempted all six
     border properties, which is a rule in code wider than the sentence stating it — §3.8's
     own argument, in the other direction."""
     ring = usage("input:focus-visible { border-color: var(--accent); }")
     assert status_of(ring, "1 usage roles") == clauses.PASS
     edge = usage("input:focus-visible { border: 1px solid var(--accent); }")
     assert status_of(edge, "1 usage roles") == clauses.FAIL
+
+
+def test_hover_is_a_state_like_focus_and_first_child_is_not():
+    """The second instance, and the reason the shape is stated as *a state* rather than as
+    `:focus`. `wroclaw`'s `nav.toc a:hover` lights a pill's border and its text together —
+    the border signals rather than encloses, which is the same thing the focus ring does.
+
+    It surfaced only when that page's `--line` was renamed to `--border`: until then the
+    palette held no house border role, so `1 usage roles` reported `undecided` and could
+    decide nothing. *A rename made a clause able to answer, and the first thing it answered
+    was a real question.*
+
+    `:first-child` is in here because a pseudo-class is not automatically a state: this
+    exemption is for borders a reader's interaction changes, and nothing else.
+    """
+    assert status_of(usage("nav.toc a:hover { border-color: var(--accent); }"),
+                     "1 usage roles") == clauses.PASS
+    assert status_of(usage("a:active { border-color: var(--accent); }"),
+                     "1 usage roles") == clauses.PASS
+    assert status_of(usage("li:first-child { border-color: var(--accent); }"),
+                     "1 usage roles") == clauses.FAIL
 
 
 def test_a_focus_written_inside_an_attribute_value_is_not_a_focus_state():
@@ -996,7 +1017,7 @@ def test_a_dark_only_token_painted_in_the_light_half_is_still_a_broken_reference
     assert "undeclared" in detail_of(findings, "1 usage refs")
 
 
-def test_a_focus_ring_painted_in_a_house_role_is_still_an_edge():
+def test_an_interaction_border_painted_in_a_house_role_is_still_an_edge():
     """The fourth shape, and the fourth appearance of this class on one branch.
 
     The guard went on the rail, the filled control and its own fill, and the focus ring kept
@@ -1033,10 +1054,12 @@ def test_every_exception_shape_refuses_a_house_role_and_admits_its_own():
         # `color` is in this one because the corpus declaration has it: `mini-traceroute`'s
         # button paints its own text. Without it the accent *background* is itself a wrong
         # ground, and the case would fail for a reason that is not the shape under test.
-        "its own fill": ("button { background: var(--%s); border: 1px solid var(--%s);"
-                         " color: var(--bg); }", "accent", "surface"),
-        "focus ring": ("input:focus-visible { border-color: var(--%s); }",
-                       "accent", "surface"),
+        "its own fill": (
+            ("button { background: var(--%s); border: 1px solid var(--%s);"
+             " color: var(--bg); }"),
+            "accent", "surface"),
+        "interaction state": (
+            "input:focus-visible { border-color: var(--%s); }", "accent", "surface"),
     }
     for name, (template, own_role, wrong_role) in shapes.items():
         placeholders = template.count("%s")
