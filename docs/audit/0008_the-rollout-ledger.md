@@ -110,9 +110,9 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
 | **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **closed** — `current_projects` `ef3d8c0` on `main`, CI green **on `main`**. §3.5 |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **closed** — `apply-scout` `33a8559`, `current_projects` `6b7d3b8`, both on `main` with CI green **on `main`**, not on the PR. Both carriers read a usage site; three review passes were needed to guard all four of the role rule's exception shapes, and §3.10 records why the corpus sweep could not find the last one |
-| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass. **`pl-jobs-lora` gets a committed artifact first** — §5 | 2 hand-written pages, plus one generator or table that does not exist yet | 2–3 d | **open, and larger than recorded** |
+| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass. **`pl-jobs-lora` gets a committed artifact first** — §4.2. **And both pages' seven card tags, which S6 deliberately left here** — §4.3 | 2 hand-written pages, 14 card tags, plus one generator or table that does not exist yet | 2–3 d | **open, and larger than recorded twice over** |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
-| **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | **9 repositories once S3 lands** — the back-link is what they need; `apply-scout` was the tenth and needed card metadata only, which S3 supplies. By *surface* it is ten, because `car-price-ml/docs/app/index.html` is a second published surface with neither. **Plus that surface's `button { color: #ffffff }`** — the one live defect the new literals clause found, §3.7 | 1.5 d | **next.** The one remaining stage with no unresolved decision and no unbuilt mechanism, and the one S3 unblocks by name |
+| **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, and `mini-traceroute`'s unwrapped `<figure>` table** (`0007` row 6) | `.tile`/`.stat`→`.kpi`, `.scroll`/`.ledger-wrap`/`.tablewrap`→`.table-wrap`, `--ink`/`--line`, `wroclaw`'s two absent tokens | 1.5 d | open |
 | **S8** | **The text layers** (`0006` B6) — the four About codes **and their committed README twins**, L3, H3, `pl-review-sense` C3 | 4 About + ≥6 READMEs + 5 `CLAUDE.md` | 2–3 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos | 0.5 d | open, schedulable anywhere |
@@ -520,6 +520,83 @@ moves from 1.5–2 days to 2–3, and the scope is stated here rather than disco
 *This is the one option that removes the exception instead of recording it. §5.1's fallback exists because
 two repositories cannot source a figure; after S4 only one of them cannot, and §5.1 should be re-read at that
 point rather than left standing as though nothing changed.*
+
+### 4.3 What S6 covered, what it left, and the defect it turned up
+
+**Scope derived from the repositories, not from the row.** The S6 row reads *"back-link + card metadata"*
+in its title and *"the back-link is what they need"* in its body, and the body is the one that matches the
+measurement: nine repositories lack clause 6, three surfaces lack clause 5, and `apply-scout`'s card metadata
+— the item the title is about — was supplied by S3. So S6 rolled out **the back-link on ten surfaces**, plus
+card metadata only where a surface had none of it.
+
+| | |
+|---|---|
+| **Back-link, all ten** | `ab-lab` `f8e8bb0`, `auth-log-scan` `a783180`, `car-price-ml` `30c6a04` (both surfaces), `it-job-radar` `e21a3ad`, `mini-traceroute` `dbf04a5`, `mlops-car-price` `5d2b072`, `pl-jobs-lora` `e0ed459`, `pl-review-sense` `5039299`, `wroclaw-air-insights` `d8d41b6`. Two follow-ups from the review then landed on top: `auth-log-scan` `4f16990` and `wroclaw-air-insights` `88c580f` — §4.4 |
+| **Card metadata** | `car-price-ml/docs/app` gains all seven; `wroclaw` gains the one it lacked, `og:description` |
+| **Deliberately left** | `mlops-car-price` and `pl-jobs-lora` keep no card metadata. Both are **S4** targets and S4 rewrites those pages — tokens, eyebrow, `h1`, `<title>`. Seven `og:*` tags written now are seven rewritten then |
+
+**Where the edit goes is not the same question as which page is wrong.** Five of the nine pages are
+generated and byte-diffed by their own CI, so the back-link went into a template, a theme module or a
+report generator; three are hand-written; `car-price-ml` is both, and its second surface is the only HTML
+there that CI does *not* diff. Each generated page was rebuilt with its own command, its hash checked before
+and after, and the diff read before publishing — `ab-lab`'s first rebuild ran without the package importable
+and **silently changed nothing**, which is the trap §3 of this ledger already records.
+
+**And the literals clause earned its keep on its first stage.** `car-price-ml`'s valuation form painted its
+submit button `color: #ffffff` on `background: var(--accent)`. White in both schemes, so in dark it put 16px
+600-weight text on `#6ea8fe` at **2.42:1** against Level AA's 4.5:1 — on the only control that page has.
+`var(--bg)` follows the scheme: **5.17:1 light, 7.71:1 dark**. It was reported as one hex outside the token
+block, on the surface CI does not byte-diff, and *nothing in this portfolio could see it before S3*.
+
+**One figure this stage refuted, and it has the cause §3.7 already named.** `0007` §9 row 4 scopes card
+metadata to *"Nine and **three** repositories"*. Three is what §3's card-meta column says, because that
+column is a page-level yes/no — and **§5 clause 5, in the same document, refutes it**: *"`wroclaw`'s `yes` is
+the one that is not whole … missing `og:description`."* The real scope is **four surfaces**. §9 is superseded
+and its rows are not restated here, but the *cause* is worth carrying, because this is its second instance:
+**§3.7 recorded the checker being composed from §3's frozen columns rather than from §5's sentences, and this
+is the same substitution made by a person rather than by a program.** A column that answers *whether* a page
+has something cannot answer *what it is missing*, and every scope derived from one inherits that.
+
+**`wroclaw` is the one whose result this branch cannot confirm.** It commits no HTML; the page is built by
+the daily refresh, and `reports/site/` is a gitignored local build that has produced a wrong answer
+surviving a session. Its three new assertions run on every push there, which is why they were added rather
+than left to the index checker — §6's first row still applies, and confirming the live page means
+dispatching `refresh.yml` and reading the URL.
+
+### 4.4 The S6 review, and the fifth appearance of one class
+
+The review confirmed every claim in the nine commits — the nine/ten scope, the six-generated /
+three-hand-written split verified by running each repository's own build command, the three contrast
+ratios, the four live URLs, the two test counts — and found nothing wrong with the code in any
+repository. What it found was in the record and in one guard.
+
+**The guard is the one worth carrying.** `wroclaw`'s new card-metadata check decided *"whether a cached
+description quotes a number this run produced"*, and compared against `f"{value:g}"` alone — while every
+metric on that page renders through `formatting.fmt`. The MAE reads `3.00`, not `3`. **So the single
+likeliest way a figure reaches that description — somebody lifting the page's own sentence — was the one
+shape that passed.** Fixing it exposed a second miss in the same line: the right-hand bound `(?![\d.])`
+rejects a continuing number *and* the full stop ending a sentence, so `its error of 3.00.` still slipped
+through. It is `(?!\d)(?!\.\d)` now, proved on four shapes plus a control — a value the run did **not**
+measure, because a guard reddening on any decimal would pass the other four and mean nothing.
+
+*That is a claim wider than its code, and it is the fifth appearance of that class across S3 and S6.* The
+four before it were guards on n−1 shapes of n; this one is a guard on one rendering of two. **The
+instrument that finds it is the same every time — enumerate what the thing can actually receive, and check
+the guard against all of it — and the instrument that misses it is the same too: proving it on the shape
+the author had in mind.**
+
+Two smaller items landed with it. `auth-log-scan`'s back-link was a literal in a template where every
+other URL is substituted from a constant — one string in one place, but the wrong place for that
+repository's pattern; the published page is byte-identical, which is how that is known to be a move rather
+than a change. And `_PROFILE_URL`'s comment in `wroclaw` claimed it was named *"for the same reason
+`_REPO_URL` is"*, whose stated reason is drift between two use sites; `_PROFILE_URL` has one. A stated
+reason that does not hold is the defect this record names, and it was written into the fix for it.
+
+One item is **carried, not fixed**: `car-price-ml`'s new `description` writes `1 200 trees` with a plain
+space. Clause 8 scores rendered text, so meta content is outside every carrier there is — the checker reads
+`space 1` on that surface while the file holds two grouped figures. Nothing is violated today; it is a
+standing figure that a later separator migration must find with nothing pointing at it, and S7 and S8 should
+know that meta content is a blind spot rather than discover it.
 
 ## 5. What is carried, not scheduled
 
