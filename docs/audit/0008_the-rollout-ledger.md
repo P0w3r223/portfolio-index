@@ -603,8 +603,9 @@ know that meta content is a blind spot rather than discover it.
 S6 closed with the live `wroclaw` page contradicting the merged tree, and the question worth answering was
 not *"did the deploy fail"* but *"what exactly is automatic here"*. Measured:
 
-- **The data refresh works and has for weeks.** Twenty-two consecutive scheduled runs to 2026-09-06, every
-  one `success`, rebuilding and republishing the page daily. Nothing was broken.
+- **The data refresh works.** The last **22** scheduled runs — 2026-08-16 to 09-06 — are every one
+  `success`, rebuilding and republishing the page daily. Over the full record there are **51** scheduled
+  runs since 2026-07-18 and **four** failures, all of them in July. Nothing was broken in September.
 - **The stale page was five hours of ordinary timing.** The day's run started 09:16Z from `98b3051`; the S6
   commits merged at 14:31Z and 14:46Z. The page was one run behind, not wrong.
 - **But `refresh.yml` was the only workflow that deploys Pages, and it had no push trigger.** `ci.yml` runs
@@ -612,11 +613,27 @@ not *"did the deploy fail"* but *"what exactly is automatic here"*. Measured:
   waited for the next data run — up to a day, and here rather more than that. Fixed: it now also triggers
   on a push touching `src/**` or the workflow. The merge that added the trigger was published **by the
   trigger it added**.
-- **And the schedule itself is not the schedule.** Until 2026-08-26 the runs started 05:33–05:43Z against a
-  `0 5 * * *` cron; from 2026-08-27 they started **09:16–17:17Z**, four to twelve hours late, every one
-  still succeeding. `ab-lab`'s unrelated Monday cron degraded **on the same date** (07:11Z → 13:23Z), which
-  is what says the cause is the platform's queue rather than either repository. *A cron expression is a
-  request, and this record should not read one as a time.*
+- **And the schedule itself is not the schedule.** Measured over all 51 scheduled runs, as minutes after
+  the 05:00Z the cron asks for:
+
+  | period | runs | delay |
+  |---|---|---|
+  | 2026-07-18 → 08-06 | 20 | 123–218 min |
+  | 2026-08-07 → 08-14 | 8 | 47–81 min |
+  | 2026-08-15 → 08-26 | 12 | **31–43 min** |
+  | 2026-08-27 → 09-06 | 11 | 235–737 min |
+
+  **The delay has never been under half an hour**, and it has swung by a factor of twenty across four bands
+  rather than stepping once. *A cron expression is a request, and this record should not read one as a
+  time.*
+
+  *A first draft of this section said the runs kept 05:33–05:43Z "until 2026-08-26" and then stepped once.
+  That range is the **twelve days** of 08-15 to 08-26 — the best spell in the record — and I read the most
+  recent thirty runs and stated what they showed of the whole. It also called `ab-lab`'s Monday cron
+  corroboration; that workflow has **two** scheduled runs in its entire history, which is a coincidence
+  worth noting and not evidence of anything. The conclusion survives and is stronger on 51 runs than on the
+  window that happened to be in front of me — but the evidence under it was the shape `0007` §8.4 names:
+  an observation true of one window, stated of the class.*
 
 *The general lesson is §3.5's, one layer out: the instrument said the page was wrong, and the instrument was
 right — but the reason it gave (`FAIL`) and the reason it had (one run behind) are different sentences, and
