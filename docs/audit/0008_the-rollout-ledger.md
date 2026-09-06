@@ -113,7 +113,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass. **`pl-jobs-lora` gets a committed artifact first** — §4.2. **And both pages' seven card tags, which S6 deliberately left here** — §4.3 | 2 hand-written pages, 14 card tags, plus one generator or table that does not exist yet | 2–3 d | **open, and larger than recorded twice over** |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
-| **S7** | **Naming, and `mini-traceroute`'s unwrapped `<figure>` table** (`0007` row 6) | `.tile`/`.stat`→`.kpi`, `.scroll`/`.ledger-wrap`/`.tablewrap`→`.table-wrap`, `--ink`/`--line`, `wroclaw`'s two absent tokens | 1.5 d | open |
+| **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
 | **S8** | **The text layers** (`0006` B6) — the four About codes **and their committed README twins**, L3, H3, `pl-review-sense` C3 | 4 About + ≥6 READMEs + 5 `CLAUDE.md` | 2–3 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos | 0.5 d | open, schedulable anywhere |
 
@@ -644,6 +644,37 @@ not *"did the deploy fail"* but *"what exactly is automatic here"*. Measured:
 right — but the reason it gave (`FAIL`) and the reason it had (one run behind) are different sentences, and
 only the second one leads to a fix.*
 
+### 4.6 S7's scope, re-derived — the row named four items and the stage touched nine repositories
+
+§3's own rule is that a stage finding its scope has moved re-derives it and says so here, and S6 set the
+precedent in §4.3. S7's row names `.tile`/`.stat`, `.scroll`/`.ledger-wrap`/`.tablewrap`, `--ink`/`--line`
+and `wroclaw`'s two absent tokens. What the repositories held at entry was more, and less, than that.
+
+| | |
+|---|---|
+| **Named and done** | `ab-lab` `.tile`+`.scroll` `fa58484`; `wroclaw` `.stat`+`--ink`/`--line`+`--radius`/`--positive` `c06d5fa`; `mini-traceroute` `.ledger-wrap` `7458aaf`; `mlops-car-price` `47f7cc0` and `pl-jobs-lora` `0b1c21e` `.tablewrap` |
+| **Named by `0007` §9 row 6, dropped by the S7 row** | `wroclaw`'s third `--accent-soft`, and `mini-traceroute`'s unwrapped `<figure>` table — the stage's one real clause-3 failure |
+| **Carried into S7 by §3.2** | `auth-log-scan` could not take the pinned `--accent-soft` without a usage-site change, and `.ev-accepted` was a live SC 1.4.11 failure. `83a22b5` |
+| **Not named anywhere, and taken on §9 row 5's reasoning** | the pinned values on `ab-lab` (dark), `doc-extract` `2a1be1d`, `it-job-radar` `c740900`, `pl-review-sense` `6ac7d66`. Row 5 set these aside as *"conformance, not harm"* and moved them to row 6, which is this stage; the S7 row simply did not carry that forward |
+
+**The one that was bigger than recorded.** §3.2 left `auth-log-scan` with one known failure. Sweeping every
+mark against every band found **four**: `ev-accepted` on the window band at 2.81:1, and all three of the
+other marks on the *flagged* band — a second band §3.2 never measured, because its reasoning was about
+`--accent-soft` and that band paints `--danger`. Solved by measurement rather than choice: 0.25 and 0.15 are
+the highest 0.05 steps at which every mark clears 3:1 with the pinned tokens. All sixteen pairs pass now.
+
+**And the rename made a clause able to answer.** `wroclaw`'s palette had no `--border`, so `1 usage roles`
+reported `undecided` — the treatment S3 built precisely so a planned stage's starting state is not called a
+defect before the stage runs. The moment `--line` became `--border`, the clause could decide, and the first
+thing it decided was a real question: `nav.toc a:hover` paints `border-color: var(--accent)`. That is an
+interaction state, not a wrong role; `0007` §5 clause 1 now says so, and `:focus` turned out to have been
+one instance of a shape rather than the shape.
+
+*Four review passes ran over this stage. Three blocked, and between them they found nine figures or guards
+that were right about the case in front of their author and silent about the rest of the set — including
+one where the fix for the eighth introduced the ninth, defeating a guard that had worked before it. The
+count is in §3.9, §3.10 and here; the instrument that finds them has not changed once.*
+
 ## 5. What is carried, not scheduled
 
 | item | state |
@@ -652,6 +683,7 @@ only the second one leads to a fix.*
 | **`Author:`** — 70 fields, ten repositories | Not a decision to take but **a migration to finish**: the newest document in each self-disagreeing repository already carries the name. Recommend `Piotr Cząstkiewicz` throughout |
 | **The profile fields** — `name`, `bio`, `email`, `blog`, `hireable`, social accounts | The user's own action. The token carries no `user` scope, so nothing here can write them |
 | **L2** — action pinning | Answered `0006` §3: do not pin, and the answer does not cover a third-party action if one is ever introduced |
+| **`wroclaw`'s scroller has no house name** | After S7 every other committed surface scrolls its tables in `.table-wrap`; this one uses `table { display: block; overflow-x: auto }` under `max-width: 640px`, so clause 3 reports `undecided` and will keep doing so. Neither the S7 row nor `0007` §9 row 6 names it, and S8 is the text layers — so it is unscheduled rather than skipped, and recorded here so the next reader does not go looking for it in a stage |
 
 ## 6. Assumptions to verify before each stage, not once
 
