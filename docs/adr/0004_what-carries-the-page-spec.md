@@ -109,6 +109,25 @@ own **and** are read by the index checker. Three more — **`mini-traceroute`, `
 `pl-jobs-lora`**, the hand-written pages in repositories with no Python page test — are covered by the index
 checker alone. `token-budget` has no page and is out of scope entirely.
 
+> **Amended 2026-09-06, twice, and both times because a repository could host a test §2.4 had not counted.**
+> `wroclaw-air-insights` joined in S6 and S7: `tests/test_report.py` now asserts clause 6's *exactly one*
+> back-link, clause 5's seven tags, that no card description quotes a figure the run measured, and that every
+> token the charts paint is one the stylesheet declares. §2.4 excluded that repository because
+> `test_verify_published_page.py` exercises the instrument rather than the page — which was true of that file
+> and not of the repository.
+>
+> **S4 adds `mlops-car-price` and `pl-jobs-lora`.** Both have a live pytest suite and a CI workflow; what they
+> lacked was a page test, not the means to host one. And S4 needs one: the constraint that every figure is a
+> committed artifact's cell is **unenforceable by the index checker**, which reads a page's HTML and CSS and
+> cannot see its repository's artifacts. So is clause 2's binding, for the same reason — `clause_2_tiles`
+> grants §5.1's fallback to any page with no tiles.
+>
+> **Seven becomes ten, and the uncovered set becomes one.** `mini-traceroute` is the remainder: no
+> `pyproject.toml`, a C++ suite, and no place to put a Python assertion — a structural exemption rather than
+> an omission. This is not a retreat from K-c toward K-a: nothing is vendored, nothing is copied, no checker
+> is duplicated. Each test asserts only what is local to its own repository, which is exactly what §2.4's
+> seven do.
+
 **`wroclaw-air-insights` is the twelfth and it is a different case, which K-b as stated does not cover.**
 "Run over all twelve working trees" assumes every page is committed bytes; this one is not. `.gitignore:25`
 ignores `reports/site/`, the page ships as a Pages artifact, and `git ls-files '*.html'` returns only the
@@ -157,3 +176,9 @@ none is in a test.
   repositories carry no visible proof that a spec governs them. Seven of them will carry assertions, which is
   the partial answer; the other **four** will not — the three of §4 plus `wroclaw`, whose own test covers the
   instrument rather than the page — and a reader of those four cannot see the rule.
+
+  *Amended 2026-09-06: the four are one.* `wroclaw` gained page assertions in S6 and S7, and S4 gives them to
+  `mlops-car-price` and `pl-jobs-lora`, leaving `mini-traceroute` alone — where the exemption is structural.
+  **The cost recorded here was real and it was paid down by stages doing other work**, which is worth noting:
+  each of those three got its test because a stage needed a carrier the index checker could not be, not
+  because anyone set out to close this gap.

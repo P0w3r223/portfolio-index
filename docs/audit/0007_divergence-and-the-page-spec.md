@@ -433,17 +433,65 @@ it is an instruction.
    on one page. The reason is in the glyph: a plain space breaks across a line and cuts a number in half.
    The majority here is the unconsidered choice and `U+202F` is the considered one.
 
+### 5.0 What counts as quoting a cell
+
+`ADR-0012` says the page quotes and never retypes, and every stage since has leaned on that without the
+portfolio ever stating what *quoting* permits. S4 could not proceed without it: both its target pages print
+figures today that no artifact prints, and calling that a violation needs a rule rather than a preference.
+
+1. **A figure is a quotation when its digit sequence equals a cell's, character for character.** The group
+   separator, the minus sign and the presence or absence of a trailing zero are the *page's typography* and
+   are not part of the quotation. The reference implementation already exists and predates this sentence:
+   `car-price-ml/src/car_price_ml/site/charts.py:76` is `f"{value:,.0f}".replace(",", "\u202f")` — the
+   generator holds the value, the page holds the glyph. `wroclaw`'s `formatting.fmt` is the same pattern.
+2. **Rounding is not quoting.** `727,554` → `728k`, `2.25` → `2.3` and `0.23` → `23 %` are new numbers, and
+   a reader cannot check them against anything. To publish a figure at a coarser precision, change the
+   generator's precision and regenerate; the friction is the point, and it is `ADR-0012`'s own — *to publish
+   a new number, extend the generator.*
+3. **A ratio or a comparison is an argument, not a cell.** `ADR-0012` §2 already says so; it is restated here
+   because clause 1 of this section is otherwise read as forbidding prose.
+
+*This is what makes clause 8 satisfiable at all.* `mlops-car-price/reports/artifact_cost.md` prints `9,278`
+with a comma and clause 8 mandates `U+202F`; under a byte-for-byte reading no page could satisfy both, and
+that repository holds no `U+202F` anywhere. Sentence 1 is the resolution, and it is the one the portfolio was
+already implementing.
+
 ### 5.1 The tile rule, against ADR-0012
 
-`mlops-car-price` and `pl-jobs-lora` have no tiles, no generator, and no committed table to quote. A
-mandate to grow four tiles would make them print figures no artifact produces, which the portfolio's own
-standard forbids.
+**Clause 2 binds where a committed artifact can source the figure, and names the fallback where it cannot:
+a lead paragraph carrying the claim, with the reason stated on the page** — so a later reader does not read
+the exemption as sloppiness.
 
-**So clause 2 binds where a committed artifact can source the figure, and names the fallback where it
-cannot: a lead paragraph carrying the claim, with the reason stated on the page** — so a later reader does
-not read the exemption as sloppiness. `mlops-car-price` already has `examples/` scripts that regenerate its
-README's tables and is the cheap case; `pl-jobs-lora`'s honest headline is a claim about baselines measured
-before the fine-tune exists, which is a copy decision that has to be taken before any tile can be filled.
+**The condition is a question about a repository, not a list of pages.** Does `git ls-files` show a committed
+artifact holding the cell the tile would quote? A list is what let the paragraph below stand wrong for two
+weeks, and a list cannot be checked by anyone who is not maintaining it.
+
+> ~~`mlops-car-price` and `pl-jobs-lora` have no tiles, no generator, and no committed table to quote. A
+> mandate to grow four tiles would make them print figures no artifact produces, which the portfolio's own
+> standard forbids. … `pl-jobs-lora`'s honest headline is a claim about baselines measured before the
+> fine-tune exists, which is a copy decision that has to be taken before any tile can be filled.~~
+
+**Struck 2026-09-06: every clause of that was false when it was written, and the fallback applies to
+neither page.** Measured with `git ls-files` rather than read:
+
+| | committed artifacts | generator |
+|---|---|---|
+| `mlops-car-price` | `reports/artifact_cost.md`, `reports/detector_evaluation.md`, `reports/drift_scenarios.md` | `examples/artifact_cost.py`, `examples/detector_evaluation.py`, `examples/drift_scenarios.py` |
+| `pl-jobs-lora` | `results/eval/report.md`, `results/eval/report.json` | `src/pl_jobs_lora/eval/report.py`, covered by `tests/test_eval_report.py` |
+
+`pl-jobs-lora`'s page has quoted that report since **2026-08-21**, two weeks before this document said the
+table did not exist. So the exemption was granted against the repositories rather than from them — the
+failure this record's own §2 method exists to prevent, committed in the section that grants an exemption.
+
+**Clause 2 therefore binds on both, and eight tiles are sourceable today**: `mlops-car-price` from
+`9,278` PLN and `3.3` MB against `338.5` MB and `5.0%` false alarms; `pl-jobs-lora` from `0.51` field F1,
+`0.05` JSON validity, a `0.28` recall ceiling and `142` gold records.
+
+**And the index checker cannot carry this clause either way.** `clause_2_tiles` returns
+`n/a — no tiles; §5.1 fallback applies` for *any* page with no tiles, because a checker reading one page's
+HTML cannot see its repository's artifacts. It reports `n/a` before and `ok` after and never reports the
+state in between, so the binding is carried by a test in the repository — which is what `ADR-0004` §4's
+amendment provides.
 
 ### 5.2 What carries the spec
 
