@@ -1,7 +1,7 @@
 # The divergence, measured — and the page spec it turns out to describe
 
 Date: 2026-09-04
-Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement. **§5 clause 1 amended 2026-09-05** with the role sentence — see the note below
+Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement. **§5 amended four times: clause 1's role sentence 2026-09-05, clause 1's interaction state and clause 2's convergence note in S7, and §5.1 struck 2026-09-06** with the role sentence — see the note below
 Author: Piotr Cząstkiewicz
 Related to: [0006_session3-4-presentation-block.md](0006_session3-4-presentation-block.md) B2 and B3,
 [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) §3 (Session 4) and §4 (the two families),
@@ -302,9 +302,12 @@ it is an instruction.
    `:root`. No literal hex outside the token block. **A token is used in the role it names**: `background`
    and `background-color` take `--bg` or `--surface`; `border`, `border-color` and the four one-sided
    borders take `--border`.
-   *Measured on 2026-09-06 across the eleven published surfaces on disk and `wroclaw`'s own source, which
-   its page is rebuilt from daily — that page commits no HTML, and `--fetch` shows the pre-S7 palette until
-   the next publish: **141** declarations in those two families name a token; **11** of
+   *Measured **at S3 close, before S4 tokenised `mlops-car-price` and `pl-jobs-lora`** — so the figures below
+   are a dated snapshot and not the current tree. S4 added conforming sites to both pages and two rails to
+   `pl-jobs-lora` (`.status`, `.correction`), which is why re-deriving them today gives larger numbers. **Do
+   not re-type a replacement here:** `python -m tools.pagespec` prints a role census on every run, and
+   `ef3d8c0` already moved one table in this document from typed to computed for exactly this reason. The
+   snapshot, across the eleven surfaces on disk and `wroclaw`'s own source: **141** declarations in those two families name a token; **11** of
    them are `color-mix()`, which clause 1's composited half already reports `undecided` and this sentence
    does not reach. Of the **130** that remain, **112** already name the house role. Every one of the
    remaining eighteen is one of four shapes, and they are the exception rather than a
@@ -402,10 +405,12 @@ it is an instruction.
    where it was.*
 5. **The page carries `description`, `og:type`, `og:title`, `og:description`, `og:url`, `twitter:card`
    and a favicon** — the property list, named, because `og:*` passes on any single tag and a checker needs
-   to know which. *The card-meta column of §3. `wroclaw`'s `yes` is the one that is not whole: it carries
-   three of the four `og:` properties and is missing `og:description`.*
-6. **The page carries exactly one link back to the profile.** *The back-link column of §3. `0003` §7
-   settled the shape — hub-and-spoke, one link — and it has never been rolled out.*
+   to know which. *The card-meta column of §3. `wroclaw`'s `yes` was the one that was not whole — three of the four
+   `og:` properties, missing `og:description`. **S6 supplied it** (`report.py:414`), and the live page
+   now reports `ok 5 card meta all seven present`.*
+6. **The page carries exactly one link back to the profile.** *The back-link column of §3. `0003` §7 settled the shape — hub-and-spoke, one link — and
+   **S6 rolled it out**: exactly one on each of the eleven committed surfaces, and `ok 6 back-link`
+   on the live `wroclaw` page.*
 7. **Type is the system stack.** No third-party font request. *The webfont column of §3; the three that
    fetch Inter from `fonts.googleapis.com` are making a request to a third party from a page whose subject
    is provenance. `wroclaw` is not among them — it dropped the webfont in `#27`, and the stale committed
@@ -427,7 +432,9 @@ it is an instruction.
 
    An earlier draft claimed this clause had "no majority to appeal to" and named `&nbsp;`, an HTML entity
    a checker cannot test for. There **is** a majority — the plain space, on four of the seven pages that
-   group at all, and by volume a larger one still: **61 of the portfolio's 85 grouped figures carry it**.
+   group at all, and by volume a larger one still: the plain space is still the most common form by volume. *The exact split moved when S4 rewrote
+   `mlops-car-price`'s separators, and it will move again; `python -m tools.pagespec --fetch --detail`
+   prints it per surface, which is where the live figure belongs.*
    It loses to the governing rule anyway. **`doc-extract` is the one page that has left it entirely**, and
    **`car-price-ml` is mid-migration in public** — 16 figures with a plain space against 12 with `U+202F`,
    on one page. The reason is in the glyph: a plain space breaks across a line and cuts a number in half.

@@ -41,7 +41,7 @@ is exactly how `0006` §2.4 happened.
 | the record says | the repositories say |
 |---|---|
 | L5: the deprecated `license` TOML table form is present *"in all twelve"* (`0006` §3 L5) | **eleven of twelve.** `mini-traceroute` is C++/CMake and has **no `pyproject.toml` at all**. The exemption is structural, not an oversight, and must be recorded — otherwise the next reader finds eleven and goes looking for a twelfth |
-| *"62 `Author: P0w3r223` fields across nine repositories"* | **70 fields across ten.** The count omitted the index itself, which holds 8 — and the index is where `0003`–`0005` live. Both self-disagreeing repositories are already half-migrated: `apply-scout` 10 handle / 2 name, the index 8 / 2 |
+| *"62 `Author: P0w3r223` fields across nine repositories"* | **70 fields across ten.** The count omitted the index itself, which holds 8 — and the index is where `0003`–`0005` live. Both self-disagreeing repositories are already half-migrated: `apply-scout` 10 handle / 2 name, the index 8 handle / 4 name at the time of writing |
 | `0007` §9 row 5 scopes the contrast repair **by page** | **by token source: three repositories, four surfaces.** Row 5 already named the right three repositories, so this is a re-scoping rather than a refutation — what it missed is that `car-price-ml` has *one* token source feeding *two* published surfaces (`src/car_price_ml/site/assets/tokens.css` is inlined into `docs/index.html`, and `chart.css` is shared with the form by `build.py` and `form.py`), so one hex edit moves both |
 
 ### 2.2 What the contrast repair actually is, read from the usage sites
@@ -110,7 +110,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S1** | **The contrast repair** — `car-price-ml` (one source, two surfaces), `mini-traceroute` (both tokens). **`auth-log-scan` attempted and reverted, §3.2** | 2 repos, 3 surfaces, hex values only | 0.5–1 d | **closed** — `car-price-ml` `0abbfe3`, `mini-traceroute` `19cda5f`, both on `main` with CI green **on `main`**, not on the PR |
 | **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **closed** — `current_projects` `ef3d8c0` on `main`, CI green **on `main`**. §3.5 |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **closed** — `apply-scout` `33a8559`, `current_projects` `6b7d3b8`, both on `main` with CI green **on `main`**, not on the PR. Both carriers read a usage site; three review passes were needed to guard all four of the role rule's exception shapes, and §3.10 records why the corpus sweep could not find the last one |
-| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass, both pages' card tags (§4.3), **eight tiles now that §5.1's exemption is struck**, and every rounded figure re-quoted | 2 hand-written pages · 14 card tags · 12 literal migrations with one two-role trap on each · 8 tiles · 2 new page tests | ~2 d | **open** — scope re-derived in §4.7 |
+| **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass, both pages' card tags (§4.3), **eight tiles now that §5.1's exemption is struck**, and every rounded figure re-quoted | 2 hand-written pages · 14 card tags · **22 literal declaration sites** with one two-role trap on each · 8 tiles · 2 new page tests | ~2 d | **closed** — `mlops-car-price` `e1d797e`, `pl-jobs-lora` `9be52a2`, `current_projects` `d2e96b8`, all on `main` with CI green **on `main`**. The review's four HIGH are fixed and merged too — `mlops-car-price` `9641f07`, `pl-jobs-lora` `879b5df`, both on `main`; the first version of this row said "fixed in #21 / #14" while both were still open, which read as merged and was the same defect §1 forbids. Both pages read `clear`; §4.7 re-derived the scope before the stage, §4.8 records what the quotation rule caught once it was executable, §4.9 what the review found once the guards were mutated |
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
@@ -234,7 +234,7 @@ the rest stay in S7 and S8, but it should be *planned* as one repository rather 
 S3's substantive fix was a token migrated **by value instead of by role**: `#eef1f6` carried two roles on that
 page, and the table separator was mapped to `--surface` where six sibling pages use `--border`. That is fixed.
 What is not fixed is that **nothing detects it coming back**. Reintroducing exactly that line leaves
-`apply-scout`'s 298 tests green and the checker reporting the page `clear`.
+`apply-scout`'s 300 tests green and the checker reporting the page `clear`.
 
 Both carriers read the **`:root` block** and nothing reads a **usage site**, so the whole class is invisible to
 them: a role swapped for another declared role, `code { background: var(--border) }`, or `--radius` deleted
@@ -422,7 +422,7 @@ Two more from the same pass:
 - **The refuted "seven of the nine" was corrected in two documents and left standing in a third
   place** — a test docstring. The erratum and the figure it corrects were three files apart.
 
-*The extraction was checked the way `0007` §3.5 checked the whole checker: `palettes()` after the
+*The extraction was checked the way §3.5 of this ledger checked the whole checker: `palettes()` after the
 refactor agrees with the pre-refactor implementation on every one of the eleven surfaces, to the
 key and the value. That is what said the refactor was safe; it is also what could not say the
 partition was, because no surface on disk nests a dark query.*
@@ -451,9 +451,12 @@ a table separator is decorative and SC 1.4.11 does not reach it — so any bound
 1.24 is a house number with a 0.18 margin. Worse, the mirror mutation
 `code { background: var(--border) }` *raises* contrast, 1.06 → 1.24, so a lower bound misses it
 entirely. A per-repository snapshot alone was rejected as *sufficient* for the same reason
-`ADR-0004` §6 gives: its ceiling is the seven repositories with a page test, and the four that
-cannot see the rule are exactly `mini-traceroute`, `mlops-car-price`, `pl-jobs-lora` and
-`wroclaw`. It is kept as the second carrier, not as the only one.
+`ADR-0004` §6 gives: its ceiling was the seven repositories with a page test, and the four that
+could not see the rule were `mini-traceroute`, `mlops-car-price`, `pl-jobs-lora` and `wroclaw`.
+**That is no longer the count.** `ADR-0004` was amended twice on 2026-09-06: `wroclaw` gained page
+assertions in S6 and S7, S4 gave them to the other two, and the uncovered set is now
+`mini-traceroute` alone — where the exemption is structural. It is kept as the second carrier,
+not as the only one.
 
 ## 4. L3 — the recommendation
 
@@ -698,7 +701,7 @@ The row grew twice on premises that measurement removes, and grew once on someth
 stage. `mlops-car-price` prints `728k`, `119k`, `148k` where its artifacts print `727,554`, `118,993`,
 `148,049`, and writes `−0.9%` with U+2212 where the artifact writes a hyphen. `pl-jobs-lora` prints `2.3`,
 `2.5`, `21.4` where its report prints `2.25`, `2.47`, `21.43`. Under §5.0 the separators and the minus are the
-page's typography and are fine; **the rounding is not**, so those seven figures either come from a regenerated
+page's typography and are fine; **the rounding is not**, so those six figures either come from a regenerated
 artifact or leave the page.
 
 **And the S3 defect is loaded on both pages, identically.** `#eef1f6` serves two roles on each:
@@ -715,6 +718,140 @@ distinguishes it from `car-price-ml` in a recruiter's thirty seconds, and it dis
 construction. `pl-jobs-lora` opens on *94% of what the input makes recoverable* — a sentence its own artifact
 prints verbatim at `results/eval/report.md:36`, model-free, and finished rather than pending, so S5 makes it
 context instead of making it false.
+
+### 4.8 What closing S4 measured — including a scope figure neither page produces
+
+Both pages read `clear`. `mlops-car-price` reported seven clause failures at entry and `pl-jobs-lora` six; the
+single `undecided` left on each is clause 4's `h1`, which the checker declines to judge rather than fails.
+**Three of the eleven committed surfaces are now clear** — `apply-scout`, and these two. Live bytes were
+compared against the git blob, not against the working tree: both identical, so this is a statement about the
+published page and not about a local checkout (§6's third assumption, discharged for the two surfaces
+this stage touched). 116 tests on `mlops-car-price`, 231 on `pl-jobs-lora`.
+
+**§4.7's "12 literal migrations" is a figure no page produces.** It is the same failure §2.1 records three of
+at entry — a count written into a plan and then carried, never read back off a repository. Read from the two
+stylesheets at entry: **22 declaration sites**, 7 on `mlops-car-price` and 15 on `pl-jobs-lora`, carrying 11
+distinct values between them and 16 counted per page. And **two of the 22 were deleted rather than migrated**:
+`#fffaf0` and `#fffbfa`, the tints on `pl-jobs-lora`'s `.status` and `.correction` cards, which no house role
+names and which the rail replaces. So the row is 22 sites, 20 migrations, 2 deletions. The two-role trap was
+on each page as §4.7 said it would be, and it was `#eef1f6` on both.
+
+**What the rule caught once it was executable, and what it does not catch.** Running each new test's quotation
+check against the page as it stood at entry rejects **four figures on `mlops-car-price`** — `728`, `119`,
+`148` where the reports print `727,554`, `118,993`, `148,049`, and `338` where the page's own next sentence
+wrote `338.5` — and **six on `pl-jobs-lora`**: `2.3`, `21.4`, `67.9`, `4.9`, `568` and `11`. Ten figures
+that had been published, none of them a quotation of anything.
+
+Two more were also wrong and the guard is **silent** on them: `36 %` and `23 %` on `pl-jobs-lora`, found by
+reading the report rather than by running the check. `results/eval/report.md` writes `36` and `ADR-0001`
+writes `n=23`, both for unrelated reasons, and a bare two-digit integer is very likely to be a whole token
+somewhere in four artifacts two of which are prose. The guard is strong for a decimal and for three digits or
+more, weak for a two-digit integer; **the limit is written into the test**, because a guard whose boundary is
+not recorded gets read as covering everything. Versioning `results/probe/` would take the first ADR off the
+artifact set and tighten it.
+
+**The tokeniser welded two cells and the defect was mine.** Admitting the ordinary space into the number class
+— it is a legitimate group separator under clause 8 — joins adjacent table cells into one token:
+`0.05 0.04` reads as `0.050.04` and matches nothing, so a whole table silently stops being checked. Caught on
+`pl-jobs-lora`, latent on `mlops-car-price`, and it is the same welding §8.5 of `0007` already records
+against every earlier separator tally in this portfolio.
+
+**One exemption is about a figure rather than about a not-a-figure.** `pl-jobs-lora`'s correction section
+quotes what the page *used to* publish, and no generator prints a number that was withdrawn. The shape is
+`<s class="withdrawn">`, struck in the markup so a reader sees it is not a claim, and exempt in the test —
+because the alternative forbids the one section on that page whose whole subject is a figure that should not
+have been published.
+
+### 4.9 The S4 review, and the sixth and seventh appearance of one class
+
+The review blocked: **four HIGH, six MEDIUM, two LOW, every one proved by a mutation that shipped green**
+rather than by reading. Two of the four are the class §3.9 and §3.10 record — *a guard that is green under
+the very mutation its own docstring names* — and both were in the tests S4 had just written to close it.
+
+| the guard's own sentence | what passed it |
+|---|---|
+| *"asserted per tile against the cell, not in aggregate"* | four tiles printing one number, and a tile printing its neighbour's cell. It compared each tile against every figure in the file, one tile at a time — which is the aggregate comparison |
+| *"nothing catches the `code` half"* | a later `@media (prefers-color-scheme: dark) { code { … } }`. CSS resolves by the **last** declaration and `re.search` returns the **first**, and the page test and `pagespec` were both clean |
+| *"a dead exemption is worse than none"* | every exemption on both pages, always. It searched the raw HTML, where an exempted shape is still present long after the pass that consumed it |
+| — | every figure in `og:description`. Attribute content is stripped along with its tag, so the social card was outside the provenance rule entirely |
+
+**Asking the liveness question correctly killed an exemption on sight.** `mlops-car-price` carried a `years`
+shape that consumed nothing a reader sees — the page's only year is inside the build date, which the shape
+above it already removes — while accepting a four-digit corruption of any cell: `15 422` retyped as `2019`
+passed. It was pure widening, and it is gone.
+
+**Two things in the review did not survive being checked, and checking them was the point.**
+
+* Its proposed fix for the liveness guard — *"count hits per pattern inside `_rendered_text()` and assert each
+  `> 0`"* — is wrong, and measurably so: run against the finished text, **every** exemption reads dead, because
+  removing them is what that function does. The question only has an answer at the point each pattern is
+  applied, so the pipeline now tallies as it strips.
+* Its census, *"7 of 22 printed figures have an accepted corruption"*, did not reproduce. Substituting one
+  digit at a time gives **10 of 22** on `mlops-car-price` and **56 of 59** on `pl-jobs-lora`; the review's own
+  cited example, `12.9 ms` retyped as `13.0 ms`, is a two-digit corruption its family excluded. Both censuses
+  are now in the test files **with the corruption family stated**, because a census whose definition is
+  unstated is a number nobody can reproduce — which is how it came to be quoted at a figure it never measured.
+
+**16 mutations across the two repositories, all red.** The first `pl-jobs-lora` run was thrown away: the
+mutation harness restores each file with `git checkout --`, and an uncommitted caption edit went with it, so
+two verdicts were measured against a test that was already red for an unrelated reason. Re-run against a
+committed tree. That is the second time in one day that a restore-from-HEAD took work nobody had looked at,
+and the rule it earns is narrow: **commit before the harness runs, not before the harness finishes.**
+
+### 4.10 The documentation round — and the surface the rule was never applied to
+
+Three reviews, split by **question** rather than by file, because 102 documents read for "anything wrong"
+gets read thinly: are the twelve `CLAUDE.md` correct as instructions someone follows *before* reading the
+code; do the thirteen READMEs state things their own repositories contradict; is this record internally
+consistent and still true of the trees. All three blocked.
+
+**The finding that matters most is structural.** S4 spent a stage establishing that a published surface
+quotes and never retypes, and applied it to `docs/index.html`. **Nobody applied it to `README.md`** — which
+GitHub renders first and the page is a click away from. Ten of the twelve READMEs carried at least one
+figure no artifact prints, including in `apply-scout`, which §4.8 records as `clear`: that repository's
+`tests/test_docs_page.py` pins `48978+10983 | cost: $0.4368` so the *page* cannot round it, and the README
+beside it printed `49.0k+11.0k` and `$0.44`. "Three of eleven surfaces are clear" was a statement about one
+file per repository.
+
+The sharpest single figure was not a rounding at all. `pl-jobs-lora/README.md` opened its motivation
+sentence with *"0.23 field F1 few-shot"* where the report and the README's own table forty lines above both
+print `0.30`. It reconstructs exactly as the **pre-redefinition** four-field mean — `(0.25 + 0.12 + 0.54 +
+0.01) / 4` — from before `field F1` was redefined to drop `tech_optional`. That is §4.8's own named blind
+spot, *a figure moved to the wrong place*, and it survived because `0.23` does appear in the artifacts, as a
+different metric on a different row.
+
+**What the reviews corrected in this record, rather than in the repositories.**
+
+| what it said | what the trees say |
+|---|---|
+| §4.8: the ten figures S4 removed are still in the READMEs | **eight.** `67.90` quoted as `67.9` is legal — §5.0 names a trailing zero as the page's typography — and `568` is printed by `configs/config.yaml` and `ADR-0006`, which the page's own artifact set excludes |
+| §4.8: *"Three more were also wrong"* | **two** are named on the line. Written in the paragraph arguing that an unstated census is a number nobody can reproduce |
+| §4.7: *"those seven figures"* | **six** are enumerated |
+| The S4 row: *"closed … the review's four HIGH fixed in #21 and #14"* | both were **open** when that was written. It read as merged, which §1 forbids in as many words. Now merged, and the row says what the first version got wrong |
+| §3.8 and §3.9: **four** repositories cannot see the rule | **one.** `ADR-0004` was amended twice the same day and this ledger contradicted it two sections apart |
+| §3.7 and `clauses.py`: `apply-scout`'s **298** tests | **300**, at the S3 closing commit and today. 298 is no revision of that repository — and it sat inside the paragraph blocking S3 for over-claiming |
+
+**And one rule was stricter than the spec it cites.** `0007` §5.0 names *the separator, the minus sign and
+the presence or absence of a trailing zero* as the page's typography; the page tests compared digit strings,
+so `67.90` and `67.9` read as different figures. The sentence is now implemented in `_canonical()` and
+pinned by a test, in both repositories. A guard that disagrees with its own normative source is worse than a
+missing one, because it produces confident false findings — this one produced two.
+
+**The census is dated rather than re-derived**, in `0007` §5 clause 1 and in `clauses.py`. It was measured at
+S3 close; S4 added conforming sites to two pages and two rails to `pl-jobs-lora`, so it is stale. Three
+attempts at a replacement — the review's, and two of mine over different populations — produced three
+different numbers, which is the argument for not typing a fourth. `ef3d8c0` already moved one table in that
+document from typed to computed; the report prints a role census on every run, and clause 8's `61 of 85`
+went the same way for the same reason.
+
+**The `CLAUDE.md` round found one instruction actively pointing the wrong way** in nine of twelve files: a
+block telling the reader to prefer an MCP server *over* Grep and to fall back only when the graph does not
+cover the question. That server is declared in each submodule's own `.mcp.json`, so it is simply absent
+whenever a session starts in this index one directory up — as every session of this block has. Neither index
+has a hook, and both were weeks behind the trees they describe. `car-price-ml`'s version was the one that
+said all of this already; the other nine were rewritten to match it. The page contract itself — the thing
+eleven of these repositories are held to — appeared in none of the twelve, and now appears in ten, naming
+each repository's own local carrier or, for `mini-traceroute`, the absence of one.
 
 ## 5. What is carried, not scheduled
 
@@ -736,4 +873,5 @@ no means to check, and three of five such claims were false.
 | `wroclaw`'s live page carries what `main` says it carries | Fetch the live URL. It commits **no HTML** — `.gitignore:25` — so `reports/site/` is an untracked local build and reading it has produced a wrong answer that survived a session. **The lag is closed**: `refresh.yml` now also triggers on a push touching `src/**`, so a code change publishes itself — §4.5. Its `og:description` and back-link are live as of 2026-09-06 |
 | The four About descriptions are still as recorded | `gh api` per repository; they are an account surface, not a file |
 | Ten of eleven pages are still served byte-identical to their committed file | Hash the fetched bytes against the file (`0007` §2) |
+| The working tree is what the record assumes — no submodule on an unmerged branch, no uncommitted file. §4.10's round left twelve `CLAUDE.md` and eight `README.md` uncommitted across the submodules for an hour, and two submodules checked out on a fix branch, so `python -m tools.pagespec` was reading two pages nobody had published. Check before quoting the checker |
 | No pull request is open and all twelve pointers still match | `gh pr list` per repository + `git submodule status` |
