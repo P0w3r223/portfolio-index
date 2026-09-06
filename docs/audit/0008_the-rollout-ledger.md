@@ -535,10 +535,13 @@ card metadata only where a surface had none of it.
 | **Card metadata** | `car-price-ml/docs/app` gains all seven; `wroclaw` gains the one it lacked, `og:description` |
 | **Deliberately left** | `mlops-car-price` and `pl-jobs-lora` keep no card metadata. Both are **S4** targets and S4 rewrites those pages — tokens, eyebrow, `h1`, `<title>`. Seven `og:*` tags written now are seven rewritten then |
 
-**Where the edit goes is not the same question as which page is wrong.** Five of the nine pages are
-generated and byte-diffed by their own CI, so the back-link went into a template, a theme module or a
-report generator; three are hand-written; `car-price-ml` is both, and its second surface is the only HTML
-there that CI does *not* diff. Each generated page was rebuilt with its own command, its hash checked before
+**Where the edit goes is not the same question as which page is wrong.** Six of the nine pages are
+generated and three are hand-written. Of the six, **five are byte-diffed by their own CI** — `ab-lab`,
+`auth-log-scan`, `it-job-radar`, `pl-review-sense`, `car-price-ml` — so the back-link went into a template,
+a theme module or a generator; the sixth is `wroclaw`, which is generated and byte-diffed by nothing,
+because it commits no HTML at all. `car-price-ml` is both kinds at once, and its second surface is the only
+HTML there that CI does *not* diff. *A first draft wrote "five … three", which reads as a partition of nine
+and covers eight.* Each generated page was rebuilt with its own command, its hash checked before
 and after, and the diff read before publishing — `ab-lab`'s first rebuild ran without the package importable
 and **silently changed nothing**, which is the trap §3 of this ledger already records.
 
@@ -594,9 +597,11 @@ reason that does not hold is the defect this record names, and it was written in
 
 One item is **carried, not fixed**: `car-price-ml`'s new `description` writes `1 200 trees` with a plain
 space. Clause 8 scores rendered text, so meta content is outside every carrier there is — the checker reads
-`space 1` on that surface while the file holds two grouped figures. Nothing is violated today; it is a
-standing figure that a later separator migration must find with nothing pointing at it, and S7 and S8 should
-know that meta content is a blind spot rather than discover it.
+`space 1` on that surface while the file holds two grouped figures. No *new* violation is introduced — but that surface already
+fails clause 8 today (`FAIL 8 separator space 1`) on the body occurrence at `docs/app/index.html:27`, and
+both separators are the same U+0020. The point stands and is sharper for it: the checker reads `space 1`
+where the file holds **two** grouped figures, so a later separator migration must find the second one with
+nothing pointing at it. S7 and S8 should know meta content is a blind spot rather than discover it.
 
 ### 4.5 The page did self-update; what did not was the code that renders it
 
