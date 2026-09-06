@@ -598,6 +598,30 @@ space. Clause 8 scores rendered text, so meta content is outside every carrier t
 standing figure that a later separator migration must find with nothing pointing at it, and S7 and S8 should
 know that meta content is a blind spot rather than discover it.
 
+### 4.5 The page did self-update; what did not was the code that renders it
+
+S6 closed with the live `wroclaw` page contradicting the merged tree, and the question worth answering was
+not *"did the deploy fail"* but *"what exactly is automatic here"*. Measured:
+
+- **The data refresh works and has for weeks.** Twenty-two consecutive scheduled runs to 2026-09-06, every
+  one `success`, rebuilding and republishing the page daily. Nothing was broken.
+- **The stale page was five hours of ordinary timing.** The day's run started 09:16Z from `98b3051`; the S6
+  commits merged at 14:31Z and 14:46Z. The page was one run behind, not wrong.
+- **But `refresh.yml` was the only workflow that deploys Pages, and it had no push trigger.** `ci.yml` runs
+  on every push and only tests. So a change to the *rendering code* had no publish path of its own and
+  waited for the next data run — up to a day, and here rather more than that. Fixed: it now also triggers
+  on a push touching `src/**` or the workflow. The merge that added the trigger was published **by the
+  trigger it added**.
+- **And the schedule itself is not the schedule.** Until 2026-08-26 the runs started 05:33–05:43Z against a
+  `0 5 * * *` cron; from 2026-08-27 they started **09:16–17:17Z**, four to twelve hours late, every one
+  still succeeding. `ab-lab`'s unrelated Monday cron degraded **on the same date** (07:11Z → 13:23Z), which
+  is what says the cause is the platform's queue rather than either repository. *A cron expression is a
+  request, and this record should not read one as a time.*
+
+*The general lesson is §3.5's, one layer out: the instrument said the page was wrong, and the instrument was
+right — but the reason it gave (`FAIL`) and the reason it had (one run behind) are different sentences, and
+only the second one leads to a fix.*
+
 ## 5. What is carried, not scheduled
 
 | item | state |
@@ -614,7 +638,7 @@ no means to check, and three of five such claims were false.
 
 | assumption | how, and the trap |
 |---|---|
-| `wroclaw`'s live page still carries the row `0007` §4.3 describes, and still lacks `og:description` | Fetch the live URL. It commits **no HTML** — `.gitignore:25` — so `reports/site/` is an untracked local build and reading it has produced a wrong answer that survived a session |
+| `wroclaw`'s live page carries what `main` says it carries | Fetch the live URL. It commits **no HTML** — `.gitignore:25` — so `reports/site/` is an untracked local build and reading it has produced a wrong answer that survived a session. **The lag is closed**: `refresh.yml` now also triggers on a push touching `src/**`, so a code change publishes itself — §4.5. Its `og:description` and back-link are live as of 2026-09-06 |
 | The four About descriptions are still as recorded | `gh api` per repository; they are an account surface, not a file |
 | Ten of eleven pages are still served byte-identical to their committed file | Hash the fetched bytes against the file (`0007` §2) |
 | No pull request is open and all twelve pointers still match | `gh pr list` per repository + `git submodule status` |
