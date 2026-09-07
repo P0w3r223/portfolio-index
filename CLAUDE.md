@@ -68,24 +68,6 @@ python -m pytest -m 'not submodules'     # what CI's `core` job runs — no sibl
 python -m pytest -m submodules           # only the tests that read a working tree
 ```
 
-## Read the entry state before quoting anything
-
-`0008` §6 is a table of assumptions to verify **before each stage, not once**. Two of its rows
-are now `python -m tools.entry_state`; the rest are still yours to check, and the module's
-docstring names which.
-
-- **`git fetch` first.** `origin/main` is a local file a session inherits and nothing refreshes
-  on its own. On 2026-09-07, an hour after `#77` merged, two passes independently reported the
-  index as unmerged with no pull request open — which is exactly what a stale ref plus a
-  *closed* (not never-opened) pull request looks like. Three signals agreed with the false
-  hypothesis at once.
-- **This repository squash-merges.** A branch commit is never reachable from `main` and never
-  will be. Cite the commit on `main`; a cell citing the branch SHA is citing a commit that does
-  not exist for any reader. `0008` §4.12 records the S-gate row doing it.
-- **Check the working tree before quoting the checker.** A submodule on a fix branch, or a
-  round of uncommitted edits, means `python -m tools.pagespec` is reading pages nobody has
-  published. That has happened, for an hour, across twelve `CLAUDE.md` and eight `README.md`.
-
 ## Working rules
 
 - Branches and pull requests, [Conventional Commits](https://www.conventionalcommits.org/),
@@ -118,9 +100,6 @@ docstring names which.
   What is settled: **`mini-traceroute` holds no Python at all** — no `pyproject.toml`, zero
   `.py` files — so it can carry no local page test, which makes it the one surface the index
   checker guards alone. This repository re-points submodules; it does not edit them.
-- **Do not commit `.claude/sessions/`** — it is ignored deliberately. `.claude/settings.json`
-  *is* tracked, because a hook nobody can read in a diff is a hook nobody can correct.
-
 ## The published surfaces, and what the gate does not say
 
 Twelve surfaces: eleven read from committed files, and `wroclaw-air-insights`, which commits no
@@ -152,3 +131,27 @@ alone is longer than any module in it — so prefer reading a named section over
 and prefer the checker's own output over any figure the record quotes. No line count is written
 down here on purpose: a figure in this file would be a hand-typed one, which is the practice the
 section above forbids.
+
+## Read the entry state before quoting anything
+
+`0008` §6 is a table of assumptions to verify **before each stage, not once**. Two of its rows
+are now `python -m tools.entry_state`; the rest are still yours to check, and the module's
+docstring names which.
+
+- **`git fetch` first.** `origin/main` is a local file a session inherits and nothing refreshes
+  on its own. On 2026-09-07, an hour after `#77` merged, two passes independently reported the
+  index as unmerged with no pull request open — which is exactly what a stale ref plus a
+  *closed* (not never-opened) pull request looks like. Three signals agreed with the false
+  hypothesis at once.
+- **This repository squash-merges.** A branch commit is never reachable from `main` and never
+  will be. Cite the commit on `main`; a cell citing the branch SHA is citing a commit that does
+  not exist for any reader. `0008` §4.12 records the S-gate row doing it.
+- **Check the working tree before quoting the checker.** A submodule on a fix branch, or a
+  round of uncommitted edits, means `python -m tools.pagespec` is reading pages nobody has
+  published. That has happened, for an hour, across twelve `CLAUDE.md` and eight `README.md`.
+
+*This section sits last on purpose.* It is the one part of this file that has already been
+paid for: two passes reached the same false conclusion on 2026-09-07 because none of it was
+loaded, and a reader's attention is weakest in the middle of a document and strongest at its
+end. Everything above tells you what this repository is; this tells you what to check before
+you say anything about it.
