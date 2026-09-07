@@ -66,7 +66,7 @@ def test_a_third_party_sheet_is_declared_unread_rather_than_fetched(tree):
         "</head>"), encoding="utf-8")
     loaded = sources.load(PAGE, tree, allow_fetch=False)
     assert loaded.unreadable == [
-        "https://fonts.googleapis.com/css2?family=Inter (third party, not read)"]
+        ("https://fonts.googleapis.com/css2?family=Inter", sources.THIRD_PARTY)]
     assert "Inter" not in loaded.css
 
 
@@ -76,16 +76,45 @@ def test_a_protocol_relative_sheet_is_third_party_too(tree):
         "</head>", '<link rel="stylesheet" href="//cdn.example/x.css"></head>'),
         encoding="utf-8")
     assert sources.load(PAGE, tree, allow_fetch=False).unreadable == [
-        "//cdn.example/x.css (third party, not read)"]
+        ("//cdn.example/x.css", sources.THIRD_PARTY)]
 
 
-def test_a_same_origin_sheet_that_is_missing_is_reported_rather_than_skipped(tree):
+def test_a_missing_same_origin_sheet_is_reported_with_the_reason(tree):
     """Silently skipping it would report the page as having no scroller rule — the same
-    wrong answer as never looking, with no trace that anything was missed."""
+    wrong answer as never looking, with no trace that anything was missed.
+
+    **And the cause travels with it.** This entry gates, through `_unread_same_origin`, on a
+    path the scheduled job walks daily; a rename, a permission error and a file that was never
+    written arrive as one identical line when the `except` discards the exception. `0008` §5
+    carried that as a residual from the S-gate review, and the fetch branch beside it had
+    already made the same argument for itself.
+    """
     (tree / "mini-traceroute" / "docs" / "assets" / "styles.css").unlink()
     loaded = sources.load(PAGE, tree, allow_fetch=False)
-    assert loaded.unreadable == ["assets/styles.css"]
+    assert len(loaded.unreadable) == 1
+    href, why = loaded.unreadable[0]
+    assert href == "assets/styles.css", "the href is carried, not spelled into prose"
+    assert why.startswith("FileNotFoundError"), (
+        "the fact without the cause is one line for three faults")
     assert loaded.stylesheets == []
+
+
+def test_a_cache_busting_query_string_names_a_file_that_can_be_read(tree):
+    """An href is a URL reference and not a path, and this one gated a page that is fine.
+
+    `styles.css?v=2` was joined to the directory verbatim, so the read failed on a file
+    sitting right there — and an unread same-origin sheet refuses the build. The fetch branch
+    has always been right about this, through `urljoin`; only the local branch was not.
+    """
+    page = tree / "mini-traceroute" / "docs" / "index.html"
+    page.write_text(page.read_text(encoding="utf-8").replace(
+        'href="assets/styles.css"', 'href="assets/styles.css?v=2"'), encoding="utf-8")
+
+    loaded = sources.load(PAGE, tree, allow_fetch=False)
+
+    assert loaded.unreadable == []
+    assert loaded.stylesheets == ["assets/styles.css?v=2"]
+    assert loaded.css.strip(), "the sheet was located but nothing was read from it"
 
 
 # -- a page that cannot be read is not an empty page ---------------------------------------
@@ -166,3 +195,55 @@ def test_exactly_one_surface_exists_only_at_a_live_url():
 def test_a_surface_with_a_committed_path_is_never_fetched():
     for surface in sources.SURFACES:
         assert surface.must_fetch is (surface.path is None)
+
+
+def test_a_percent_encoded_href_reaches_the_file_it_names(tree):
+    """`%20` means a space. The fetch branch has always decoded it through `urljoin`."""
+    docs = tree / "mini-traceroute" / "docs"
+    (docs / "assets" / "my styles.css").write_text(".spaced { overflow-x: auto }",
+                                                   encoding="utf-8")
+    page = docs / "index.html"
+    page.write_text(page.read_text(encoding="utf-8").replace(
+        'href="assets/styles.css"', 'href="assets/my%20styles.css"'), encoding="utf-8")
+
+    loaded = sources.load(PAGE, tree, allow_fetch=False)
+
+    assert loaded.unreadable == []
+    assert ".spaced" in loaded.css
+
+
+def test_a_file_whose_name_really_contains_a_percent_is_read_rather_than_gated(tree):
+    """Decoding is right by the spec and a false gate is worse than a missing one.
+
+    A file literally called `my%20x.css` would be reported unreadable by decoding alone — and
+    an unread same-origin sheet refuses the build. The literal spelling is tried second, so
+    either name on disk answers the question the clauses are about to ask.
+    """
+    docs = tree / "mini-traceroute" / "docs"
+    (docs / "assets" / "my%20x.css").write_text(".literal { overflow-x: auto }",
+                                                encoding="utf-8")
+    page = docs / "index.html"
+    page.write_text(page.read_text(encoding="utf-8").replace(
+        'href="assets/styles.css"', 'href="assets/my%20x.css"'), encoding="utf-8")
+
+    loaded = sources.load(PAGE, tree, allow_fetch=False)
+
+    assert loaded.unreadable == []
+    assert ".literal" in loaded.css
+
+
+def test_the_reason_does_not_repeat_the_absolute_path_the_href_already_names(tree):
+    """`str(error)` on a missing file is the whole absolute path, and it reaches gate output."""
+    (tree / "mini-traceroute" / "docs" / "assets" / "styles.css").unlink()
+
+    _href, why = sources.load(PAGE, tree, allow_fetch=False).unreadable[0]
+
+    assert str(tree) not in why, "the machine path is in the message the gate prints"
+    # `startswith`, not equality: `strerror` is locale-dependent on Linux, and a contributor
+    # on a localised desktop would get a red test about a property this one does not assert.
+    assert why.startswith("FileNotFoundError: ")
+    # Not `!= "FileNotFoundError:"`: the value is built as `f"{type}: {why}"`, so it always
+    # carries the colon and a space — that inequality held with the cause deleted entirely,
+    # which is the one thing this line exists to catch.
+    assert why.removeprefix("FileNotFoundError:").strip(), (
+        "the cause is the half that was missing")

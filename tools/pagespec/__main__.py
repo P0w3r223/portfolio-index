@@ -49,14 +49,16 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: `4 title` (3) or `8 separator` (7), and nothing else fails anywhere. So this set costs no
 #: page change today — it starts refusing the moment one of them regresses, which is the point.
 #: `8 separator` enters with S9; `4 title` with S10.
+#:
+#: **The two guards on this tuple read eleven surfaces, not twelve.** `test_published_surfaces`
+#: sweeps without `--fetch`, so neither the ceiling (no gated clause fails) nor the floor
+#: (every clean clause is gated) can see `wroclaw-air-insights`. Widen this tuple only after
+#: `python -m tools.pagespec --fetch` agrees: the `surfaces` job cannot see the twelfth
+#: surface, so a widening that is premature merges green and reddens the scheduled `live`
+#: run instead.
 GATED: tuple[str, ...] = ("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "5 ", "6 ", "7 ")
 
 
-#: How `sources._with_styles` marks a sheet it declined to read because it belongs to someone
-#: else. Third-party sheets are unread *by design* — fetching one would put a page's verdict
-#: on somebody else's CDN — so they never gate. A **same-origin** sheet that could not be read
-#: is the opposite case, and `_unread_same_origin` is why.
-_THIRD_PARTY = " (third party, not read)"
 
 
 def _unread_same_origin(loaded: sources.Loaded) -> list[str]:
@@ -68,13 +70,18 @@ def _unread_same_origin(loaded: sources.Loaded) -> list[str]:
     policy 2's own argument one level down — a renamed *stylesheet* degrading to a green pass
     instead of a renamed *page* — so it gates for the same reason.
 
-    Read off `loaded.unreadable` rather than off the finding's message. A first version
-    parsed the `stylesheets` detail with `split(", ")`, and the marker above **contains that
-    separator** (`, not read)`), so every third-party sheet split into two fragments and the
-    second one gated. The structured value was available the whole time; reconstructing it
-    from prose was the error, and it is `0008` §3.5's welded-token defect in one more place.
+    Read off `loaded.unreadable` rather than off the finding's message, and off the
+    structured pair rather than off a formatted one. A first version parsed the
+    `stylesheets` detail with `split(", ")` and the third-party marker **contains that
+    separator**, so every third-party sheet split into two fragments and the second gated.
+    A later reader split on `" ("` and a change that added a cause before it broke that too.
+    Three readers, three prose formats: `unreadable` carries `(href, why)` now, the marker
+    is `sources.THIRD_PARTY` and is compared rather than searched for, and the sentence this
+    docstring had already written — *the structured value was available the whole time* —
+    stops being advice the module gives and does not take.
     """
-    return [entry for entry in loaded.unreadable if _THIRD_PARTY not in entry]
+    return [sources.describe((href, why)) for href, why in loaded.unreadable
+            if why != sources.THIRD_PARTY]
 
 
 def _gated(finding: clauses.Finding) -> bool:
@@ -115,7 +122,7 @@ def _census(sheets: list[tuple[str, str]]) -> list[str]:
         tally: dict[str, int] = {}
         where: dict[str, set[str]] = {}
         for name, css in sheets:
-            for _selector, _body, prop, role, _scheme in clauses._usage_sites(css):
+            for _selector, _body, prop, role, _scheme, _fallback in clauses._usage_sites(css):
                 if prop not in properties:
                     continue
                 tally[role] = tally.get(role, 0) + 1

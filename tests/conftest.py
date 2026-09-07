@@ -28,6 +28,12 @@ from tools.pagespec import render, sources
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
+#: Emitted by `clauses.check` and not a clause: the checker reporting on its own inputs. It is
+#: `UNDECIDED` by construction and can never be `FAIL`, and the gate refuses on it through
+#: `_unread_same_origin` — a separate reason with its own header — so requiring it in `GATED`
+#: would demand a prefix that gates nothing and says the wrong thing about why.
+NOT_A_CLAUSE = frozenset({"stylesheets"})
+
 
 def fixture(name: str) -> str:
     """One fixture of record, read as text. See `fixtures/README.md` for provenance."""
@@ -39,7 +45,7 @@ def page(html: str) -> render.Page:
 
 
 def loaded(html: str = "", css: str = "", *, name: str = "surface", repo: str = "surface",
-           unreadable: list[str] | None = None) -> sources.Loaded:
+           unreadable: list[tuple[str, str]] | None = None) -> sources.Loaded:
     """A `Loaded` assembled by hand, so the clauses can be exercised without any I/O.
 
     `repo` defaults to `name` because clause 4 compares the `<title>` against the directory,

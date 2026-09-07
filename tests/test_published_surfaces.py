@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from conftest import ROOT, require_submodule
+from conftest import NOT_A_CLAUSE, ROOT, require_submodule
 from tools.pagespec import __main__ as report
 from tools.pagespec import clauses, render, sources
 
@@ -36,7 +36,31 @@ CLAUSES = ("1 tokens", "1 usage refs", "1 usage roles", "1 literals",
            "2 tiles", "3 tables", "4 h1", "4 title",
            "5 card meta", "6 back-link", "7 webfont", "8 separator")
 
+
 pytestmark = pytest.mark.submodules
+
+
+def _sweep() -> tuple[int, dict[str, set[str]]]:
+    """One pass over the committed surfaces: how many were read, and each key's statuses.
+
+    Shared by the ratchet's two halves on purpose. They make opposite claims about `GATED`
+    against the same corpus, and a corpus assembled twice is a corpus that can diverge once —
+    `0008` §4.12 is the record of a fix applied to one of two tests that shared a defect and
+    not to the other, five lines away. The `require_submodule` loop lives here for the same
+    reason: neither half can now run against a partial checkout while the other does not.
+    """
+    for surface in COMMITTED:
+        require_submodule(surface.repo, surface.path)
+    read = 0
+    statuses: dict[str, set[str]] = {}
+    for surface in sources.SURFACES:
+        loaded = sources.load(surface, ROOT, allow_fetch=False)
+        if loaded is None:
+            continue
+        read += 1
+        for finding in clauses.check(loaded):
+            statuses.setdefault(finding.clause, set()).add(finding.status)
+    return read, statuses
 
 
 def _load(surface: sources.Surface) -> sources.Loaded:
@@ -86,7 +110,7 @@ def test_no_css_question_is_answered_from_an_incomplete_stylesheet(surface):
     """
     loaded = _load(surface)
     linked = render.parse(loaded.html).stylesheet_hrefs()
-    accounted = set(loaded.stylesheets) | {entry.split(" (")[0] for entry in loaded.unreadable}
+    accounted = set(loaded.stylesheets) | {href for href, _why in loaded.unreadable}
     assert set(linked) <= accounted, (
         f"{surface.name} links a stylesheet that was neither read nor reported"
     )
@@ -155,22 +179,91 @@ def test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing():
     whole point: *a corpus sweep proves the rule against the corpus*, so the corpus has to be
     all of it or the test has to skip.
     """
-    for surface in COMMITTED:
-        require_submodule(surface.repo, surface.path)
-    read = 0
-    failing: set[str] = set()
-    for surface in sources.SURFACES:
-        loaded = sources.load(surface, ROOT, allow_fetch=False)
-        if loaded is None:
-            continue
-        read += 1
-        failing |= {finding.clause for finding in clauses.check(loaded)
-                    if finding.status == clauses.FAIL}
+    read, statuses = _sweep()
     assert read == len(COMMITTED), f"the sweep read {read} of {len(COMMITTED)} surfaces"
+
+    failing = {clause for clause, seen in statuses.items() if clauses.FAIL in seen}
     for clause in sorted(failing):
         assert not any(clause.startswith(prefix) for prefix in report.GATED), (
             f"{clause} fails on a committed surface and is in GATED: either a page "
             "regressed, or the ratchet was widened before its stage closed")
+
+
+def test_the_ratchet_cannot_be_narrowed_either_every_clean_clause_is_gated():
+    """The other direction, which nothing guarded until now.
+
+    Its twin above asserts *gated implies no failure*. That is one-way: removing a prefix from
+    `GATED` cannot violate it, because fewer gated keys is trivially still zero failures. So the
+    suite's entire protection of the ratchet's **content** was *"`GATED` must be non-empty"* —
+    measured, dropping any single one of the eight prefixes left all 311 tests green, and
+    `GATED = ("1 ",)`, which un-gates seven clauses at once, was green too.
+
+    **This matters now rather than in the abstract.** `0008` S9 and S10 both edit that tuple. An
+    edit adding `"8 "` while dropping `"5 "` would ship green and clause 5 would silently stop
+    gating twelve surfaces — the displacement shape §3.9, §3.10, §4.9 and §4.12 each record.
+
+    With both halves the tuple is no longer a claim checked in one direction: **`GATED` is
+    exactly the set of finding keys that report no failure on the corpus**, derived from the
+    sweep rather than typed. A stage closing moves a key from failing to clean, and this test is
+    then what *requires* the widening its twin permits.
+
+    **One exemption, and the first version of this test claimed there were none.** That claim —
+    *"the gate's other two reasons are not clause findings at all, so they never reach this
+    set"* — is false: `clauses.check` emits a `stylesheets` finding whenever a sheet could not
+    be read (`clauses.py`, the `loaded.unreadable` branch). It is `UNDECIDED` by construction,
+    can never be `FAIL`, and the gate already refuses on it through `_unread_same_origin`, which
+    is a different reason with its own header. So it is clean-and-ungated the moment any page
+    has an unreadable sheet — and no committed surface has one today, which is exactly why the
+    claim survived being written. Reproduced against a hand-built `Loaded` rather than waited
+    for.
+
+    The exemption is one name and a reason. That is the difference between an exemption and a
+    place for a key to hide — **and it is also the route for a clause that ships report-only**.
+    `0009` §7 row 12 plans one: a contrast clause that prints and does not gate until a stage
+    closes it. Under this rule a clause that is never `FAIL` is *required* to be gated, so
+    shipping one means adding its key here with its reason. That is deliberate: it makes
+    report-only a recorded decision rather than a silence.
+
+    *The alternative — deriving `clean` from keys observed `PASS` at least once — was measured
+    and rejected. `1 composited` and `4 h1` are `UNDECIDED` on every surface and never `PASS`,
+    so both would drop out of the demanded set and their removal from `GATED` would go
+    unnoticed; `4 h1` is failable by construction (a missing `<h1>`, or one equal to the
+    repository's name), so that is a real hole in the direction this guard exists to close.*
+
+    **Scope: eleven surfaces, and the gate covers twelve.** `_sweep` never passes `--fetch`, so
+    `wroclaw-air-insights` is not in this measurement, while the scheduled `live` job gates
+    over it. The failure message says so, because the trap is specific and lands on S9: the
+    committed pages can go clean on a clause while the fetch-only one still fails, this guard
+    would then *demand* the widening, the `surfaces` job cannot see the twelfth, and the
+    morning's `live` run goes red on a merge that was green.
+    """
+    read, statuses = _sweep()
+    assert read == len(COMMITTED), f"the sweep read {read} of {len(COMMITTED)} surfaces"
+
+    # The exemption set earns its keys rather than holding them. An entry that the corpus ever
+    # reports `PASS` or `FAIL` is a clause that can gate, and exempting one would un-gate it in
+    # silence — measured: adding `5 card meta` and `6 back-link` left all 390 tests green.
+    for exempt in sorted(NOT_A_CLAUSE):
+        assert not statuses.get(exempt, set()) & {clauses.PASS, clauses.FAIL}, (
+            f"{exempt} is exempted from the floor but the corpus reports it "
+            f"{sorted(statuses[exempt])}: only a key that cannot gate belongs in NOT_A_CLAUSE")
+
+    clean = {clause for clause, seen in statuses.items()
+             if clauses.FAIL not in seen} - NOT_A_CLAUSE
+    assert clean, "no clause is clean on the corpus, which cannot be true while the gate is green"
+    for clause in sorted(clean):
+        assert any(clause.startswith(prefix) for prefix in report.GATED), (
+            f"{clause} reports no failure on any committed surface and is not in GATED: the "
+            "ratchet was narrowed, so a clause that passes everywhere has stopped gating.\n"
+            "Read the twelfth before doing anything: `python -m tools.pagespec --fetch` "
+            "locally, or dispatch pagespec.yml's `live` job, which reads it on a chosen ref "
+            "and is the one lever that makes this verifiable before a merge rather than "
+            "trusted. This sweep reads the eleven committed surfaces; the gate covers twelve.\n"
+            "  - twelfth clean too -> widen GATED; that is the ratchet working.\n"
+            "  - twelfth still failing -> do NOT widen, and do not land the pointer bump that "
+            "cleaned the eleven until the twelfth is done. The stage owns both.\n"
+            "  - the clause can never fail by construction -> NOT_A_CLAUSE, which is checked "
+            "above and will refuse a key the corpus reports PASS or FAIL.")
 
 
 def test_the_computed_table_does_not_depend_on_set_iteration_order():

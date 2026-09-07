@@ -171,6 +171,38 @@ def test_a_table_that_is_its_own_scroller_passes_with_nothing_above_it():
         page("<body><table></table></body>"), fixture("wroclaw_scroller.css"))
     assert finding.status == clauses.UNDECIDED
     assert "the table itself" in finding.detail
+    assert "media condition is not read" in finding.detail, (
+        "the docstring promises the detail says which half is missing")
+
+
+def test_a_wrapped_table_beside_a_bare_one_does_not_pass_on_the_wrapped_one_s_account():
+    """The shape no surface has yet, which is why it went uncaught.
+
+    `element_scrolls` is a property of the *stylesheet*, and it used to zero the unwrapped
+    count for every table on the page; the caveat about the unread media condition was then
+    attached to the report branch, and that branch only fired when *no* wrapper class was
+    named. So a page holding both — a named wrapper and a bare `table` rule — printed a flat
+    `ok` while a table wearing neither wrapper was invisible.
+
+    Not reachable today: `table_itself` is False on all eleven committed surfaces, and
+    `wroclaw` is the only page with the rule. It becomes reachable the moment that page's
+    scroller is given a house name, which `0008` §5 carries as wanted-but-unscheduled — on
+    the one surface with no committed HTML to byte-diff.
+
+    The honest verdict is `undecided` and not `fail`: the bare rule may well cover the second
+    table at every width, and `rules()` cannot say. What must not happen is `pass`.
+    """
+    markup = ('<div class="table-wrap"><table id="wrapped"></table></div>'
+              "<table id=\"bare\"></table>")
+    sheet = (".table-wrap { overflow-x: auto }\n"
+             "@media (max-width: 640px) { table { display: block; overflow-x: auto } }")
+
+    finding = clauses.clause_3_tables(page(markup), sheet)
+
+    assert finding.status == clauses.UNDECIDED, (
+        "the wrapped table's class made the page read as clear for both")
+    assert "1 rest on the bare `table` rule" in finding.detail
+    assert ".table-wrap" in finding.detail and "the table itself" in finding.detail
     assert "media condition is not read" in finding.detail
 
 
@@ -513,7 +545,9 @@ def test_a_stylesheet_that_could_not_be_read_is_declared_rather_than_ignored():
     """Reading only the inline blocks is the trap that recorded `mini-traceroute` wrongly
     across three sessions. A sheet that cannot be read makes the CSS clauses provisional, and
     the report has to say so."""
-    findings = clauses.check(loaded("<html></html>", "", unreadable=["assets/styles.css"]))
+    findings = clauses.check(loaded(
+        "<html></html>", "",
+        unreadable=[("assets/styles.css", "FileNotFoundError: no such file")]))
     assert status_of(findings, "stylesheets") == clauses.UNDECIDED
     assert "assets/styles.css" in detail_of(findings, "stylesheets")
 
@@ -1069,3 +1103,288 @@ def test_every_exception_shape_refuses_a_house_role_and_admits_its_own():
         refused = usage(template % ((wrong_role,) * placeholders))
         assert status_of(refused, "1 usage roles") == clauses.FAIL, (
             f"the {name} shape exempts a house role, so a swapped token walks through it")
+
+
+def test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemption_safe():
+    """`stylesheets` is the checker reporting on its own inputs, not a clause.
+
+    `test_the_ratchet_cannot_be_narrowed_either_every_clean_clause_is_gated` exempts this one
+    key from the rule that every clause reporting no failure must be in `GATED`, and the
+    exemption rests entirely on the status below: a key that can never be `FAIL` cannot be a
+    key that stopped gating, and the gate refuses on an unread same-origin sheet through
+    `_unread_same_origin` anyway — a different reason with its own header.
+
+    The exemption's first version did not exist, because no committed surface has an unreadable
+    sheet and the key therefore never appeared in the sweep. It would have reddened the floor
+    guard for the wrong reason on the first page that did.
+    """
+    findings = clauses.check(loaded(
+        "<html><head><title>A claim about the data</title></head>"
+        "<body><p class='eyebrow'>Data</p><h1>A claim</h1></body></html>",
+        unreadable=[("assets/styles.css", "FileNotFoundError: no such file")]))
+
+    assert status_of(findings, "stylesheets") == clauses.UNDECIDED
+    assert "assets/styles.css" in detail_of(findings, "stylesheets")
+
+
+# -- clause 1: a var() fallback is painted, whatever its type -------------------------------
+
+
+@pytest.mark.parametrize("declaration, resolved", [
+    ("var(--space-3, 12px)", "12px"),
+    ("var(--stack, ui-monospace, monospace)", "ui-monospace, monospace"),
+    ("var(--brand, #2563eb)", "#2563eb"),
+    ("var(--a, var(--b, #fff))", "var(--b, #fff)"),
+])
+def test_an_undeclared_token_with_a_fallback_is_painted_and_not_called_dangling(
+        declaration, resolved):
+    """The fallback matcher was a regex accepting a 3- or 6-digit hex and nothing else.
+
+    Every other legal fallback fell through to `_DANGLING`, so `var(--stack, monospace)`
+    reported *"names a token that resolves to nothing"* about a declaration the browser
+    paints — the wrong verdict under the wrong sentence, which is the pairing this package
+    says it exists to refuse. And it **gates**: the key is `1 <scheme> --<name> value`, and
+    `"1 "` is in `GATED`, so one defensive fallback written during `0008` S7 or S9 would have
+    refused the build.
+
+    A regex could not have been widened into this. A fallback may hold a nested `var()`, and
+    `[^)]*` stops at the inner close paren — the last row is the case that proves the scan
+    balances rather than searches.
+    """
+    value, reason = clauses._resolve_chain("x", {"x": declaration})
+
+    assert reason == "", f"{declaration} was discarded as {reason!r}"
+    assert value == resolved
+
+
+def test_a_var_with_no_fallback_is_still_a_dangling_reference():
+    """The repair must not swallow the defect the clause exists for."""
+    value, reason = clauses._resolve_chain("x", {"x": "var(--nope)"})
+
+    assert (value, reason) == (None, clauses._DANGLING)
+
+
+def test_the_fallback_is_read_from_the_var_that_named_the_missing_token():
+    """Anchored, not searched. The old matcher ran over the whole declaration, so a *second*
+    `var()`'s hex could be handed back as the first one's fallback."""
+    assert clauses._fallback_argument("var(--a) var(--b, #fff)", 0) is None
+    assert clauses._fallback_argument("var(--a) var(--b, #fff)", 9) == "#fff"
+
+
+def test_the_anchor_is_the_var_itself_and_not_the_start_of_the_declaration():
+    """Asserted through `_resolve_chain`, because the call site is where the anchor is chosen.
+
+    The test above pins `_fallback_argument` and cannot see the argument it is *given* — so
+    replacing `reference.start()` with `0` left it green, which is a guard positioned where it
+    cannot see the failure. That is the class this branch keeps meeting, and here it was in a
+    test written to close an instance of it.
+
+    A function call before the `var()` is what separates the two: scanning from zero enters
+    `rgba(` first, takes the comma at *its* depth, and hands back `0, 0, .5` as the token's
+    fallback.
+    """
+    value, reason = clauses._resolve_chain("x", {"x": "rgba(0, 0, 0, .5) var(--gone, #fff)"})
+
+    assert reason == ""
+    assert value == "#fff", "the fallback came from an earlier function call, not from the var()"
+
+
+def test_a_usage_site_naming_an_undeclared_token_with_a_fallback_is_not_a_broken_reference():
+    """The same hole one level out: this branch did not consult the fallback at all.
+
+    Dead on today's corpus — `1 usage refs` is PASS on all eleven surfaces — which is why it
+    is repaired *before* S9 rewrites five stylesheets rather than during, and why the repair
+    moves no page.
+    """
+    sheet = (":root { --bg: #ffffff; --surface: #f6f8fa; --border: #d8dee9; --text: #1c2430;"
+             " --muted: #5b6675; --accent: #2563eb; --accent-soft: #5b93e4;"
+             " --warn: #b45309; --danger: #b42318; --positive: #047857 }"
+             ".note { color: var(--brand, #2563eb) }")
+
+    findings = clauses.clause_1_usage(sheet)
+
+    assert status_of(findings, "1 usage refs") == clauses.PASS
+    assert "undeclared" not in detail_of(findings, "1 usage refs")
+
+
+def test_a_usage_site_naming_an_undeclared_token_with_no_fallback_still_fails():
+    sheet = (":root { --bg: #ffffff; --surface: #f6f8fa; --border: #d8dee9; --text: #1c2430;"
+             " --muted: #5b6675; --accent: #2563eb; --accent-soft: #5b93e4;"
+             " --warn: #b45309; --danger: #b42318; --positive: #047857 }"
+             ".note { color: var(--brand) }")
+
+    findings = clauses.clause_1_usage(sheet)
+
+    assert status_of(findings, "1 usage refs") == clauses.FAIL
+    assert "undeclared" in detail_of(findings, "1 usage refs")
+
+
+@pytest.mark.parametrize("text, status, detail", [
+    ("8 612.50 PLN", clauses.FAIL, "space 1"),
+    (f"1{NARROW}234{NARROW}567.89 z\u0142", clauses.PASS, "U+202F 2"),
+    ("40 198.51.100.77", clauses.NOT_APPLICABLE, "no grouped figure on the page"),
+    ("07:00 203.0.113.42", clauses.NOT_APPLICABLE, "no grouped figure on the page"),
+])
+def test_a_figure_with_a_decimal_tail_is_measured_and_a_dotted_quad_still_is_not(
+        text, status, detail):
+    r"""The tail sits inside the bound, which is what keeps both halves.
+
+    Without it `8 612.50` matched nothing and the page read `n/a — no grouped figure`, and
+    `1 234 567.89` scored one separator where it has two. `car-price-ml` prints PLN amounts
+    throughout, so once `0008` S9 gates this clause, rewriting `8 612` as `8 612.50` would
+    have carried a surface from `FAIL` to `n/a` and past the gate on a plain space.
+
+    The obvious repair is the trap. Relaxing the trailing bound to `(?![\d:])` was measured
+    against the corpus and reddens `auth-log-scan` with four `FAIL`s out of
+    `40 198.51.100.77` and its neighbours — the exact shape the bound exists to reject, and
+    the reason the last two rows are here.
+    """
+    finding = clauses.clause_8_separator(page(f"<html><body><p>{text}</p></body></html>"))
+
+    assert (finding.status, finding.detail) == (status, detail)
+
+
+def test_a_thin_space_is_a_wrong_separator_rather_than_an_absent_one():
+    """U+2009 is what a hand edit reaches for while migrating to the narrow no-break space.
+
+    Outside the separator class it matched nothing, so a page grouping its thousands with the
+    wrong codepoint reported `n/a — no grouped figure`: indistinguishable from a page that
+    groups nothing, in the clause whose whole subject is which codepoint does the grouping.
+    """
+    finding = clauses.clause_8_separator(
+        page("<html><body><p>1\u2009234 hours</p></body></html>"))
+
+    assert finding.status == clauses.FAIL
+    assert finding.detail == "U+2009 1"
+
+
+def test_a_page_that_groups_nothing_is_not_applicable_and_that_reading_is_deliberate():
+    """The stated reading, pinned so a later change to it is a decision rather than a drift.
+
+    §5 clause 8's subject is how a grouped figure separates its thousands, so `1234` has no
+    separator to be wrong about. It leaves a real escape once the clause gates — ungrouping is
+    cheaper than migrating — and closing that escape means `0007` §5 gaining a sentence it does
+    not have, which is an amendment and not a checker change.
+    """
+    finding = clauses.clause_8_separator(
+        page("<html><body><p>1234 resamples over 9999 draws</p></body></html>"))
+
+    assert finding.status == clauses.NOT_APPLICABLE
+
+
+PALETTE = (":root { --bg:#ffffff; --surface:#f6f8fa; --border:#d8dee9; --text:#1c2430;"
+           " --muted:#5b6675; --accent:#2563eb; --accent-soft:#5b93e4; --warn:#b45309;"
+           " --danger:#b42318; --positive:#047857 }")
+
+
+def test_the_role_rule_still_reaches_a_site_whose_reference_the_fallback_rescued():
+    """The fallback branch keeps the *reference*; it does not excuse the *role*.
+
+    Both tests above use `color:`, which leaves the loop before the role rule — so the easy
+    half of the repair was guarded and the load-bearing half was not. Adding `continue` after
+    the fallback branch left the whole suite green while this site flipped from `FAIL` to
+    `PASS`, on a key `"1 "` gates.
+    """
+    findings = clauses.clause_1_usage(
+        PALETTE + ".card { background: var(--brand, #2563eb) }")
+
+    assert status_of(findings, "1 usage refs") == clauses.PASS
+    assert status_of(findings, "1 usage roles") == clauses.FAIL
+    assert "expected --bg/--surface" in detail_of(findings, "1 usage roles")
+
+
+@pytest.mark.parametrize("width, status", [
+    ("3px", clauses.PASS),
+    ("0.2rem", clauses.PASS),
+    ("0.2em", clauses.PASS),
+    ("medium", clauses.PASS),
+    ("thick", clauses.PASS),
+    ("1px", clauses.FAIL),
+    ("thin", clauses.FAIL),
+])
+def test_a_rail_is_recognised_in_whatever_unit_its_width_is_written(width, status):
+    """`px` alone was the whole pattern, so `0.2rem` matched nothing and took no exemption.
+
+    A hairline is the box's edge and the role rule applies to it; a rail is a deliberate
+    accent and is exempted. Writing the same rail in `rem` reported `1 usage roles FAIL` about
+    a conforming page — and `0008` S9 rewrites five stylesheets, which is where a unit
+    changes. The keyword rows matter for the same reason: `medium` is CSS's initial
+    `border-width`, so it is a rail written without a number.
+    """
+    findings = clauses.clause_1_usage(
+        PALETTE + ".card.caution { border-left: " + width + " solid var(--warn) }")
+
+    assert status_of(findings, "1 usage roles") == status
+
+
+def test_a_commented_out_import_is_not_a_webfont_request():
+    """Clause 7 read the raw sheet, so a comment warning against an `@import` *was* one.
+
+    `"7 "` is in `GATED`, so the build was refused by a line telling a reader not to do the
+    thing. `clause_1_literals` goes through `rules()` and has always stripped comments; this
+    is the same sheet read two ways in one module.
+    """
+    live = clauses.clause_7_webfont(
+        page("<html><head><title>t</title></head><body></body></html>"),
+        "@import url(https://fonts.googleapis.com/x);")
+    commented = clauses.clause_7_webfont(
+        page("<html><head><title>t</title></head><body></body></html>"),
+        "/* the page must never do this: @import url(https://fonts.googleapis.com/x); */")
+
+    assert live.status == clauses.FAIL, "the guard must still catch the real thing"
+    assert commented.status == clauses.PASS
+
+
+def test_a_token_named_after_a_width_keyword_does_not_buy_a_rail_exemption():
+    """`\b` does not fence off a hyphen, and a declaration always contains `var(--<role>)`.
+
+    The first version of the keyword search ran over the whole declaration looking for the bare
+    word, so `border-left: solid var(--thick-rule)` matched `thick` inside the token's *name*
+    and took the rail exemption — a hairline exempted as a deliberate accent. That is a false
+    **exemption** on a key `"1 "` gates, which is the silent-green direction, and it is a hole
+    the digit-anchored pattern it replaced could not have had.
+
+    The token is declared here on purpose: an undeclared one is a broken reference and leaves
+    the loop before the role rule, so the first draft of this test proved nothing.
+    """
+    palette = PALETTE.replace("--positive:#047857 }", "--positive:#047857; --thick-rule:#b45309 }")
+
+    findings = clauses.clause_1_usage(palette + ".c { border-left: solid var(--thick-rule) }")
+
+    assert status_of(findings, "1 usage refs") == clauses.PASS, "the token is declared"
+    assert status_of(findings, "1 usage roles") == clauses.FAIL
+
+
+@pytest.mark.parametrize("declaration, status, why", [
+    ("solid var(--rule-2rem)", clauses.FAIL, "a hairline exempted by a number in the name"),
+    ("thick solid var(--rule-1px)", clauses.PASS, "a 5px rail failed by a number in the name"),
+    ("solid var(--rule-2p5rem)", clauses.FAIL, "the lookbehind's dot is what shuts this one"),
+    ("0.2rem solid var(--warn)", clauses.PASS, "a real rail must still be exempted"),
+    (".5rem solid var(--warn)", clauses.PASS, "a leading-dot width is a width"),
+    ("1px solid var(--warn)", clauses.FAIL, "a real hairline must still be an edge"),
+])
+def test_a_number_in_a_token_name_is_not_a_border_width(declaration, status, why):
+    """`_LENGTH` had the same hole as the keyword pattern and was fixed one commit later.
+
+    The keyword branch was anchored past the hyphen and its sibling three lines above was not
+    — and `_LENGTH` is evaluated *first*, so it shadowed the anchored one in both directions.
+    It reads a number and a unit straight out of a token's name: `var(--rule-2rem)` bought a
+    hairline the rail exemption, and `var(--rule-1px)` scavenged `1px`, beat an explicit
+    `thick`, and failed a genuine 5px rail.
+
+    Both directions are here because the repair had to survive both, and the previous commit's
+    claim that this pattern *"could not have had"* the hole is what made the sibling look safe.
+    """
+    palette = PALETTE.replace(
+        "--positive:#047857 }",
+        "--positive:#047857; --rule-2rem:#b45309; --rule-1px:#b45309;"
+        " --rule-2p5rem:#b45309 }")
+
+    findings = clauses.clause_1_usage(palette + ".c { border-left: " + declaration + " }")
+
+    # The setup guard its sibling above carries and this dropped: an undeclared token is a
+    # broken reference and leaves the loop before the role rule, so a `PASS` row would prove
+    # nothing if the `replace` above ever stopped matching. Measured — sabotaging the target
+    # left the false-FAIL case, the harder half, green.
+    assert status_of(findings, "1 usage refs") == clauses.PASS, "the tokens are declared"
+    assert status_of(findings, "1 usage roles") == status, why
