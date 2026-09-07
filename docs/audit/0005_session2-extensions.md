@@ -4,7 +4,7 @@ Date: 2026-09-03. **Reconciled 2026-09-04** against the repositories: four of th
 carried as open had landed or been decided, and none of them said so — see the section at the foot of
 § 9 and `0003` § 11.
 Status: accepted — all three decisions in § 9 taken 2026-09-03 and executed by 2026-09-04
-Author: P0w3r223 + Claude
+Author: Piotr Cząstkiewicz + Claude
 Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3 (the commission) and § 9 (the reconciliation rule), [0004_session1-recruiter-triage.md](0004_session1-recruiter-triage.md) § 5, § 7 and § 8
 
 ---

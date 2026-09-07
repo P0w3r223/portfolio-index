@@ -2,7 +2,7 @@
 
 Date: 2026-08-14
 Status: proposed
-Author: P0w3r223 + Claude
+Author: Piotr Cząstkiewicz + Claude
 Related to: supersedes [0001_portfolio-presentation-audit.md](0001_portfolio-presentation-audit.md)
 
 ---

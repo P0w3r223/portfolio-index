@@ -2,7 +2,7 @@
 
 Date: 2026-08-18
 Status: accepted
-Author: P0w3r223 + Claude
+Author: Piotr Cząstkiewicz + Claude
 Related to: [0001_p5-doc-extract-thesis.md](0001_p5-doc-extract-thesis.md), [0003_p5-metric-design.md](0003_p5-metric-design.md)
 
 ---
