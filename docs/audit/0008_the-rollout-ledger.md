@@ -111,19 +111,26 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **closed** — `current_projects` `ef3d8c0` on `main`, CI green **on `main`**. §3.5 |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **closed** — `apply-scout` `33a8559`, `current_projects` `6b7d3b8`, both on `main` with CI green **on `main`**, not on the PR. Both carriers read a usage site; three review passes were needed to guard all four of the role rule's exception shapes, and §3.10 records why the corpus sweep could not find the last one |
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass, both pages' card tags (§4.3), **eight tiles now that §5.1's exemption is struck**, and every rounded figure re-quoted | 2 hand-written pages · 14 card tags · **22 literal declaration sites** with one two-role trap on each · 8 tiles · 2 new page tests | ~2 d | **closed** — `mlops-car-price` `e1d797e`, `pl-jobs-lora` `9be52a2`, `current_projects` `d2e96b8`, all on `main` with CI green **on `main`**. The review's four HIGH are fixed and merged too — `mlops-car-price` `9641f07`, `pl-jobs-lora` `879b5df`, both on `main`; the first version of this row said "fixed in #21 / #14" while both were still open, which read as merged and was the same defect §1 forbids. Both pages read `clear`; §4.7 re-derived the scope before the stage, §4.8 records what the quotation rule caught once it was executable, §4.9 what the review found once the guards were mutated |
-| **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
+| **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open — **taken inside the `car-price-ml` pass with S9b and S10's app title**, which regenerate the same page and edit three adjacent lines of `docs/app/index.html`; §4.13 |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
 | **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `297e3c5` on `main` with CI green **on `main`**. *The first version of this cell cited `043bf72` + `38f26a9`, which are branch commits: this repository squash-merges, so neither is reachable from `main` and neither ever will be — §4.12's last paragraph.* **Fifteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and **two that reddened nothing at all** until a later pass found the guard absent or out of reach (rows 9 and 15). **Four review passes**, the last three finding fixes that displaced a defect rather than removing it; §4.12 |
-| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, build-only · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **18 non-conforming write sites in 13 files across five repositories and six surfaces**; 7 failing surfaces — §4.11 | 1.5–2 d | open |
-| **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open |
+| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | open — **first commit prints the census; the commit that changes `wroclaw`'s separator widens `test_report.py:1524` in the same change**, §4.13 |
+| **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open — the `car-price-ml/app` title is `docs/app/index.html:6` and rides with S9b's `:7` and `:27`; §4.13 |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
-| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | open, schedulable anywhere |
+| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | open — **the only open item depending on no gate, no clause and no other stage**; §4.13 |
 
-Roughly **13–14 days** as first written; **+2.5–3 days** for S-gate (0.5) + S9 (1.5–2) + S10 (0.5), plus S10's
+Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
+S10's
 copy time, which is not estimated because three of its four surfaces need a claim written rather than a line
 moved. §4.11 shows all three were never scheduled rather than newly discovered. S0–S2 are one unit; everything after S3 is schedulable separately.
+
+*S9's figure was 1.5–2 until §4.13. It grew because the stage's S9a half was costed as "four repositories,
+build-only" and two of those four are not: one needs a simulation re-recorded and a byte-guarded README
+region rebuilt, the other needs a test's number pattern widened in the same commit as the edit. **The
+re-derivation happened before the stage rather than during it**, which is §4.7's precedent and the only
+reason the figure moved on paper instead of on the day.*
 
 **S8 is no longer last, and it is no longer one stage.** The row placed it last *"because it is the one that
 can slip without blocking anything"* — true of the work, and it is now the stage most blocked *itself*: L3's
@@ -956,7 +963,9 @@ the present tense first, inside the section whose next sentence calls that this 
 defect committed in the file whose §1 exists to prevent it.*
 
 Then, per repository: **no submodule test asserts which separator a page writes** — swept over all twelve.
-And the two that name `U+202F` are the two that most deliberately cannot see it. `mlops-car-price/tests/test_docs_page.py:41`
+**Refuted 2026-09-07; two do, and both assert a comma — §4.13.** The sentence is left standing because the
+conclusion it supports survives and the correction changes a *stage's* cost rather than this section's
+argument. And the two that name `U+202F` are the two that most deliberately cannot see it. `mlops-car-price/tests/test_docs_page.py:41`
 and its twin in `pl-jobs-lora` build
 
 ```python
@@ -998,6 +1007,12 @@ Not seven pages. **Eighteen non-conforming write sites, in thirteen files, acros
 surfaces** — counted by file and line, because `regime_section.py:25` and `:46` are two edits and the stage is
 scoped by formatter rather than by page.
 
+> **Corrected 2026-09-07, and the number is deliberately not re-typed here — §4.13.** The table below lists
+> **nineteen**, not eighteen; the trees hold **twenty**. Both figures in the sentence above are wrong, in the
+> way the italics two paragraphs down already describe about *fifteen*. **A fourth hand-count would be a
+> fourth number**, so the census moves into the checker's output rather than being patched again, and §4.13
+> says what it must print.
+
 *A first version of this sentence said **fifteen** sites across **six repositories**, and both are wrong in
 the way this section is about. Fifteen was taken from a design pass and never counted back off the table
 printed directly beneath it — §2.1's and §4.8's defect, committed in the paragraph naming it. Six counted
@@ -1006,7 +1021,7 @@ that exact substitution a category error, in the row that dissolves B3. Caught b
 
 | repository | site | writes |
 |---|---|---|
-| `ab-lab` | `sitegen/numbers.py:46` `integer()` · `sitegen/page.py:219` literal | comma · space |
+| `ab-lab` | `sitegen/numbers.py:46` `integer()` · `sitegen/page.py:219` literal · **`examples/validation_table.py:130`** — added 2026-09-07, §4.13 | comma · space · **comma** |
 | `car-price-ml` | `site/charts.py:76` | **U+202F** ✓ |
 | `car-price-ml` | `site/build.py:76` `_thousands` · `site/export.py:179` `_pln` · `templates/index.html.j2:83, 114, 160` | space |
 | `car-price-ml/app` | `docs/app/index.html:27` literal · **`:7` `<meta name="description">` literal** | space |
@@ -1297,6 +1312,121 @@ repositories and `car-price-ml/app` is hand-written.*
 > §3.5's welded-token defect — *"`str.split()` destroying the two codepoints clause 8 counts"* — in a third
 > place, and it was caught by running all four cases rather than the one the fix was written for.
 
+### 4.13 The errata S9 inherits — four corrections taken before the stage rather than during it
+
+§3's rule, and §4.3, §4.7 and §4.11 set the precedent. **All four were verified against the trees before
+being written here**, and three of them change S9's cost. Taken as one round because §4.10 records what
+happens otherwise: *the first commit refuted three sections and marked only one.*
+
+#### 1. Two submodule tests do assert a separator, and both assert a comma
+
+§4.11 says, as a sweep over all twelve, *"no submodule test asserts which separator a page writes."* Two do:
+
+| test | assertion |
+|---|---|
+| `wroclaw-air-insights/tests/test_report.py:377` | `assert "1,280 hours" in html` — on the render of `regime_section`, **the exact module S9a edits at `:25`** |
+| `ab-lab/tests/test_record.py:86` | `assert any(f"n = {solved.per_group:,}/arm" in scenario …)` |
+
+**The conclusion survives and the cost does not.** Those two pin the *wrong* separator rather than enforcing
+clause 8, so §4.11's *"clause 8 can only ever be carried by the index checker"* still holds — the four tests
+it names really are blind to the glyph, correctly, under `0007` §5.0. But the sweep was used to say the
+per-repository tests are *uniformly* blind, and two of them are not blind at all: they are pointed the other
+way, and they **go red on S9a's own edit**. The false half is the half that costs work.
+
+*A sweep that finds nothing is the hardest kind to audit, because it leaves no exhibit to re-read. This one
+was searched for tests that assert `U+202F`; a test that asserts a comma answers a different query, and those
+are the ones the stage collides with.*
+
+#### 2. The census is eighteen in prose, nineteen in its own table, twenty in the trees
+
+Counting the table's non-conforming entries: `ab-lab` 2 + `car-price-ml` 5 + `car-price-ml/app` 2 +
+`it-job-radar` 3 + `pl-review-sense` 2 + `wroclaw` 5 = **19**. §4.4's erratum added `docs/app/index.html:7`
+to the table and the headline was never re-derived — **the same failure the paragraph directly beneath that
+headline already records about *fifteen***, committed in the act of correcting it.
+
+**And a twentieth site was missing from the table entirely:** `ab-lab/examples/validation_table.py:130`,
+
+```python
+f"Sample size solved for 80% power (n = {design.per_group:,}/arm)",
+```
+
+reaching `ab-lab/docs/data/findings.json`, `docs/index.html` and `README.md` verbatim as `n = 14,745/arm`.
+It is a *second formatter inside one repository* — the page's other comma figure, `10,000`, is
+`numbers.integer()` — and the checker corroborates the split independently: `ab-lab` reports
+`FAIL 8 separator comma 2`, two comma figures from two different write sites, where the census named one.
+
+*This is the sharpest of the four, because the repository already documents the site by name.*
+`ab-lab/sitegen/numbers.py:1-11` — *"no renderer is allowed a format string of its own"* — cites this exact
+figure as the drift that motivated the module, and `ab-lab/docs/decisions/0007-the-page-is-generated.md:19-22`
+tabulates `examples/validation_table.py` with its format string as the divergence the whole package argues
+against. **The one site the sweep missed is the one site a decision record names.** A census read off
+generators and templates does not look in `examples/`, and that repository's own ADR is the artifact that
+would have said so.
+
+**The number is not patched here, and the refusal is the finding rather than an omission.** Three hand-counts
+have now produced fifteen, eighteen and nineteen. **The census belongs in the checker's output**, the way
+clause 1's census and the role census went — printed on every run, reproducible by a reader, and unable to go
+stale between a design pass and the stage that spends it. That is `ADR-0004` §5's rule and this file's own
+precedent, and it is S9's **first commit** rather than a follow-up: *a stage scoped by a figure no instrument
+prints is scoped by whoever counted last.*
+
+#### 3. S9 will blind the provenance guard §4.4 was written to repair — in the act of doing its own work
+
+`wroclaw-air-insights/tests/test_report.py:1524` matches comma grouping and nothing else, and `_numbers_in`
+strips `","` alone. Measured:
+
+```
+"1,752 hours"  ->  [1752.0]        today
+"1 752 hours"  ->  [1.0, 752.0]    after S9a rewrites report.py:307
+```
+
+So the card-description provenance guard — the one §4.4 records fixing **twice**, for the `3.00` miss and
+then for its numeric bound — **stops seeing grouped figures at all, and passes.** It goes green on exactly
+the shape it exists to catch.
+
+**This is the only item in this ledger that cannot be found after the fact.** Every other silent-green in
+§3.7, §3.9, §4.4, §4.9 and §4.12 was found by looking at a guard that had already failed to fire, with the
+evidence still on disk. This one is *created by scheduled work*: the guard is correct today, the stage is
+correct today, and only the composition is wrong. **The pattern widens in the same commit that changes the
+separator** — not in a follow-up, because a follow-up is a window in which the page is unguarded and nothing
+anywhere says so.
+
+*Swept: `wroclaw` is the only submodule test that parses comma-grouped numbers.
+`car-price-ml/tests/test_site.py:184`, the `_SEP_CHARS` tables in `mlops-car-price` and `pl-jobs-lora`, and
+`doc-extract/tests/test_ground.py:359` all delete separators before comparing and are unaffected — §4.11 is
+right about those four.*
+
+#### 4. S5, S9b and S10 land on three adjacent lines of one file
+
+`car-price-ml/docs/app/index.html` is hand-written and is the one surface CI does not byte-diff (§4.3):
+
+| line | content | stage |
+|---|---|---|
+| `:6` | `<title>car-price-ml — valuation form</title>` | **S10** |
+| `:7` | `<meta name="description" content="… the same 1 200 trees …">` | **S9b** |
+| `:27` | `the same 1 200 trees the API serves` | **S9b** |
+
+And S5 regenerates `docs/index.html`, which S9b also regenerates after editing `build.py:76`,
+`export.py:179` and the template. §3's table schedules S5, S9 and S10 as independently schedulable; §4.1's
+erratum already established the governing rule for this shape — *taking them separately edits the same lines
+twice*, here on the one surface with no byte-diff to catch a bad second edit.
+
+**This does not re-scope clause 8 by page.** §4.11 is right that a formatter's clause cannot be found that
+way, and the census stays formatter-scoped. What changes is only what one commit carries.
+
+#### What this costs, and the one thing it does not
+
+| stage | before | after |
+|---|---|---|
+| **S9** | 18 sites · 13 files · *"S9a four repositories, build-only"* · 1.5–2 d | **20 sites · 14 files**, census printed by the checker · S9a is **not build-only in two of the four**: `ab-lab` needs a simulation re-record and a generated README region, `wroclaw` needs its number pattern widened and `test_report.py:377` re-pinned · **2–2.5 d** |
+| **S10** | 4 surfaces · 1 guard | unchanged, but its `car-price-ml/app` line rides with S9b |
+| **S5** | independently schedulable | folds into the `car-price-ml` pass |
+| **Sx** | *"open, schedulable anywhere"* | **the only open item with no dependency on the gate, on a clause, or on another stage** — and both figures reproduced again 2026-09-07 |
+
+**None of it touches the gate.** `GATED` is unchanged, clause 8 is still outside it until S9 closes, and the
+ratchet test still holds. *The errata move a stage's cost and not the instrument's contract, which is the
+separation `ADR-0004` §5 exists to keep.*
+
 ## 5. What is carried, not scheduled
 
 | item | state |
@@ -1306,6 +1436,7 @@ repositories and `car-price-ml/app` is hand-written.*
 | **The profile fields** — `name`, `bio`, `email`, `blog`, `hireable`, social accounts | The user's own action. The token carries no `user` scope, so nothing here can write them |
 | **L2** — action pinning | Answered `0006` §3: do not pin, and the answer does not cover a third-party action if one is ever introduced |
 | **The quotation rule has no carrier on `README.md`** | §4.10 applied `0007` §5.0 to `docs/index.html` and found ten of twelve READMEs carrying a figure no artifact prints. The figures were repaired; **nothing detects the next one.** Only `ab-lab` generates and byte-guards README regions (`<!-- generated: -->` at `README.md:14, 45, 49, 92, 96`). Twelve of thirteen are hand-typed prose with no carrier — the same structural shape as §4.11's two clauses, and it wants the same answer, but a README figure-provenance reader is a larger build than a separator and should follow S9 rather than ride inside it |
+| **Three residuals from S-gate's fourth review** | Not blocking, and none is live on a committed surface today. `sources.py:141` files an unreadable stylesheet under `except Exception` and discards the cause — on a path that now **gates daily**, so a rename, a permission error and a 404 arrive as one line. `_with_styles` decides *third party* by URL prefix (`http://`, `https://`, `//`) where `_unread_same_origin`'s docstring says *"exist on our side"*: on the eleven committed surfaces the two agree, on the fetch-only surface they do not, so an absolute same-host URL there would be exempted from the gate. And the marker `" (third party, not read)"` is still prose built in one module and matched in two others — the `split(", ")` defect §4.12 records, moved rather than removed. **S9 makes the first two reachable**: it edits generators in five repositories, and `car-price-ml/app` is hand-written |
 | **`wroclaw`'s scroller has no house name** | After S7 every other committed surface scrolls its tables in `.table-wrap`; this one uses `table { display: block; overflow-x: auto }` under `max-width: 640px`, so clause 3 reports `undecided` and will keep doing so. Neither the S7 row nor `0007` §9 row 6 names it, and S8a/S8b are the text layers — so it is unscheduled rather than skipped, and recorded here so the next reader does not go looking for it in a stage. **Not folded into S10**: that stage is clause 4, and this is clause 3 |
 
 ## 6. Assumptions to verify before each stage, not once
