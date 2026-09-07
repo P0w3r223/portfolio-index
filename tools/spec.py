@@ -251,12 +251,17 @@ CLAUSES: tuple[Clause, ...] = (
         cite="0007 §5 clause 4, the title",
         quote="the `<title>` follows the `h1` rather than the directory",
         carriers=_index("4 title"),
-        note="Reading settled 2026-09-07: the `<title>` must not *lead with* the project's "
+        note="Reading settled 2026-09-07 and implemented the same day in "
+             "`_leads_with_the_projects_identity`: the `<title>` must not *lead with* the project's "
              "identity, in either the directory spelling or the project's own prose spelling "
              "of it. Compared at the head of the string — a name appearing later is the house "
              "style `<claim> — <repo>` and passes. Derived against the corpus: a "
-             "non-positional reading fails 10 of 12 surfaces. `0008` S10 is four surfaces "
-             "under this reading and three under the directory-only one.",
+             "non-positional reading fails 11 of 12 surfaces, because seven of the eight "
+             "conforming titles carry the name as a suffix. **S10's scope is computed rather "
+             "than asserted now — `python -m tools.pagespec --detail` prints the roster.** No "
+             "surface is named here: a typed list stales silently on the first one S10 fixes, "
+             "in the field whose own argument is that a stage must not be scoped by whoever "
+             "read it last.",
     ),
     Clause(
         id="c5.s1",

@@ -48,8 +48,9 @@ def loaded(html: str = "", css: str = "", *, name: str = "surface", repo: str = 
            unreadable: list[tuple[str, str]] | None = None) -> sources.Loaded:
     """A `Loaded` assembled by hand, so the clauses can be exercised without any I/O.
 
-    `repo` defaults to `name` because clause 4 compares the `<title>` against the directory,
-    and a test that wants that comparison to bite has to be able to set it.
+    `repo` defaults to `name` because clause 4 compares the `<title>` against the project's
+    identity — the directory string *and* the prose spelling of it, since the reading was
+    settled on 2026-09-07 — and a test that wants that comparison to bite has to set it.
     """
     surface = sources.Surface(name, repo, "docs/index.html")
     return sources.Loaded(surface, html, css, unreadable=list(unreadable or []))
