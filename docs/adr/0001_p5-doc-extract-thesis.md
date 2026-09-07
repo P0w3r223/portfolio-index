@@ -2,7 +2,7 @@
 
 Date: 2026-08-18
 Status: accepted
-Author: P0w3r223
+Author: Piotr Cząstkiewicz
 Related to: [0002_p5-corpus-strategy.md](0002_p5-corpus-strategy.md), [0003_p5-metric-design.md](0003_p5-metric-design.md), [../audit/0002_portfolio-presentation-audit-v2.md](../audit/0002_portfolio-presentation-audit-v2.md)
 
 ---

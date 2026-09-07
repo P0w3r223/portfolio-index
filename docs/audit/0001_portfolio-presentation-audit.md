@@ -2,7 +2,7 @@
 
 Date: 2026-08-14
 Status: superseded by [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md)
-Author: P0w3r223
+Author: Piotr Cząstkiewicz
 Related to: `README.md` (portfolio index), the 13 project submodules
 
 > **Superseded 2026-08-14.** Code review found three false premises in §4 and five

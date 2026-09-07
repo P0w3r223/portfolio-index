@@ -9,7 +9,7 @@ is not the record, is `0003` § 9.
 three, § 6.4's set is four and not three, and § 6.5's bound checklist is one open page and not three.
 See `0003` § 11.
 Status: accepted
-Author: P0w3r223
+Author: Piotr Cząstkiewicz
 Related to: [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) § 3 and § 9, `README.md`, the profile README
 
 ---

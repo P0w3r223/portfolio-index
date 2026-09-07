@@ -6,7 +6,7 @@ the repositories: four statements below had gone stale because the work landed a
 did not follow — see §8. **Reconciled again later the same day** — see §9, which is what §8 asked
 for and did not itself achieve.
 Status: accepted
-Author: P0w3r223
+Author: Piotr Cząstkiewicz
 Related to: [0002_portfolio-presentation-audit-v2.md](0002_portfolio-presentation-audit-v2.md), `README.md`, ~~13~~ **12** submodules (`infra-docker-workmate` unpinned 2026-09-03, §8 decision 4)
 
 ---
