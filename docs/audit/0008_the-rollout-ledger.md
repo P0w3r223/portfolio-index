@@ -114,7 +114,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
-| **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `043bf72` + `38f26a9`. **Fourteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and one that reddened nothing at all until a review found the branch had no guard (row 9). **Three review passes**, the last two finding fixes that displaced a defect rather than removing it; §4.12 |
+| **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `297e3c5` on `main` with CI green **on `main`**. *The first version of this cell cited `043bf72` + `38f26a9`, which are branch commits: this repository squash-merges, so neither is reachable from `main` and neither ever will be — §4.12's last paragraph.* **Fifteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and **two that reddened nothing at all** until a later pass found the guard absent or out of reach (rows 9 and 15). **Four review passes**, the last three finding fixes that displaced a defect rather than removing it; §4.12 |
 | **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, build-only · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **18 non-conforming write sites in 13 files across five repositories and six surfaces**; 7 failing surfaces — §4.11 | 1.5–2 d | open |
 | **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
@@ -1130,7 +1130,7 @@ delete one as duplicate coverage.
 
 ### 4.12 What S-gate closed, and the two guards that turned out not to be redundant
 
-`current_projects` `043bf72`. **No page changed**, which was the argument for taking it first: the ratchet
+`current_projects` `297e3c5`, on `main`. **No page changed**, which was the argument for taking it first: the ratchet
 starts on the clauses that already report zero `FAIL` on all twelve surfaces, so the gate went from
 "impossible" to "green" without a single byte of any page moving.
 
@@ -1142,7 +1142,7 @@ S10 or hold the other two out. `GATED` is `("1 ", "2 ", "3 ", "4 eyebrow", "4 h1
 remembering a flag is one a later workflow edit drops without anyone noticing, which is the shape §3.7, §3.9,
 §4.4 and §4.9 record five times between them. It costs nothing to default: the set is clean today.
 
-#### The fourteen mutations
+#### The fifteen mutations
 
 Every guard was proved red by the mutation its own docstring names, by running each — §3.7's instruction, and
 the one §3.6 blocked S3 for asserting without doing.
@@ -1163,6 +1163,7 @@ the one §3.6 blocked S3 for asserting without doing.
 | **12** | reinstate the prose parse **behind an `if not loaded.unreadable: return []` guard**, which is the shipped bug's actual reach: `detail.removeprefix("unread: ").split(", ")` | **2** — the third-party test and the same-origin test |
 | **13** | `raise` on `main`'s first line — the checker never runs | 20 tests, **and the determinism test is the one that counts**: before the fix it was the single test that ran the module as a process, and it *passed* — two empty outputs comparing equal |
 | **14** | print the stylesheet gate under the `GATED` header | the same-origin test — *the header is part of the finding, not decoration* |
+| **15** | `raise` inside `clauses.check` — the checker dies **after** printing its header | **nothing, before the fourth pass.** The determinism test's `startswith("pagespec")` reaches only a failure *earlier* than the first print, and the header is emitted above the surface loop: both seeds emit the header and nothing else, and the two compare equal. Red now, on the exit code |
 
 *Row 12 was first written as **three** tests, and the number is worth the paragraph it costs.* Three
 reconstructions of the same one-line bug give **three different counts**: parsing inside the function that
@@ -1174,11 +1175,14 @@ against, because §4.9 already records what an unstated census costs and this is
 down: *a mutation named in prose is not a mutation, and its count is not reproducible until the code is on
 the page.*
 
-*Rows 9, 10 and 13 were not in the first version of this table, and row 9 is the one that matters: `missing` has
+*Rows 9, 10, 13 and 15 were not in the first version of this table, and rows 9 and 15 are the ones that
+matter. Row 9: `missing` has
 **three** reasons and only two were asserted, so the branch behind the `live` job's entire stated purpose
-could be deleted with nothing going red. The sentence above this table — "every guard was proved red by the
+could be deleted with nothing going red. Row 15 is the same lesson about a **guard that exists but stops
+short** — the determinism test's compensating assertion could only ever fire before the checker's first
+print, so a crash one line later was invisible to it. The sentence above this table — "every guard was proved red by the
 mutation its own docstring names" — was true, and silent about the path that had no docstring because it had
-no guard. **A mutation table proves the guards you wrote, not the branches you have**, which is §3.10's
+no guard, and later silent again about the guard that had a docstring and less reach than it read. **A mutation table proves the guards you wrote, not the branches you have**, which is §3.10's
 "a corpus sweep proves the rule against the corpus" applied to a conditional instead of a page.*
 
 **Mutation 6 is the one that proves the ratchet is a ratchet.** Without a test that fails when the gate stops
@@ -1197,7 +1201,11 @@ see it and the byte-diff would not.
 > — five rebuild-and-compare guards passed twice each while seven surfaces drifted — and it is recorded here
 > so that a later reader tidying up does not delete one as duplicate coverage of the other.
 
-#### Three things the stage found that were not in its scope
+#### Five things the stage found that were not in its scope
+
+*The heading said **three** and the list below it has always had five — written at three, grown by the second
+and third passes, and never recounted. Found on the fourth pass, in the section whose subject is exactly
+this, two headings below a table corrected for the same thing on the same day.*
 
 - **`ADR-0004` §6 still read *"report-only first"*.** Turning the gate on while the ADR licensing the
   instrument says otherwise is §3.8's finding facing the other way: not a document the repositories refute,
@@ -1216,6 +1224,48 @@ see it and the byte-diff would not.
   have passed whatever the `needs --fetch` branch did. Caught by running it. **A test has to be able to fail
   for one reason**, and this is §4.4's *"enumerate what the thing can actually receive"* met from the other
   side: the guard received more than the shape it was written for.
+
+#### The fourth pass, and a citation the merge strategy cannot preserve
+
+**Both code findings are the shape the third pass is named for**: a fix applied where the defect was found
+and not where it also lived, five lines away in one case.
+
+- **The determinism test still passed on a checker that crashed** — mutation 15. The third pass correctly
+  identified `check=False` as having removed the last assertion that the subprocess did anything, and added
+  `startswith("pagespec")` in its place. That assertion reaches a failure *before* the first print and no
+  other, because the header is emitted above the surface loop. It now asserts the exit code as well: under
+  `--report-only` `main` returns 0 whatever it finds, so a non-zero code means the process died rather than
+  that the gate refused — the coupling `--report-only` exists to break stays broken, and the assertion is
+  back at full strength. Not `check=True`, which raises `CalledProcessError` and hides the two tables.
+- **`test_the_report_runs_over_the_whole_index_and_the_gate_is_green` ran behind one
+  `require_submodule("ab-lab")`** — the exact guard the ratchet test five lines below had been corrected for,
+  in the commit whose message spells out why one call is not a guard. Before the gate a missing sibling was a
+  `not read:` line and this test passed; **since S-gate an unread committed surface gates**, so on a checkout
+  that is *partial* rather than *empty* `main` returns 1 and this file's docstring — *"every test skips when
+  its submodule is not checked out"* — is false. Reproduced on a root holding only `ab-lab/docs`: exit 1,
+  `gate — a surface that should have been readable was not read`, and nothing in the message about
+  submodules. *Turning on a gate changes what every skip-guard in the suite is guarding, and the pass that
+  turned it on re-derived that for one test of two.*
+
+**And the status cell cited two commits that cannot be on `main`.** It read `closed — current_projects
+043bf72 + 38f26a9`. This repository **squash-merges**: every commit on `main` has a single parent, so no
+branch SHA survives. Checked — `89a9cc2` (S0), `ef3d8c0` (S2), `6b7d3b8` (S3) and `d2e96b8` (S4) are all
+reachable from `main`; `043bf72`, `38f26a9` and `3163908` are not and never will be. The stage *was* merged,
+as `#77` → **`297e3c5`**, with CI green on `main` — so this is not the S4 defect the row above it records, a
+row saying closed while the work is unmerged. It is a narrower one underneath: **the row was written in a
+citation form this repository's merge strategy discards**, so it named the work correctly and pointed at
+nothing. §1's rule is *marked against the default branch in the pass that lands it*; a SHA that will not
+exist on that branch cannot discharge it, however true the sentence around it is.
+
+> **Read from a stale `origin/main`, that same cell says the stage was never merged at all.** Both this pass
+> and an architecture pass run beside it reached exactly that conclusion, independently, within an hour of
+> `#77` merging — because both read `.git/refs/remotes/origin/*`, which is a local file that a session
+> inherits and no command refreshes on its own. Three unreachable SHAs and a `gh pr list` returning empty
+> read as *"the work is on a branch and nobody opened a pull request."* **The record was right and the
+> instrument was stale**, which is the inverse of every other correction in this file and the reason §6's
+> last row now says *after a fresh fetch* rather than naming two commands. *A citation form that cannot be
+> resolved on `main` and a ref that has not been updated produce the same sentence, and only one of them is
+> about the document.*
 
 #### What the gate deliberately does not do
 
@@ -1269,4 +1319,4 @@ no means to check, and three of five such claims were false.
 | The four About descriptions are still as recorded | `gh api` per repository; they are an account surface, not a file |
 | Ten of eleven pages are still served byte-identical to their committed file | Hash the fetched bytes against the file (`0007` §2) |
 | The working tree is what the record assumes — no submodule on an unmerged branch, no uncommitted file | **Check before quoting the checker.** §4.10's round left twelve `CLAUDE.md` and eight `README.md` uncommitted across the submodules for an hour, and two submodules checked out on a fix branch, so `python -m tools.pagespec` was reading two pages nobody had published. *The row had itself lost the separator between its two cells and rendered as one — found 2026-09-07 while discharging it* |
-| No pull request is open and all twelve pointers still match | `gh pr list` per repository + `git submodule status` |
+| No pull request is open and all twelve pointers still match | **`git fetch` first, then** `gh pr list` per repository + `git submodule status`. *`origin/main` is a local file a session inherits, and nothing refreshes it on its own. Discharged from a stale ref 2026-09-07, an hour after `#77` merged, this row reports the index as unmerged with no pull request open — which is what `gh pr list` says once the PR is **closed**, and what `git log origin/main` says while the ref still predates it. Two passes reached that conclusion independently and neither was reading the repository. §4.12* |

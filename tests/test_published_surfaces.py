@@ -115,8 +115,20 @@ def test_the_report_runs_over_the_whole_index_and_the_gate_is_green(capsys):
     does not decide"* and started meaning *"nothing in `GATED` failed"*. Same assertion, and
     a different claim — which is worth the rename, because the old name would now read as a
     guarantee that the checker never refuses.
+
+    **Every committed surface is required, not just one**, and the gate is why. This ran
+    behind a single `require_submodule("ab-lab")` for one commit — the same guard the
+    ratchet test below had already been corrected for, five lines away, in the commit that
+    named the correction. Before the gate a missing sibling was a `not read:` line and this
+    test passed; since S-gate an unread committed surface *gates*, so on any checkout that
+    is partial rather than empty `main` returns 1 and this file's own docstring — *"every
+    test skips when its submodule is not checked out"* — is false. Reproduced on a root
+    holding only `ab-lab/docs`: exit 1, `gate — a surface that should have been readable was
+    not read`, and nothing in the message about submodules. *A fix applied to one of two
+    tests that share a defect is the displacement this branch is named for.*
     """
-    require_submodule("ab-lab")
+    for surface in COMMITTED:
+        require_submodule(surface.repo, surface.path)
     assert report.main(["--root", str(ROOT), "--detail"]) == 0
     out = capsys.readouterr().out
     assert "wroclaw-air-insights (needs --fetch)" in out
@@ -188,6 +200,18 @@ def test_the_computed_table_does_not_depend_on_set_iteration_order():
         # test pins — live on Windows, where the table is full of em-dashes — was invisible
         # to every test there is. Relaxing a coupled assertion is not the same as removing
         # it, and the first fix did the second.
+        #
+        # `startswith("pagespec")` was that first fix, and it reaches only a failure that
+        # happens **before** the first print — the header is emitted above the surface loop.
+        # Reproduced: with `clauses.check` raising, both seeds emit the header and nothing
+        # else, the two compare equal, and this test passed. So the exit code is asserted
+        # too. Under `--report-only` `main` returns 0 whatever it finds (`__main__.py`), so a
+        # non-zero code here means the process died rather than that the gate refused — the
+        # coupling this flag exists to break stays broken, and the assertion is restored to
+        # full strength. Not `check=True`: `CalledProcessError` hides the two tables.
+        assert finished.returncode == 0, (
+            f"the checker exited {finished.returncode} under --report-only, where it "
+            f"returns 0 whatever it finds\n{finished.stderr}")
         assert finished.stdout.startswith("pagespec"), (
             f"the checker printed no table; exit {finished.returncode}\n{finished.stderr}")
         return finished.stdout
