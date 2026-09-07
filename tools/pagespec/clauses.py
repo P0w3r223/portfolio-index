@@ -12,6 +12,7 @@ checker that reports a confident verdict it did not earn is that failure automat
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 
 from . import colour, css as cssmod, render, sources
@@ -675,6 +676,89 @@ def clause_3_tables(page, css: str) -> Finding:
     return Finding("3 tables", PASS, detail)
 
 
+#: Letters with no canonical decomposition, so NFKD leaves them whole and a
+#: strip-the-combining-marks normaliser silently does nothing to them. **`ł` is the one that
+#: matters and it is the one the obvious fix fails on**: `unicodedata.normalize("NFKD", "ł")`
+#: is one character, so an NFKD-only fold would leave `wrocław` unequal to `wroclaw` — a guard
+#: too weak to fail, on exactly the character that produced the finding. Measured 2026-09-07;
+#: `đ` behaves the same way. The others are here because the same property holds of them and
+#: a later page in another language would meet it, not because any surface uses them today.
+_UNDECOMPOSED = str.maketrans({
+    "ł": "l", "Ł": "L", "đ": "d", "Đ": "D", "ø": "o", "Ø": "O",
+    "ß": "ss", "æ": "ae", "Æ": "AE", "œ": "oe", "Œ": "OE", "ħ": "h", "ŧ": "t",
+})
+_SEPARATORS = re.compile(r"[-_\s]+")
+
+
+def _fold(text: str) -> str:
+    """One spelling for a directory string and for the prose a page writes it as.
+
+    `wroclaw-air-insights` and `Wrocław Air Insights` are the same identity under two
+    encodings: a different letter, and hyphens where the prose has spaces. Fold the
+    diacritics, treat the separators alike, and case-fold.
+    """
+    decomposed = unicodedata.normalize("NFKD", text.translate(_UNDECOMPOSED))
+    unmarked = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    return _SEPARATORS.sub(" ", unmarked).strip().casefold()
+
+
+def _leads_with_the_projects_identity(title: str, repo: str) -> bool:
+    """Clause 4's `<title>` half, read positionally and in both spellings.
+
+    **The reading, settled 2026-09-07 and recorded in `tools/spec.py` at `c4.s3`.** The clause
+    says the `<title>` *follows the `h1` rather than the directory*, and glosses its own reason:
+    the two halves are *"different surfaces with different readers — the page, and the search
+    result or the shared link."* **A search result shows a reader a name, never a directory**,
+    so the directory string alone is the wrong comparison — `Wrocław Air Insights — live PM2.5
+    forecast` commits precisely the failure the clause describes, to precisely the reader it
+    names, and passed.
+
+    Positional, because the alternative was measured and refuted: any reading that asks
+    whether the name appears *anywhere* fails **11 of the 12** surfaces, since seven of the
+    eight conforming titles are `<claim> — <repo>` and the name is a suffix. The house style
+    is not the defect. *(Both figures were wrong when first written — 10 and eight — and both
+    are recomputed by `python -m tools.pagespec --detail`. `apply-scout` is the one conforming
+    title that carries the name nowhere at all.)*
+
+    The match must end on a word boundary. Without that, `ab-lab` would lead `Ab labs are
+    cheap` — a prefix of a longer word is not the name.
+
+    **The honest limit, stated the way clause 3 states its checkable form**, and wider than
+    a first draft of this paragraph said. Two shapes are not caught:
+
+    - a *reworded* identity — `ReviewSense PL` for `pl-review-sense`;
+    - the same words with the separators **deleted** rather than spaced — `DocExtract`,
+      `AuthLogScan`, `MiniTraceroute`. `_fold` turns a separator into a space, so it cannot
+      reach a spelling that has none, and this is a common way a project writes its own prose
+      name. Swept over the twelve pinned pages: none uses one today, so the paragraph is
+      about what this function claims rather than about a live gap.
+
+    That is the same residual `4 h1` carries, and it is why this key can gate on the
+    mechanical failure without claiming the semantic one.
+    """
+    # **One comparison, not two — and the reason is narrower than a first version claimed.**
+    # An earlier revision also compared the raw directory string, and the comment said `_fold`
+    # was *"a strict relaxation"* that subsumed it. That is true only of the raw comparison
+    # **as this function had already written it**, with the word-boundary rule applied. It is
+    # false of the comparison this replaced on `main`, which was a bare `startswith`:
+    #
+    #     repo `ab-lab`, title `ab-labs are cheaper`   ->  bare startswith: a lead
+    #                                                      here:            not a lead
+    #
+    # `_fold` relaxes spelling — separators, diacritics, case — and the boundary rule
+    # *restricts* at the match end, so the two moves go in opposite directions and neither
+    # comparison contains the other. **The loosening is deliberate**: `ab-labs` is a different
+    # word, not the project's name, and `main` failed that title. Stated because a reader who
+    # believed the subsumption claim would think re-adding the raw comparison is a no-op, and
+    # it is not — it would restore that `FAIL`.
+    #
+    # `needle` is empty only if `repo` folds to nothing, which `SURFACES` cannot produce; the
+    # guard is here so a caller passing one gets `False` rather than every title matching.
+    haystack, needle = _fold(title), _fold(repo)
+    return bool(needle) and haystack.startswith(needle) \
+        and not haystack[len(needle):][:1].isalnum()
+
+
 def clause_4_opening(page, repo: str) -> list[Finding]:
     """Eyebrow, `h1` and `<title>` — clause 4 states all three, and §3 has a column each.
 
@@ -686,14 +770,21 @@ def clause_4_opening(page, repo: str) -> list[Finding]:
         "4 h1", UNDECIDED if page.headline else FAIL,
         page.headline[:60] or "no <h1>",
     )
-    if page.headline and page.headline.strip().lower() == repo.lower():
+    # The same comparison as the `<title>` half, and clause 4's own words are why: it says
+    # *not the repository's **name*** for the `h1` and *rather than the **directory*** for the
+    # title, so if either half deserved the identity reading it was this one. It was left on
+    # the raw directory string when the title half moved, which put the two halves of one
+    # clause in disagreement about what the name is. Measured before changing it: both
+    # comparisons are `False` on all twelve surfaces, so `4 h1` — which *is* in `GATED` —
+    # cannot move on the corpus today.
+    if page.headline and _fold(page.headline) == _fold(repo):
         headline = Finding("4 h1", FAIL, f"the repository's name: {page.headline}")
-    named_after_the_directory = page.title.strip().lower().startswith(repo.lower())
+    leads_with_identity = _leads_with_the_projects_identity(page.title, repo)
     title = Finding(
         "4 title",
-        FAIL if named_after_the_directory or not page.title else PASS,
+        FAIL if leads_with_identity or not page.title else PASS,
         (page.title[:60] or "no <title>")
-        + (" (leads with the repository's name)" if named_after_the_directory else ""),
+        + (" (leads with the project's name)" if leads_with_identity else ""),
     )
     eyebrow = Finding(
         "4 eyebrow",

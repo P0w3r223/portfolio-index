@@ -9,6 +9,8 @@ tests that matter most are the ones where a plausible implementation would have 
 
 from __future__ import annotations
 
+import unicodedata
+
 import pytest
 
 from conftest import detail_of, fixture, loaded, page, status_of
@@ -268,7 +270,10 @@ def test_a_title_that_leads_with_the_directory_name_fails():
     findings = clauses.clause_4_opening(
         page("<title>apply-scout — an LLM job-matching agent</title>"), "apply-scout")
     assert status_of(findings, "4 title") == clauses.FAIL
-    assert "leads with the repository's name" in detail_of(findings, "4 title")
+    # *project's*, not *repository's*: since the reading was settled the check compares the
+    # directory string and the prose spelling of the same identity, and the detail has to
+    # name what was actually matched rather than only one of the two.
+    assert "leads with the project's name" in detail_of(findings, "4 title")
 
 
 def test_a_title_that_states_the_claim_first_passes_even_when_it_ends_with_the_directory():
@@ -292,6 +297,24 @@ def test_a_headline_that_is_the_repository_name_fails():
     assert detail_of(findings, "4 h1") == "the repository's name: mlops-car-price"
 
 
+def test_a_headline_that_is_the_repository_name_spelled_as_prose_also_fails():
+    """The `h1` half reads the identity too, and clause 4's own words are why.
+
+    It says *not the repository's **name*** for the `h1` and *rather than the **directory***
+    for the `<title>`, so of the two halves this is the one whose text asks for the name. It
+    was left on the raw directory string when the `<title>` half moved, which put the two
+    halves of one clause in disagreement about what a name is.
+
+    No committed surface exercises this — the widening is a measured no-op on the corpus —
+    so without this test the change would be carried by nothing, which is the class this
+    whole branch exists to close.
+    """
+    findings = clauses.clause_4_opening(
+        page("<h1>Wrocław Air Insights</h1><title>A claim</title>"), "wroclaw-air-insights")
+    assert status_of(findings, "4 h1") == clauses.FAIL
+    assert "the repository's name" in detail_of(findings, "4 h1")
+
+
 def test_a_headline_that_is_not_the_repository_name_is_undecided_rather_than_passed():
     """*"States a claim"* is a human judgement — `0007` §7 names it as the one normative
     clause a vendored checker cannot carry. Reporting `pass` here would be the checker
@@ -307,18 +330,74 @@ def test_a_missing_headline_fails_rather_than_being_left_open():
     assert detail_of(findings, "4 h1") == "no <h1>"
 
 
-def test_a_title_spelled_as_prose_does_not_read_as_the_directory_it_resembles():
-    """The judgement the checker deliberately does not settle.
+def test_a_title_spelled_as_prose_reads_as_the_identity_it_is():
+    """**The decision this test used to hold open, taken 2026-09-07.**
 
-    `0007` §3 calls `wroclaw`'s `<title>` the repository name; mechanically *"Wrocław Air
-    Insights"* does not lead with the directory `wroclaw-air-insights`, so the check passes
-    it. That is a difference of reading, not a defect on either side, and §7 says a checker
-    cannot carry it. Pinned here so that changing the reading is a decision, not a drift.
+    Its previous version asserted `PASS` here and said *"pinned so that changing the reading
+    is a decision, not a drift."* The decision was taken: clause 4's `<title>` half is read
+    positionally and in both spellings, because the clause's own gloss says the half exists
+    for *"the search result or the shared link"*, and a search result shows a reader a name,
+    never a directory. `tools/spec.py` `c4.s3` is where the reading is recorded.
+
+    The alternative was measured before it was rejected: asking whether the name appears
+    anywhere fails 10 of the 12 surfaces, because eight conforming titles are
+    `<claim> — <repo>`.
     """
     findings = clauses.clause_4_opening(
         page("<title>Wrocław Air Insights — live PM2.5 forecast</title>"),
         "wroclaw-air-insights")
+    assert status_of(findings, "4 title") == clauses.FAIL
+    assert "leads with the project's name" in detail_of(findings, "4 title")
+
+
+def test_the_fold_reaches_a_letter_nfkd_leaves_alone():
+    """The trap the obvious implementation falls into, pinned as a unit.
+
+    `unicodedata.normalize("NFKD", "ł")` is one character — U+0142 has no canonical
+    decomposition — so an NFKD-plus-strip-combining-marks fold does nothing at all to the one
+    letter that produced this finding. A guard written that way would be green on
+    `wroclaw-air-insights` and look correct.
+    """
+    assert unicodedata.normalize("NFKD", "ł") == "ł", "if this ever changes, simplify _fold"
+    assert clauses._fold("Wrocław Air Insights") == "wroclaw air insights"
+    assert clauses._fold("wroclaw-air-insights") == "wroclaw air insights"
+    # **The other half of the fold, which nothing reached.** Every case above turns on `ł`,
+    # and `_UNDECOMPOSED` handles that before NFKD is consulted — so deleting the
+    # strip-the-combining-marks step left the whole suite green, one line below the trap this
+    # test was written for. `ó` does decompose, so this is the assertion that reaches it.
+    assert unicodedata.normalize("NFKD", "ó") != "ó", "ó must decompose or this proves nothing"
+    assert clauses._fold("Kraków Air") == "krakow air"
+
+
+def test_a_title_leading_with_a_longer_word_is_not_leading_with_the_name():
+    """`ab-lab` folds to `ab lab`, which is a prefix of `ab labs`. The match has to end on a
+    word boundary or the clause fails a title that merely starts with similar letters."""
+    findings = clauses.clause_4_opening(
+        page("<title>Ab labs are cheaper than you think</title>"), "ab-lab")
     assert status_of(findings, "4 title") == clauses.PASS
+
+
+def test_where_the_fold_and_the_bare_prefix_disagree_and_which_one_wins():
+    """The two comparisons do not contain each other, and the direction they part is a
+    decision rather than an accident.
+
+    An earlier revision asserted subsumption over four rows that all end the match on a word
+    boundary — the one class where the two *cannot* disagree — under a docstring claiming to
+    assert the property rather than an example. The counterexample row is here now, and it is
+    the row that makes this a real guard: `main` failed `ab-labs are cheaper` for a repository
+    called `ab-lab`, and this reading passes it, because `ab-labs` is a different word.
+    """
+    parted = ("ab-lab", "ab-labs are cheaper than you think")
+    assert parted[1].casefold().startswith(parted[0].casefold()), "the bare prefix bites here"
+    assert not clauses._leads_with_the_projects_identity(*reversed(parted)), (
+        "and this reading deliberately does not — the boundary rule is the loosening"
+    )
+    # Where the spelling differs and the boundary holds, the fold reaches what the bare
+    # prefix cannot: that is the relaxation half, and it is the half wroclaw turns on.
+    for repo, title in (("doc-extract", "doc_extract — KSeF schema coverage"),
+                        ("wroclaw-air-insights", "Wrocław Air Insights — live PM2.5")):
+        assert not title.casefold().startswith(repo.casefold())
+        assert clauses._leads_with_the_projects_identity(title, repo)
 
 
 # -- clause 5: the six card properties and a favicon ----------------------------------------
