@@ -257,12 +257,12 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | 2 | The three code defects before S9 touches five stylesheets: `_VAR_FALLBACK`, `clause_3_tables` per table, `sources.py:141`'s cause | W2, W3, N5 | S | **done — `#83`**, and widened: see the note below |
 | 3 | A **`GATED` floor guard** — every key reporting zero `FAIL` must be in the tuple — plus the assertion repair in §5.2 row 2 and the rebuild of the ratchet test before it becomes unsatisfiable | §5.1 | S | **done — `#83`** |
 | 4 | Clause 8's regex in the bound-preserving form (§4.1), and a stated decision on `n/a` and `U+2009` | §4.1, §5.2 | S | **done — `#83`**; the `n/a` reading is stated and left to S9 as a spec question |
-| 5 | A **clause registry** — `CLAUSES` keyed by clause-sentence id, each carrying `carried_by: index \| repo-test \| review \| none`, with a `core`-job test that every entry has a check or an explicit reason | W1, and gives clause 9 and the geometry half an honest home | S | open — the artifact whose absence produced all three occurrences |
+| 5 | A **clause registry** — `CLAUSES` keyed by clause-sentence id, each carrying `carried_by: index \| repo-test \| review \| none`, with a `core`-job test that every entry has a check or an explicit reason | W1, and gives clause 9 and the geometry half an honest home | S | **done — `#85`, `35ae5a9`**, and it found two more occurrences on its first walk: clause 7's first sentence and clause 3's `data-scroll` escape. `ADR-0005` is the decision; §12 |
 | 6 | Re-scope S9's first commit: no permanent source census; reconcile against the checker's existing per-surface inventory and let the ratchet carry recurrence | W4 | *a saving* | open — the ledger's own evidence supports it |
 | 7 | S9 and S10, with `wroclaw/tests/test_report.py:1524` widened in the same commit that moves the separator | the two failing clauses | 2.5–3 d | open, per `0008` |
 | 8 | The scheduled `live` job hashes all twelve fetched surfaces against their committed files, reporting a mismatch under its own finding key | **C1**, both halves | S | open |
 | 9 | Split `0008`: ledger, **a failure-taxonomy document**, measurements to the report | §6.2 row 5 | S | open — after S9/S10, so the file is smaller when split |
-| 10 | **Sx** — 11 `pyproject.toml`, 70 `Author:` fields | dead weight | 0.5 d | open, depends on nothing |
+| 10 | **Sx** — 11 `pyproject.toml`, 70 `Author:` fields | dead weight | 0.5 d | **done** — eleven sibling pull requests plus `b416c83` and `d550066`. Both figures now read **0**. `d550066` is green on `main`; `b416c83` is `docs/**` only, which the paths filter excludes, so it has no run. `0008` §4.14 records what the stage measured, including a deprecation date the record did not have |
 | 11 | Bring the **profile README** into the system — at minimum a `Surface` read by `--fetch` in `live`, plus the quotation rule | the asymmetry in §9 | S | open |
 | 12 | **Contrast at the usage site** — a clause using the existing `colour.resolve()`/`composite()`, `UNDECIDED` for `color-mix`, `opacity < 1` and SVG paint order, threshold per usage site | N4, `0007` §7's largest gap | M | open — ships report-only, enters `GATED` only when a stage closes it |
 | 13 | Registry-drift test (N1) · resolve N3 (implement the geometry half or amend `ADR-0004` §4 to say it is deferred and unowned) · clean `autoMode.environment` | N1, N3, §6.2 row 4 | S | open, each independent |
@@ -393,3 +393,91 @@ no-op. The same shape survives at `__main__`'s `"needs --fetch"`, built as prose
 and compared in another; it is guarded (the end-to-end test asserts both the exit code and the
 string), so it is a smaller instance and not the one §5 describes, but the claim *"the residual
 is closed"* is true of the stylesheet marker only.
+
+## 12. What the passes of 2026-09-07 got wrong, including this file
+
+§8's discipline applied to the session that closed §7 rows 5 and 10 and settled §11's first
+question. Every figure below was recomputed rather than re-read.
+
+### 12.1 In this document
+
+1. **§2's conformance table lists `wroclaw` under the clause-4 failures, and the instrument read
+   `ok`.** §11 of this same file says so nine sections later. The cell was `0008`'s *scope* figure
+   printed in a column labelled as the checker's reading — the substitution `ADR-0004` §5 exists to
+   prevent, in the document that quotes that rule. The outcome has since moved for a different
+   reason (the reading was settled and `wroclaw` now fails), which is exactly why the method error
+   is worth recording separately from the number.
+2. **§8 row 6's naive count was 72 on the day it was written, not 71.** The row diagnosed the
+   off-by-one correctly and, *by quoting the pattern it was counting*, added the second instance
+   itself. Since Sx the header form is **0** portfolio-wide. The tracked naive count was **2** —
+   §8 row 6 and `0008` §2.1, both records of a measurement rather than fields.
+
+   ***And this commit made it 3.*** The Sx status cell written in the same change quoted the
+   pattern while reporting it as zero, which is the third occurrence of the shape this very
+   item was written to diagnose — the first in `0008` §2.1, the second in §8 row 6 correcting
+   the first, the third here correcting the second. The cell is rewritten to name the thing
+   instead of spelling it, which is what this item does and is why this item did not add a
+   fourth. **The count is the wrong instrument and that is the finding**: a figure whose
+   measurement is a substring of the document reporting it cannot be stated in that document
+   without moving. The header form does not have this property, which is why it is the one
+   the ledger tracks.
+
+### 12.2 In the architecture passes commissioned this session
+
+Both were substantively right and both carried a figure that did not reproduce, which is the
+reason `CLAUDE.md` says to reproduce before building on one.
+
+| claim | measured |
+|---|---|
+| un-normalised, a served-versus-committed hash *"would report all eleven as mismatched"* on this machine | **five of eleven** — only five working-tree files carry CRLF |
+| `pagespec.yml` mentions `--fetch` twice, so a naive `count == 1` ships broken | **three times**. The conclusion is right and stronger than stated |
+| a non-positional clause-4 reading fails 10 of 12 surfaces | **11 of 12** — the first count compared without folding `ł`, so it could not see `wroclaw` |
+| eight conforming titles are `<claim> — <repo>` | **seven of the eight**; `apply-scout` carries the name nowhere |
+
+The last two were this session's own, propagated from `main` into two new sites before the review
+caught them.
+
+### 12.3 In the work, found by the reviews that blocked it
+
+Three guards shipped green over the defect they name, and all three were in stages whose subject
+is that class:
+
+1. **The registry's lower-bound guard could not fail.** It asserted a quote's occurrence count in
+   the *whole document* and then restated what `normative_text()` already raises on, so moving the
+   bound to the document's title — pulling all of §3 into the normative slice — left the entire
+   file passing. It was not among the fourteen mutations run before the stage was proposed.
+2. **The subsumption claim in clause 4's fold was false as written.** `_fold` subsumes the raw
+   comparison *with the word boundary applied*, which is what the exhaustive check compared; it does
+   not subsume the bare `startswith` this replaced on `main`. The two moves go in opposite
+   directions — the fold relaxes spelling, the boundary restricts the match end. The guard asserting
+   the property iterated four rows that all end on a boundary, **the one class where the two cannot
+   disagree**, under a docstring claiming to assert the property rather than an example.
+3. **The combining-mark strip was reached by nothing.** Every test exercising `_fold` used `ł`, and
+   `_UNDECOMPOSED` handles `ł` before NFKD is consulted — so deleting the strip left the whole suite
+   green, one line below the trap the branch was written to close.
+
+**And one was caught before review, which is new.** The raw directory comparison was dead code and
+it shipped with a test whose name claimed to guard the difference it could not fail on. Every prior
+appearance of this class in the record was found by a later pass; this one was found by suspecting
+the code while writing it.
+
+### 12.4 Two corrections to §7's own rows
+
+- **Row 13 overstates N1.** It is already half closed:
+  `tests/test_entry_state.py::test_the_two_registries_still_name_the_same_repositories` ties
+  `.gitmodules` to `sources.SURFACES`. What remains untied is `pagespec.yml`'s two hard-coded
+  eleven-repository path lists and `test_sources.py`'s `12`/`11` literals — and the workflow list is
+  the one row 13 correctly calls the silent failure.
+- **Row 5's `carried_by: index | repo-test | review | none` is single-valued and the decision it
+  describes is not.** `ADR-0004`'s K-c is one checker **plus** assertions in the repositories, so
+  clause 1's palette and clause 6's back-link are genuinely carried twice. `ADR-0005` ships a tuple.
+
+### 12.5 A false-positive path in the entry state, found by tripping it
+
+A tool that rewrites a file byte-identically leaves `git status` — and therefore
+`tools/entry_state.py` — reporting uncommitted changes that `git diff` denies, until a `git add`
+refreshes the index. It happened here to a mutation driver restoring its own edits, and the entry
+state read `! 2 uncommitted change(s)` over two files identical to `HEAD`.
+
+Recorded rather than fixed. It is the mirror of the stale-`origin/main` false finding §4.12
+records: the instrument reports what git reports, and what git reports is not always what changed.

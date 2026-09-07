@@ -119,7 +119,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open — the `car-price-ml/app` title is `docs/app/index.html:6` and rides with S9b's `:7` and `:27`; §4.13 |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
-| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | open — **the only open item depending on no gate, no clause and no other stage**; §4.13 |
+| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -1426,6 +1426,66 @@ way, and the census stays formatter-scoped. What changes is only what one commit
 **None of it touches the gate.** `GATED` is unchanged, clause 8 is still outside it until S9 closes, and the
 ratchet test still holds. *The errata move a stage's cost and not the instrument's contract, which is the
 separation `ADR-0004` §5 exists to keep.*
+
+### 4.14 What closing Sx measured — three things the record did not have, and two mistakes in the doing
+
+Taken 2026-09-07. Every figure below comes from a shell or a build, not from a reading of this
+file — §3's rule, applied to the stage that discharges §5's carried list.
+
+#### 1. L5 is a deprecation with a date, and the date is not far
+
+§5 calls L5 *"the deprecated `license` table form"* and attaches no urgency. Built against
+setuptools 84.0.0:
+
+```
+SetuptoolsDeprecationWarning: `project.license` as a TOML table is deprecated
+    By 2027-Feb-18, you need to update your project and remove deprecated calls
+```
+
+After the change the wheel carries `Metadata-Version: 2.4`, `License-Expression: MIT` and
+`License-File: LICENSE`, and the licence is packaged into `dist-info/licenses/` — which the table
+form never did. **Every one of the eleven runs an editable install in CI** — seven with the `[dev]` extra,
+the others with `[site]`, `[tools]` or none, and three of the eleven on a two-version
+matrix — so the warning was firing on a live build path on every run in the portfolio
+rather than being cosmetic. *A first version of this sentence said all eleven used `[dev]`
+on two versions, which is one repository's workflow read as the portfolio's.* `requires` moved to `setuptools>=77`, the release that understands the
+expression.
+
+*This is the opposite shape from the errata above: those corrected a figure the record had. This
+one is a fact the record never held, and it changes L5 from tidying into scheduled work.*
+
+#### 2. `mini-traceroute`'s exemption reaches both halves, not one
+
+§5 predicts a structural exemption for the licence half — it is C++, holds no `pyproject.toml`.
+It also carried **no `Author:` field at all**, so it is the one repository Sx did not touch in any
+way. The row said to *"record `mini-traceroute`'s structural exemption"*, singular; it is two.
+
+#### 3. §6 row 3 is discharged by an instrument for the first time, and it says eleven
+
+The row reads *"Ten of eleven pages are still served byte-identical to their committed file."*
+Fetched and hashed, 2026-09-07: **eleven of eleven**. Five differ bytewise and every one of the
+five differs *only* in line endings — `core.autocrlf = true`, and the byte delta equals the file's
+CRLF count exactly, in all five.
+
+**That is a constraint on `0009` §7 row 8 and not only a discharge.** A byte-for-byte hash run
+from a Windows working tree would report five false regressions; the comparison has to normalise
+line endings, compare the git blob, or state that it is CI-only.
+
+#### 4. Two mistakes in the execution, recorded because neither was caught by a guard
+
+- **`git add -A` was too broad.** Four sibling commits picked up untracked
+  `.claude/sessions/*.md`. Removed before any pull request opened — but the cause stands: **eight of the
+  twelve submodules do not gitignore `.claude/`**, so in those eight the files are untracked rather
+  than ignored and any `-A` reaches them. `apply-scout`, `doc-extract`, `pl-jobs-lora` and
+  `wroclaw-air-insights` already ignore it, and all four commits that picked a file up were in the
+  exposed eight. *A first version said none of the twelve — measured only on the four repositories
+  that had the problem, which is a sample chosen by the conclusion.*
+- **A background script produced ten empty summaries that looked like results.** It resolved a
+  relative interpreter path after `cd`, so every suite reported `<no summary>` — output shaped
+  like a measurement with no measurement in it. Sx's evidence is what actually ran: `doc-extract`'s
+  full suite (817), the one test in the portfolio that parses `pyproject.toml`, the byte guard over
+  generated README regions, a sweep showing **no test anywhere reads an `Author:` field**, and then
+  CI on each of the eleven pull requests.
 
 ## 5. What is carried, not scheduled
 
