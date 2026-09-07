@@ -1,9 +1,15 @@
-"""Report mode — the command line, and the one thing it must never do yet.
+"""The command line, and the gate `0008` S-gate turned on.
 
-`0008` S2 schedules the gate *after* the rollout rather than before it, because a gate
-written before any page is green has no reference to gate against. So the exit status is
-zero whatever the checker finds, and that is asserted here on a tree built to fail every
-clause — the day someone turns this into a gate, this test is where the decision surfaces.
+Until that stage the exit status was zero whatever the checker found, and this file asserted
+it on a tree built to fail every clause. That test said *"the day someone turns this into a
+gate, this test is where the decision surfaces"* — it did, and the tests below are what
+replaced it. It was not deleted: the workflow named it as the guard on report-only mode, and
+a guard that vanishes along with the thing it guarded is the silent-green shape this suite
+exists to catch.
+
+**Every test here runs with no submodule on disk.** That is the `core` job's contract, and it
+is why the ratchet's corpus check lives in `test_published_surfaces.py` instead — a claim
+about what `GATED` may contain can only be asserted against the real trees.
 """
 
 from __future__ import annotations
@@ -56,11 +62,113 @@ def tree(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def test_the_checker_exits_zero_on_a_page_that_fails_every_clause_it_can(tree, capsys):
-    """Report only. `ADR-0004` §6 and `0008` S2 both turn on this, and reversing it is a
-    decision about the rollout rather than about the checker."""
-    assert report.main(["--root", str(tree), "--only", "mlops-car-price"]) == 0
-    assert "fail" in capsys.readouterr().out
+def test_a_page_failing_a_gated_clause_makes_the_checker_refuse(tree, capsys):
+    """The reversal of `test_the_checker_exits_zero_...`, which stood here until `0008`
+    S-gate and is replaced rather than deleted: it was the guard on report-only mode, and
+    the workflow named it as such, so dropping it silently is the shape this suite exists to
+    catch. `ADR-0004` §6 is the normative home and was amended in the same change."""
+    assert report.main(["--root", str(tree), "--only", "mlops-car-price"]) == 1
+    out = capsys.readouterr().out
+    assert "gate — a clause in GATED failed" in out
+    assert "1 tokens" in out
+
+
+def test_a_page_failing_only_an_ungated_clause_still_passes(tree, capsys):
+    """**The test that proves the ratchet is a ratchet.** Without it every guard here would
+    also pass on a gate that simply gated everything — which would go red on S9's own first
+    commit, and on every surface it had not reached yet.
+
+    The page below fails exactly the two clauses outside `GATED`: a comma-grouped figure
+    (clause 8) and a `<title>` leading with the directory (clause 4's `<title>` half). Both
+    print, neither gates.
+    """
+    page = (tree / "ab-lab" / "docs" / "index.html").read_text(encoding="utf-8")
+    page = page.replace("<title>A 5% test is only 5% if you look once — ab-lab</title>",
+                        "<title>ab-lab — A 5% test is only 5% if you look once</title>")
+    page = page.replace("</body>", "<p>1,234 resamples</p></body>")
+    (tree / "ab-lab" / "docs" / "index.html").write_text(page, encoding="utf-8")
+
+    assert report.main(["--root", str(tree), "--only", "ab-lab"]) == 0
+    out = capsys.readouterr().out
+    assert "FAIL  8 separator" in out and "FAIL  4 title" in out
+    assert "gate —" not in out
+
+
+def test_a_committed_surface_that_cannot_be_read_gates(tree, capsys):
+    """Policy 2 of `0008` §4.11. A renamed or deleted path must not degrade to a green skip
+    — that is the silent-green shape §3.7, §3.9 and §4.9 each record, and a checker that
+    passes a page it never opened is worse than one that fails."""
+    (tree / "ab-lab" / "docs" / "index.html").unlink()
+    assert report.main(["--root", str(tree), "--only", "ab-lab"]) == 1
+    assert "a surface that should have been readable was not read" in capsys.readouterr().out
+
+
+def test_needing_fetch_is_the_one_unread_reason_that_does_not_gate(tree, capsys):
+    """The other half of policy 2, asserted separately — `0008` §4.4's lesson is that a guard
+    proved on one shape of two is a guard on neither. The push job is deliberately offline,
+    so `wroclaw` being unread there is the design and not a defect; only the scheduled run
+    asks for the wire.
+
+    `--only` is doing real work here rather than tidying: a first version ran over the whole
+    fixture tree, where nine committed surfaces are also absent, so it gated on *those* and
+    proved nothing about the reason it names. The test has to be able to fail for one reason.
+    """
+    assert report.main(["--root", str(tree), "--only", "wroclaw-air-insights"]) == 0
+    out = capsys.readouterr().out
+    assert "wroclaw-air-insights (needs --fetch)" in out
+    assert "gate —" not in out
+
+
+def test_a_same_origin_stylesheet_the_run_could_not_read_gates(tree, capsys):
+    """Policy 2 one level down, and it was found by review rather than by the tests.
+
+    Every clause reading `loaded.css` answers from whatever was assembled; a sheet the page
+    names and the run could not open makes those answers a reading of an incomplete
+    stylesheet, and the page then reports `clear`. Renaming a sheet carrying a webfont
+    `@import` moved a surface from `FAIL 7 webfont` to `clear`, exit 1 to exit 0 — a renamed
+    *stylesheet* degrading to a green pass, where policy 2 already refuses a renamed *page*.
+    """
+    page = (tree / "ab-lab" / "docs" / "index.html").read_text(encoding="utf-8")
+    (tree / "ab-lab" / "docs" / "index.html").write_text(
+        page.replace("</head>", '<link rel="stylesheet" href="absent.css"></head>'),
+        encoding="utf-8")
+    assert report.main(["--root", str(tree), "--only", "ab-lab"]) == 1
+    out = capsys.readouterr().out
+    assert "a same-origin stylesheet the page names could not be read" in out
+    assert "ab-lab  absent.css" in out
+    # The header has to be the right one. This gated under "a clause in GATED failed" at
+    # first, on a row printing `clear`, with `stylesheets` being an UNDECIDED that is not in
+    # GATED — pointing the reader at §4.11 policy 1, the paragraph that says UNDECIDED never
+    # gates. Naming the wrong reason is how a real finding gets read as noise.
+    assert "a clause in GATED failed" not in out
+
+
+def test_a_third_party_stylesheet_is_unread_by_design_and_does_not_gate(tree, capsys):
+    """The other half, asserted separately. A third-party sheet is skipped deliberately —
+    fetching one would put a page's verdict on somebody else's CDN — so it must not gate,
+    and `0008` §3.6 already records clause 7 being *quiet rather than silent* about it.
+
+    This pair also pins the bug the first fix shipped with: it parsed the `stylesheets`
+    message with `split(", ")`, and the third-party marker *contains* that separator, so
+    every exempt sheet split in two and the fragment gated. The structured list was there
+    the whole time.
+    """
+    page = (tree / "ab-lab" / "docs" / "index.html").read_text(encoding="utf-8")
+    (tree / "ab-lab" / "docs" / "index.html").write_text(
+        page.replace("</head>",
+                     '<link rel="stylesheet" href="https://cdn.example/x.css"></head>'),
+        encoding="utf-8")
+    assert report.main(["--root", str(tree), "--only", "ab-lab"]) == 0
+    assert "gate —" not in capsys.readouterr().out
+
+
+def test_report_only_prints_the_same_table_and_refuses_to_decide(tree, capsys):
+    """The escape hatch, and it is deliberately not the default. A gate reached only by
+    remembering a flag is one a later workflow edit drops without anyone noticing; gating by
+    default costs nothing today, because `GATED` is clean on all twelve surfaces."""
+    assert report.main(["--root", str(tree), "--only", "mlops-car-price",
+                        "--report-only"]) == 0
+    assert "gate —" not in capsys.readouterr().out
 
 
 def test_a_surface_that_satisfies_the_spec_reports_clear_and_still_says_what_it_could_not_judge(
@@ -98,7 +206,10 @@ def test_nothing_is_fetched_unless_fetching_is_asked_for(tmp_path, monkeypatch, 
         raise AssertionError(f"the report fetched {url} without --fetch")
 
     monkeypatch.setattr(report.sources, "_fetch", refuse)
-    assert report.main(["--root", str(tmp_path)]) == 0
+    # 1, not 0: every committed surface is absent from an empty root, and `0008` §4.11's
+    # policy 2 gates on a surface that should have been readable. The subject of this test is
+    # the network, and the exit code moved underneath it when the gate landed.
+    assert report.main(["--root", str(tmp_path)]) == 1
 
 
 def test_detail_prints_the_findings_that_are_not_failures(tree, capsys):
@@ -153,7 +264,13 @@ def test_a_failed_fetch_is_not_reported_as_a_flag_the_reader_forgot(tree, capsys
         raise OSError("connection refused")
 
     monkeypatch.setattr(sources, "_fetch", refuse)
-    report.main(["--root", str(tree), "--fetch", "--only", "wroclaw-air-insights"])
+    # The exit code, and it was missing: `missing` has **three** reasons and only two were
+    # asserted, so `reason == "not found"` — dropping the fetch-failure branch entirely —
+    # left the whole suite green. That branch is the sole mechanism behind the `live` job's
+    # stated purpose, and `0008` §4.12's mutation table had no row for it. n-1 of n on a
+    # three-way branch, which is §4.4's shape.
+    assert report.main(["--root", str(tree), "--fetch",
+                        "--only", "wroclaw-air-insights"]) == 1
     out = capsys.readouterr().out
     assert "fetch failed" in out
     assert "needs --fetch" not in out

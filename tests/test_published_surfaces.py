@@ -108,12 +108,57 @@ def test_a_clause_that_cannot_trust_the_ancestry_says_so_instead_of_passing(surf
         assert finding.status != clauses.UNDECIDED
 
 
-def test_the_report_runs_over_the_whole_index_and_still_exits_zero(capsys):
-    """The end-to-end path, at the size it actually runs: twelve surfaces, no network."""
+def test_the_report_runs_over_the_whole_index_and_the_gate_is_green(capsys):
+    """The end-to-end path, at the size it actually runs: twelve surfaces, no network.
+
+    Named for the exit code until `0008` S-gate, when the zero stopped meaning *"this checker
+    does not decide"* and started meaning *"nothing in `GATED` failed"*. Same assertion, and
+    a different claim — which is worth the rename, because the old name would now read as a
+    guarantee that the checker never refuses.
+    """
     require_submodule("ab-lab")
     assert report.main(["--root", str(ROOT), "--detail"]) == 0
     out = capsys.readouterr().out
     assert "wroclaw-air-insights (needs --fetch)" in out
+
+
+def test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing():
+    """The ratchet cannot be widened past the measurement that licenses it.
+
+    `GATED` is a claim about the trees: those keys report zero `FAIL` on every surface read.
+    This asserts the claim rather than trusting the tuple, so adding `8 separator` before S9
+    has landed turns it red — which is exactly when it should.
+
+    It lives here and not beside the gate's own tests because it needs the real working
+    trees, and `test_report.py` is the `core` job's file: that job runs with no submodule on
+    disk and is the one that must never be allowed to go red.
+
+    **Vacuity is guarded on what was read, not on what failed** — and getting there took two
+    goes. `assert failing` fails rather than skips in a fresh clone, and would fail *again*
+    once S9 and S10 close, because then nothing fails and `failing` is empty: **a guard that
+    reddens on the success of the work it guards.** But `assert read` with a single
+    `require_submodule("ab-lab")` above it was no better — that call checks the very path
+    `sources.load` checks, so the assertion could not fire, and `read == 1` passed happily
+    while proving the ratchet against **one** surface of eleven. §3.10's sentence is the
+    whole point: *a corpus sweep proves the rule against the corpus*, so the corpus has to be
+    all of it or the test has to skip.
+    """
+    for surface in COMMITTED:
+        require_submodule(surface.repo, surface.path)
+    read = 0
+    failing: set[str] = set()
+    for surface in sources.SURFACES:
+        loaded = sources.load(surface, ROOT, allow_fetch=False)
+        if loaded is None:
+            continue
+        read += 1
+        failing |= {finding.clause for finding in clauses.check(loaded)
+                    if finding.status == clauses.FAIL}
+    assert read == len(COMMITTED), f"the sweep read {read} of {len(COMMITTED)} surfaces"
+    for clause in sorted(failing):
+        assert not any(clause.startswith(prefix) for prefix in report.GATED), (
+            f"{clause} fails on a committed surface and is in GATED: either a page "
+            "regressed, or the ratchet was widened before its stage closed")
 
 
 def test_the_computed_table_does_not_depend_on_set_iteration_order():
@@ -126,11 +171,25 @@ def test_the_computed_table_does_not_depend_on_set_iteration_order():
 
     def run(seed: str) -> str:
         environment = dict(os.environ, PYTHONHASHSEED=seed, PYTHONIOENCODING="utf-8")
+        # `--report-only` is what decouples this from the gate's exit code — on that path
+        # `main` returns 0 whatever it finds — so the test can fail for exactly one reason.
+        # With the gate on and `check=True` it reddened under four mutations that are about
+        # the gate and none about set iteration order.
         finished = subprocess.run(
-            [sys.executable, "-m", "tools.pagespec", "--detail"],
+            [sys.executable, "-m", "tools.pagespec", "--detail", "--report-only"],
             cwd=ROOT, env=environment, capture_output=True, text=True,
-            encoding="utf-8", check=True,
+            encoding="utf-8", check=False,
         )
+        # `check=False` on top of that removed the last assertion that the subprocess did
+        # anything at all: with the checker raising on its first line, both runs produced
+        # empty output, the two empties compared equal, and this test passed. It is the
+        # suite's **only** test that runs the module as a process, so an argparse
+        # regression, an import failure, or a `UnicodeEncodeError` under the encoding this
+        # test pins — live on Windows, where the table is full of em-dashes — was invisible
+        # to every test there is. Relaxing a coupled assertion is not the same as removing
+        # it, and the first fix did the second.
+        assert finished.stdout.startswith("pagespec"), (
+            f"the checker printed no table; exit {finished.returncode}\n{finished.stderr}")
         return finished.stdout
 
     assert run("0") == run("12345")

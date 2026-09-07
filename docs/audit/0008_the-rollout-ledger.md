@@ -114,7 +114,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
-| **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, **and the two tests that pin the exit code** — `tests/test_report.py:59`, `tests/test_published_surfaces.py:111`; the workflow header names the first as *"the test that guards it"*, so it is replaced rather than deleted. **No page changes** — §4.11 | 0.5 d | open, **first** |
+| **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `043bf72` + `38f26a9`. **Fourteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and one that reddened nothing at all until a review found the branch had no guard (row 9). **Three review passes**, the last two finding fixes that displaced a defect rather than removing it; §4.12 |
 | **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, build-only · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **18 non-conforming write sites in 13 files across five repositories and six surfaces**; 7 failing surfaces — §4.11 | 1.5–2 d | open |
 | **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
@@ -1099,12 +1099,15 @@ can be gated now with no page changing at all.
 So: a **ratchet**. Gate the clauses that are already clean, and extend the set by one as each stage closes.
 Three decisions the implementation must state rather than imply:
 
-1. **Fail on `FAIL` only.** `UNDECIDED` and `n/a` never gate. Clause 4's `h1` is permanently undecided by
-   design (`0007` §7), clause 3 answers `undecided` where a media condition is not read, clause 2 is `n/a`
-   on a page with no tiles, and **clause 1's `composited` is undecided on seven of twelve surfaces** — the
-   largest such population, and the one §3.2 and §3.5 argue hardest to keep, because resolving a `color-mix`
-   or an `opacity` needs the ground the mark is *drawn over*. A gate that reddens on `undecided` would be a
-   gate on the checker's honesty.
+1. **Fail on `FAIL` only** — with one exception, found by review and recorded at the end of §4.12. Clause 4's
+   `h1` is undecided on every surface today because *"states a claim"* is a judgement no checker can make
+   (`0007` §7) — **not undecided *by design*, which is what a first draft of this line said**: it still
+   `FAIL`s on a missing `h1` or one equal to the repository's name, and that sentence became load-bearing the
+   moment `4 h1` entered `GATED`. Clause 3 answers `undecided` where a media condition is not read, clause 2
+   is `n/a` on a page with no tiles, and **clause 1's `composited` is undecided on seven of twelve surfaces**
+   — the largest such population, and the one §3.2 and §3.5 argue hardest to keep, because resolving a
+   `color-mix` or an `opacity` needs the ground the mark is *drawn over*. A gate that reddens on those would
+   be a gate on the checker's honesty.
 2. **An unread surface that should have been readable is a failure.** Otherwise a renamed path degrades to a
    green skip — which is the shape of every silent-green defect in §3.7, §3.9 and §4.9.
 3. **`--fetch` moves to a scheduled job, not the push job.** The push job gates eleven committed surfaces; a
@@ -1112,12 +1115,137 @@ Three decisions the implementation must state rather than imply:
    `--fetch` was excluded in the first place, and the comment states it — while ending the state where
    `wroclaw` is gated by nothing at all.
 
+   *S-gate shipped this against the cron already in the file, which is **Monday**, so for one commit the
+   policy said daily and the workflow ran weekly — a regression on the one surface that exists nowhere but
+   the wire could have stood for six days. Caught by review; the cron is `0 7 * * *` now. The schedule was
+   inherited from when this workflow only printed, and inheriting it unread is how a policy and its
+   implementation came to disagree inside one change.*
+
 **The mutation that proves it, and the second one is the interesting half.** Revert `charts.py:76` to a comma,
 rebuild, run the checker: today it prints `FAIL` and exits 0. Then make the same source edit **without**
 rebuilding: the gate stays green and `car-price-ml`'s own byte-diff reddens instead. **The two guards are
 complementary rather than redundant** — one sees a page that no longer matches its inputs, the other sees a
 page that matches inputs which are themselves wrong — and that is worth recording so a later reader does not
 delete one as duplicate coverage.
+
+### 4.12 What S-gate closed, and the two guards that turned out not to be redundant
+
+`current_projects` `043bf72`. **No page changed**, which was the argument for taking it first: the ratchet
+starts on the clauses that already report zero `FAIL` on all twelve surfaces, so the gate went from
+"impossible" to "green" without a single byte of any page moving.
+
+**The unit is the finding key, not the clause number**, and clause 4 is why. `4 h1` and `4 eyebrow` are clean
+everywhere while `4 title` fails on three surfaces; gating by the number would either pull `4 title` in before
+S10 or hold the other two out. `GATED` is `("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "5 ", "6 ", "7 ")`.
+
+**Gating is the default, with `--report-only` to opt out — not a `--gate` flag.** A gate reached only by
+remembering a flag is one a later workflow edit drops without anyone noticing, which is the shape §3.7, §3.9,
+§4.4 and §4.9 record five times between them. It costs nothing to default: the set is clean today.
+
+#### The fourteen mutations
+
+Every guard was proved red by the mutation its own docstring names, by running each — §3.7's instruction, and
+the one §3.6 blocked S3 for asserting without doing.
+
+| # | mutation | what reddened |
+|---|---|---|
+| 1 | add `"8 "` to `GATED` before S9 lands | the corpus ratchet test — *the guard against widening the ratchet past its measurement* |
+| 2 | `return 0` unconditionally again | the gated-clause test, and the empty-root test |
+| 3 | let `UNDECIDED` gate too | the ungated-clause test **and** the whole-index green test |
+| 4 | never gate on an unread surface | the deleted-surface test |
+| 5 | gate on `needs --fetch` too | the `needs --fetch` test |
+| 6 | gate every `FAIL`, ignoring `GATED` | the ungated-clause test |
+| 7 | ignore `--report-only` | the report-only test |
+| 8 | revert `charts.py:76` to a comma, **without rebuilding** | **nothing in the index** — and `car-price-ml`'s own `tests/test_site.py` |
+| **9** | `missing = missing or reason == "not found"` — drop the **fetch-failure** branch | **nothing, before the fix — the whole suite stayed green.** `test_a_failed_fetch_is_not_reported_as_a_flag_the_reader_forgot` now |
+| **10** | stop gating an unread same-origin stylesheet | the same-origin test |
+| **11** | gate a **third-party** sheet too | the third-party test — *the other half, and it has to be asserted separately* |
+| **12** | reinstate the prose parse **behind an `if not loaded.unreadable: return []` guard**, which is the shipped bug's actual reach: `detail.removeprefix("unread: ").split(", ")` | **2** — the third-party test and the same-origin test |
+| **13** | `raise` on `main`'s first line — the checker never runs | 20 tests, **and the determinism test is the one that counts**: before the fix it was the single test that ran the module as a process, and it *passed* — two empty outputs comparing equal |
+| **14** | print the stylesheet gate under the `GATED` header | the same-origin test — *the header is part of the finding, not decoration* |
+
+*Row 12 was first written as **three** tests, and the number is worth the paragraph it costs.* Three
+reconstructions of the same one-line bug give **three different counts**: parsing inside the function that
+runs for *every* surface reddens 3, because an empty `unreadable` list yields `[""]` and gates the whole
+portfolio — a larger bug than the one that shipped; the same parse behind a non-empty guard, which is the
+shipped bug's real reach, reddens 2; and the review's own reconstruction reddened 1. **None of them is wrong;
+they are three different mutations wearing one description.** The row now quotes the text it was measured
+against, because §4.9 already records what an unstated census costs and this is the same thing one layer
+down: *a mutation named in prose is not a mutation, and its count is not reproducible until the code is on
+the page.*
+
+*Rows 9, 10 and 13 were not in the first version of this table, and row 9 is the one that matters: `missing` has
+**three** reasons and only two were asserted, so the branch behind the `live` job's entire stated purpose
+could be deleted with nothing going red. The sentence above this table — "every guard was proved red by the
+mutation its own docstring names" — was true, and silent about the path that had no docstring because it had
+no guard. **A mutation table proves the guards you wrote, not the branches you have**, which is §3.10's
+"a corpus sweep proves the rule against the corpus" applied to a conditional instead of a page.*
+
+**Mutation 6 is the one that proves the ratchet is a ratchet.** Without a test that fails when the gate stops
+consulting `GATED`, every other guard here would pass on a gate that simply gates everything — which would go
+red on S9's own first commit and on every surface S9 had not reached yet. A gate that cannot be partial is not
+a rollout instrument.
+
+**And mutation 8 is the one worth keeping.** Reverting `car-price-ml`'s conforming formatter — one of the
+portfolio's **two**, alongside `doc-extract/docs/build_index.py:1590`, as §4.11's own table says — left the index
+gate **green** — correctly, because clause 8 is outside `GATED` until S9 and because the page bytes had not
+moved — while `car-price-ml`'s own byte-diff went red. Run the other way (rebuild, then check) the index would
+see it and the byte-diff would not.
+
+> **The two guards are complementary rather than redundant.** One asks *does the page still match its inputs*;
+> the other asks *are the inputs right*. §4.11's counterfactual is exactly the gap between those two questions
+> — five rebuild-and-compare guards passed twice each while seven surfaces drifted — and it is recorded here
+> so that a later reader tidying up does not delete one as duplicate coverage of the other.
+
+#### Three things the stage found that were not in its scope
+
+- **`ADR-0004` §6 still read *"report-only first"*.** Turning the gate on while the ADR licensing the
+  instrument says otherwise is §3.8's finding facing the other way: not a document the repositories refute,
+  but **a rule in code that no document states**. Amended in the same commit, and the amendment says what
+  expired rather than deleting the bullet — the deferral's reason was *per page*, and it still holds per page;
+  the gate simply does not have to be per page.
+- **The `core` job's contract nearly took a submodule-dependent test.** The ratchet's corpus check was written
+  into `tests/test_report.py`, which is the file the `core` job runs **with no submodule on disk** — the job
+  the workflow header calls *"the one that must never be allowed to go red."* Moved to
+  `test_published_surfaces.py`. *A test that asserts a claim about the trees cannot live in the file whose
+  contract is that there are no trees.*
+- **The determinism test could no longer fail for one reason.** `test_the_computed_table_does_not_depend_on_set_iteration_order` shells out with `check=True`, so turning on the gate coupled hash-seed determinism to the exit status: it reddened under four of the mutations above, none of which is about set iteration order, and raised `CalledProcessError` instead of showing the two tables that differ. **I saw it redden during the mutation run and wrote it off as a bystander.** It runs `--report-only` now. *The third bullet of this list states the principle, and I broke it two files away while writing the list.*
+- **The ratchet's corpus test would have reddened on the rollout's success.** It guarded vacuity with `assert failing` — so once S9 and S10 close and nothing fails, the guard fails. It also failed rather than skipped in a fresh clone, against this file's own docstring. Vacuity is guarded on what was **read** now. *A guard that goes red when the work it guards finishes is worse than no guard, and it would have arrived as a mystery at exactly the wrong moment.*
+- **A guard of mine proved nothing until `--only` was added to it.** The `needs --fetch` test first ran over
+  the whole fixture tree, where nine committed surfaces are also absent — so it gated on *those* and would
+  have passed whatever the `needs --fetch` branch did. Caught by running it. **A test has to be able to fail
+  for one reason**, and this is §4.4's *"enumerate what the thing can actually receive"* met from the other
+  side: the guard received more than the shape it was written for.
+
+#### What the gate deliberately does not do
+
+It never gates on a clause's `UNDECIDED` or `n/a`, and the list that protects is longer than it looks: clause
+4's `h1` (undecided on all twelve today, because *"states a claim"* is a judgement no checker can make,
+`0007` §7 — it still **fails** on a missing `h1` or one naming the repository), clause 3 where a media
+condition is unread, clause 2 on a page with no tiles, and **clause 1's `composited` on seven of twelve
+surfaces** — the largest such population, kept undecided because resolving a `color-mix()` needs the ground
+the mark is drawn over (§3.2). *A gate that reddened on those would be a gate on the checker's own honesty,
+and the fix for it would be to make the checker claim verdicts it cannot reach.*
+
+**And there is exactly one `UNDECIDED` that does gate, which the review found and this section had described
+as a four-member set that is five.** `sources._with_styles` files a stylesheet it could not open under
+`unreadable`, surfacing as an undecided `stylesheets` finding — and every clause reading `loaded.css` then
+answers from a stylesheet it knows is incomplete. Measured: renaming a same-origin sheet carrying a webfont
+`@import` takes a surface from `FAIL 7 webfont` to **`clear`**, exit 1 to exit 0. That is policy 2's own
+argument one level down — a renamed *stylesheet* degrading to a green pass where a renamed *page* is already
+refused — so it gates for the same reason. A **third-party** sheet stays exempt: it is unread by design, and
+fetching one would put a page's verdict on somebody else's CDN.
+
+*Not live on any surface today — every page is all-inline or all-external, and losing an all-external sheet
+trips `1 tokens` instead. It is scheduled work that makes it reachable: S9 edits generators in five
+repositories and `car-price-ml/app` is hand-written.*
+
+> **The first fix for it shipped with the defect this record is named after.** It parsed the `stylesheets`
+> message with `split(", ")` — and the third-party marker is `" (third party, not read)"`, which **contains
+> that separator**, so every exempt sheet split into two fragments and the second one gated. The structured
+> list was on `loaded.unreadable` the whole time and reconstructing it from prose was the whole error. It is
+> §3.5's welded-token defect — *"`str.split()` destroying the two codepoints clause 8 counts"* — in a third
+> place, and it was caught by running all four cases rather than the one the fix was written for.
 
 ## 5. What is carried, not scheduled
 
