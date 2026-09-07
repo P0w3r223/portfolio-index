@@ -127,11 +127,37 @@ def test_a_surface_whose_file_is_absent_comes_back_as_none(tmp_path):
     assert sources.load(PAGE, tmp_path, allow_fetch=False) is None
 
 
-def test_the_fetch_only_surface_is_not_read_from_disk_when_fetching_is_off():
+def test_the_fetch_only_surface_is_not_read_from_disk_when_fetching_is_off(tmp_path):
     """`wroclaw-air-insights` commits no HTML at all. `reports/site/` is a gitignored local
-    build that has been 24 days stale and produced a wrong answer that survived a session."""
+    build that has been 24 days stale and produced a wrong answer that survived a session.
+
+    **Two corrections to this guard, and the second is the interesting one.**
+
+    It was asserted against `ROOT`, so it was red only on a machine that had run the site
+    generator and green in the `core` job, which checks out no submodules — the guard for the
+    record's most-repeated wrong answer was green in the job that runs on every push.
+
+    And what actually protects this surface is not a branch in `load` at all: it is that the
+    registry gives it **no committed path**, so no file is ever a candidate. A mutation of
+    `load`'s fetch-only early return leaves this green, correctly, because that branch is
+    reached only when a fetch was attempted and failed. So the property is asserted where it
+    lives, and the root is stocked with both plausible files so the assertion has something to
+    be wrong about.
+    """
     wroclaw = next(one for one in sources.SURFACES if one.must_fetch)
-    assert sources.load(wroclaw, ROOT, allow_fetch=False) is None
+    assert wroclaw.path is None, (
+        "the fetch-only surface now declares a committed path; the local build under "
+        "reports/site/ is exactly what that would start reading"
+    )
+    for relative in ("reports/site/index.html", "docs/index.html"):
+        target = tmp_path / wroclaw.repo / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(f"<html><head><title>{relative}</title></head></html>",
+                          encoding="utf-8")
+
+    assert sources.load(wroclaw, tmp_path, allow_fetch=False) is None, (
+        "the fetch-only surface was answered from a file"
+    )
 
 
 def test_a_fetch_that_fails_comes_back_as_none_rather_than_as_a_blank_page(monkeypatch):
@@ -276,3 +302,53 @@ def test_a_surface_with_neither_a_path_nor_a_url_is_a_programming_error():
     """`_published` cannot invent one, and returning a wrong URL would accuse the page."""
     with pytest.raises(ValueError, match="must state its url"):
         sources._published("somewhere", None)
+
+
+def test_the_reason_reaches_the_operator_and_not_only_the_tuple():
+    """`describe` is *"the only rendering"* of the `(href, why)` pair and had no test.
+
+    Mutating it to drop the reason survived the whole suite. The two tests that look like they
+    cover it assert on the structured tuple, and the gate-output one asserts only that the
+    href appears — so the cause `0008` §5 carried as a residual for two rounds could be deleted
+    from the operator's line with everything green.
+
+    Three readers have now had to recover an href from a formatted string; this is the guard
+    that keeps the formatting honest rather than just single.
+    """
+    rendered = sources.describe(("assets/page.css", "FileNotFoundError: No such file"))
+    assert "assets/page.css" in rendered
+    assert "FileNotFoundError: No such file" in rendered, (
+        "the reason is gone — a rename, a permission error and a missing file arrive as one "
+        "identical line without it"
+    )
+    assert sources.describe(("x.css", sources.THIRD_PARTY)) == f"x.css ({sources.THIRD_PARTY})"
+
+
+def test_a_stylesheet_href_naming_another_scheme_is_not_fetched(monkeypatch, tmp_path):
+    """`urljoin` lets an absolute reference win, whatever its scheme.
+
+    An href of `file:///…` or `ftp://…` survives the join, and `urlopen` services both — the
+    bytes land in `loaded.css`, whose fragments are printed in the `1 literals` and
+    `1 usage roles` details. Latent, because the only two external hrefs in the portfolio are
+    relative; but `--fetch` now joins markup **served from twelve public origins** on a CI
+    runner rather than from one, and this module's docstring says it owns that boundary.
+    """
+    asked: list[str] = []
+
+    def record(url):
+        asked.append(url)
+        return b'<html><head><link rel="stylesheet" href="file:///etc/passwd"></head></html>'
+
+    monkeypatch.setattr(sources, "_fetch", record)
+    wroclaw = next(one for one in sources.SURFACES if one.must_fetch)
+    loaded = sources.load(wroclaw, tmp_path, allow_fetch=True)
+
+    assert asked == [wroclaw.published], "a non-http scheme was handed to urlopen"
+    # **Which list, and it is the whole question.** The refusal raised a bare `ValueError`,
+    # which carries no status, so it classified as *unreachable* — the non-gating list — and
+    # printed under a header saying *the wire did not deliver* and *this refuses nothing*. The
+    # network was never asked. A page naming `file:///…` is the page's business, and the two
+    # lists have opposite gate policies, so an assertion that accepts either decides nothing.
+    assert loaded.unreachable == [], "a refusal this module made read as a wire failure"
+    assert loaded.unreadable, "and it was not reported as the page's business either"
+    assert "passwd" in sources.describe(loaded.unreadable[0]), "which href is not named"

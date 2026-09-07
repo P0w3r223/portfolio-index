@@ -146,6 +146,42 @@ class Loaded:
     served_gone: bool = False
 
 
+class _RefusedScheme(ValueError):
+    """This module declining to fetch a URL, as distinct from the network failing to deliver."""
+
+
+def origin_answered(error: Exception) -> bool:
+    """Did the origin answer at all, or did the wire fail? **The stylesheet path's question.**
+
+    It was written twice, in two shapes, in one module: `getattr(error, "code", None) in
+    (404, 410)` on the page path and `not isinstance(error, urllib.error.HTTPError)` on the
+    stylesheet path. Nothing forced the two to agree, because neither was the rule — both were
+    encodings of it, and a Pages 503 during a deploy was `undecided` on a page and **refused
+    the build** on one of its stylesheets.
+
+    A 5xx is the origin failing to answer, not answering. Anything that is not an HTTP status
+    at all is the wire.
+    """
+    status = getattr(error, "code", None)
+    return isinstance(status, int) and status < 500
+
+
+def page_is_gone(error: Exception) -> bool:
+    """Is the *page* not there? **A narrower question, and it refuses the run.**
+
+    The first repair used `origin_answered` for both and so widened this from `(404, 410)` to
+    any 4xx at the same moment it started gating — which makes a `429` from a runner fetching
+    twelve pages and their sheets, or a `403`, or a `304`, refuse the build under a sentence
+    saying *the page is not being served*. That is false about the event and it is the
+    cries-wolf shape `conftest.py` warns about.
+
+    `404` and `410` are the two statuses that mean the page is not there. A 4xx that is not
+    one of them is the origin declining to answer *this* request, which is closer to a wire
+    failure than to a regression, and it prints as `undecided` without refusing.
+    """
+    return getattr(error, "code", None) in (404, 410)
+
+
 def _fetch(url: str) -> bytes:
     """The served bytes, undecoded.
 
@@ -191,7 +227,7 @@ def load(surface: Surface, root: Path, *, allow_fetch: bool,
             # S-gate the scheduled job gates. Recorded on the surface rather than raised,
             # because a page that cannot be read must not stop the other eleven.
             served_error = f"{type(error).__name__}: {error}"
-            served_gone = getattr(error, "code", None) in (404, 410)
+            served_gone = page_is_gone(error)
             if errors is not None:
                 errors[surface.name] = served_error
 
@@ -277,8 +313,24 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
                 # `_fetch` returns bytes since the served-versus-committed comparison
                 # exists; a stylesheet is text to every reader downstream, so it is
                 # decoded here rather than making the seam return two types.
-                parts.append(_fetch(urllib.parse.urljoin(base_url, href))
-                             .decode("utf-8", errors="replace"))
+                # **`urljoin` lets an absolute reference win, whatever its scheme.** An
+                # href of `file:///C:/Windows/win.ini` or `ftp://host/x.css` survives the
+                # join and `urlopen` services both, landing the bytes in `loaded.css` —
+                # whose fragments are printed in the `1 literals` and `1 usage roles`
+                # details. Latent: the only two external hrefs in the portfolio are
+                # relative. But since `--fetch` reads all twelve, the markup being joined
+                # is now *served* from twelve public origins on a CI runner rather than one,
+                # and the boundary this module says it owns is the place to bound it.
+                target = urllib.parse.urljoin(base_url, href)
+                scheme = urllib.parse.urlparse(target).scheme
+                if scheme not in ("http", "https"):
+                    # A policy refusal, not a wire failure — the network was never asked. It
+                    # raised a bare `ValueError`, which carries no status, so it classified as
+                    # unreachable and printed under a header saying *the wire did not deliver*
+                    # and *this refuses nothing*. A page naming `file:///…` is the page's
+                    # business: cause against consequence, one more time.
+                    raise _RefusedScheme(f"refusing a {scheme or 'schemeless'} URL")
+                parts.append(_fetch(target).decode("utf-8", errors="replace"))
             names.append(href)
         except Exception as error:
             # The cause, not just the fact — the same argument the fetch path above already
@@ -292,7 +344,10 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
             # A wire failure on the fetch path is the network, not the page. An HTTP
             # status is the page answering, so that keeps gating: a 404 on a stylesheet
             # is a real defect and a DNS blip is not.
-            if base_url is not None and not isinstance(error, urllib.error.HTTPError):
+            # A refusal this module made is never the wire's fault, whatever it looks
+            # like to `origin_answered`.
+            if (base_url is not None and not isinstance(error, _RefusedScheme)
+                    and not origin_answered(error)):
                 unreachable.append(described)
             else:
                 unreadable.append(described)

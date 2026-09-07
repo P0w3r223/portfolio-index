@@ -226,3 +226,51 @@ def test_a_self_closing_svg_does_not_leave_the_document_title_unreachable():
     page = render.parse(
         '<html><body><svg /><title>Not the document title</title></body></html>')
     assert page.title == "Not the document title"
+
+
+def test_a_self_closed_title_or_heading_does_not_strand_its_collector():
+    """`handle_startendtag`'s own docstring: *every counter `handle_starttag` raises has to
+    come back down here*. Two did not, and the consequence is a wrong verdict rather than a
+    missing one.
+
+    `<title/>` opens the collector and no `handle_endtag` follows, so it stays open and every
+    later text node is appended to it. A stray `</title>` anywhere after — malformed markup,
+    but markup a browser forgives — then commits the page's **body text as its title**. Clause
+    4's `<title>` half would judge that, and `4 title` enters `GATED` with S10.
+
+    Measured both ways before this was written: with the reset the title is empty, without it
+    it is `A claim about latency`.
+    """
+    stranded = render.parse(
+        "<html><head><title/></head><body><p>A claim about latency</p></title></body></html>")
+    assert stranded.title == "", (
+        "the page's body text was committed as its title by a collector nothing closed"
+    )
+    # And the ordinary shape still works, so the reset has not broken the common case.
+    ordinary = render.parse(
+        "<html><head><title>The real title</title></head>"
+        "<body><h1>The real claim</h1><p>body</p></body></html>")
+    assert ordinary.title == "The real title" and ordinary.headline == "The real claim"
+
+
+def test_a_self_closed_tag_inside_a_heading_does_not_clear_the_collector():
+    """The first repair lowered the collectors for **every** self-closed tag.
+
+    `<h1>Fast <br/> answers</h1>` cleared `_heading`, so `handle_endtag("h1")` found it `None`
+    and never committed it — `clause_4_opening` then reported `4 h1 FAIL — no <h1>` on a page
+    that has one, and `"4 h1"` gates. `<br/>`, `<img/>` and `<wbr/>` inside a heading are
+    ordinary markup; `<h1/>` is not. Strictly more reachable than the hole it closed.
+    """
+    for inner in ("<br/>", "<img src='x.svg'/>", "<wbr/>"):
+        parsed = render.parse(
+            f"<html><head><title>A claim</title></head>"
+            f"<body><h1>Fast {inner} answers</h1></body></html>")
+        assert parsed.headline == "Fast answers", f"{inner} cleared the heading collector"
+        assert parsed.title == "A claim", f"{inner} did not, but check the title too"
+    # **No assertion about a tag inside `<title>`, deliberately.** A first version had one and
+    # it passed here and failed in CI: `html.parser` treats `<title>`'s content as RCDATA in
+    # some 3.12 patch releases and as markup in others, so `A <meta/> claim` comes back whole
+    # on one interpreter and stripped on another. That is a property of CPython and not of
+    # this module, and binding a guard to it is the class this suite was just audited for.
+    # The heading cases above are the subject, and `<title/>`'s own shape is pinned by
+    # `test_a_self_closed_title_or_heading_does_not_strand_its_collector`.

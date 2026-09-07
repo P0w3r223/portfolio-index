@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import urllib.parse
 import unicodedata
 from dataclasses import dataclass
 
@@ -145,7 +146,14 @@ _VAR_NAME = re.compile(r"var\(\s*(--[\w-]+)")
 
 #: An `@import` or a `@font-face` `src:` pointing off-origin. Quotes are stripped by the
 #: caller rather than matched here, which keeps the class free of quote characters.
-_REMOTE_URL = re.compile(r"(?:@import|src\s*:)[^;{}]*?url\(([^)]*)\)", re.IGNORECASE)
+#: `@import` and `src:` reach a host by two spellings, and this read one of them — then, on
+#: being widened, read the *first* of them and stopped. `src: local("Inter"), url(https://…)`
+#: is the canonical `@font-face` line, and an alternation makes the two spellings compete for
+#: one match: `"Inter"` won, the remote URL was never examined, and the page reported
+#: `ok 7 webfont system stack`. **Closing one false `PASS` on a gated clause opened another on
+#: the same clause.** So the declaration is anchored once and every target inside it is read.
+_REMOTE_DECLARATION = re.compile(r"(?:@import|src\s*:)([^;{}]*)", re.IGNORECASE)
+_TARGET = re.compile(r"""url\(([^)]*)\)|["']([^"']*)["']""")
 _SEPARATOR_NAMES = {" ": "space", " ": "U+2009", " ": "U+202F",
                     " ": "U+00A0", ",": "comma"}
 
@@ -808,9 +816,20 @@ def clause_5_card_meta(page) -> Finding:
 def clause_6_back_link(page) -> Finding:
     # `endswith(PROFILE)` already excludes /issues, /pulls and every repository URL, so no
     # second filter is needed. Case-folded because GitHub URLs are not case-sensitive.
+    # **Bounded at the host, not only at the suffix.** `endswith(PROFILE)` already excludes
+    # `/issues`, `/pulls` and every repository URL, which is what its comment says — but it
+    # also accepted `https://notgithub.com/P0w3r223`, because that ends in the same characters.
+    # The clause is about a link back to the profile, and a different host is a different
+    # profile. Compared on the parsed netloc so a subdomain cannot spoof it either.
     profile = PROFILE.lower()
-    profile_only = [href for href in page.anchors
-                    if href.rstrip("/").lower().endswith(profile)]
+    host, _, path = profile.partition("/")
+    profile_only = []
+    for href in page.anchors:
+        parsed = urllib.parse.urlsplit(href.rstrip("/"))
+        if parsed.netloc.lower() != host:
+            continue
+        if parsed.path.lstrip("/").lower() == path:
+            profile_only.append(href)
     if len(profile_only) == 1:
         return Finding("6 back-link", PASS, profile_only[0])
     if not profile_only:
@@ -830,10 +849,13 @@ def clause_7_webfont(page, css: str) -> Finding:
     # Comments stripped first. `clause_1_literals` goes through `rules()` and therefore
     # already does; this read the raw sheet, so `/* never do this: @import url(...) */`
     # reported `FAIL 7 webfont` — and `"7 "` gates, so a comment refused the build.
-    for target in _REMOTE_URL.findall(cssmod.strip_comments(css)):
-        target = target.strip().strip(chr(34)).strip(chr(39))
-        if target.startswith(("http://", "https://", "//")):
-            third_party.append(target)
+    # Two groups now — `url(...)` and the bare-string spelling — so each match is a pair and
+    # exactly one side of it is filled. A first version kept `.strip()` on the tuple.
+    for declaration in _REMOTE_DECLARATION.findall(cssmod.strip_comments(css)):
+        for parenthesised, quoted in _TARGET.findall(declaration):
+            target = (parenthesised or quoted).strip().strip(chr(34)).strip(chr(39))
+            if target.startswith(("http://", "https://", "//")):
+                third_party.append(target)
     if third_party:
         return Finding("7 webfont", FAIL, ", ".join(sorted(set(third_party))))
     return Finding("7 webfont", PASS, "system stack")
@@ -945,6 +967,48 @@ def served_matches_committed(loaded) -> list[Finding]:
                     f"`python -m tools.entry_state --full` is what tells the two apart")]
 
 
+#: The clauses whose verdict is read out of the assembled stylesheet. Clauses 2, 4, 5, 6 and 8
+#: read the markup and are unaffected by a sheet that could not be assembled.
+#: `7 ` is deliberately absent: clause 7 reads `page.links` as well as the sheet, so a
+#: dropped stylesheet does not excuse a third-party `<link>` sitting in the markup.
+_CSS_DERIVED = ("1 ", "3 ")
+
+
+def _undecided_where_the_stylesheet_is_incomplete(findings, loaded):
+    """A clause cannot fail on a stylesheet it never read.
+
+    **This is where a false gate was hiding after it was reported as removed.** Splitting
+    *a sheet the network dropped* from *a sheet that is missing* took the wire off the
+    stylesheet gate — and the run still refused, because `loaded.css` was empty and clause 1
+    then reported `no custom properties declared at all` and clause 3 `no class in the
+    stylesheet scrolls`, both of which **are** gated. The gate moved from a key naming the
+    cause to two keys naming a consequence, and the output stopped mentioning the stylesheet
+    at all. A daily blip refused the build under what reads as a portfolio-wide CSS regression.
+
+    So the fix is not only to print the dropped sheet: it is that a clause reading an
+    incomplete sheet has not earned a verdict. `0007` §7's whole argument, and this module's
+    opening line — *a checker that reports a confident verdict it did not earn is that failure
+    automated.* The gate for a sheet that is genuinely missing is unaffected: it lives in
+    `_unread_same_origin`, under a header that names the cause.
+    """
+    # **A sheet declared third party is not read *by design*, and is not incomplete.**
+    # `_unread_same_origin` filters that marker before gating and this did not — so a page
+    # adding Google Fonts had every clause-1, -3 and -7 `FAIL` rewritten to `UNDECIDED`, and
+    # `UNDECIDED` never gates. The repair for a false gate had made a false pass on the clause
+    # whose entire subject is a third-party font.
+    incomplete = [entry for entry in loaded.unreadable
+                  if entry[1] != sources.THIRD_PARTY] + list(loaded.unreachable)
+    if not incomplete:
+        return findings
+    why = ", ".join(sources.describe(entry) for entry in incomplete)
+    return [
+        Finding(one.clause, UNDECIDED,
+                f"{one.detail} — not decided: the stylesheet is incomplete ({why})")
+        if one.status == FAIL and one.clause.startswith(_CSS_DERIVED) else one
+        for one in findings
+    ]
+
+
 def check(loaded) -> list[Finding]:
     """Every clause, over one loaded surface."""
     page = render.parse(loaded.html)
@@ -960,9 +1024,11 @@ def check(loaded) -> list[Finding]:
     findings.append(clause_7_webfont(page, loaded.css))
     findings.append(clause_8_separator(page))
     findings += served_matches_committed(loaded)
-    if loaded.unreadable:
+    findings = _undecided_where_the_stylesheet_is_incomplete(findings, loaded)
+    if loaded.unreadable or loaded.unreachable:
         findings.append(Finding("stylesheets", UNDECIDED,
                                 "unread: " + ", ".join(
                                     sources.describe(entry)
-                                    for entry in loaded.unreadable)))
+                                    for entry in list(loaded.unreadable)
+                                    + list(loaded.unreachable))))
     return findings

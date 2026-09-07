@@ -552,3 +552,50 @@ def test_the_report_says_which_depth_answered_it():
 
     assert "pointer vs its own origin/main" in full
     assert "every pointer matches its own origin/main" in full
+
+
+def test_a_real_finding_under_the_hook_flag_still_exits_zero(monkeypatch, capsys):
+    """The `--hook` contract's whole point, and it was untested.
+
+    The module's own docstring: *a session-start banner reporting a real finding must not read
+    as a broken hook*. `CLAUDE.md` wires `--hook` to `SessionStart`, so a non-zero exit there
+    is the harness saying the hook is broken — over a state the hook read correctly.
+
+    **Mutating `return 0 if (args.hook or state.clean) else 1` to `return 0 if state.clean
+    else 1` survived the whole suite.** The two tests that parametrise `(["--hook"], 0)` both
+    force an exception and so exercise the `except` branch's own return; the third passes a
+    clean state, where both spellings agree. The one case the contract exists for — hook flag,
+    real finding — was reached by nothing.
+    """
+    monkeypatch.setattr(entry_state, "collect",
+                        lambda **kwargs: clean_state(uncommitted=("docs/x.md",)))
+    assert entry_state.main(["--hook"]) == 0, "a real finding read as a broken hook"
+    assert entry_state.main([]) == 1, "and without the flag it must still refuse"
+    assert "uncommitted" in capsys.readouterr().out
+
+
+def test_the_account_the_two_depths_query_is_the_portfolio_owner(monkeypatch):
+    """`OWNER` and `INDEX` were bound by nothing.
+
+    Mutating `OWNER` sends every `gh` query to somebody else's repositories, which answers
+    empty — the false-clean direction. Mutating `INDEX` drops this repository out of `repos`,
+    so an open pull request **here** files under *"outside the portfolio (not a finding)"*,
+    which is precisely the 2026-09-07 misreading the module exists to prevent.
+
+    `FakeGh` already recorded the arguments; nothing looked at them.
+    """
+    quick, full = FakeGh(), FakeGh()
+    entry_state.collect(full=False, git=FakeGit(), gh=quick)
+    entry_state.collect(full=True, git=FakeGit(), gh=full)
+
+    # The quick depth asks one search, scoped by account.
+    assert any(entry_state.OWNER in one for call in quick.calls for one in call), (
+        "the session-start query names a different account, which answers empty — the "
+        "false-clean direction"
+    )
+    # The full depth asks per repository, and this repository has to be one of them.
+    assert any(entry_state.INDEX in one for call in full.calls for one in call), (
+        "the index is not among the repositories queried, so an open pull request here "
+        "files as `outside the portfolio` — the 2026-09-07 misreading, mechanised"
+    )
+    assert entry_state.OWNER == "P0w3r223" and entry_state.INDEX == "current_projects"

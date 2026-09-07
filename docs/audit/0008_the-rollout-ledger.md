@@ -1072,6 +1072,7 @@ contrast — read the threshold per usage site — and this is the same shape fo
   surfaces, **exactly one site** qualifies as a displayed specimen, and every other grouped figure sits in
   `<p>`, `<td>` or SVG `<text>`. State the census in the clause and print it from the checker, so the
   exemption cannot silently widen — §3.9's own instrument.
+- ***Closed 2026-09-07 by `#86`, and the citation below is to code that no longer exists.*** The comparison is `_leads_with_the_projects_identity` now: positional, over the project's identity in both its directory spelling and its prose spelling. Left standing rather than rewritten because the diagnosis is what the stage was built from.
 - **Clause 4's guard is weaker than clause 4.** `clauses.py:568` is
   `page.title.strip().lower().startswith(repo.lower())`. `wroclaw`'s title *"Wrocław Air Insights"* **is** the
   repository's name in prose and **passes**, because `ł` and the space-for-hyphen defeat the comparison.
@@ -1491,8 +1492,8 @@ line endings, compare the git blob, or state that it is CI-only.
 
 | item | state |
 |---|---|
-| **L5** — the deprecated `license` table form | **eleven** repositories (§2.1). Take it as one sweep with SHAs, the way L1 went; record `mini-traceroute`'s structural exemption |
-| **`Author:`** — 70 fields, ten repositories | Not a decision to take but **a migration to finish**: the newest document in each self-disagreeing repository already carries the name. Recommend `Piotr Cząstkiewicz` throughout, and do **not** retroactively add `+ Claude` — co-authorship is unknowable per document at this distance, and saying so is more honest than guessing |
+| ~~**L5** — the deprecated `license` table form~~ | **Done, Sx, 2026-09-07.** Eleven repositories carry a PEP 639 expression; `mini-traceroute`'s exemption is structural and reaches **both** halves of the sweep, not only this one. setuptools names a date — 2027-Feb-18 — which this row never had. §4.14 |
+| ~~**`Author:`** — 70 fields, ten repositories~~ | **Done, Sx, 2026-09-07.** The header form now returns zero portfolio-wide. What follows is the decision as it was taken, kept because it is the reasoning and not the instruction: not a decision to take but **a migration to finish**: the newest document in each self-disagreeing repository already carries the name. Recommend `Piotr Cząstkiewicz` throughout, and do **not** retroactively add `+ Claude` — co-authorship is unknowable per document at this distance, and saying so is more honest than guessing |
 | **The profile fields** — `name`, `bio`, `email`, `blog`, `hireable`, social accounts | The user's own action. The token carries no `user` scope, so nothing here can write them |
 | **L2** — action pinning | Answered `0006` §3: do not pin, and the answer does not cover a third-party action if one is ever introduced |
 | **The quotation rule has no carrier on `README.md`** | §4.10 applied `0007` §5.0 to `docs/index.html` and found ten of twelve READMEs carrying a figure no artifact prints. The figures were repaired; **nothing detects the next one.** Only `ab-lab` generates and byte-guards README regions (`<!-- generated: -->` at `README.md:14, 45, 49, 92, 96`). Twelve of thirteen are hand-typed prose with no carrier — the same structural shape as §4.11's two clauses, and it wants the same answer, but a README figure-provenance reader is a larger build than a separator and should follow S9 rather than ride inside it |
