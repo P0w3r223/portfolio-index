@@ -4,7 +4,10 @@ Eleven repositories publishing twelve surfaces, **three different kinds of sourc
 getting this wrong is the failure `0007` §2 calls the one every earlier attempt made:
 answering a question about the rendered page from something that is not the rendered page.
 
-- Ten commit a `docs/index.html` served byte-identically. Read the file.
+- Ten commit a `docs/index.html`. Read the file — and under `--fetch`, read what is
+  actually served and compare the two. *This line asserted the identity as fact until
+  `0009` §3.1 named it as C1: nothing measured it, and `0008` §6 carried it as a
+  manual row. The `served` finding is what measures it now.*
 - `car-price-ml` commits a **second** surface, `docs/app/index.html` — hand-written inside a
   repository that generates and byte-diffs everything else.
 - `wroclaw-air-insights` commits **no HTML at all** (`.gitignore:25`). Its page is a Pages
@@ -17,6 +20,7 @@ answering a question about the rendered page from something that is not the rend
 
 from __future__ import annotations
 
+import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
@@ -59,6 +63,29 @@ class Surface:
     def must_fetch(self) -> bool:
         return self.path is None
 
+    @property
+    def published(self) -> str:
+        """Where this surface is actually served. Every surface has one; only one lacks a file."""
+        return self.url or _published(self.repo, self.path)
+
+
+#: Where the pages are served from. A project site, so each repository is a path segment.
+PAGES = "https://p0w3r223.github.io/"
+
+
+def _published(repo: str, path: str | None) -> str:
+    """The URL a committed page is served at, derived rather than typed twelve times.
+
+    GitHub Pages serves `docs/` as the site root and `index.html` as a directory, so
+    `docs/app/index.html` in `car-price-ml` is `/car-price-ml/app/`. Derived because a typed
+    table is a second registry of the same fact — `0009` N1's shape, and this file already
+    carries one pair of those.
+    """
+    if path is None:
+        raise ValueError("a surface with no committed path must state its url")
+    inner = path.removeprefix("docs/").removesuffix("index.html").strip("/")
+    return f"{PAGES}{repo}/" + (f"{inner}/" if inner else "")
+
 
 SURFACES: tuple[Surface, ...] = (
     Surface("ab-lab", "ab-lab", "docs/index.html"),
@@ -75,7 +102,7 @@ SURFACES: tuple[Surface, ...] = (
     Surface("pl-jobs-lora", "pl-jobs-lora", "docs/index.html"),
     Surface("pl-review-sense", "pl-review-sense", "docs/index.html"),
     Surface("wroclaw-air-insights", "wroclaw-air-insights",
-            url="https://p0w3r223.github.io/wroclaw-air-insights/",
+            url=PAGES + "wroclaw-air-insights/",
             note="commits no HTML; live URL is the only surface that exists"),
 )
 
@@ -94,46 +121,99 @@ class Loaded:
     #: structured value was available at every one of those sites, and `_unread_same_origin`
     #: had already written that sentence down before the third reader was added.
     unreadable: list[tuple[str, str]] = field(default_factory=list)
+    #: What the wire returned, when the run read it. **Bytes, not text**: `_fetch` decodes with
+    #: `errors="replace"`, which collapses two *different* invalid bytes to one U+FFFD, so a
+    #: hash taken after decoding cannot tell those apart. The comparison has to happen where
+    #: the bytes still exist.
+    served: bytes | None = None
+    #: What the committed file holds. `None` for the surface that commits no HTML.
+    committed: bytes | None = None
+    #: Why the fetch did not happen, when one was attempted and failed.
+    served_error: str | None = None
+    #: Same-origin sheets the wire could not deliver. A separate list rather than a marker
+    #: inside `unreadable`, because the two get opposite policies and `0008` §5 carries what
+    #: it costs to encode a policy as prose one module builds and another matches. A missing
+    #: *file* is the page's business and gates; a *network* failure is not and does not — the
+    #: same distinction `served` already makes between a 404 and a DNS blip, and the argument
+    #: `_local_sheet` makes on the file path: a false gate is worse than a missing one.
+    #:
+    #: Unreachable before `--fetch` read the eleven. Every scheduled run now fetches their
+    #: sheets, so `mini-traceroute` and `car-price-ml/app` would have gated on any blip.
+    unreachable: list[tuple[str, str]] = field(default_factory=list)
+    #: The page answered 404 or 410. A regression, not a wire failure, and the two must not
+    #: arrive as the same line — `0007` §2's whole subject is answering a question about a
+    #: page from something that is not that page, and "gone" is an answer.
+    served_gone: bool = False
 
 
-def _fetch(url: str) -> str:
+def _fetch(url: str) -> bytes:
+    """The served bytes, undecoded.
+
+    It returned `str` until the served-versus-committed comparison existed. Decoding first
+    with `errors="replace"` maps every invalid byte to the same U+FFFD, so two pages differing
+    only in an undecodable byte would hash identically and the comparison would report them
+    equal — a false `PASS` on the one question this function now exists to answer.
+    """
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=FETCH_TIMEOUT) as response:
-        return response.read().decode("utf-8", errors="replace")
+        return response.read()
 
 
 def load(surface: Surface, root: Path, *, allow_fetch: bool,
          errors: dict[str, str] | None = None) -> Loaded | None:
     """The surface's markup, or `None` when it cannot be read.
 
+    **Under `--fetch` the clauses are answered from the served bytes, not from the file.**
+    That is `0009` §3.1's finding C1: this checker answers a question about a *published* page
+    by reading a *committed* one, and CI reads that file at the superproject's pinned gitlink —
+    so a page could regress in a public repository and stay invisible here until somebody
+    bumped a pointer. The fallback order is served, then committed, then nothing, and the
+    `served` finding says which of the three happened.
+
     Returning `None` rather than an empty page matters: an empty page satisfies no clause and
     would be reported as thirteen failures, which reads as a portfolio-wide regression when
     the truth is that the network was off.
     """
-    if surface.must_fetch:
-        if not allow_fetch:
-            return None
-        try:
-            html = _fetch(surface.url)
-        except Exception as error:
-            # The exception text, not just the fact. Since `0008` S-gate the scheduled job
-            # is the only reader of this surface and it now gates, so `fetch failed` is a
-            # thing somebody has to act on — and a 404 (the page is gone, a real regression)
-            # and a DNS blip are the same line without this. Recorded on the surface rather
-            # than raised, because a page that cannot be read must not stop the other eleven
-            # from being reported.
-            if errors is not None:
-                errors[surface.name] = f"{type(error).__name__}: {error}"
-            return None
-        return _with_styles(surface, html, base_url=surface.url)
+    committed: bytes | None = None
+    page_path = root / surface.repo / surface.path if surface.path else None
+    if page_path is not None and page_path.is_file():
+        committed = page_path.read_bytes()
 
-    page_path = root / surface.repo / surface.path
-    if not page_path.is_file():
+    served: bytes | None = None
+    served_error: str | None = None
+    served_gone = False
+    if allow_fetch:
+        try:
+            served = _fetch(surface.published)
+        except Exception as error:
+            # The exception text, not just the fact. A 404 (the page is gone, a real
+            # regression) and a DNS blip are the same line without it, and since `0008`
+            # S-gate the scheduled job gates. Recorded on the surface rather than raised,
+            # because a page that cannot be read must not stop the other eleven.
+            served_error = f"{type(error).__name__}: {error}"
+            served_gone = getattr(error, "code", None) in (404, 410)
+            if errors is not None:
+                errors[surface.name] = served_error
+
+    if served is None and surface.must_fetch:
+        # The one surface with no file to fall back to. This branch is why a failed fetch
+        # still ends the run for it, and `test_a_failed_fetch_is_not_reported_as_a_flag_the
+        # _reader_forgot` is the guard on that.
         return None
-    # `errors="replace"`, matching the fetch path above: one undecodable byte in one
-    # page must not end the run for the other eleven.
-    html = page_path.read_text(encoding="utf-8", errors="replace")
-    return _with_styles(surface, html, base_path=page_path)
+    if served is None and committed is None:
+        return None
+
+    source = served if served is not None else committed
+    # `errors="replace"` on both branches: one undecodable byte in one page must not end the
+    # run for the other eleven. The undecoded bytes are kept on `Loaded` for the comparison.
+    html = source.decode("utf-8", errors="replace")
+    loaded = (_with_styles(surface, html, base_url=surface.published) if served is not None
+              else _with_styles(surface, html, base_path=page_path))
+    loaded.served = served
+    loaded.committed = committed
+    loaded.served_error = served_error
+    loaded.served_gone = served_gone
+    return loaded
 
 
 def _local_sheet(base_path: Path, href: str) -> Path:
@@ -174,6 +254,7 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
     parts = list(page.inline_styles)
     names: list[str] = ["<style>"] * len(page.inline_styles)
     unreadable: list[tuple[str, str]] = []
+    unreachable: list[tuple[str, str]] = []
 
     for href in page.stylesheet_hrefs():
         if href.startswith(("http://", "https://", "//")):
@@ -193,7 +274,11 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
                 parts.append(_local_sheet(base_path, href).read_text(
                     encoding="utf-8", errors="replace"))
             else:
-                parts.append(_fetch(urllib.parse.urljoin(base_url, href)))
+                # `_fetch` returns bytes since the served-versus-committed comparison
+                # exists; a stylesheet is text to every reader downstream, so it is
+                # decoded here rather than making the seam return two types.
+                parts.append(_fetch(urllib.parse.urljoin(base_url, href))
+                             .decode("utf-8", errors="replace"))
             names.append(href)
         except Exception as error:
             # The cause, not just the fact — the same argument the fetch path above already
@@ -203,6 +288,14 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
             # `strerror` where the exception carries one: the href already names the file,
             # and `str(error)` repeats it as an absolute machine path into the gate output.
             why = getattr(error, "strerror", None) or str(error)
-            unreadable.append((href, f"{type(error).__name__}: {why}"))
+            described = (href, f"{type(error).__name__}: {why}")
+            # A wire failure on the fetch path is the network, not the page. An HTTP
+            # status is the page answering, so that keeps gating: a 404 on a stylesheet
+            # is a real defect and a DNS blip is not.
+            if base_url is not None and not isinstance(error, urllib.error.HTTPError):
+                unreachable.append(described)
+            else:
+                unreadable.append(described)
 
-    return Loaded(surface, html, "\n".join(parts), names, unreadable)
+    return Loaded(surface, html, "\n".join(parts), names, unreadable,
+                  unreachable=unreachable)

@@ -24,7 +24,9 @@ from pathlib import Path
 
 import pytest
 
-from conftest import NOT_A_CLAUSE
+import urllib.error
+
+from conftest import NOT_A_CLAUSE, ROOT
 from tools.pagespec import __main__ as report
 from tools.pagespec import clauses, sources
 
@@ -386,3 +388,269 @@ def test_the_exemption_set_is_pinned_because_it_is_policy_and_not_a_measurement(
         "NOT_A_CLAUSE changed. Every entry needs a test proving the key can never be FAIL — "
         "the corpus check in the floor guard is a weaker, corpus-scoped proxy and is vacuous "
         "for a key that is UNDECIDED everywhere, which is what the dangerous ones are.")
+
+
+# -- the served page, and the wire that must stay off the push path ---------------------------
+
+
+def _fetched(monkeypatch, tree, body, *, error=None, code=None):
+    """One surface loaded with `_fetch` stubbed. The seam, and nothing else, is faked."""
+    def stub(url):
+        if error is not None:
+            raise error
+        return body
+    monkeypatch.setattr(sources, "_fetch", stub)
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    return sources.load(surface, tree, allow_fetch=True), surface
+
+
+def test_no_served_finding_is_emitted_when_nothing_was_fetched(tree):
+    """The silence is load-bearing, not tidiness.
+
+    If `served` appeared as `n/a` on the fetchless sweep, the ratchet's floor guard would see
+    it clean-and-ungated and demand it in `GATED` on the first commit — forcing the gating
+    decision before one measurement exists. Staying out of that sweep is what lets it ship
+    report-only.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    loaded = sources.load(surface, tree, allow_fetch=False)
+    assert loaded is not None
+    assert not [one for one in clauses.check(loaded) if one.clause == "served"]
+
+
+def test_served_bytes_equal_to_the_committed_file_pass(monkeypatch, tree):
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    body = (tree / surface.repo / surface.path).read_bytes()
+    loaded, _ = _fetched(monkeypatch, tree, body)
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.PASS
+    assert "served" in finding.detail and "committed" in finding.detail
+
+
+def test_a_page_differing_only_in_line_endings_still_passes(monkeypatch, tree):
+    """`core.autocrlf` rewrites the working-tree copy on Windows. Measured 2026-09-07:
+    un-normalised, five of the eleven committed pages differ from what is served and every
+    one of the five differs *only* in line endings — the delta equals the file's CRLF count
+    exactly. Without the fold this reports five regressions on a developer's machine and none
+    in CI, which is worse than not having the instrument."""
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    committed = (tree / surface.repo / surface.path).read_bytes()
+    # **The served body must be the *other* spelling of whatever is on disk.** A first version
+    # always built the CRLF form — and this checkout writes CRLF, so the two byte strings came
+    # out identical and the test passed with the fold deleted. It was green over the defect it
+    # names, in the guard for the one constraint this stage found by measuring rather than by
+    # reasoning. Caught by the mutation, which is why the mutation exists.
+    folded = clauses._lf(committed)
+    other = folded if committed != folded else folded.replace(clauses._LF, clauses._CRLF)
+    assert other != committed, "the two spellings are identical; this test would be vacuous"
+    assert clauses._lf(other) == folded, "the two spellings must be one page after folding"
+    crlf = other
+    loaded, _ = _fetched(monkeypatch, tree, crlf)
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.PASS
+
+
+def test_served_bytes_that_differ_fail_and_name_both_hypotheses(monkeypatch, tree):
+    """The checker cannot tell a stale pointer from a broken publish, and must not guess. It
+    names the discriminator instead — `entry_state --full` is the instrument that asks whether
+    each pointer equals its own `origin/main`."""
+    loaded, _ = _fetched(monkeypatch, tree, b"<html><title>something else</title></html>")
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.FAIL
+    assert "pointer" in finding.detail and "publish" in finding.detail
+    assert "entry_state" in finding.detail
+
+
+def test_a_wire_failure_is_undecided_and_does_not_gate(monkeypatch, tree, capsys):
+    """A DNS blip must not read as eleven page regressions. This is `_local_sheet`'s own
+    argument — a false gate is worse than a missing one — one level out."""
+    loaded, _ = _fetched(monkeypatch, tree, None, error=OSError("dns"))
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.UNDECIDED
+    assert not report._gated(finding)
+
+
+def test_a_page_that_is_gone_fails_rather_than_reading_as_a_wire_failure(monkeypatch, tree):
+    """404 is an answer about the page, not about the network, and the two must not arrive as
+    one line — `0007` §2's subject is exactly this distinction."""
+    gone = urllib.error.HTTPError("http://x", 404, "Not Found", {}, None)
+    loaded, _ = _fetched(monkeypatch, tree, None, error=gone)
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.FAIL
+    assert "gone" in finding.detail
+
+
+def test_the_wire_never_reaches_the_push_path():
+    """`--fetch` appears in exactly one `run:` line of the workflow, under `live`.
+
+    Three mechanisms keep the network off a merge: the key is emitted only when bytes were
+    fetched, `_gated` never fires on `UNDECIDED`, and this — the one that nothing guarded. A
+    single edit adding `--fetch` to the `surfaces` step would put the wire on the merge path
+    with nothing anywhere noticing.
+
+    Read as text, with **comments excluded rather than `run:` lines included**. The file
+    mentions `--fetch` three times in prose explaining why it is absent, so an occurrence count
+    ships broken — but scoping to lines containing `run:` was the wrong answer to that, and it
+    shipped green over the defect it names: GitHub Actions accepts
+
+        run: |
+          python -m tools.pagespec --detail --fetch
+
+    where `--fetch` is on a line with no `run:` on it. Measured — the whole suite stayed green
+    with the wire on the merge path. Excluding `#` lines covers both spellings and every future
+    one, because the prose is the only thing that legitimately names the flag.
+    """
+    workflow = (ROOT / ".github" / "workflows" / "pagespec.yml").read_text(encoding="utf-8")
+    job = None
+    offenders = []
+    for line in workflow.splitlines():
+        stripped = line.strip()
+        if line.startswith("  ") and not line.startswith("    ") and stripped.endswith(":"):
+            job = stripped[:-1]
+        if ("--fetch" in stripped and not stripped.startswith("#")
+                and job in ("core", "surfaces")):
+            offenders.append((job, stripped))
+    assert not offenders, f"the wire is on the push path: {offenders}"
+    assert any("--fetch" in line and not line.strip().startswith("#")
+               for line in workflow.splitlines()), (
+        "no job fetches at all — the live surface would stop being read by anything"
+    )
+
+
+def test_served_is_deliberately_outside_the_gate_and_the_reason_is_recorded():
+    """**Report-only, and this is where that decision lives rather than in a silence.**
+
+    The ratchet's rule is that a key reporting zero `FAIL` across every surface read must be
+    gated, and `served` reports exactly that — eleven of eleven, measured 2026-09-07. So the
+    rule says gate it. It is not gated, for a reason the rule does not cover:
+
+    **neither ratchet guard can see this key.** Both derive from `_sweep()`, which hardcodes
+    `allow_fetch=False`, and `served` is emitted only when bytes were fetched. Putting it in
+    `GATED` would add a prefix that the ceiling guard cannot check and the floor guard cannot
+    demand — *a place for a key to hide*, which is the phrase the floor guard's own docstring
+    is written against.
+
+    Closing that needs the eleven/twelve asymmetry `0009` §11 records to be resolved first, and
+    that is not this stage's business. Until then the honest state is: the finding prints, a
+    mismatch is visible in the scheduled run, and this test is the record that it was a
+    decision rather than an oversight.
+    """
+    assert "served" not in report.GATED
+    assert not any("served".startswith(prefix) for prefix in report.GATED), (
+        "a GATED prefix now covers `served`, which neither ratchet guard can measure"
+    )
+
+
+def test_the_clauses_are_answered_from_the_served_bytes_and_not_from_the_file(
+        monkeypatch, tree):
+    """C1's *first* half, which the `served` finding does not cover.
+
+    A hash mismatch says the two disagree; it does not say which clause the public page now
+    fails. Under `--fetch` the verdicts have to come from the wire, or the table still
+    describes the pinned page while claiming to be the live job — the founding failure `0007`
+    §2 names, committed by the instrument built to end it.
+
+    Built as a page *conforming on disk and broken on the wire*, because the reverse would
+    pass under either behaviour.
+
+    **It read the real working tree in its first version**, so it passed here and failed in
+    the `core` job, which runs without a single page on disk: with no committed file there is
+    nothing to serve *against*, the `served` key is not emitted at all, and the eyebrow
+    assertion was satisfied for the wrong reason — the served bytes were simply the only
+    source. `0009` §8 row 3 is the same class, and it is why `core` exists.
+    """
+    served = b"<html><head><title>a claim</title></head><body><p>no eyebrow</p></body></html>"
+    loaded, _ = _fetched(monkeypatch, tree, served)
+    assert loaded is not None and loaded.served == served
+    assert loaded.committed is not None, "the fixture must commit a page to serve against"
+    findings = {one.clause: one.status for one in clauses.check(loaded)}
+    assert findings["4 eyebrow"] == clauses.FAIL, (
+        "the eyebrow verdict came from the committed file, not from what was served"
+    )
+    assert findings["served"] == clauses.FAIL
+
+
+def test_a_committed_page_that_has_gone_missing_is_not_masked_by_a_successful_fetch(
+        monkeypatch, tree):
+    """The fetching twin of `test_a_committed_surface_that_cannot_be_read_gates`.
+
+    Without `--fetch`, a missing `docs/index.html` makes `load` return `None`, which the report
+    counts as `missing` and refuses on — `0008` §4.11 policy 2. Once the wire could answer for
+    the file, that gate stopped firing: Pages keeps serving the last deployment, so a sibling
+    deleting or renaming its page would read `clear` and exit 0 for as long as nobody looked.
+
+    **The `served` key goes silent exactly where the two disagree most**, which is the opposite
+    of what it is for.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    body = (tree / surface.repo / surface.path).read_bytes()
+    (tree / surface.repo / surface.path).unlink()
+
+    loaded, _ = _fetched(monkeypatch, tree, body)
+    assert loaded is not None and loaded.committed is None
+    finding = next(one for one in clauses.check(loaded) if one.clause == "served")
+    assert finding.status == clauses.FAIL
+    assert "missing" in finding.detail
+
+
+def test_the_fetch_only_surface_still_emits_nothing_when_it_has_no_committed_file(
+        monkeypatch, tree):
+    """The other half of the same branch, so the repair cannot turn a design into a defect.
+
+    `wroclaw` commits no HTML — `.gitignore:25` — so *no committed page* is its normal state
+    and a `FAIL` there would be the instrument reporting the design as a regression.
+    """
+    monkeypatch.setattr(sources, "_fetch", lambda url: b"<html><title>x</title></html>")
+    wroclaw = next(one for one in sources.SURFACES if one.must_fetch)
+    loaded = sources.load(wroclaw, tree, allow_fetch=True)
+    assert loaded is not None and loaded.committed is None
+    assert not [one for one in clauses.check(loaded) if one.clause == "served"]
+
+
+def test_a_row_answered_from_the_file_says_so_rather_than_printing_clear(monkeypatch, tree):
+    """A fetch that failed falls back to the committed file — right, and silent until now.
+
+    `clear` under a job named for the bytes the public receives, when the wire was never read,
+    reinstates the premise C1 removed. The caveat moves no gate; it stops the line claiming
+    more than the run earned.
+    """
+    loaded, _ = _fetched(monkeypatch, tree, None, error=OSError("dns blip"))
+    row = report._row("surface", clauses.check(loaded))
+    assert "the wire was not read" in row
+
+
+def test_a_stylesheet_the_wire_dropped_does_not_gate_but_a_missing_one_still_does(
+        monkeypatch, tree, capsys):
+    """The policy this branch newly exposed, settled rather than inherited.
+
+    Before `--fetch` read the eleven, only `wroclaw` fetched a stylesheet, so *a sheet the
+    network dropped* and *a sheet that is missing* could share one gate without anyone
+    noticing. Every scheduled run now fetches eleven more, and two of them link an external
+    same-origin sheet — so a blip would have refused a page that is fine, which is the false
+    gate `_local_sheet`'s own docstring argues against.
+
+    A 404 is the page answering and still gates: a stylesheet that is gone is a real defect.
+    """
+    page = b'<html><head><link rel="stylesheet" href="a.css">' \
+           b'<title>a claim</title></head><body></body></html>'
+
+    def blip(url):
+        if url.endswith("a.css"):
+            raise OSError("dns")
+        return page
+
+    monkeypatch.setattr(sources, "_fetch", blip)
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    loaded = sources.load(surface, tree, allow_fetch=True)
+    assert loaded.unreachable and not loaded.unreadable
+    assert not report._unread_same_origin(loaded), "a wire blip must not reach the gate"
+    assert report._unreachable_sheets(loaded), "and it must still be printed"
+
+    def gone(url):
+        if url.endswith("a.css"):
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+        return page
+
+    monkeypatch.setattr(sources, "_fetch", gone)
+    loaded = sources.load(surface, tree, allow_fetch=True)
+    assert report._unread_same_origin(loaded), "a 404 on a sheet is the page, and still gates"

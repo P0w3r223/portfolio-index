@@ -14,7 +14,8 @@ is the stage that built this file and is closed, and not by any other. Two other
 said the same thing, and `0008` §4.11 records all three.*
 
     python -m tools.pagespec              # the twelve committed surfaces, gated
-    python -m tools.pagespec --fetch      # and wroclaw, from its live URL
+    python -m tools.pagespec --fetch      # judge all twelve on the served bytes,
+                                          #   and compare them with the committed files
     python -m tools.pagespec --detail     # every finding, not just the failures
     python -m tools.pagespec --report-only  # print and exit zero whatever it finds
 
@@ -56,6 +57,17 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: `python -m tools.pagespec --fetch` agrees: the `surfaces` job cannot see the twelfth
 #: surface, so a widening that is premature merges green and reddens the scheduled `live`
 #: run instead.
+#: **`served` is deliberately absent, and the reason is not that it fails.** It reports zero
+#: `FAIL` across every surface read, which is this tuple's own entry condition. It is out
+#: because *neither ratchet guard can see it*: both derive from a sweep hardcoding
+#: `allow_fetch=False`, so gating it adds a prefix the ceiling cannot check and the floor
+#: cannot demand — a place for a key to hide. And the stronger reason, which is about the key
+#: rather than the guards: **a mismatch is routinely not a defect at all.** This repository
+#: re-points submodules constantly, so served-differs-from-committed is the normal state
+#: between a sibling publishing and the index bumping its gitlink. Gated, this key would redden
+#: the daily run as ordinary portfolio work proceeds — the cries-wolf failure `conftest.py`
+#: warns about. It may be that gating it is never right; that is worth settling deliberately
+#: rather than inheriting.
 GATED: tuple[str, ...] = ("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "5 ", "6 ", "7 ")
 
 
@@ -101,12 +113,35 @@ def _gated(finding: clauses.Finding) -> bool:
             and any(finding.clause.startswith(prefix) for prefix in GATED))
 
 
+def _unreachable_sheets(loaded) -> list[str]:
+    """Same-origin sheets the wire could not deliver — printed, never gating.
+
+    The twin of `_unread_same_origin`, and the split is the policy: a sheet that is *missing*
+    is the page's business and refuses the build; a sheet the *network* dropped is not. Before
+    `--fetch` read the eleven only `wroclaw` fetched a sheet at all, so this distinction cost
+    nothing and did not exist; now every scheduled run fetches eleven more and a blip on either
+    of the two surfaces with an external sheet would have refused a page that is fine.
+    """
+    return [sources.describe(entry) for entry in loaded.unreachable]
+
+
 def _row(name: str, findings: list[clauses.Finding]) -> str:
+    """One surface's line, and — under `--fetch` — where its verdict came from.
+
+    **A fetch that failed falls back to the committed file, and the verdict then says nothing
+    about the page anybody can open.** That fallback is right (thirteen `FAIL`s on a DNS blip
+    is worse than a missing answer), but printing `clear` unqualified under a job named for
+    the bytes the public receives reinstates exactly the premise `0009` §3.1 removed — and
+    `clauses.py`'s own opening line calls a confident verdict a checker did not earn "that
+    failure automated". The caveat costs nothing and moves no gate.
+    """
     failures = sum(1 for finding in findings if finding.status == clauses.FAIL)
     undecided = sum(1 for finding in findings if finding.status == clauses.UNDECIDED)
     verdict = f"{failures} fail" if failures else "clear"
     if undecided:
         verdict += f", {undecided} undecided"
+    if any(one.clause == "served" and one.status == clauses.UNDECIDED for one in findings):
+        verdict += "  (from the committed file; the wire was not read)"
     return f"  {name:<24} {verdict}"
 
 
@@ -144,7 +179,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2],
                         help="the index repository's working tree")
     parser.add_argument("--fetch", action="store_true",
-                        help="also read the surfaces that exist only at a live URL")
+                        help="judge every surface on the bytes it actually serves, and compare "
+                             "them against the committed files")
     parser.add_argument("--detail", action="store_true", help="print every finding")
     parser.add_argument("--only", help="check one surface by name")
     parser.add_argument("--report-only", action="store_true",
@@ -163,6 +199,7 @@ def main(argv: list[str] | None = None) -> int:
     unread: list[str] = []
     blocked: list[str] = []
     unread_sheets: list[str] = []
+    unreachable_sheets: list[str] = []
     fetch_errors: dict[str, str] = {}
     missing = False
     sheets: list[tuple[str, str]] = []
@@ -195,6 +232,8 @@ def main(argv: list[str] | None = None) -> int:
                     for finding in findings if _gated(finding)]
         unread_sheets += [f"{surface.name}  {entry}"
                           for entry in _unread_same_origin(loaded)]
+        unreachable_sheets += [f"{surface.name}  {entry}"
+                               for entry in _unreachable_sheets(loaded)]
         print(_row(surface.name, findings))
         for finding in findings:
             if args.detail or finding.status in (clauses.FAIL, clauses.UNDECIDED):

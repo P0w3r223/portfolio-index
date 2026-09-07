@@ -51,6 +51,19 @@ HUMAN = "human"
 
 KINDS = (INDEX, REPO, HUMAN)
 
+#: Finding keys the checker emits that are **not** normative sentences of `0007` §5-§6, so no
+#: row here claims them and the coverage guards skip them.
+#:
+#: **This is not `conftest.NOT_A_CLAUSE`, and the difference is the whole reason it exists.**
+#: That set answers *can this key ever be `FAIL`* — it is the ratchet floor's exemption list,
+#: and its pin test requires a proof of impossibility for every entry. This set answers *is
+#: this key a sentence somebody wrote in the spec*. The two questions coincided for as long as
+#: there was one key in either, and `served` is what separates them: it **can** fail, so it is
+#: not exempt from the floor, and `0007` §5 says nothing about it, so no sentence carries it.
+#: A single set would have forced one of two lies — a false proof of impossibility, or a
+#: normative row for a sentence that does not exist.
+NOT_A_SENTENCE = frozenset({"stylesheets", "served"})
+
 
 @dataclass(frozen=True)
 class Carrier:
@@ -461,6 +474,10 @@ def report() -> list[str]:
             # of clause 4 scopes S10, and a field arguing that a stage must not be *scoped by
             # whoever read it last* cannot itself be visible only in source.
             lines.append(f"          note: {clause.note}")
+    lines.append("")
+    lines.append("  emitted and carried by no sentence, by design: "
+                 + ", ".join(sorted(NOT_A_SENTENCE))
+                 + " — the checker reporting on its own inputs rather than on the page")
     open_rows = uncarried()
     lines.append("")
     lines.append(f"  {len(CLAUSES)} normative sentence(s); "
