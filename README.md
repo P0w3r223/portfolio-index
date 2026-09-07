@@ -4,10 +4,14 @@
 > from data acquisition, through models, to deployed applications and their evaluation.
 > Targeting AI Engineer and Data Scientist roles (open to Junior Python / ML Engineer).
 
-This repository is the **index** of my portfolio. Each project below lives in its own
-repository with a dedicated README, tests, and (where relevant) CI. The projects are
-ordered as a deliberate progression: each one adds a new layer of skills and builds on
-the previous.
+This repository is the **index** of my portfolio, and it is **private**. The public landing
+page is the profile README at [github.com/P0w3r223](https://github.com/P0w3r223), a separate
+repository — said here because everything below reads as though it were addressed to a
+recruiter, and a recruiter cannot open this page. It is for me, and for anyone I hand access to.
+
+Each project below lives in its own repository with a dedicated README, tests, and (where
+relevant) CI. The projects are ordered as a deliberate progression: each one adds a new layer
+of skills and builds on the previous.
 
 ## Start here
 
