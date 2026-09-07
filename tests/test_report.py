@@ -481,40 +481,64 @@ def test_a_page_that_is_gone_fails_rather_than_reading_as_a_wire_failure(monkeyp
 
 
 def test_the_wire_never_reaches_the_push_path():
-    """`--fetch` appears in exactly one `run:` line of the workflow, under `live`.
+    """`--fetch` reaches no job that runs on a push or a pull request.
 
     Three mechanisms keep the network off a merge: the key is emitted only when bytes were
-    fetched, `_gated` never fires on `UNDECIDED`, and this — the one that nothing guarded. A
-    single edit adding `--fetch` to the `surfaces` step would put the wire on the merge path
-    with nothing anywhere noticing.
+    fetched, `_gated` never fires on `UNDECIDED`, and this — the one that nothing guarded.
 
-    Read as text, with **comments excluded rather than `run:` lines included**. The file
-    mentions `--fetch` three times in prose explaining why it is absent, so an occurrence count
-    ships broken — but scoping to lines containing `run:` was the wrong answer to that, and it
-    shipped green over the defect it names: GitHub Actions accepts
+    **Twice too narrow before now.** It first scoped to lines containing `run:`, and the block
+    scalar spelling puts `--fetch` on a line with no `run:` on it. Then it excluded comments
+    but asked `job in ("core", "surfaces")` — two names typed out — so a *third* job added on
+    the push trigger was the same single edit the docstring warns about, and passed. It asks
+    which jobs the triggers reach now, and reads that from the file too.
 
-        run: |
-          python -m tools.pagespec --detail --fetch
-
-    where `--fetch` is on a line with no `run:` on it. Measured — the whole suite stayed green
-    with the wire on the merge path. Excluding `#` lines covers both spellings and every future
-    one, because the prose is the only thing that legitimately names the flag.
+    Comments are excluded rather than `run:` lines included, because the file names `--fetch`
+    three times in prose explaining why it is absent — an occurrence count ships broken.
     """
     workflow = (ROOT / ".github" / "workflows" / "pagespec.yml").read_text(encoding="utf-8")
-    job = None
-    offenders = []
-    for line in workflow.splitlines():
-        stripped = line.strip()
-        if line.startswith("  ") and not line.startswith("    ") and stripped.endswith(":"):
+    lines = workflow.splitlines()
+
+    def block(name):
+        """The lines of one top-level block, by indentation rather than by a typed list."""
+        start = next((i for i, one in enumerate(lines) if one.rstrip() == f"{name}:"), None)
+        assert start is not None, f"{name}: is not in the workflow"
+        out = []
+        for one in lines[start + 1:]:
+            if one.strip() and not one.startswith(" "):
+                break
+            out.append(one)
+        return out
+
+    triggers = block("on")
+    push_events = [one.strip().rstrip(":") for one in triggers
+                   if one.strip().rstrip(":") in ("push", "pull_request")]
+    assert push_events, "the workflow no longer runs on a push; this guard has no subject"
+
+    #: A job is off the merge path only if it says so. `live` gates itself with an `if:` on
+    #: the event name; anything without one runs on every push there is.
+    guarded, job, offenders = set(), None, []
+    for one in block("jobs"):
+        stripped = one.strip()
+        if one.startswith("  ") and not one.startswith("    ") and stripped.endswith(":"):
             job = stripped[:-1]
-        if ("--fetch" in stripped and not stripped.startswith("#")
-                and job in ("core", "surfaces")):
+        if job and stripped.startswith("if:"):
+            # **Guarded means the condition excludes the push triggers, not that it mentions
+            # a dispatch.** Asking for the substring `workflow_dispatch` read
+            # `if: github.event_name == 'schedule'` as unguarded — a false red — and
+            # `... == 'workflow_dispatch' || ... == 'pull_request'` as guarded, which is the
+            # single edit this guard exists to catch. Third time this predicate was a typed
+            # literal in disguise.
+            if not any(f"'{event}'" in stripped for event in push_events):
+                guarded.add(job)
+        if "--fetch" in stripped and not stripped.startswith("#"):
             offenders.append((job, stripped))
-    assert not offenders, f"the wire is on the push path: {offenders}"
-    assert any("--fetch" in line and not line.strip().startswith("#")
-               for line in workflow.splitlines()), (
-        "no job fetches at all — the live surface would stop being read by anything"
+
+    on_the_push_path = [(job, line) for job, line in offenders if job not in guarded]
+    assert not on_the_push_path, (
+        f"the wire is on the merge path: {on_the_push_path}. A job fetches unless its `if:` "
+        f"restricts it to a schedule or a dispatch; guarded jobs here are {sorted(guarded)}"
     )
+    assert offenders, "no job fetches at all — the live surface stops being read by anything"
 
 
 def test_served_is_deliberately_outside_the_gate_and_the_reason_is_recorded():
@@ -613,10 +637,26 @@ def test_a_row_answered_from_the_file_says_so_rather_than_printing_clear(monkeyp
     `clear` under a job named for the bytes the public receives, when the wire was never read,
     reinstates the premise C1 removed. The caveat moves no gate; it stops the line claiming
     more than the run earned.
+
+    **It was keyed on the finding's status and so missed the case that needs it most.** A wire
+    blip is `UNDECIDED` and a page answering 4xx is `FAIL`; both fall back to the file, and the
+    caveat fired only on the first. The second is where every `ok` above came from a file whose
+    published counterpart is not being served. Both are asserted here, and so is the negative.
     """
-    loaded, _ = _fetched(monkeypatch, tree, None, error=OSError("dns blip"))
-    row = report._row("surface", clauses.check(loaded))
-    assert "the wire was not read" in row
+    for label, error in (("a wire blip", OSError("dns blip")),
+                         ("the page answering 404",
+                          urllib.error.HTTPError("http://x", 404, "Not Found", {}, None))):
+        loaded, _ = _fetched(monkeypatch, tree, None, error=error)
+        row = report._row("surface", clauses.check(loaded), answered_from_the_file=True)
+        assert "the wire was not read" in row, (
+            f"{label}: the verdicts came from the file and the row does not say so"
+        )
+    # And it must not fire when the wire *was* read, or the caveat means nothing.
+    good = (tree / next(one for one in sources.SURFACES if not one.must_fetch).repo
+            / "docs" / "index.html").read_bytes()
+    loaded, _ = _fetched(monkeypatch, tree, good)
+    assert "the wire was not read" not in report._row(
+        "surface", clauses.check(loaded), answered_from_the_file=False)
 
 
 def test_a_stylesheet_the_wire_dropped_does_not_gate_but_a_missing_one_still_does(
@@ -654,3 +694,119 @@ def test_a_stylesheet_the_wire_dropped_does_not_gate_but_a_missing_one_still_doe
     monkeypatch.setattr(sources, "_fetch", gone)
     loaded = sources.load(surface, tree, allow_fetch=True)
     assert report._unread_same_origin(loaded), "a 404 on a sheet is the page, and still gates"
+
+
+# -- what the gate does with an input it could not read, asserted on the exit code ------------
+
+
+def _run(tmp, monkeypatch, fetch_impl, *, only=None, fetch=True):
+    """One full `main` run with the wire stubbed. **The exit code is the assertion.**
+
+    Every guard written for these branches asserted a *finding's status* and none asserted the
+    run's verdict, which is exactly how three conditions came to print `FAIL` and exit 0.
+    """
+    monkeypatch.setattr(sources, "_fetch", fetch_impl)
+    argv = ["--root", str(tmp)] + (["--only", only] if only else []) + (["--fetch"] if fetch else [])
+    return report.main(argv)
+
+
+def test_a_published_page_answering_404_refuses_the_run(tree, monkeypatch, capsys):
+    """It printed `FAIL served — the page is gone` and exited **0**.
+
+    The exemption argued for the `served` key is about a *digest mismatch*, which is routine
+    while a sibling has published and the index has not bumped its pointer. A page that is not
+    being served is never routine, and it inherited the exemption without anyone arguing it.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+
+    def gone(url):
+        raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+
+    assert _run(tree, monkeypatch, gone, only=surface.name) == 1
+    assert "answered 4xx" in capsys.readouterr().out
+
+
+def test_a_committed_page_that_is_absent_refuses_even_when_the_wire_answers(
+        tree, monkeypatch, capsys):
+    """`0008` §4.11 policy 2, restored. It refused before `--fetch` read these eleven; the wire
+    then answered in the file's place and the run exited 0, indefinitely, because Pages keeps
+    serving the last deployment."""
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    body = (tree / surface.repo / surface.path).read_bytes()
+    (tree / surface.repo / surface.path).unlink()
+
+    assert _run(tree, monkeypatch, lambda url: body, only=surface.name) == 1
+    assert "commits a page has none" in capsys.readouterr().out
+
+
+def test_the_surface_that_commits_no_page_does_not_refuse_for_having_none(
+        tree, monkeypatch, capsys):
+    """The negative, without which the guard above would be a rule that fails the design.
+
+    `wroclaw` commits no HTML — `.gitignore:25` — so having no committed file is its normal
+    state, and refusing on it would be the instrument reporting a decision as a regression.
+
+    It serves the fixture's *conforming* page, so the run turns on the absent file rather than
+    on this page's own quality: a synthetic page failing clause 5 would make the exit code say
+    1 for a reason this test is not about, which is how its first version passed for nothing.
+    """
+    wroclaw = next(one for one in sources.SURFACES if one.must_fetch)
+    body = (tree / "ab-lab" / "docs" / "index.html").read_bytes()
+    assert _run(tree, monkeypatch, lambda url: body, only=wroclaw.name) == 0
+    assert "commits a page has none" not in capsys.readouterr().out
+
+
+def test_a_stylesheet_the_wire_dropped_is_printed_and_refuses_nothing(
+        tree, monkeypatch, capsys):
+    """The whole of the fix, asserted on the run rather than on a helper.
+
+    The previous guard asserted `report._unreachable_sheets(loaded)` — the helper, never the
+    output — under a message that said *"and it must still be printed"*. Nothing was printed,
+    and the run refused anyway: the CSS clauses failed on a sheet they never read, so the gate
+    moved from a key naming the cause to two keys naming a consequence, and the output stopped
+    mentioning the stylesheet at all.
+
+    Built from the fixture's conforming page with its inline CSS moved out to a sheet the wire
+    drops, because the question is whether an undelivered sheet refuses the run and a page that
+    fails a gated clause on its own could not answer it.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    committed = (tree / "ab-lab" / "docs" / "index.html").read_text(encoding="utf-8")
+    start, end = committed.index("<style>"), committed.index("</style>") + len("</style>")
+    page = (committed[:start] + '<link rel="stylesheet" href="a.css">'
+            + committed[end:]).encode("utf-8")
+
+    def blip(url):
+        if url.endswith("a.css"):
+            raise OSError("dns")
+        return page
+
+    assert _run(tree, monkeypatch, blip, only=surface.name) == 0
+    out = capsys.readouterr().out
+    assert "not gated — a same-origin stylesheet the wire did not deliver" in out
+    assert "a.css" in out, "the operator is never told which sheet, or why"
+    assert "FAIL  1 " not in out and "FAIL  3 " not in out, (
+        "a clause failed on a stylesheet it never read"
+    )
+
+
+@pytest.mark.parametrize("status, refuses", [
+    (404, True), (410, True),      # the page is not there
+    (403, False), (429, False),    # the origin declined *this* request
+    (503, False),                  # a deploy in flight
+])
+def test_only_the_statuses_that_mean_the_page_is_gone_refuse(tree, monkeypatch, status, refuses):
+    """`served_gone` widened from `(404, 410)` to any 4xx at the same moment it started gating.
+
+    A `429` from a runner fetching twelve pages and their stylesheets, a `403`, or a `304`
+    then refused the build under a sentence saying *the page is not being served* — false about
+    the event, and the cries-wolf shape `conftest.py` warns about. Neither boundary was
+    guarded in either direction: narrowing back left the suite green, and so did widening to
+    *any HTTP status*, which is the Pages-503 defect the split was written to end.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+
+    def answer(url):
+        raise urllib.error.HTTPError(url, status, "x", {}, None)
+
+    assert _run(tree, monkeypatch, answer, only=surface.name) == (1 if refuses else 0)

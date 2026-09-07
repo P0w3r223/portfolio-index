@@ -136,6 +136,20 @@ index checker must take that page **by fetch, from the live URL**, exactly as `0
 `measure_page.py` already does natively (it accepts a URL or a path). This is a source rule, not an
 exemption: the page is checked, from the only surface that exists.
 
+> **Amended 2026-09-07 — `#90`, and the twelfth stops being the different case.** The source
+> rule above is now the rule for *all* twelve, not the exception for one: under `--fetch` the
+> checker answers every clause from the served bytes, and the eleven that also commit a file get
+> a `served` finding comparing the two. `0009` §3.1 records why — reading a committed file at
+> the superproject's pinned gitlink answers a question about a *published* page from something
+> that is not it, which is `0007` §2's founding failure inside the instrument built to end it.
+>
+> **K-c's index half is unchanged in shape and changed in source.** One checker, no vendoring,
+> no pin, no new dependency; the push path still reads working trees and never the network, and
+> the fetch lives in the scheduled job alone. What moved is which bytes the `live` job judges.
+> Recorded here because §6's gate bullet was amended on the same principle — *turning on a gate
+> while the ADR licensing the instrument still says report-only first would be the same defect
+> facing the other way* — and changing which bytes K-c judges is the same size of move.
+
 ### 4.1 Two constraints the implementation must carry
 
 - **The static core must read same-origin external stylesheets, not only the inline `<style>`.**

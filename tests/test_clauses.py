@@ -14,7 +14,7 @@ import unicodedata
 import pytest
 
 from conftest import detail_of, fixture, loaded, page, status_of
-from tools.pagespec import clauses
+from tools.pagespec import clauses, sources
 
 NARROW = "\u202f"
 NBSP = "\u00a0"
@@ -340,7 +340,7 @@ def test_a_title_spelled_as_prose_reads_as_the_identity_it_is():
     never a directory. `tools/spec.py` `c4.s3` is where the reading is recorded.
 
     The alternative was measured before it was rejected: asking whether the name appears
-    anywhere fails 10 of the 12 surfaces, because eight conforming titles are
+    anywhere fails 11 of the 12 surfaces, because seven of the eight conforming titles are
     `<claim> — <repo>`.
     """
     findings = clauses.clause_4_opening(
@@ -1467,3 +1467,81 @@ def test_a_number_in_a_token_name_is_not_a_border_width(declaration, status, why
     # left the false-FAIL case, the harder half, green.
     assert status_of(findings, "1 usage refs") == clauses.PASS, "the tokens are declared"
     assert status_of(findings, "1 usage roles") == status, why
+
+
+def test_a_webfont_reached_by_the_string_spelling_fails_too():
+    """`@import` and `src:` reach a host by two spellings, and the clause read one.
+
+    `@import "https://fonts.googleapis.com/…";` is legal CSS and escaped, so the page reported
+    `ok 7 webfont system stack` while fetching from a third party — **a false `PASS` on a
+    clause `GATED` contains**, printing as its detail the very sentence `tools/spec.py` records
+    as carried by nothing. The docstring claimed "any of the three routes"; it read one and a
+    half of them.
+    """
+    page_ = page("<html></html>")
+    for css in ('@import "https://fonts.googleapis.com/css2?family=Inter";',
+                '@font-face{font-family:X;src:"https://fonts.gstatic.com/a.woff2"}',
+                # **The canonical spelling, and the one the first widening broke.** An
+                # alternation makes the two forms compete for one match, so `local("Inter")`
+                # won and the remote URL was never examined — closing one false `PASS` on a
+                # gated clause by opening another on the same clause.
+                'src: local("Inter"), url(https://fonts.gstatic.com/x.woff2) format("woff2");',
+                'src: local("Inter"), "https://fonts.gstatic.com/x.woff2";'):
+        assert clauses.clause_7_webfont(page_, css).status == clauses.FAIL, css
+    # And the local spellings must still pass, or the widening has failed a conforming page.
+    for css in ('@font-face{font-family:X;src:"assets/a.woff2"}',
+                '@font-face{font-family:X;src:url(assets/a.woff2)}'):
+        assert clauses.clause_7_webfont(page_, css).status == clauses.PASS, css
+    # Comments are stripped first — a commented-out example must not refuse the build.
+    assert clauses.clause_7_webfont(
+        page_, '/* never: @import "https://fonts.googleapis.com/x" */').status == clauses.PASS
+
+
+def test_a_back_link_on_another_host_is_not_a_link_back_to_the_profile():
+    """`endswith(PROFILE)` accepted `https://notgithub.com/P0w3r223`.
+
+    The comment above the check was right that a suffix match excludes `/issues`, `/pulls` and
+    every repository URL — and it did not bound the host, so any domain ending in the same
+    characters read as the profile. Clause 6 is about a link *back to the profile*.
+    """
+    for href, expected in (("https://github.com/P0w3r223", clauses.PASS),
+                           ("https://github.com/P0w3r223/", clauses.PASS),
+                           ("https://notgithub.com/P0w3r223", clauses.FAIL),
+                           ("https://github.com.evil.test/P0w3r223", clauses.FAIL),
+                           ("https://github.com/P0w3r223/ab-lab", clauses.FAIL)):
+        finding = clauses.clause_6_back_link(page(f'<a href="{href}">p</a>'))
+        assert finding.status == expected, f"{href} read as {finding.status}"
+
+
+def test_a_third_party_link_is_not_excused_by_the_sheet_it_declines_to_read():
+    """A sheet declared third party is not read **by design**, and is not an incomplete one.
+
+    `_unread_same_origin` filters that marker before gating; the incompleteness rule did not.
+    So a page adding Google Fonts had its clause-7 `FAIL` rewritten to `UNDECIDED`, and
+    `UNDECIDED` never gates — **the repair for a false gate made a false pass on the clause
+    whose entire subject is a third-party font.** `7 ` is also out of the CSS-derived set, so a
+    genuinely dropped same-origin sheet cannot excuse a `<link>` sitting in the markup either.
+    """
+    linked = ('<html><head><link rel="stylesheet" '
+              'href="https://fonts.googleapis.com/css2?family=Inter">'
+              "<title>A claim</title></head><body></body></html>")
+    findings = clauses.check(loaded(linked, "", unreadable=[
+        ("https://fonts.googleapis.com/css2?family=Inter", sources.THIRD_PARTY)]))
+    webfont = next(one for one in findings if one.clause == "7 webfont")
+    assert webfont.status == clauses.FAIL, "the third-party font was excused as 'incomplete'"
+
+    # **And the CSS-derived clauses are not excused either**, which is the half that the
+    # `7 `-out-of-`_CSS_DERIVED` change does not cover: a page whose *only* unread sheet is the
+    # third-party one has a complete stylesheet as far as this repository is concerned, so
+    # clause 1 keeps its verdict and keeps gating.
+    assert next(one for one in findings if one.clause == "1 tokens").status == clauses.FAIL, (
+        "a third-party link excused clause 1 from deciding, and `1 ` gates"
+    )
+
+    # With a genuinely unread same-origin sheet, clause 7 still answers on the markup while
+    # the CSS-derived clauses go undecided.
+    both = clauses.check(loaded(linked, "", unreadable=[
+        ("https://fonts.googleapis.com/css2?family=Inter", sources.THIRD_PARTY),
+        ("local.css", "FileNotFoundError: gone")]))
+    assert next(one for one in both if one.clause == "7 webfont").status == clauses.FAIL
+    assert next(one for one in both if one.clause == "1 tokens").status == clauses.UNDECIDED

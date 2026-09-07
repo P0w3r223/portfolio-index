@@ -43,11 +43,17 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: The ratchet — `0008` §4.11. A finding key enters here once a run reports zero `FAIL` for it
 #: across every surface read, and each closing stage adds its own. **Keyed on the finding
 #: prefix rather than the clause number, because clause 4's halves disagree**: `4 h1` and
-#: `4 eyebrow` have been clean on all twelve surfaces since S6 while `4 title` fails on three.
+#: `4 eyebrow` have been clean on all twelve surfaces since S6 while `4 title` fails — on
+#: three of the eleven committed surfaces, and on four of the twelve once `--fetch` reads the
+#: twelfth.
 #: Gating by the number would either pull `4 title` in before S10 or hold the other two out.
 #:
 #: Measured 2026-09-07 over twelve surfaces with `--fetch`: every `FAIL` in the portfolio is
-#: `4 title` (3) or `8 separator` (7), and nothing else fails anywhere. So this set costs no
+#: `4 title` (**4**) or `8 separator` (7), and nothing else fails anywhere. *The `4 title`
+#: figure read three until the audit of that evening: three is the eleven-surface count, and
+#: this sentence says twelve. `#86` settled the reading that moved the twelfth and its own
+#: commit body says four — a hand-typed figure the instrument had already refuted, in the
+#: comment block `CLAUDE.md` sends a stage editor to.* So this set costs no
 #: page change today — it starts refusing the moment one of them regresses, which is the point.
 #: `8 separator` enters with S9; `4 title` with S10.
 #:
@@ -125,7 +131,8 @@ def _unreachable_sheets(loaded) -> list[str]:
     return [sources.describe(entry) for entry in loaded.unreachable]
 
 
-def _row(name: str, findings: list[clauses.Finding]) -> str:
+def _row(name: str, findings: list[clauses.Finding], *,
+         answered_from_the_file: bool = False) -> str:
     """One surface's line, and — under `--fetch` — where its verdict came from.
 
     **A fetch that failed falls back to the committed file, and the verdict then says nothing
@@ -140,7 +147,11 @@ def _row(name: str, findings: list[clauses.Finding]) -> str:
     verdict = f"{failures} fail" if failures else "clear"
     if undecided:
         verdict += f", {undecided} undecided"
-    if any(one.clause == "served" and one.status == clauses.UNDECIDED for one in findings):
+    # Keyed on the fallback having happened, not on one of the two statuses that cause it.
+    # It fired on `UNDECIDED` alone, so the benign case — a wire blip — was annotated and the
+    # serious one — the page answered 4xx — was not. The serious one is exactly where every
+    # `ok` above came from a file whose published counterpart is not being served.
+    if answered_from_the_file:
         verdict += "  (from the committed file; the wire was not read)"
     return f"  {name:<24} {verdict}"
 
@@ -200,6 +211,8 @@ def main(argv: list[str] | None = None) -> int:
     blocked: list[str] = []
     unread_sheets: list[str] = []
     unreachable_sheets: list[str] = []
+    gone: list[str] = []
+    absent: list[str] = []
     fetch_errors: dict[str, str] = {}
     missing = False
     sheets: list[tuple[str, str]] = []
@@ -234,7 +247,19 @@ def main(argv: list[str] | None = None) -> int:
                           for entry in _unread_same_origin(loaded)]
         unreachable_sheets += [f"{surface.name}  {entry}"
                                for entry in _unreachable_sheets(loaded)]
-        print(_row(surface.name, findings))
+        # **Two input conditions that are unambiguous regressions, and both were exempt.**
+        # The `served` key carried three different facts and the exemption was argued for
+        # one of them — a digest mismatch, routine while a sibling has published and the
+        # index has not bumped its pointer. These two are not that and neither was argued:
+        # a page answering 4xx is not being served, and a committed page absent while the
+        # wire answers is `0008` §4.11 policy 2's own case, which refused before `--fetch`
+        # read these eleven and stopped refusing after.
+        if loaded.served_gone:
+            gone.append(f'{surface.name}  {loaded.served_error}')
+        if loaded.committed is None and not surface.must_fetch:
+            absent.append(f'{surface.name}  {surface.repo}/{surface.path}')
+        print(_row(surface.name, findings,
+                   answered_from_the_file=args.fetch and loaded.served is None))
         for finding in findings:
             if args.detail or finding.status in (clauses.FAIL, clauses.UNDECIDED):
                 print(f"      {_MARK[finding.status]:<5} {finding.clause:<20} {finding.detail}")
@@ -268,9 +293,29 @@ def main(argv: list[str] | None = None) -> int:
               "clause\n       reading its CSS answered from an incomplete one; 0008 §4.12\n")
         for line in unread_sheets:
             print(f"  {line}")
+    if unreachable_sheets:
+        print("\nnot gated — a same-origin stylesheet the wire did not deliver. The network is"
+              "\n           not the page, so this refuses nothing, and the clauses "
+              "reading its CSS say"
+              "\n           `undecided` rather than failing on a sheet they never read\n")
+        for line in unreachable_sheets:
+            print(f"  {line}")
+    if gone:
+        print("\ngate — the published page answered 4xx. That is the origin saying the page is"
+              "\n       not being served, which is an answer about the page; a wire failure"
+              "\n       is `undecided` and prints above without refusing\n")
+        for line in gone:
+            print(f"  {line}")
+    if absent:
+        print("\ngate — a surface that commits a page has none and the wire answered in its"
+              "\n       place. Pages keeps serving the last deployment, so this is "
+              "invisible until"
+              "\n       somebody looks; it is `0008` §4.11 policy 2, restored\n")
+        for line in absent:
+            print(f"  {line}")
     if missing:
         print("\ngate — a surface that should have been readable was not read")
-    return 1 if (blocked or unread_sheets or missing) else 0
+    return 1 if (blocked or unread_sheets or gone or absent or missing) else 0
 
 
 if __name__ == "__main__":

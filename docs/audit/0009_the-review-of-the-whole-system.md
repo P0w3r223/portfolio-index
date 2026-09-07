@@ -360,6 +360,8 @@ is true of the eleven committed surfaces and not of the twelfth, and the only pl
 printed is the scheduled `live` job. Stated because a reader meeting the new line there would
 otherwise have to work out whether something had changed.
 
+***Settled and implemented 2026-09-07 — `#86`, `2c53f04`. The paragraph below is the question as it stood; `named_after_the_directory` no longer exists and the answer is four surfaces, computed rather than asserted.***
+
 **`wroclaw`'s `<title>` passes clause 4 while leading with the project's name.** Fetched
 2026-09-07: `Wrocław Air Insights — live PM2.5 forecast` reports `ok`, because
 `named_after_the_directory` is `startswith(repo.lower())` and `wrocław air insights` is not a
@@ -488,3 +490,134 @@ state read `! 2 uncommitted change(s)` over two files identical to `HEAD`.
 
 Recorded rather than fixed. It is the mirror of the stale-`origin/main` false finding §4.12
 records: the instrument reports what git reports, and what git reports is not always what changed.
+
+## 13. The four-pass audit of the same evening, and the regression it found
+
+Commissioned after the six stages of 2026-09-07 had merged, on the reasoning that each had been
+reviewed alone and none against the others. Four passes over one tree: the architecture, the
+whole of `tools/` as code rather than as a diff, the whole suite by mutation, and the day read
+as one body of work. Every pass was told that the author of all six stages was the one asking.
+
+**It found a regression introduced that day, by the stage whose subject was closing the finding
+it regressed.**
+
+### 13.1 The gate that stopped firing, under a comment saying it fires
+
+`#90` closed §3.1's C1 by making `--fetch` answer the clauses from the served bytes. It also
+routed **three different facts through one finding key**, and argued the report-only exemption
+for one of them:
+
+| fact | routine? | was it argued? |
+|---|---|---|
+| the served markup differs from the committed file | **yes** — the normal state between a sibling publishing and the index bumping its pointer | yes, at length |
+| the published page answers 4xx | never | no |
+| the committed page is absent while the wire answers | never | no |
+
+The second and third inherited the first's exemption. Measured: a deleted `docs/index.html`
+refused the run **without** `--fetch` and exited **0** with it; a page answering 404 printed
+`FAIL served — the page is gone` and exited **0**. The twelfth surface exits 1 on the same 404,
+because it has no file to fall back to — *the same event, opposite verdicts, decided by whether
+a fallback happens to exist.*
+
+And `clauses.py` said, of the second condition, *"A gate that stopped firing, and this is where
+it fires again."* It did not fire. **Every guard written for these branches asserted a finding's
+status and none asserted the run's exit code**, which is how three conditions came to print
+`FAIL` and exit 0 under three separate reviews.
+
+### 13.2 A false gate that was reported as removed and had only moved
+
+The same stage split *a stylesheet the network dropped* from *a stylesheet that is missing*, so
+that a blip would stop refusing the build. The split was right and the false gate survived it:
+`loaded.css` came back empty, clause 1 then reported `no custom properties declared at all` and
+clause 3 `no class in the stylesheet scrolls`, and **both of those gate**. The refusal moved
+from a key naming the cause to two keys naming a consequence — and the list of dropped sheets
+was collected and never printed, so the output stopped mentioning stylesheets at all. A daily
+blip refused the build under what reads as a portfolio-wide CSS regression.
+
+*This is `0008` §4.12's displacement pattern, committed by a commit message that cites it.*
+
+### 13.3 What the suite audit found, and what it did not
+
+108 mutations, roughly 95 killed — usually by the test whose docstring names that exact defect.
+**The suite is strong**, and the residue is small and specific. The two worth carrying:
+
+- **`test_a_repo_citation_still_points_at_something` was named in a docstring and never
+  written.** All three `REPO` carriers could cite a repository, a file and a function that do
+  not exist, and `python -m tools.spec` would print the sentence as *carried*. `ADR-0005` §2's
+  own failure mode, one carrier-kind to the left, inside the registry built to end it.
+- **A guard for the record's most-repeated wrong answer was red on one laptop and green in
+  CI.** It asserted against `ROOT`, where `wroclaw`'s gitignored local build exists only on a
+  machine that has run the site generator — and the test is unmarked, so it runs in the `core`
+  job, which checks out no submodules. It had been that way for its whole life.
+
+Writing the repair for the first of those reproduced the class a third time in one evening: the
+new probe used `require_submodule`, which **skips** on a missing path — conflating *the sibling
+is not checked out* with *the citation is wrong* — and was green over two of its own three
+mutations before that was noticed.
+
+### 13.4 The record's own errata, and one recurrence with a name
+
+- **`#86` appears nowhere in `docs/` or `CLAUDE.md`.** The day's only change to a clause's
+  semantics went unrecorded, and four artifacts went on asserting what it replaced — including
+  the `GATED` comment block `CLAUDE.md` sends a stage editor to, which typed `4 title` (3)
+  where the instrument computes 4, and §11 of this file, which still said *"settle the reading
+  before the stage"* three hours after it was settled.
+- **`0008` §5's carried list still instructed a reader to do Sx**, which §4.14 in the same
+  document records as done.
+- **`CLAUDE.md` said narrowing `GATED` "is not caught by anything."** False since `#83` — and
+  true of the `core` job, which is not what it said. The most safety-critical instruction in
+  the repository, understating the protection that exists.
+- **The refuted clause-4 figures survived in a third place: a test docstring.** `0008` §3.10
+  records that exact shape — *"corrected in two documents and left standing in a third place, a
+  test docstring"* — so §12.3's *"propagated into two new sites"* was itself one short.
+
+### 13.5 What this says about the method
+
+Nine review passes across the day found a real defect in the round of fixes before them, and a
+tenth found a defect in the round that closed the ninth's findings. That is not a failing loop:
+every one of these was found, and the ones that reached `main` were found within hours. But two
+things generalise.
+
+**A stage that argues an exemption must say which facts it covers.** `#90`'s argument was
+correct and its scope was assumed. Three facts under one key with one argument is the shape.
+
+**Assert the verdict, not the finding.** Every one of §13.1's defects would have been caught by
+one assertion on the exit code, and every guard written for them asserted a status instead. The
+same sentence covers §13.2: the guard asserted a helper's return value under a message that
+said *"and it must still be printed"*.
+
+*A note on how this audit was run, because it cost something.* Four passes were given the same
+working tree, and two of them mutate files to prove guards. The result was that the parent's own
+test runs were unreliable for a stretch, and one unexplained working-tree edit had to be traced
+before it could be dismissed. Read-only passes can share a tree; mutating ones want their own.
+
+### 13.6 The remediation displaced three times, and that is the finding
+
+The review of §13's own repair blocked with three HIGHs, every one of them the pattern §13.2
+had just been written to describe. They are worth listing together, because the shape is the
+same three times and it is not carelessness:
+
+| what was fixed | what the fix did instead |
+|---|---|
+| clause 7 read one and a half of three routes | the widening made the two spellings **compete for one match**, so `src: local("Inter"), url(https://…)` — the canonical line — matched `"Inter"` and never examined the remote URL |
+| a false gate on a dropped stylesheet | the incompleteness rule treated *third party, not read* as incomplete, so a page adding Google Fonts had its clause-7 `FAIL` rewritten to `UNDECIDED` — **a false pass on the clause whose entire subject is a third-party font** |
+| two collectors that were never lowered | they were lowered for *every* self-closed tag, so `<h1>Fast <br/> answers</h1>` reported `no <h1>` on a page that has one |
+
+**Each repair was correct about the defect and wrong about its boundary.** Clause 7's widening
+was right that a second spelling existed and wrong that an alternation reads both. The
+incompleteness rule was right that a clause cannot fail on a sheet it never read and wrong that
+every entry in `unreadable` is such a sheet. The collector reset was right that the sinks must
+come down and wrong about when.
+
+That is a sharper statement than *"fixes displace defects"*, and it is the one worth carrying:
+**a repair inherits the blast radius of the thing it repairs, and the review that found the
+defect did not measure that radius — it measured the defect.** Every one of these three was
+found by asking *what else does this now do*, on inputs a page could plausibly write, and every
+one was invisible to the guard written alongside the fix, because that guard was built from the
+failing case rather than from the neighbourhood around it.
+
+*Two smaller instances in the same round, recorded because they are the same shape at lower
+cost:* one predicate answering two questions widened a page's refusal from `(404, 410)` to any
+4xx at the moment it started gating, so a `429` from a runner fetching twelve pages refused the
+build; and the guard on the wire never reaching the push path was **a typed literal in disguise
+for the third consecutive time** — first two job names, then a substring in an `if:` condition.

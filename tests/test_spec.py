@@ -21,8 +21,8 @@ import re
 
 import pytest
 
-from conftest import NOT_A_CLAUSE, fixture, loaded
-from tools import spec
+from conftest import NOT_A_CLAUSE, ROOT, fixture, loaded, require_submodule
+from tools import entry_state, spec
 from tools.pagespec import __main__ as report
 from tools.pagespec import clauses
 
@@ -79,9 +79,11 @@ def test_the_synthetic_corpus_reaches_every_key_the_checker_can_name():
     """
     source = pathlib.Path(clauses.__file__).read_text(encoding="utf-8")
     literals = set(re.findall(r'Finding\(\s*"([^"]+)"', source))
-    # Only what needs exempting. Subtracting the whole set also excused `stylesheets`,
-    # which this page *does* reach — half the guard switched off to accommodate one key.
-    needs_a_fetch = frozenset({"served"})
+    # Only what needs exempting. Subtracting the whole set also excused `stylesheets`, which
+    # this page *does* reach — half the guard switched off to accommodate one key. Derived
+    # from `NOT_A_SENTENCE` rather than typed, because a typed literal here was a fourth hand
+    # list of this vocabulary and a second fetch-only key would have been silently exempted.
+    needs_a_fetch = spec.NOT_A_SENTENCE - {"stylesheets"}
     unreached = sorted(literals - _emitted() - needs_a_fetch)
     assert not unreached, (
         f"`clauses.py` can name {unreached}, which the synthetic page never emits — so no "
@@ -272,8 +274,11 @@ def test_every_row_is_wellformed():
 def test_a_repo_citation_is_shaped_so_it_can_be_probed():
     """`repo:path::needle`, and the needle is a test function name.
 
-    Asserted as a shape rather than probed here, because probing needs the sibling on disk —
-    `test_a_repo_citation_still_points_at_something` is the `submodules` half.
+    Asserted as a shape rather than probed here, because probing needs the sibling on disk.
+    `test_a_repo_citation_still_points_at_something` is the `submodules` half — **and for one
+    day it was a name in this sentence and nothing else**, so all three citations could have
+    named a repository, a file and a function that do not exist, with the registry printing
+    them as carried.
     """
     for clause in spec.CLAUSES:
         for carrier in clause.carriers:
@@ -349,3 +354,55 @@ def test_the_keys_no_sentence_carries_are_printed_and_not_only_in_source():
     printed = "\n".join(spec.report())
     for key in spec.NOT_A_SENTENCE:
         assert key in printed, f"{key} is exempt from the registry and the report does not say so"
+
+
+@pytest.mark.submodules
+def test_a_repo_citation_still_points_at_something():
+    """The `submodules` half `test_a_repo_citation_is_shaped_so_it_can_be_probed` defers to.
+
+    **It was named in that docstring and never written.** Three mutations proved what that
+    cost: a `REPO` carrier could name a repository, a file and a test function none of which
+    exist, and `python -m tools.spec` would go on printing the sentence as *carried*. That is
+    `0009` §3.2's own class inside the registry built to end it — the `index:` direction had
+    four guards and the `repo:` direction had a shape check and a forward reference to nothing.
+
+    **It does not use `require_submodule`, and that is the point.** That helper skips whenever
+    the path is missing, which conflates *the sibling is not checked out* — a legitimate quiet
+    sit-down — with *the cited file is gone*, which is the whole finding. Written with it, this
+    guard was green over two of its own three mutations. So the skip is decided on the
+    submodule being populated at all, and everything below that is an assertion.
+
+    The needle is matched as a definition rather than as a substring: a test's *name* surviving
+    in a comment is not the test surviving. And this reads the sibling at the pointer this
+    repository holds, never at its own `main` — `0009` §3.1's C1 applies to a probe as much as
+    to a page, so a green result means *present at the pointer we hold* and nothing stronger.
+    """
+    # A repository the index does not declare is a wrong citation, not an absent checkout —
+    # without this the third mutation (`no-such-repo:...`) took the skip path and passed.
+    declared = set(entry_state.submodule_names(
+        (ROOT / ".gitmodules").read_text(encoding="utf-8")))
+    probed = 0
+    for clause in spec.CLAUSES:
+        for carrier in clause.carriers:
+            if carrier.kind != spec.REPO:
+                continue
+            repo, _, rest = carrier.ref.partition(":")
+            path, _, needle = rest.partition("::")
+            assert repo in declared, (
+                f"{clause.id} cites {repo}, which .gitmodules does not declare — a name that "
+                f"is not a submodule cannot be 'not checked out', it is wrong"
+            )
+            tree = ROOT / repo
+            if not tree.is_dir() or not any(tree.iterdir()):
+                pytest.skip(f"{repo} is not checked out; "
+                            f"run `git submodule update --init {repo}`")
+            cited = tree / path
+            assert cited.is_file(), (
+                f"{clause.id} cites {carrier.ref} and {repo} holds no {path}"
+            )
+            assert f"def {needle}(" in cited.read_text(encoding="utf-8"), (
+                f"{clause.id} cites {carrier.ref}, and {path} defines no {needle} — the "
+                f"registry is reporting that sentence as carried by a test that is not there"
+            )
+            probed += 1
+    assert probed, "no REPO carrier was probed; this guard would pass an empty registry"

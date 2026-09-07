@@ -115,6 +115,17 @@ class Page(HTMLParser):
                 self._style = None
         elif tag == "svg":
             self._in_svg = max(self._in_svg - 1, 0)
+        # **Two of the sinks this docstring names did not come back down** — and the first
+        # repair lowered them for *every* self-closed tag, which is far worse than the hole it
+        # closed: `<h1>Fast <br/> answers</h1>` cleared the heading collector, so
+        # `clause_4_opening` reported `4 h1 FAIL — no <h1>` on a page that has one, and
+        # `"4 h1"` gates. `<br/>`, `<img/>` and `<wbr/>` inside a heading are ordinary markup;
+        # `<h1/>` is not. Scoped to the tag that opened the collector, the way `handle_endtag`
+        # already does it.
+        elif tag == "title" and self._title is not None:
+            self._title = None
+        elif tag == "h1" and self._heading is not None:
+            self._heading = None
 
     def handle_endtag(self, tag: str) -> None:
         if tag not in _VOID and self._open:

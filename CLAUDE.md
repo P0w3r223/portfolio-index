@@ -94,9 +94,15 @@ python -m pytest -m submodules           # only the tests that read a working tr
 - **Do not hand-edit `GATED`** (`tools/pagespec/__main__.py`) as part of unrelated work. It is a
   ratchet: it names the finding keys that report zero `FAIL` across every surface read, and a
   closing stage adds its own. Widening it past the measurement is caught by
-  `test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing`; **narrowing it is
-  not caught by anything** — every prefix can be removed with the suite green. Clause 8 enters
-  with S9 and clause 4-`<title>` with S10, and both stages edit this tuple.
+  `test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing`, and **narrowing it
+  is caught by `test_the_ratchet_cannot_be_narrowed_either_every_clean_clause_is_gated` — but
+  only in the `surfaces` job.** Both guards read the sibling working trees, so a pull request
+  green on `core` alone proves nothing about this tuple: `GATED = ("1 ",)`, which un-gates
+  seven clauses at once, still passes `pytest -m 'not submodules'`. *This paragraph said
+  narrowing was caught by nothing at all, which stopped being true at `#83` and was found by
+  the audit of 2026-09-07 — a reader who believed it would not trust the guard that would have
+  stopped them.* Clause 8 enters with S9 and clause 4-`<title>` with S10, and both stages edit
+  this tuple.
 - **Do not weaken a guard to make it pass.** A guard that has started failing is a finding.
 - **Do not add a dependency.** The checker is standard library only and `pytest` is the sole
   test dependency; the `core` CI job installs nothing else.
@@ -109,10 +115,18 @@ python -m pytest -m submodules           # only the tests that read a working tr
   checker guards alone. This repository re-points submodules; it does not edit them.
 ## The published surfaces, and what the gate does not say
 
-Twelve surfaces: eleven read from committed files, and `wroclaw-air-insights`, which commits no
-HTML at all and exists only at its URL — `--fetch` reads it, and only the scheduled `live` job
-passes that flag. `reports/site/` in that repository is a gitignored local build and reading it
+Twelve surfaces. Eleven commit a file; `wroclaw-air-insights` commits no HTML at all and exists
+only at its URL. `reports/site/` in that repository is a gitignored local build and reading it
 has produced a wrong answer that survived a session.
+
+**`--fetch` is not "and also wroclaw".** Since `#90` it judges *every* surface on the bytes it
+actually serves and additionally compares those against the eleven committed files under the
+`served` key — `0009` §3.1's C1. Only the scheduled `live` job passes it, and a test refuses the
+flag in any job a push or a pull request reaches. So `surfaces` answers from the pinned gitlinks
+and `live` answers from each sibling's published page, and **the two can disagree**: that is the
+point of the flag and not a defect. A wire failure is `undecided` and refuses nothing; a page
+answering 4xx, and a surface whose committed file has gone missing while the wire answers in its
+place, both refuse.
 
 The gate is **deliberately partial**. `UNDECIDED` never gates, which is what lets the checker be
 honest about `color-mix()`, an unread media condition, and a headline it cannot judge. Two
