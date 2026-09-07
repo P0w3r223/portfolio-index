@@ -16,3 +16,15 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code
+# The configuration is tracked — `.claude/settings.json` carries the session-start hook, and a
+# hook nobody can review is a hook nobody can correct. The session briefs are not: they are a
+# per-machine handoff, they name work in progress rather than decisions, and the decisions that
+# outlive a session belong in `docs/audit/` where the record already keeps them.
+.claude/sessions/
+# Ignored here and not only in a personal global ignore file: on any other checkout the first
+# permission grant writes this, `git status` sees it, and the session-start banner then reports
+# an uncommitted change at every startup — a standing false finding in the one instrument whose
+# value is that a finding means something.
+.claude/settings.local.json
