@@ -810,3 +810,44 @@ def test_only_the_statuses_that_mean_the_page_is_gone_refuse(tree, monkeypatch, 
         raise urllib.error.HTTPError(url, status, "x", {}, None)
 
     assert _run(tree, monkeypatch, answer, only=surface.name) == (1 if refuses else 0)
+
+
+def test_a_submodule_nobody_checked_out_is_not_a_page_somebody_deleted(
+        tree, monkeypatch, capsys):
+    """`committed is None` conflates three states, and the restored gate saw only two.
+
+    No file expected (`wroclaw`), the file is gone (a regression), and **the submodule is not
+    checked out** — a condition of the machine. `--fetch` is a documented local command, so a
+    developer with a partial checkout was told a perfectly good repository had lost its page,
+    and the run exited 1.
+
+    That is the instrument blaming the page for the state of the disk, which is the class the
+    branch that added this gate spent the evening removing. Found by checking the repair rather
+    than by a later pass.
+    """
+    surface = next(one for one in sources.SURFACES if not one.must_fetch)
+    body = (tree / surface.repo / surface.path).read_bytes()
+
+    # The gitlink directory as `actions/checkout` leaves it without `submodules: true`, and as
+    # a developer has it before `git submodule update --init`.
+    empty = tree / "not-checked-out"
+    (empty / surface.repo).mkdir(parents=True)
+    monkeypatch.setattr(sources, "_fetch", lambda url: body)
+    assert report.main(["--root", str(empty), "--only", surface.name, "--fetch"]) == 0
+    assert "commits a page has none" not in capsys.readouterr().out
+
+    # **And the finding, not only the verdict.** Two mechanisms answer this question — the
+    # gate in `__main__` and the `served` finding in `clauses` — and asserting the exit code
+    # alone left the second one unguarded, which is the shape this whole branch is about.
+    loaded = sources.load(surface, empty, allow_fetch=True)
+    assert not [one for one in clauses.check(loaded) if one.clause == "served"], (
+        "the served key accused a repository nobody has checked out"
+    )
+
+    # And a repository that *is* checked out and has lost its page still refuses, or the
+    # discrimination has bought the false negative instead of the false positive.
+    populated = tree / "checked-out"
+    (populated / surface.repo).mkdir(parents=True)
+    (populated / surface.repo / "README.md").write_text("here", encoding="utf-8")
+    assert report.main(["--root", str(populated), "--only", surface.name, "--fetch"]) == 1
+    assert "commits a page has none" in capsys.readouterr().out

@@ -152,7 +152,14 @@ _VAR_NAME = re.compile(r"var\(\s*(--[\w-]+)")
 #: one match: `"Inter"` won, the remote URL was never examined, and the page reported
 #: `ok 7 webfont system stack`. **Closing one false `PASS` on a gated clause opened another on
 #: the same clause.** So the declaration is anchored once and every target inside it is read.
-_REMOTE_DECLARATION = re.compile(r"(?:@import|src\s*:)([^;{}]*)", re.IGNORECASE)
+#: **Anchored past the hyphen, which is the third pattern in this file to need it** —
+#: `_LENGTH` and `_WIDTH_KEYWORD` both record the same lesson above. Unanchored,
+#: `mask-src:` matched, so a remote image in a mask read as a third-party *font* and
+#: refused the build: a false gate on a gated clause. Inherited rather than introduced —
+#: it reproduces at `aeb643a`, before any of the 2026-09-07 work — and found by auditing
+#: this pattern's own repair.
+_REMOTE_DECLARATION = re.compile(r"(?:@import|(?<![-\w])src\s*:)([^;{}]*)",
+                                 re.IGNORECASE)
 _TARGET = re.compile(r"""url\(([^)]*)\)|["']([^"']*)["']""")
 _SEPARATOR_NAMES = {" ": "space", " ": "U+2009", " ": "U+202F",
                     " ": "U+00A0", ",": "comma"}
@@ -944,9 +951,10 @@ def served_matches_committed(loaded) -> list[Finding]:
             return [Finding("served", FAIL, f"the page is gone: {loaded.served_error}")]
         return [Finding("served", UNDECIDED, f"not read: {loaded.served_error}")]
     if loaded.committed is None:
-        if loaded.surface.must_fetch:
-            # `wroclaw` commits no HTML by design. Nothing to compare, and saying so would be
-            # noise on the one surface where the wire is the only truth there is.
+        if loaded.surface.must_fetch or not loaded.repo_checked_out:
+            # Two states that are not a missing page. `wroclaw` commits no HTML by design;
+            # and a submodule nobody has initialised is a condition of the machine, which
+            # `--fetch` meets every time it is run on a partial checkout.
             return []
         # **A gate that stopped firing, and this is where it fires again.** Before `--fetch`
         # read these eleven, a missing or renamed `docs/index.html` made `load` return `None`,

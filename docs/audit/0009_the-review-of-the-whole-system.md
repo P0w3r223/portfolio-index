@@ -621,3 +621,41 @@ cost:* one predicate answering two questions widened a page's refusal from `(404
 4xx at the moment it started gating, so a `429` from a runner fetching twelve pages refused the
 build; and the guard on the wire never reaching the push path was **a typed literal in disguise
 for the third consecutive time** — first two job names, then a substring in an `if:` condition.
+
+### 13.7 Checking the repair instead of waiting for a pass to check it
+
+§13.6 says a repair inherits the blast radius of the thing it repairs. The obvious next move is
+to measure that radius yourself, before the next review does. It found two.
+
+**One introduced, by the gate restored two commits earlier.** `committed is None` conflates
+three states — no file expected, the file is gone, and *the submodule is not checked out* — and
+the restored `absent` gate saw two. `--fetch` is a documented local command, so a developer with
+a partial checkout was told a good repository had lost its page and the run exited 1: **the
+instrument blaming the page for the state of the disk**, which is the class the same branch had
+spent the evening removing.
+
+*And the first guard for it asserted only the exit code*, leaving the half of the repair that
+lives in `clauses.py` unguarded — this file's own §13.5 lesson, needed again one commit after it
+was written down. Two mechanisms answer that question and a guard has to reach both.
+
+**One inherited, and it is the third instance of a lesson this file already records twice.**
+`(?:@import|src\s*:)` has no left boundary, so `mask-src:` matched and a remote image in a mask
+refused the build as a third-party *font* — a false gate on a gated clause. It reproduces at
+`aeb643a`, before any of the day's work. `clauses.py`'s own comments on `_LENGTH` and
+`_WIDTH_KEYWORD` say, a few lines above it, that `\b` is not a boundary against `-`.
+
+### 13.8 The measurement that says the day moved no page
+
+Run this morning's checker and this evening's over the same eleven committed surfaces:
+
+> **byte-identical output, apart from three detail strings** where clause 4 now reads *the
+> project's name* instead of *the repository's name*.
+
+Every clause, every verdict, every census row, every other detail: unchanged. That is what the
+day's twenty-odd defects and their repairs cost the pages, and it is the number this record
+should be read against — the instrument moved a great deal and the portfolio moved not at all.
+
+*Which is also the honest limit of it.* Nothing above was found by a page regressing; it was
+found by looking at the instrument. The instrument is now considerably better at refusing things
+that have never happened, and the two clauses that actually fail on real pages — the separator
+and the `<title>` — are exactly where they were this morning.
