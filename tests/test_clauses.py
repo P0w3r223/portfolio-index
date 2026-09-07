@@ -1545,3 +1545,24 @@ def test_a_third_party_link_is_not_excused_by_the_sheet_it_declines_to_read():
         ("local.css", "FileNotFoundError: gone")]))
     assert next(one for one in both if one.clause == "7 webfont").status == clauses.FAIL
     assert next(one for one in both if one.clause == "1 tokens").status == clauses.UNDECIDED
+
+
+def test_a_property_merely_ending_in_src_is_not_a_font_request():
+    """The third pattern in this file to need anchoring past the hyphen.
+
+    `_LENGTH` and `_WIDTH_KEYWORD` both record the same lesson: `\b` is not a boundary against
+    `-`. Unanchored, `mask-src:` matched, so a remote image in a mask read as a third-party
+    *font* and refused the build — a **false gate** on a gated clause, which this repository
+    ranks worse than a missing one.
+
+    Inherited rather than introduced: it reproduces at `aeb643a`, before any of the 2026-09-07
+    work. Found by auditing this pattern's own repair.
+    """
+    page_ = page("<html></html>")
+    assert clauses.clause_7_webfont(
+        page_, ".x{mask-src:url(https://cdn.example/a.png)}").status == clauses.PASS
+    # And the real `src:` spellings must still bite, in both the `{`- and `;`-preceded forms.
+    for css in ("@font-face{src:url(https://fonts.gstatic.com/a.woff2)}",
+                "@font-face{font-family:X;src:url(https://fonts.gstatic.com/a.woff2)}",
+                "@font-face{font-family:X; src : url(https://fonts.gstatic.com/a.woff2)}"):
+        assert clauses.clause_7_webfont(page_, css).status == clauses.FAIL, css

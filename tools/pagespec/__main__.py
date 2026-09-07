@@ -256,7 +256,8 @@ def main(argv: list[str] | None = None) -> int:
         # read these eleven and stopped refusing after.
         if loaded.served_gone:
             gone.append(f'{surface.name}  {loaded.served_error}')
-        if loaded.committed is None and not surface.must_fetch:
+        if (loaded.committed is None and not surface.must_fetch
+                and loaded.repo_checked_out):
             absent.append(f'{surface.name}  {surface.repo}/{surface.path}')
         print(_row(surface.name, findings,
                    answered_from_the_file=args.fetch and loaded.served is None))

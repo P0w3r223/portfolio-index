@@ -140,6 +140,12 @@ class Loaded:
     #: Unreachable before `--fetch` read the eleven. Every scheduled run now fetches their
     #: sheets, so `mini-traceroute` and `car-price-ml/app` would have gated on any blip.
     unreachable: list[tuple[str, str]] = field(default_factory=list)
+    #: Whether the sibling's gitlink directory holds anything at all. **`committed is None`
+    #: conflates three states and this separates the third**: no file expected (`wroclaw`),
+    #: the file is gone (a regression), and *the submodule is not checked out* — which is a
+    #: condition of the machine and not of the page. Without it, `--fetch` on a partial
+    #: checkout told a developer that a perfectly good repository had lost its page.
+    repo_checked_out: bool = True
     #: The page answered 404 or 410. A regression, not a wire failure, and the two must not
     #: arrive as the same line — `0007` §2's whole subject is answering a question about a
     #: page from something that is not that page, and "gone" is an answer.
@@ -211,6 +217,8 @@ def load(surface: Surface, root: Path, *, allow_fetch: bool,
     the truth is that the network was off.
     """
     committed: bytes | None = None
+    repo_root = root / surface.repo
+    repo_checked_out = repo_root.is_dir() and any(repo_root.iterdir())
     page_path = root / surface.repo / surface.path if surface.path else None
     if page_path is not None and page_path.is_file():
         committed = page_path.read_bytes()
@@ -249,6 +257,7 @@ def load(surface: Surface, root: Path, *, allow_fetch: bool,
     loaded.committed = committed
     loaded.served_error = served_error
     loaded.served_gone = served_gone
+    loaded.repo_checked_out = repo_checked_out
     return loaded
 
 
