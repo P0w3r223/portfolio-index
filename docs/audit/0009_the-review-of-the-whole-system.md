@@ -56,6 +56,13 @@ instrument.
 
 ### 3.1 The checker answers a question about the published page by reading a file — C1
 
+***Closed 2026-09-07, both halves*** — `#90`. Under `--fetch` the clauses are answered from
+the served bytes and a `served` finding compares them with the committed file; measured on
+eleven of eleven, in CI and locally, with the digests equal across both platforms. What is
+**not** closed is the gitlink half's other consequence: the `surfaces` job still reads the
+eleven at the pinned pointer, and only the scheduled `live` job fetches. The section below
+is left in the present tense because it is the diagnosis this closure was built from.
+
 Two gaps compose. `sources.py` reads `root / repo / path`, and CI checks submodules out at the
 **superproject's pinned gitlink** rather than at each repository's `main`: a page can regress in a
 public repository and stay invisible to the index gate until somebody commits a pointer bump.
@@ -260,7 +267,7 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | 5 | A **clause registry** — `CLAUSES` keyed by clause-sentence id, each carrying `carried_by: index \| repo-test \| review \| none`, with a `core`-job test that every entry has a check or an explicit reason | W1, and gives clause 9 and the geometry half an honest home | S | **done — `#85`, `35ae5a9`**, and it found two more occurrences on its first walk: clause 7's first sentence and clause 3's `data-scroll` escape. `ADR-0005` is the decision; §12 |
 | 6 | Re-scope S9's first commit: no permanent source census; reconcile against the checker's existing per-surface inventory and let the ratchet carry recurrence | W4 | *a saving* | open — the ledger's own evidence supports it |
 | 7 | S9 and S10, with `wroclaw/tests/test_report.py:1524` widened in the same commit that moves the separator | the two failing clauses | 2.5–3 d | open, per `0008` |
-| 8 | The scheduled `live` job hashes all twelve fetched surfaces against their committed files, reporting a mismatch under its own finding key | **C1**, both halves | S | open |
+| 8 | The scheduled `live` job hashes all twelve fetched surfaces against their committed files, reporting a mismatch under its own finding key | **C1**, both halves | S | **done — `#90`**. Eleven, not twelve: `wroclaw` has no committed file. And it grew a half the row did not name — a hash says the two *disagree*, not which clause the public page now fails, so the clauses are answered from the served bytes too |
 | 9 | Split `0008`: ledger, **a failure-taxonomy document**, measurements to the report | §6.2 row 5 | S | open — after S9/S10, so the file is smaller when split |
 | 10 | **Sx** — 11 `pyproject.toml`, 70 `Author:` fields | dead weight | 0.5 d | **done** — eleven sibling pull requests plus `b416c83` and `d550066`. Both figures now read **0**. `d550066` is green on `main`; `b416c83` is `docs/**` only, which the paths filter excludes, so it has no run. `0008` §4.14 records what the stage measured, including a deprecation date the record did not have |
 | 11 | Bring the **profile README** into the system — at minimum a `Surface` read by `--fetch` in `live`, plus the quotation rule | the asymmetry in §9 | S | open |

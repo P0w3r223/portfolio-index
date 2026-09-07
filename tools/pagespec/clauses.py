@@ -11,6 +11,7 @@ checker that reports a confident verdict it did not earn is that failure automat
 
 from __future__ import annotations
 
+import hashlib
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -870,6 +871,80 @@ def clause_8_separator(page) -> Finding:
     return Finding("8 separator", FAIL, inventory)
 
 
+#: The two line endings, spelled by codepoint so no escape sequence appears in this file.
+_CRLF, _LF = bytes([13, 10]), bytes([10])
+
+
+def _lf(raw: bytes) -> bytes:
+    """CRLF folded to LF. See `served_matches_committed` for why this is not cosmetic."""
+    return raw.replace(_CRLF, _LF)
+
+
+def _digest(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()[:12]
+
+
+def served_matches_committed(loaded) -> list[Finding]:
+    """Does the public receive the **markup** this repository committed?
+
+    **The markup, and not the whole surface.** Only the HTML is hashed. `mini-traceroute` and
+    `car-price-ml/app` link an external same-origin sheet, and for those the CSS carrying
+    clauses 1, 3 and 7 is outside this comparison — so `ok served` on them means the HTML
+    matches, which is less than the question a reader would assume. Narrowed here rather than
+    widened, because reading the assembled CSS from both sides is a larger change than this
+    finding is, and a claim wider than the measurement is the defect this file exists to end.
+
+    **This is not a clause.** `0007` §5 has nothing to say about it; it is the checker
+    reporting on its own inputs, which is why it is emitted under a key no normative sentence
+    claims and why `tools/spec.NOT_A_SENTENCE` names it. It is `0009` §3.1's C1, second half:
+    nothing compared the served bytes to the committed ones, and `sources.py:7` stated the
+    identity as fact while `0008` §6 carried it as a *manual* row.
+
+    **Emitted only when there is something to compare**, and that silence is load-bearing
+    rather than tidy. If this key appeared as `n/a` on the fetchless sweep, the ratchet's floor
+    guard would see it clean-and-ungated and *demand* it in `GATED` on the first commit —
+    forcing the gating decision before a single measurement exists. Staying out of that sweep
+    is what lets it ship report-only and enter the gate under the ratchet's own rule.
+
+    **One normalisation, and it is not cosmetic.** Line endings are folded on both sides
+    because `core.autocrlf` rewrites the working-tree copy on Windows. Measured 2026-09-07:
+    un-normalised, five of the eleven committed pages differ from what is served, and every
+    one of the five differs *only* in line endings — the byte delta equals the file's CRLF
+    count exactly. Without the fold this instrument reports five regressions on a developer's
+    machine and none in CI, which is worse than not having it.
+    """
+    if loaded.served is None:
+        if loaded.served_error is None or loaded.committed is None:
+            return []
+        # A page that answers 404 is gone, and that is a regression rather than a wire
+        # failure. Every other exception is the network and must not read as a page changing.
+        if loaded.served_gone:
+            return [Finding("served", FAIL, f"the page is gone: {loaded.served_error}")]
+        return [Finding("served", UNDECIDED, f"not read: {loaded.served_error}")]
+    if loaded.committed is None:
+        if loaded.surface.must_fetch:
+            # `wroclaw` commits no HTML by design. Nothing to compare, and saying so would be
+            # noise on the one surface where the wire is the only truth there is.
+            return []
+        # **A gate that stopped firing, and this is where it fires again.** Before `--fetch`
+        # read these eleven, a missing or renamed `docs/index.html` made `load` return `None`,
+        # which the report counts as `missing` and refuses on. Now the wire answers instead —
+        # and Pages keeps serving the last deployment — so a sibling deleting or renaming its
+        # page would read `clear` and exit 0, indefinitely. `committed is None` conflated *no
+        # file expected* with *the file is gone*, and only the surface knows which.
+        return [Finding("served", FAIL,
+                        "no committed page to compare: the file the eleven-surface sweep "
+                        "reads is missing, and the wire is answering in its place")]
+    served, committed = (_lf(loaded.served), _lf(loaded.committed))
+    digests = f"markup: served {_digest(served)}, committed {_digest(committed)}"
+    if served == committed:
+        return [Finding("served", PASS, digests)]
+    return [Finding("served", FAIL,
+                    f"{digests} — either the pointer this repository holds is behind the "
+                    f"public repository, or the publish is broken; "
+                    f"`python -m tools.entry_state --full` is what tells the two apart")]
+
+
 def check(loaded) -> list[Finding]:
     """Every clause, over one loaded surface."""
     page = render.parse(loaded.html)
@@ -884,6 +959,7 @@ def check(loaded) -> list[Finding]:
     findings.append(clause_6_back_link(page))
     findings.append(clause_7_webfont(page, loaded.css))
     findings.append(clause_8_separator(page))
+    findings += served_matches_committed(loaded)
     if loaded.unreadable:
         findings.append(Finding("stylesheets", UNDECIDED,
                                 "unread: " + ", ".join(

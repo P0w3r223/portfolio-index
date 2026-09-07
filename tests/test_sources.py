@@ -149,10 +149,12 @@ def test_a_fetched_page_resolves_its_linked_sheet_against_the_pages_url(monkeypa
     asked: list[str] = []
 
     def record(url):
+        # Bytes, because `_fetch` returns bytes since the served-versus-committed comparison
+        # exists. A stub returning `str` here would pass while the real seam could not.
         asked.append(url)
         if url.endswith("page.css"):
-            return ".chart-wrap { overflow-x: auto }"
-        return '<html><head><link rel="stylesheet" href="assets/page.css"></head></html>'
+            return b".chart-wrap { overflow-x: auto }"
+        return b'<html><head><link rel="stylesheet" href="assets/page.css"></head></html>'
 
     monkeypatch.setattr(sources, "_fetch", record)
     wroclaw = next(one for one in sources.SURFACES if one.must_fetch)
@@ -247,3 +249,30 @@ def test_the_reason_does_not_repeat_the_absolute_path_the_href_already_names(tre
     # which is the one thing this line exists to catch.
     assert why.removeprefix("FileNotFoundError:").strip(), (
         "the cause is the half that was missing")
+
+
+# -- where a surface is served ---------------------------------------------------------------
+
+
+def test_the_published_url_is_derived_for_every_surface_including_the_nested_one():
+    """`_published` derives eleven URLs by string surgery and nothing asserted one of them.
+
+    A wrong derivation surfaces as `served FAIL: the page is gone` — the instrument blaming
+    the page for its own typo — and because `served` is report-only it would redden nothing.
+    The dispatched `live` run proves them on the day; this proves them on every run.
+    """
+    published = {surface.name: surface.published for surface in sources.SURFACES}
+    assert published["ab-lab"] == sources.PAGES + "ab-lab/"
+    # The one non-trivial shape: a second surface inside one repository, served as a directory.
+    assert published["car-price-ml/app"] == sources.PAGES + "car-price-ml/app/"
+    # The one surface that states its own URL rather than deriving one.
+    assert published["wroclaw-air-insights"] == sources.PAGES + "wroclaw-air-insights/"
+    for name, url in published.items():
+        assert url.startswith(sources.PAGES), f"{name} is served from somewhere else"
+        assert url.endswith("/"), f"{name} names a file rather than a directory: {url}"
+
+
+def test_a_surface_with_neither_a_path_nor_a_url_is_a_programming_error():
+    """`_published` cannot invent one, and returning a wrong URL would accuse the page."""
+    with pytest.raises(ValueError, match="must state its url"):
+        sources._published("somewhere", None)

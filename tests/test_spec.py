@@ -79,7 +79,10 @@ def test_the_synthetic_corpus_reaches_every_key_the_checker_can_name():
     """
     source = pathlib.Path(clauses.__file__).read_text(encoding="utf-8")
     literals = set(re.findall(r'Finding\(\s*"([^"]+)"', source))
-    unreached = sorted(literals - _emitted())
+    # Only what needs exempting. Subtracting the whole set also excused `stylesheets`,
+    # which this page *does* reach — half the guard switched off to accommodate one key.
+    needs_a_fetch = frozenset({"served"})
+    unreached = sorted(literals - _emitted() - needs_a_fetch)
     assert not unreached, (
         f"`clauses.py` can name {unreached}, which the synthetic page never emits — so no "
         f"guard here would notice those keys having no normative sentence behind them"
@@ -161,10 +164,13 @@ def test_every_key_the_checker_emits_is_claimed_by_exactly_one_row():
     row*, which the corpus refutes; it is *exactly one clause*. Two different clauses claiming
     one key is the real ambiguity, and it stays refused.
 
-    `NOT_A_CLAUSE` is excepted because `stylesheets` is the checker reporting on its own
-    inputs rather than on the page, and `conftest` pins that set as policy.
+    `spec.NOT_A_SENTENCE` is excepted — the keys where the checker reports on its own inputs
+    rather than on the page. **Not `conftest.NOT_A_CLAUSE`**, which answers a different
+    question: that set is the ratchet floor's exemption list and demands a proof each entry can
+    never be `FAIL`. `served` can fail, so it belongs in one set and not the other, and using
+    the wrong one here would have forced a false proof of impossibility.
     """
-    for key in _emitted() - set(NOT_A_CLAUSE):
+    for key in _emitted() - spec.NOT_A_SENTENCE:
         matching = [(len(carrier.ref), clause.id) for clause in spec.CLAUSES
                     for carrier in clause.carriers
                     if carrier.kind == spec.INDEX and key.startswith(carrier.ref)]
@@ -212,6 +218,31 @@ def test_the_gate_gates_nothing_outside_the_registry_s_vocabulary():
         assert any(ref.startswith(prefix) or prefix.startswith(ref) for ref in refs), (
             f"GATED gates {prefix!r}, which belongs to no normative sentence in the registry"
         )
+
+
+def test_the_two_exemption_sets_answer_different_questions_and_say_so():
+    """`conftest.NOT_A_CLAUSE` and `spec.NOT_A_SENTENCE` were one set until `served` existed.
+
+    They are not the same question. `NOT_A_CLAUSE` is the ratchet floor's exemption list and
+    its pin test demands a proof that each entry can never be `FAIL`; `NOT_A_SENTENCE` names
+    the keys `0007` §5-§6 says nothing about. `served` can fail *and* is not a sentence, which
+    is what forced the split — a single set would have required either a false proof of
+    impossibility or a normative row for a sentence nobody wrote.
+
+    Asserted as the relationship rather than as two literals, so the guard survives either set
+    growing for its own reason.
+    """
+    assert NOT_A_CLAUSE <= spec.NOT_A_SENTENCE, (
+        "a key exempt from the ratchet floor because it can never fail is the checker "
+        "reporting on its own inputs, so it cannot be a normative sentence either"
+    )
+    assert "served" in spec.NOT_A_SENTENCE and "served" not in NOT_A_CLAUSE, (
+        "served is the key that separates the two sets; if it has moved into NOT_A_CLAUSE "
+        "somebody has claimed it can never be FAIL, which is the opposite of its purpose"
+    )
+    assert not (spec.NOT_A_SENTENCE & spec.index_refs()), (
+        "a key the registry claims as a carrier cannot also be exempt from claiming"
+    )
 
 
 def test_no_exempt_key_is_claimed_as_a_carrier():
@@ -306,3 +337,15 @@ def test_normalise_collapses_a_wrap_a_bold_and_a_blockquote_marker():
     assert spec.normalise("> quoted\n> across") == "quoted across"
     assert spec.normalise("`--radius`") == "`--radius`", "backticks are part of the identifier"
     assert spec.normalise("<table>") == "<table>", "a > that is not a line marker stays"
+
+
+def test_the_keys_no_sentence_carries_are_printed_and_not_only_in_source():
+    """`NOT_A_SENTENCE` is policy of exactly the kind this module argues must be visible.
+
+    `report()` prints the uncarried rows and the settled readings on the ground that policy
+    must not be legible only to somebody already reading the module. This set says which
+    emitted keys are deliberately outside the registry, which is the same kind of claim.
+    """
+    printed = "\n".join(spec.report())
+    for key in spec.NOT_A_SENTENCE:
+        assert key in printed, f"{key} is exempt from the registry and the report does not say so"
