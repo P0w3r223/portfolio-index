@@ -32,8 +32,13 @@ COMMITTED = [surface for surface in sources.SURFACES if not surface.must_fetch]
 #: Reported for every surface whatever it holds. `1 dark` is deliberately not among them:
 #: a page declaring no custom properties gets one finding naming the cause instead of a
 #: second one restating it, which is `0007` §5 clause 1's *"the same fact twice"*.
+#:
+#: `4 eyebrow` was missing from this tuple until the clause registry tied the four lists of
+#: this vocabulary together. It is emitted on every surface by `clause_4_opening` and it is in
+#: `GATED`, so a change that stopped emitting it would have taken a gated half of clause 4 out
+#: of the gate with every test still green — `0009` N1's shape, in the file that guards it.
 CLAUSES = ("1 tokens", "1 usage refs", "1 usage roles", "1 literals",
-           "2 tiles", "3 tables", "4 h1", "4 title",
+           "2 tiles", "3 tables", "4 eyebrow", "4 h1", "4 title",
            "5 card meta", "6 back-link", "7 webfont", "8 separator")
 
 

@@ -65,6 +65,13 @@ jobs:
         run: python -m pip install --disable-pip-version-check --quiet pytest
       - name: Run the suite without a single page on disk
         run: python -m pytest -q -m 'not submodules'
+      - name: Every normative sentence, and what carries it
+        # Printed, never gated — `tools/spec.py` exits 0 whatever it finds, because `0007`
+        # §5's governing rule means no instrument can tell an uncarried sentence that is open
+        # work from one that is a decision. Its guards ran in the step above and they gate on
+        # the registry being malformed, which is a different question. Needs no submodule and
+        # no network, so it belongs here rather than in `surfaces`.
+        run: python -m tools.spec
 
   surfaces:
     name: checker over the published surfaces

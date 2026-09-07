@@ -33,6 +33,7 @@ tools/pagespec/       the checker — standard library only
   colour.py             WCAG arithmetic; contrast() ships, resolve()/composite() are unused
   clauses.py            clauses 1-8 as pure checks over one Loaded
   __main__.py           the report, the role census, and the GATED ratchet
+tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
 docs/adr/             what carries what; 0004 is the load-bearing one
@@ -56,6 +57,11 @@ python tools/entry_state.py --hook       # verbatim what the session-start hook 
                                          #   `--hook` is what keeps a real finding from reading
                                          #   as a broken hook
 python -m tools.entry_state --full       # every pointer against its own remote, before a stage
+
+python -m tools.spec                     # every normative sentence, and what carries it.
+                                         #   Prints and exits 0 — the uncarried rows are the
+                                         #   point, and no instrument can tell an open item
+                                         #   from a decision
 
 python -m tools.pagespec                 # the conformance table; exits 1 if a GATED clause fails
 python -m tools.pagespec --detail        # every finding, which is what CI runs

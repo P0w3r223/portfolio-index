@@ -1,0 +1,482 @@
+"""Every normative sentence of `0007` §5-§6, and what carries it.
+
+**The one rule this module's correctness depends on: it is authored by reading `0007` §5 top
+to bottom, and never by reading `clauses.py`.** A registry composed from the checker's
+function list reproduces the checker's omissions exactly and then reports full coverage over
+them — which is the defect it exists to end, committed in the act of closing it. `0008` §3.7
+names that substitution: *"composed from the frozen table's columns rather than from the
+normative clauses' sentences."* Two of the uncarried rows below were found by walking the
+prose this way, and neither was known before it.
+
+**What this closes.** `0009` §3.2 records the same defect landing three times: a clause
+sentence nobody carries, invisible because nothing enumerates the sentences. Enumerating them
+is all this module does. It gates nothing about the pages — `python -m tools.spec` exits 0
+whatever it finds — because `0007` §5's governing rule means no instrument can decide whether
+an uncarried sentence is an open item or a decision. Its *guards*, in `tests/test_spec.py`,
+gate on the registry being malformed: a quote that no longer appears in `0007`, a carrier
+naming a finding key the checker does not emit, an uncarried row with nowhere to be picked up.
+
+**What it does not close, stated because the gap is structural.** Nothing detects a sentence
+that was never entered. Guard 1 catches a quote drifting from the document; the inverse — §5
+gaining a sentence with no row — has no mechanism and cannot have one, because §5 interleaves
+normative sentences with descriptive *"what is already true"* notes by design, so no parser
+can tell them apart. Its only carriers are `ADR-0005` and the `code-reviewer` pass that closes
+every stage. `0009` §10 is where that limit belongs, registered rather than implied.
+
+    python -m tools.spec            # the coverage table, then every uncarried sentence
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from pathlib import Path
+
+#: A finding prefix the index checker emits. Not a whole key: clause 1's per-scheme keys are
+#: generated per token (`1 light --accent-soft`), so the key space is parameterised and only a
+#: prefix is stable. `GATED` is keyed the same way and for the same reason, which is what lets
+#: guard 5 compare the two vocabularies instead of adding a fifth list of the same words.
+INDEX = "index"
+#: A named citation into a sibling repository: `repo:path::needle`. Never a count — `0009`
+#: §8 row 1 records three sweeps producing three answers to *how many repositories carry a
+#: page test*, and a field asserting a number here would be the hand count this repository's
+#: working rules forbid. And never a claim about the sibling's `main`: this repository reads
+#: siblings at its own pinned gitlink (`0009` §3.1, C1), so a probed citation means *present
+#: at the pointer we hold* and nothing stronger.
+REPO = "repo"
+#: Carried by a person, at the `code-reviewer` pass every stage closes with. `0007` §7 names
+#: the sentences no instrument can carry; this records them as carried rather than as missing,
+#: which is a different fact from an empty `carriers` and must not print as the same one.
+HUMAN = "human"
+
+KINDS = (INDEX, REPO, HUMAN)
+
+
+@dataclass(frozen=True)
+class Carrier:
+    kind: str
+    ref: str
+
+
+@dataclass(frozen=True)
+class Clause:
+    """One normative sentence, its citation, and what holds it.
+
+    `carriers` is a tuple and not a single value because `ADR-0004`'s decision is K-c — one
+    index checker **plus** assertions in the repositories — so clause 1's palette and clause
+    6's back-link are genuinely carried twice. A single-valued field, as `0009` §7 row 5
+    sketches it, would misreport the decision the ADR took.
+    """
+
+    id: str
+    cite: str
+    quote: str
+    carriers: tuple[Carrier, ...] = ()
+    #: Required when `carriers` is empty, and must cite a document that exists and that
+    #: mentions the citation — guard 4. An uncarried sentence with nowhere to be picked up is
+    #: how `0009` §3.2's third occurrence happened: clauses 8 and 4-`<title>` had no stage.
+    why: str = ""
+    #: The settled reading, where the sentence has more than one. This field is why the
+    #: registry earns its place *before* S9 rather than after it: a stage whose scope depends
+    #: on a reading nobody wrote down is scoped by whoever read it last.
+    note: str = ""
+
+
+def _index(*refs: str) -> tuple[Carrier, ...]:
+    return tuple(Carrier(INDEX, ref) for ref in refs)
+
+
+def _human(ref: str) -> tuple[Carrier, ...]:
+    return (Carrier(HUMAN, ref),)
+
+
+def _repo(*refs: str) -> tuple[Carrier, ...]:
+    """`repo:path::needle`. The needle is a test *function name*, never assertion text.
+
+    `tests/conftest.py` already warns that a test bound to the live content of another
+    repository goes red when that repository legitimately changes, and a check that cries
+    wolf is a check that gets deleted. A function name survives a page rewrite; the sentence
+    inside it does not.
+    """
+    return tuple(Carrier(REPO, ref) for ref in refs)
+
+
+CLAUSES: tuple[Clause, ...] = (
+    Clause(
+        id="gov",
+        cite="0007 §5, the governing rule",
+        quote="where a page has measured a reason and recorded it, that value wins. The "
+              "majority decides only where nobody measured.",
+        carriers=_human("review; the role census prints the minority as a question"),
+        note="The reason the role census is printed and never asserted: no checker can read "
+             "a reason, so a census that gated would redden on the first correctly-migrated "
+             "page. `tools/pagespec/__main__.py` says so in its own docstring.",
+    ),
+    Clause(
+        id="c1.s1",
+        cite="0007 §5 clause 1, first sentence",
+        quote="Colour and radius are the ten tokens in §4.1, with a "
+              "`prefers-color-scheme: dark` override redefining the same colour names",
+        carriers=_index("1 tokens", "1 dark"),
+    ),
+    Clause(
+        id="c1.s2",
+        cite="0007 §5 clause 1, the extension sentence",
+        quote="Additive extensions are allowed and must be named in the page's own `:root`.",
+        carriers=_index("1 usage refs"),
+    ),
+    Clause(
+        id="c1.s3",
+        cite="0007 §5 clause 1, the literal sentence",
+        quote="No literal hex outside the token block.",
+        carriers=_index("1 literals"),
+    ),
+    Clause(
+        id="c1.s4",
+        cite="0007 §5 clause 1, the role sentence",
+        quote="A token is used in the role it names",
+        carriers=_index("1 usage roles", "1 composited"),
+        note="`1 composited` is the honest half: resolving a `color-mix()` needs the ground "
+             "the mark is drawn over, so those usage sites report `undecided` rather than a "
+             "verdict. `0008` §3.2.",
+    ),
+    Clause(
+        id="c1.s4b",
+        cite="0007 §5 clause 1, the condition on the four exception shapes",
+        quote="All four hold only where the role in question is not one of the three named "
+              "above",
+        carriers=_index("1 usage roles"),
+        note="Entered on review, 2026-09-07. The first walk read it as part of the italic "
+             "census block and left it out; it is bold, rule-bearing and load-bearing — "
+             "`clauses.py` records the implementation being written twice before it was true "
+             "and three review passes each finding one layer of it. Without the condition "
+             "the sweep takes the rule from 55 of 97 conforming sites caught to 97 of 97.",
+    ),
+    Clause(
+        id="c1.s5",
+        cite="0007 §5 clause 1, the two split values",
+        quote="the spec takes the measured one",
+        carriers=_index("1 light", "1 dark "),
+        note="The per-scheme keys pin the eight settled values and the two that split. Note "
+             "the two prefixes one space apart: `1 dark` is the override's presence, `1 dark ` "
+             "with a trailing space is a pinned value.",
+    ),
+    Clause(
+        id="c1.s6",
+        cite="0007 §5 clause 1, the threshold sentence",
+        quote="The threshold is the one the page's own usage implies, and it is read per "
+              "page, not per token",
+        why="0009 §7 row 12 — a contrast clause at the usage site. `colour.resolve()` and "
+            "`colour.composite()` ship unused; only `contrast()` is called. The pinned values "
+            "in c1.s5 were derived with this rule, and the rule itself is applied to no other "
+            "usage site in the portfolio.",
+        note="The largest single gap `0007` §7 names, and the one uncarried row here that "
+             "already has a design written for it.",
+    ),
+    Clause(
+        id="c1.s7",
+        cite="0007 §5 clause 1, the closing sentence",
+        quote="A page adding a fifth shape is stating something this sentence does not "
+              "describe, and the governing rule above decides it",
+        carriers=_human("review — the exception list is closed, and `gov` decides the rest"),
+    ),
+    Clause(
+        id="c2.s1",
+        cite="0007 §5 clause 2",
+        quote="A tile is `.kpi`.",
+        carriers=_index("2 tiles"),
+    ),
+    Clause(
+        id="c2.s2",
+        cite="0007 §5.1, the tile binding",
+        quote="Clause 2 binds where a committed artifact can source the figure, and names "
+              "the fallback where it cannot: a lead paragraph carrying the claim, with the "
+              "reason stated on the page",
+        carriers=(*_human("review; `0008` §4.8 is the round that applied it"),
+                  *_repo("mlops-car-price:tests/test_docs_page.py::"
+                         "test_each_headline_tile_quotes_the_cell_it_summarises")),
+        note="`0007` §5.0's quotation rule is what makes this checkable inside a repository "
+             "and unreachable from here: the index cannot ask whether a committed artifact "
+             "holds the cell a tile quotes without reading that repository's artifacts.",
+    ),
+    Clause(
+        id="c2.s3",
+        cite="0007 §5.1, the condition",
+        quote="The condition is a question about a repository, not a list of pages.",
+        carriers=_human("review — `git ls-files` in the repository being judged"),
+    ),
+    Clause(
+        id="c3.s1",
+        cite="0007 §5 clause 3, first sentence",
+        quote="Every `<table>` sits in `.table-wrap`, which computes to `overflow-x: auto`.",
+        carriers=_index("3 tables"),
+    ),
+    Clause(
+        id="c3.s2",
+        cite="0007 §5 clause 3, the geometry half",
+        quote="The wrapper must actually have somewhere to scroll when the table needs it",
+        why="0009 N3 and §7 row 13 — `measure_page.py` is the carrier `ADR-0004` §4 names "
+            "for this half, and it is invoked from nowhere. The row is to implement it or to "
+            "amend `ADR-0004` §4 to say the half is deferred and unowned; it is currently "
+            "claimed and neither.",
+        note="`3 tables` checks the ancestry and the declared `overflow-x`. Whether the "
+             "wrapper has anywhere to scroll is a rendered width, which no static read gives.",
+    ),
+    Clause(
+        id="c3.s3",
+        cite="0007 §5 clause 3, the checkable form's escape",
+        quote="or is a table the page declared with `data-scroll=\"by-design\"`",
+        why="0009 §7 row 5 — found by this walk, 2026-09-07, and new to the record. "
+            "`data-scroll` appears nowhere in `tools/`. The escape makes the checker stricter "
+            "than the spec rather than looser, which is why it survived unnoticed; a page "
+            "using it would be failed wrongly.",
+    ),
+    Clause(
+        id="c4.s1",
+        cite="0007 §5 clause 4, the eyebrow",
+        quote="The page opens with an eyebrow",
+        carriers=_index("4 eyebrow"),
+    ),
+    Clause(
+        id="c4.s2",
+        cite="0007 §5 clause 4, the h1",
+        quote="an `h1` that states a claim, not the repository's name",
+        carriers=(*_index("4 h1"),
+                  *_human("`0007` §7 — whether it states a claim is a judgement")),
+        note="`4 h1` fails mechanically on a missing `h1` or one equal to the repository's "
+             "name, and is `undecided` otherwise. It is not undecided by design.",
+    ),
+    Clause(
+        id="c4.s3",
+        cite="0007 §5 clause 4, the title",
+        quote="the `<title>` follows the `h1` rather than the directory",
+        carriers=_index("4 title"),
+        note="Reading settled 2026-09-07: the `<title>` must not *lead with* the project's "
+             "identity, in either the directory spelling or the project's own prose spelling "
+             "of it. Compared at the head of the string — a name appearing later is the house "
+             "style `<claim> — <repo>` and passes. Derived against the corpus: a "
+             "non-positional reading fails 10 of 12 surfaces. `0008` S10 is four surfaces "
+             "under this reading and three under the directory-only one.",
+    ),
+    Clause(
+        id="c5.s1",
+        cite="0007 §5 clause 5",
+        quote="The page carries `description`, `og:type`, `og:title`, `og:description`, "
+              "`og:url`, `twitter:card` and a favicon",
+        carriers=_index("5 card meta"),
+        note="The property list is named in the clause because `og:*` passes on any single "
+             "tag. The clause requires the tags to exist; whether `og:description` says "
+             "anything true is `0008` §4.9's finding and is carried per repository.",
+    ),
+    Clause(
+        id="c6.s1",
+        cite="0007 §5 clause 6",
+        quote="The page carries exactly one link back to the profile.",
+        carriers=_index("6 back-link"),
+    ),
+    Clause(
+        id="c7.s1",
+        cite="0007 §5 clause 7, first sentence",
+        quote="Type is the system stack.",
+        why="0009 §7 row 5 — found by this walk, 2026-09-07, and new to the record. "
+            "`font-family` appears nowhere in `tools/`. `clause_7_webfont` implements only "
+            "the second sentence, and its `PASS` detail string is literally `system stack` — "
+            "so the checker prints this sentence as a verdict it never computed. A page "
+            "setting a display face from a local `@font-face` reads `ok 7 webfont system "
+            "stack` today.",
+    ),
+    Clause(
+        id="c7.s2",
+        cite="0007 §5 clause 7, second sentence",
+        quote="No third-party font request.",
+        carriers=_index("7 webfont"),
+    ),
+    Clause(
+        id="c8.s1",
+        cite="0007 §5 clause 8, the rule",
+        quote="Thousands are separated by `U+202F`, the narrow no-break space",
+        carriers=_index("8 separator"),
+        note="`n/a` where the page groups nothing is the clause read as written — its subject "
+             "is how a grouped figure separates its thousands. That leaves an escape once S9 "
+             "gates it: deleting the grouping is cheaper than migrating. Closing it means §5 "
+             "gaining a sentence it does not have — a figure of four or more digits is "
+             "grouped — which is an amendment to `0007` and not a change to the checker.",
+    ),
+    Clause(
+        id="c8.s2",
+        cite="0007 §5 clause 8, the scoring rule",
+        quote="Scored over whole grouped figures in each page's rendered text",
+        carriers=_index("8 separator"),
+        note="The bound on the whole token is what makes this a measurement: three earlier "
+             "tallies were wrong, twice because the pattern matched across two adjacent "
+             "numbers.",
+    ),
+    Clause(
+        id="q.s1",
+        cite="0007 §5.0, sentence 1",
+        quote="A figure is a quotation when its digit sequence equals a cell's, character "
+              "for character.",
+        carriers=(*_human("review; `0008` §4.8 and §4.10 are the rounds that applied it, to "
+                          "`docs/index.html` and then to `README.md`"),
+                  *_repo("ab-lab:tests/test_site_committed.py::"
+                         "test_the_committed_artefact_is_what_the_generator_produces")),
+        note="`0008` §5 carries the residual: only `ab-lab` generates and byte-guards README "
+             "regions, so twelve of thirteen surfaces are hand-typed prose with no carrier. "
+             "A README figure-provenance reader is the named follow-on to S9.",
+    ),
+    Clause(
+        id="q.s1b",
+        cite="0007 §5.0, sentence 1's carve-out",
+        quote="The group separator, the minus sign and the presence or absence of a trailing "
+              "zero are the page's typography and are not part of the quotation.",
+        carriers=_human("review — and the checker depends on it: clause 8 could not be "
+                        "satisfiable at the same time as the quotation rule without it"),
+        note="Entered on review, 2026-09-07. §5.0 credits this sentence with making clause 8 "
+             "satisfiable at all: `mlops-car-price` prints `9,278` with a comma, clause 8 "
+             "mandates `U+202F`, and under a byte-for-byte reading no page could satisfy both.",
+    ),
+    Clause(
+        id="q.s2",
+        cite="0007 §5.0, sentence 2",
+        quote="Rounding is not quoting.",
+        carriers=_human("review — the friction is the point, and it is `ADR-0012`'s own"),
+    ),
+    Clause(
+        id="q.s3",
+        cite="0007 §5.0, sentence 3",
+        quote="A ratio or a comparison is an argument, not a cell.",
+        carriers=_human("review"),
+    ),
+    Clause(
+        id="c9.s1",
+        cite="0007 §6, clause 9",
+        quote="a number that appears on more than one page names the measurement it comes "
+              "from, and points at the other",
+        carriers=(*_human("review, plus a within-repo test where a stage has supplied one"),
+                  *_repo("mlops-car-price:tests/test_docs_page.py::"
+                         "test_the_page_names_its_own_measurement_and_points_at_the_sibling")),
+        note="`0008` S4 took the `mlops-car-price` half and S5 takes `car-price-ml`'s. The "
+             "clause is deliberately outside the index checker: see c9.s2, which is the "
+             "clause stating its own limit.",
+    ),
+    Clause(
+        id="c9.s1b",
+        cite="0007 §6, clause 9's scope",
+        quote="Scope: a figure the page presents as a result — a metric, a size, a count of "
+              "the corpus — not every integer on it.",
+        carriers=_human("review — the bound is a judgement about what a page is claiming"),
+        note="Entered on review, 2026-09-07. The clause states its own reason: one covering "
+             "every integer *would be unenforceable and would be ignored*, so this sentence "
+             "is what makes clause 9 a rule rather than a slogan.",
+    ),
+    Clause(
+        id="c9.s2",
+        cite="0007 §6, clause 9's enforcement limit",
+        quote="That two pages agree cannot be checked without coupling two public "
+              "repositories to a private index, so it is a review item",
+        carriers=_human("the clause states its own limit; this row records that the absence "
+                        "of an index check is the decision and not a gap"),
+    ),
+)
+
+
+SPEC = (Path(__file__).resolve().parents[1] / "docs" / "audit"
+        / "0007_divergence-and-the-page-spec.md")
+#: The slice guard 1 searches. Bounded on both sides so a quote that exists only in §3's
+#: descriptive prose cannot satisfy it — §3 restates several clause sentences as observations,
+#: and matching there would let a normative quote drift with nothing noticing.
+NORMATIVE_FROM = "## 5. The spec"
+NORMATIVE_TO = "## 7. What this spec does not check"
+
+_EMPHASIS = re.compile(r"[*]+")
+_SPACE = re.compile(r"\s+")
+#: Blockquote markers, at a line start only. Clause 9 is stated inside a blockquote, so its
+#: sentence carries a `>` at every wrap; collapsing whitespace without stripping these welds
+#: the marker into the middle of the sentence and the quote can never match. Anchored per
+#: line so a `>` inside `<table>` or `overflow-x` is untouched.
+_QUOTE_MARKER = re.compile(r"^[ \t]*>+[ \t]?", re.MULTILINE)
+
+
+def normalise(text: str) -> str:
+    """One spelling for both sides of guard 1's comparison.
+
+    `0007` is hard-wrapped at about 100 columns, so every quote longer than a few words spans
+    a line break; its normative sentences are bolded, so the asterisks sit inside the span;
+    and clause 9's is inside a blockquote. Collapse whitespace, drop emphasis and blockquote
+    markers, and nothing else — backticks stay, because they are part of the identifiers the
+    clauses name, and dropping them would let `--radius` and `radius` match.
+    """
+    return _SPACE.sub(" ", _EMPHASIS.sub("", _QUOTE_MARKER.sub("", text))).strip()
+
+
+def normative_text() -> str:
+    """`0007` §5 through §6, normalised. Raises if either boundary heading has moved.
+
+    The failure names the heading it could not find rather than reporting every quote as
+    missing: a renamed section would otherwise arrive as twenty-odd drifted quotes, which is
+    the wrong diagnosis printed twenty-odd times.
+    """
+    document = SPEC.read_text(encoding="utf-8")
+    start = document.find(NORMATIVE_FROM)
+    end = document.find(NORMATIVE_TO)
+    if start < 0:
+        raise AssertionError(f"{SPEC.name}: the heading {NORMATIVE_FROM!r} is not in the file")
+    if end < 0:
+        raise AssertionError(f"{SPEC.name}: the heading {NORMATIVE_TO!r} is not in the file")
+    if end <= start:
+        raise AssertionError(f"{SPEC.name}: {NORMATIVE_TO!r} precedes {NORMATIVE_FROM!r}")
+    return normalise(document[start:end])
+
+
+def uncarried() -> tuple[Clause, ...]:
+    return tuple(clause for clause in CLAUSES if not clause.carriers)
+
+
+def index_refs() -> frozenset[str]:
+    """Every finding prefix the registry claims the checker emits."""
+    return frozenset(carrier.ref for clause in CLAUSES
+                     for carrier in clause.carriers if carrier.kind == INDEX)
+
+
+def report() -> list[str]:
+    """The coverage table, then every uncarried sentence and where it is picked up.
+
+    Printed and never asserted, for the role census's reason: `0007` §5's governing rule means
+    no instrument can decide whether an uncarried sentence is an open item or a decision. The
+    count comes from the registry on every run and is typed into no document.
+    """
+    lines = ["spec — every normative sentence of 0007 §5-§6, and what carries it", ""]
+    for clause in CLAUSES:
+        held = ", ".join(f"{carrier.kind}:{carrier.ref}" for carrier in clause.carriers) \
+            or "NOT CARRIED"
+        lines.append(f"  {clause.id:<7} {clause.cite}")
+        lines.append(f"          {held}")
+        if clause.note:
+            # The settled readings print. `note` is where c4.s3 records which of two readings
+            # of clause 4 scopes S10, and a field arguing that a stage must not be *scoped by
+            # whoever read it last* cannot itself be visible only in source.
+            lines.append(f"          note: {clause.note}")
+    open_rows = uncarried()
+    lines.append("")
+    lines.append(f"  {len(CLAUSES)} normative sentence(s); "
+                 f"{len(open_rows)} carried by nothing")
+    if open_rows:
+        lines.append("")
+        lines.append("carried by nothing — printed, never gated, because 0007 §5's governing")
+        lines.append("rule means no instrument can tell an open item from a decision")
+        for clause in open_rows:
+            lines.append("")
+            lines.append(f"  {clause.id}  {clause.cite}")
+            lines.append(f"      \"{clause.quote}\"")
+            lines.append(f"      why: {clause.why}")
+    return lines
+
+
+def main() -> int:
+    for line in report():
+        print(line)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
