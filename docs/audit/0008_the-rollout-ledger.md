@@ -114,11 +114,24 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
-| **S8** | **The text layers** (`0006` B6) — the four About codes **and their committed README twins**, L3, H3, `pl-review-sense` C3 | 4 About + ≥6 READMEs + 5 `CLAUDE.md` | 2–3 d | open |
-| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos | 0.5 d | open, schedulable anywhere |
+| **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, **and the two tests that pin the exit code** — `tests/test_report.py:59`, `tests/test_published_surfaces.py:111`; the workflow header names the first as *"the test that guards it"*, so it is replaced rather than deleted. **No page changes** — §4.11 | 0.5 d | open, **first** |
+| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, build-only · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **18 non-conforming write sites in 13 files across five repositories and six surfaces**; 7 failing surfaces — §4.11 | 1.5–2 d | open |
+| **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open |
+| **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
+| **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
+| **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | open, schedulable anywhere |
 
-Roughly **13–14 days**. S0–S2 are one unit; everything after S3 is schedulable separately, and S8 is last
-because it is the one that can slip without blocking anything.
+Roughly **13–14 days** as first written; **+2.5–3 days** for S-gate (0.5) + S9 (1.5–2) + S10 (0.5), plus S10's
+copy time, which is not estimated because three of its four surfaces need a claim written rather than a line
+moved. §4.11 shows all three were never scheduled rather than newly discovered. S0–S2 are one unit; everything after S3 is schedulable separately.
+
+**S8 is no longer last, and it is no longer one stage.** The row placed it last *"because it is the one that
+can slip without blocking anything"* — true of the work, and it is now the stage most blocked *itself*: L3's
+cost case is refuted (§4.1) and its scope is two to three times its row (§4.11). **S-gate moves to first**, on
+§3.1's own reasoning one step further: that section promoted S1 because a row which *stops harm* does not owe
+the ordering rule *"prove the spec before applying it widely."* A gate proves nothing and prevents recurrence,
+and unlike S1 it costs no page change at all — the clauses it starts with already pass on all twelve
+surfaces.
 
 ### 3.1 Why S1 moves from fifth to first
 
@@ -199,6 +212,12 @@ repository name, where mechanically *"Wrocław Air Insights"* does not lead with
 `wroclaw-air-insights`. Neither is a defect on either side; both are recorded so the next reader does
 not treat the difference as drift.
 
+> **Erratum — §4.11.** The second half is reversed. *"Neither is a defect on either side"* was measured
+> against the **guard** (`clauses.py:568`, `startswith`), not against the **clause**: §3 was right and the
+> checker is wrong, because `ł` and the space-for-hyphen are what the comparison fails on, not the naming.
+> Normalised, the title reduces to exactly the repository's three tokens. **S10 repairs the guard, and
+> `wroclaw` becomes its fourth surface.**
+
 **What it refuses to say is the part worth keeping.** Every `color-mix` or `opacity` usage is reported
 `undecided`, never as a verdict, because resolving one needs the ground the mark is *drawn over* and
 paint order inside an SVG is not recoverable from a stylesheet. That is §3.2's lesson encoded rather
@@ -226,6 +245,10 @@ It carries both live contrast failures, the unwrapped `<figure>` table, a descri
 `<title>`, the `.ledger-wrap` name and the B1 About code — and it has no `pyproject.toml`, so it can host no
 per-repo Python test and is covered by the index checker alone (`ADR-0004` §4). S1 pulls its worst item forward;
 the rest stay in S7 and S8, but it should be *planned* as one repository rather than discovered six times.
+
+> **Erratum — §4.11.** *"The rest stay in S7 and S8"* did not hold for the `<title>`: **S7 closed without it
+> and S8's scope list never contained it.** §4.11 calls this the sharper instance of the whole finding — an
+> item routed to two stages, neither of which was going to carry it. It is **S10** now.
 
 ### 3.6 S3 was written and was not done — the defect it fixes was unguarded by both carriers
 
@@ -485,7 +508,7 @@ redefined the tier so it *"no longer promises an exhibit"*. That reasoning stand
 is worth stating that the tier still *reads* as an exhibit tier to anyone scanning the Site column, and that is
 the price of the choice, not a defect in it.
 
-### 4.1 The consequence that makes S8 cheaper rather than harder
+### 4.1 The consequence that was argued to make S8 cheaper — and the argument the trees refuted
 
 Removing B3 renumbers the tier: B4 → B3, B5 → B4. Those codes are published — in four GitHub About descriptions
 *and* in the committed READMEs behind them (`auth-log-scan/README.md:11`, `mini-traceroute/README.md:13`,
@@ -498,6 +521,28 @@ move are `pl-review-sense` (B4→B3) and `token-budget` (B5→B4), and **neither
 from before their demotion. `mini-traceroute` (B1) and `auth-log-scan` (B2) sit *above* the removed row and do
 not move at all. So renumbering touches zero published surfaces.
 
+> **Refuted by the trees, 2026-09-07 — and by this record's own repair.** Both stale codes were corrected in
+> §4.10's documentation round the day after this paragraph was written: `token-budget` `6605324` (*"A6 was
+> renamed B5 two audits ago"*) and `pl-review-sense` in the same round. `pl-review-sense/README.md:8` now reads
+> **B4** and `token-budget/README.md:6` reads **B5** — their *current* codes. **So the renumbering now touches
+> two committed README lines**, and the measured-cost case above is false as written.
+>
+> *The conclusion survives and the reasoning changes.* If S8a deletes the codes from those READMEs, the
+> renumbering is free **because the lines are deleted**, not because they are stale — which makes L3's renumber
+> and S8a's removal **one change rather than two**, and taking them separately edits the same two lines twice.
+> That is an ordering constraint the paragraph above cannot state, because it was written when the lines were
+> already wrong for a different reason.
+>
+> **And a fix in one place invalidated an argument three files away.** The four precise README references are
+> what made this cost case read as measured — §4.1's own erratum says exactly that of its predecessor, one
+> paragraph down. It was refuted not by drift but by this record repairing the very lines it was citing, which
+> is a failure mode neither §8.4 of `0007` nor §3.7 of this file had named: **a citation can be invalidated by
+> your own correctness.**
+>
+> One consequence is live and unscheduled: `pl-review-sense`'s GitHub About still reads *"Portfolio A4."* while
+> its own README now reads `B4`. **Two surfaces of one repository contradict each other today**, which is what
+> H3 and M4 are about, and the README half was fixed without the account half.
+
 *A first draft of this section argued the opposite — that keeping the codes would force a renumber across two
 surfaces each, and so that L3 decided the other way would double S8. It cited four README lines that each
 refute it. Corrected by review; the four precise references were what made an unmeasured cost case read as a
@@ -506,7 +551,9 @@ measured one.*
 **The codes still come off the public surfaces, on the argument that was always sufficient:** `0006` §2.3's
 finding that a recruiter cannot decode them, and that two repositories publish a code the index contradicts.
 What L3 settles is narrower than a cost — it is *which* ranking the index holds once B3 is no longer a row,
-and S8 cannot rewrite an opening line without knowing that.
+and **S8a** cannot rewrite an opening line without knowing that. *§4.11 splits the stage; this constraint
+follows the public half, because §2.3's recruiter argument is what reaches a published surface. `CLAUDE.md`
+(S8b) needs its own reason and is not blocked on L3.*
 
 ### 4.2 S4's copy decision was taken, and it grew the stage
 
@@ -612,6 +659,12 @@ fails clause 8 today (`FAIL 8 separator space 1`) on the body occurrence at `doc
 both separators are the same U+0020. The point stands and is sharper for it: the checker reads `space 1`
 where the file holds **two** grouped figures, so a later separator migration must find the second one with
 nothing pointing at it. S7 and S8 should know meta content is a blind spot rather than discover it.
+
+> **Erratum — §4.11.** The migration is **S9**, not S7 or S8, and this paragraph's warning was
+> *nearly* wasted: §4.11's first census listed only `docs/app/index.html:27` and missed `:7`
+> — `the same 1 200 trees` — which is the exact second figure named here. **The blind spot was
+> rediscovered by falling into it**, one section after it was written down, and the review caught
+> it rather than the pointer. §4.11's table now carries `:7`.
 
 ### 4.5 The page did self-update; what did not was the code that renders it
 
@@ -853,6 +906,219 @@ said all of this already; the other nine were rewritten to match it. The page co
 eleven of these repositories are held to — appeared in none of the twelve, and now appears in ten, naming
 each repository's own local carrier or, for `mini-traceroute`, the absence of one.
 
+### 4.11 The two clauses no stage owned, and the instrument that cannot fail
+
+Measured at entry 2026-09-07: no open pull request in any of the thirteen repositories, all twelve pointers
+equal *and* on `main`, working tree clean apart from untracked `.claude/`. Index `main` at `2d1cf41`.
+
+**Three of twelve surfaces read `clear`, and the nine that do not fail exactly two clauses between them.**
+Tallied over every verdict the checker emits, with `--fetch`:
+
+| clause | FAIL | ok | n/a or undecided |
+|---|---|---|---|
+| **8 separator** | **7** | **1** | 4 print no grouped figure |
+| **4 title** | **3** | 9 | measured **against the current guard**, not against the clause — the repair below takes `wroclaw` from `ok` to `FAIL` and makes it 4 / 8 |
+| 1 (tokens, dark, light, literals, usage) | 0 | 12 each | — |
+| 1 composited | 0 | 5 | **7 undecided** — the second-largest undecided population in the portfolio, and §3.2 and §3.5 argue hardest for keeping it that way |
+| 2 tiles · 3 tables · 4 eyebrow · 5 card meta · 6 back-link · 7 webfont | **0** | 11 · 10 · 12 · 12 · 12 · 12 | 1 · 2 |
+
+**Every `FAIL` in this portfolio is one of two clauses.** Nothing else fails anywhere, on any surface. And
+clause 8's single `ok` is `mlops-car-price` — the page S4 rewrote — so **one published surface prints a
+grouped figure and prints it correctly**, against seven that print one wrongly.
+
+#### Why no stage owns them
+
+`0007` §9's rollout is scoped **by repository row**, and this ledger inherited that scoping without
+re-deriving it. Clauses 8 and 4-title cut *across* rows: they are properties of every page, not of the three
+or four a row names. So they were only ever repaired **incidentally**, on the pages a stage happened to
+rewrite for another reason — which is exactly the three surfaces that read `clear` today.
+
+**This is §3.7's finding one layer out.** §3.7 records the checker being *"composed from the frozen table's
+columns rather than from the normative clauses' sentences."* Here the same substitution was made by the
+**plan** rather than by the program: the stages were composed from §9's rows rather than from §5's clauses,
+and two clauses have no row. §3.7 said this *"is a thing to check for the whole of S6 and S7, not a one-off"*
+— it was checked for the checker and not for the ledger that sentence is written in.
+
+The sharper instance is already in this file. §3.4 assigned `mini-traceroute`'s repo-name `<title>` to
+*"S7 and S8"*. **S7 closed without it and S8's scope list does not contain it** — an item routed to two
+stages, one of which has closed, and neither of which was ever going to carry it.
+
+#### The mechanism, which is not the scoping
+
+`tools/pagespec/__main__.py` ends `return 0`, unconditionally, on any finding. `.github/workflows/pagespec.yml`
+runs it with the comment *"Read from the log rather than gated on, until `0008` schedules the gate."*
+**This ledger scheduled no gate before this section** — not in S0–S8, not in Sx, not in §5's carried list.
+Two published artifacts, one of them a workflow, pointed at a stage that did not exist; a third is the
+checker's own module docstring, which says *"`0008` S2 schedules the gate after the rollout"* — and S2 is the
+stage that built the checker and is **closed**. §3's table now holds S-gate, so this paragraph is the
+diagnosis of the state this commit ends rather than a claim about the document it now lives in. *Written in
+the present tense first, inside the section whose next sentence calls that this record's signature defect.* *That is this record's signature
+defect committed in the file whose §1 exists to prevent it.*
+
+Then, per repository: **no submodule test asserts which separator a page writes** — swept over all twelve.
+And the two that name `U+202F` are the two that most deliberately cannot see it. `mlops-car-price/tests/test_docs_page.py:41`
+and its twin in `pl-jobs-lora` build
+
+```python
+_SEP_CHARS  = "    "
+_SEPARATORS = str.maketrans(dict.fromkeys("," + _SEP_CHARS, ""))
+```
+
+— a table that **deletes** every separator, U+202F included, before comparing, because `0007` §5.0 makes the
+separator the page's typography rather than part of a quotation. `car-price-ml/tests/test_site.py:184` strips
+both space characters for the same reason, and `doc-extract/tests/test_ground.py:359` normalises U+00A0 and
+U+0020 to one value before asserting.
+
+*So the tests written closest to clause 8 are blind to it **correctly**, and the blindness is not an oversight
+any of them should fix: a per-repository test cannot both honour §5.0's quotation rule and enforce clause 8's
+glyph, because §5.0 exists to say the glyph is not part of the claim. **Clause 8 can only ever be carried by
+the index checker** — which is the gate argument arriving from the opposite direction, and it is stronger than
+the one this section opened with.* So clause 8 and clause 4-title are carried by an instrument that **cannot return non-zero**,
+and by nothing else.
+
+**The counterfactual is in the trees rather than in the argument.** Every clause-8-failing repository was
+edited by S6, S7 or both: S6 put a back-link into `ab-lab`, `car-price-ml` (both surfaces), `it-job-radar`,
+`pl-review-sense` and `wroclaw` (`d8d41b6`); S7 rewrote palettes on `doc-extract`, `it-job-radar`,
+`pl-review-sense` and `wroclaw` (`c06d5fa`). **Two stages** rebuilt those pages — and of the seven failing
+surfaces, **five carry a rebuild-and-compare guard** that ran on every one of those merges: `ab-lab`
+(`tests/test_site_committed.py:61`), `it-job-radar` (`tests/test_site.py:258`, byte-exact), `car-price-ml`
+and `pl-review-sense` (CI `diff`), and `doc-extract` — whose comparison is **normalised rather than
+byte-exact**, and still would have caught a separator. `wroclaw` and `car-price-ml/app` are guarded by
+nothing (§4.3). **Not one separator moved.**
+
+*So this is not a story about weak guards.* Five instruments compared a regenerated page against its
+committed bytes, twice each, and every one of them passed — because a guard that asks *"does the page still
+match its inputs"* cannot ask *"are the inputs right"*. That is the whole argument for the index gate, and
+it is also why the gate does not make those five redundant. Repairing seven surfaces
+while leaving the gate unbuilt reproduces that condition exactly.
+
+#### What clause 8's subject actually is
+
+Not seven pages. **Eighteen non-conforming write sites, in thirteen files, across five repositories and six
+surfaces** — counted by file and line, because `regime_section.py:25` and `:46` are two edits and the stage is
+scoped by formatter rather than by page.
+
+*A first version of this sentence said **fifteen** sites across **six repositories**, and both are wrong in
+the way this section is about. Fifteen was taken from a design pass and never counted back off the table
+printed directly beneath it — §2.1's and §4.8's defect, committed in the paragraph naming it. Six counted
+`car-price-ml/app` as a repository, which is a **surface** of `car-price-ml` — and §4 of this same file rules
+that exact substitution a category error, in the row that dissolves B3. Caught by review.*
+
+| repository | site | writes |
+|---|---|---|
+| `ab-lab` | `sitegen/numbers.py:46` `integer()` · `sitegen/page.py:219` literal | comma · space |
+| `car-price-ml` | `site/charts.py:76` | **U+202F** ✓ |
+| `car-price-ml` | `site/build.py:76` `_thousands` · `site/export.py:179` `_pln` · `templates/index.html.j2:83, 114, 160` | space |
+| `car-price-ml/app` | `docs/app/index.html:27` literal · **`:7` `<meta name="description">` literal** | space |
+| `it-job-radar` | `site/charts.py:93` · `site/build.py:355, 386` | space |
+| `pl-review-sense` | `site/charts.py:89` · `site/build.py:290` | space |
+| `wroclaw` | `accuracy_section.py:25` · `regime_section.py:25, 46` · `report.py:248, 307` | comma |
+| `doc-extract` | `docs/build_index.py:1590` | **U+202F** ✓ |
+
+*Two conforming **write sites**. Counting conforming **figures** instead gives more — `mlops-car-price`'s
+hand-written page holds eight U+202F literals, which is the `ok 8 separator U+202F 8` in the table above and
+the reason that page is the portfolio's one correct grouped-figure surface. Both quantities are real and the
+table counts sites, because a site is what S9 edits.*
+
+**`car-price-ml` holds two byte-identical copies of one function and a third implementation that drifted
+with them:**
+
+```
+charts.py:76    return f"{value:,.0f}".replace(",", " ")            ->  U+202F
+build.py:76     return f"{value:,.0f}".replace(",", " ")            ->  U+0020
+export.py:179   return f"{value:,.0f}".replace(",", " ") + " PLN"   ->  U+0020
+```
+
+`charts.py:76` and `build.py:76` are `_thousands` and are byte-identical **apart from one invisible
+codepoint**: a reader comparing them in a terminal, a diff or a `grep` sees the same line twice.
+`export.py:179` is `_pln`, a different function — and it is the stronger evidence rather than the weaker,
+because its own docstring asserts the convention the repository does not keep: *"Thousands separated by a
+space, as everywhere else on the page and in Polish usage."* **Everywhere else on the page is U+202F.**
+
+*A first version of this block trimmed `+ " PLN"` so all three lines would read identically, and called them
+three copies of one function. The trees refute it, and the trimmed quote made a true point with a doctored
+exhibit — which is worse than the untrimmed one, because the untrimmed one carries the docstring.* So `0007` §5 clause 8's *"`car-price-ml` is mid-migration in public — 16 figures with a plain
+space against 12 with `U+202F`"* is accurate as a page count and **wrong about what it is**: it is not a
+migration, it is one repository's helper duplicated three times and drifted. The page count is a symptom, and
+scoping the repair by page would have repaired the symptom.
+
+*The general form, and it is the reason this belongs in the ledger rather than in a stage: **a clause whose
+subject is a formatter cannot be scoped by the pages that print it.** §3.2 earned the sibling lesson for
+contrast — read the threshold per usage site — and this is the same shape for provenance.*
+
+#### Three things a page-scoped repair would have got wrong
+
+- **`doc-extract` is a false positive, and "fixing" it publishes a false statement.** Its one clause-8 hit is
+  `docs/index.html:438`, `<code>3&nbsp;466,62</code>`, inside the sentence *"reads as `3 466,62` in a flat text
+  dump, **because a space is also Poland's thousands separator**."* The subject of the sentence is the glyph,
+  and `synth/render.py:531` really does print an ordinary space into the corpus. Migrating the specimen would
+  make the page claim something its own generator does not do. **This needs a spec amendment, not an edit** —
+  S9c — written in §5's own method, as a description with its census: swept over the eleven committed
+  surfaces, **exactly one site** qualifies as a displayed specimen, and every other grouped figure sits in
+  `<p>`, `<td>` or SVG `<text>`. State the census in the clause and print it from the checker, so the
+  exemption cannot silently widen — §3.9's own instrument.
+- **Clause 4's guard is weaker than clause 4.** `clauses.py:568` is
+  `page.title.strip().lower().startswith(repo.lower())`. `wroclaw`'s title *"Wrocław Air Insights"* **is** the
+  repository's name in prose and **passes**, because `ł` and the space-for-hyphen defeat the comparison.
+  §3.5 records this cell as *"the checker being more precise than the table"*; measured against the **clause**
+  it is the opposite. Sixth appearance of §3.9's class — a guard proved on the shape its author had in mind.
+  **And the repair changes the stage's scope rather than only the checker's honesty**: normalised, `wroclaw`'s
+  title reduces to exactly the repository's three tokens, so it moves from `ok` to `FAIL` and **S10 is four
+  surfaces, not three**. The other eleven titles were checked and none moves, so the consequence is bounded
+  and re-derivable. *A guard too weak to fail is also a guard too weak to scope a stage — which is why this
+  was found by review of a scope figure and not by the checker.*
+- **A B-code sweep would corrupt a table about something else.** `doc-extract/README.md:507-529` uses
+  **B1 / B2 / B3** as the names of its `constant` / `pattern` / `noisy` baselines, and `:211`, `:520` and
+  `:523` argue from them. Nine lines that a grep-driven renumber would hit and that have nothing to do with
+  the portfolio tiers. Separately, `mlops-car-price/README.md` uses `A3` six times as a live cross-reference.
+
+#### S8's scope, re-derived before the stage rather than during it
+
+§3's rule, and §4.3 and §4.7 set the precedent. The S8 row reads *"4 About + ≥6 READMEs + 5 `CLAUDE.md`"*.
+Measured:
+
+| the row said | the trees say |
+|---|---|
+| ≥6 READMEs | **8** publish a portfolio code: `wroclaw:15` A1, `it-job-radar:14` A2, `car-price-ml:8` A3, `mini-traceroute:13` B1, `auth-log-scan:11` B2, `pl-review-sense:8` B4, `token-budget:6` B5, `pl-jobs-lora:6` P4 |
+| 5 `CLAUDE.md` | **all twelve** |
+
+**And the stage was doing two jobs for two audiences.** `0006` §2.3's removal argument is that *a recruiter
+cannot decode the codes*. That reaches a published `README.md`; it does **not** reach `CLAUDE.md`, which no
+recruiter opens and whose reader is a contributor for whom the code is a useful pointer into `0004`. One
+argument cannot decide both surfaces, so the stage splits: **S8a** is the public half and carries L3 with it;
+**S8b** is the contributor half and needs its own reason. *A row that names two populations and one estimate
+is a scope that has never been taken.*
+
+#### The gate, and the three policy decisions it needs
+
+The deferral's stated reason — *a gate written before any page is green has no reference to gate against* —
+was true at S2, when the unit was a whole page. **Per clause it is false today**, and the table at the head of
+this section is why: clauses 1, 2, 3, 5, 6 and 7 report **zero `FAIL` across all twelve surfaces**, so they
+can be gated now with no page changing at all.
+
+So: a **ratchet**. Gate the clauses that are already clean, and extend the set by one as each stage closes.
+Three decisions the implementation must state rather than imply:
+
+1. **Fail on `FAIL` only.** `UNDECIDED` and `n/a` never gate. Clause 4's `h1` is permanently undecided by
+   design (`0007` §7), clause 3 answers `undecided` where a media condition is not read, clause 2 is `n/a`
+   on a page with no tiles, and **clause 1's `composited` is undecided on seven of twelve surfaces** — the
+   largest such population, and the one §3.2 and §3.5 argue hardest to keep, because resolving a `color-mix`
+   or an `opacity` needs the ground the mark is *drawn over*. A gate that reddens on `undecided` would be a
+   gate on the checker's honesty.
+2. **An unread surface that should have been readable is a failure.** Otherwise a renamed path degrades to a
+   green skip — which is the shape of every silent-green defect in §3.7, §3.9 and §4.9.
+3. **`--fetch` moves to a scheduled job, not the push job.** The push job gates eleven committed surfaces; a
+   daily job gates twelve. That keeps a network failure from reading as a page regression — the reason
+   `--fetch` was excluded in the first place, and the comment states it — while ending the state where
+   `wroclaw` is gated by nothing at all.
+
+**The mutation that proves it, and the second one is the interesting half.** Revert `charts.py:76` to a comma,
+rebuild, run the checker: today it prints `FAIL` and exits 0. Then make the same source edit **without**
+rebuilding: the gate stays green and `car-price-ml`'s own byte-diff reddens instead. **The two guards are
+complementary rather than redundant** — one sees a page that no longer matches its inputs, the other sees a
+page that matches inputs which are themselves wrong — and that is worth recording so a later reader does not
+delete one as duplicate coverage.
+
 ## 5. What is carried, not scheduled
 
 | item | state |
@@ -861,7 +1127,8 @@ each repository's own local carrier or, for `mini-traceroute`, the absence of on
 | **`Author:`** — 70 fields, ten repositories | Not a decision to take but **a migration to finish**: the newest document in each self-disagreeing repository already carries the name. Recommend `Piotr Cząstkiewicz` throughout, and do **not** retroactively add `+ Claude` — co-authorship is unknowable per document at this distance, and saying so is more honest than guessing |
 | **The profile fields** — `name`, `bio`, `email`, `blog`, `hireable`, social accounts | The user's own action. The token carries no `user` scope, so nothing here can write them |
 | **L2** — action pinning | Answered `0006` §3: do not pin, and the answer does not cover a third-party action if one is ever introduced |
-| **`wroclaw`'s scroller has no house name** | After S7 every other committed surface scrolls its tables in `.table-wrap`; this one uses `table { display: block; overflow-x: auto }` under `max-width: 640px`, so clause 3 reports `undecided` and will keep doing so. Neither the S7 row nor `0007` §9 row 6 names it, and S8 is the text layers — so it is unscheduled rather than skipped, and recorded here so the next reader does not go looking for it in a stage |
+| **The quotation rule has no carrier on `README.md`** | §4.10 applied `0007` §5.0 to `docs/index.html` and found ten of twelve READMEs carrying a figure no artifact prints. The figures were repaired; **nothing detects the next one.** Only `ab-lab` generates and byte-guards README regions (`<!-- generated: -->` at `README.md:14, 45, 49, 92, 96`). Twelve of thirteen are hand-typed prose with no carrier — the same structural shape as §4.11's two clauses, and it wants the same answer, but a README figure-provenance reader is a larger build than a separator and should follow S9 rather than ride inside it |
+| **`wroclaw`'s scroller has no house name** | After S7 every other committed surface scrolls its tables in `.table-wrap`; this one uses `table { display: block; overflow-x: auto }` under `max-width: 640px`, so clause 3 reports `undecided` and will keep doing so. Neither the S7 row nor `0007` §9 row 6 names it, and S8a/S8b are the text layers — so it is unscheduled rather than skipped, and recorded here so the next reader does not go looking for it in a stage. **Not folded into S10**: that stage is clause 4, and this is clause 3 |
 
 ## 6. Assumptions to verify before each stage, not once
 
@@ -873,5 +1140,5 @@ no means to check, and three of five such claims were false.
 | `wroclaw`'s live page carries what `main` says it carries | Fetch the live URL. It commits **no HTML** — `.gitignore:25` — so `reports/site/` is an untracked local build and reading it has produced a wrong answer that survived a session. **The lag is closed**: `refresh.yml` now also triggers on a push touching `src/**`, so a code change publishes itself — §4.5. Its `og:description` and back-link are live as of 2026-09-06 |
 | The four About descriptions are still as recorded | `gh api` per repository; they are an account surface, not a file |
 | Ten of eleven pages are still served byte-identical to their committed file | Hash the fetched bytes against the file (`0007` §2) |
-| The working tree is what the record assumes — no submodule on an unmerged branch, no uncommitted file. §4.10's round left twelve `CLAUDE.md` and eight `README.md` uncommitted across the submodules for an hour, and two submodules checked out on a fix branch, so `python -m tools.pagespec` was reading two pages nobody had published. Check before quoting the checker |
+| The working tree is what the record assumes — no submodule on an unmerged branch, no uncommitted file | **Check before quoting the checker.** §4.10's round left twelve `CLAUDE.md` and eight `README.md` uncommitted across the submodules for an hour, and two submodules checked out on a fix branch, so `python -m tools.pagespec` was reading two pages nobody had published. *The row had itself lost the separator between its two cells and rendered as one — found 2026-09-07 while discharging it* |
 | No pull request is open and all twelve pointers still match | `gh pr list` per repository + `git submodule status` |
