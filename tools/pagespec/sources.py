@@ -80,7 +80,8 @@ def _fetch(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def load(surface: Surface, root: Path, *, allow_fetch: bool) -> Loaded | None:
+def load(surface: Surface, root: Path, *, allow_fetch: bool,
+         errors: dict[str, str] | None = None) -> Loaded | None:
     """The surface's markup, or `None` when it cannot be read.
 
     Returning `None` rather than an empty page matters: an empty page satisfies no clause and
@@ -92,7 +93,15 @@ def load(surface: Surface, root: Path, *, allow_fetch: bool) -> Loaded | None:
             return None
         try:
             html = _fetch(surface.url)
-        except Exception:
+        except Exception as error:
+            # The exception text, not just the fact. Since `0008` S-gate the scheduled job
+            # is the only reader of this surface and it now gates, so `fetch failed` is a
+            # thing somebody has to act on — and a 404 (the page is gone, a real regression)
+            # and a DNS blip are the same line without this. Recorded on the surface rather
+            # than raised, because a page that cannot be read must not stop the other eleven
+            # from being reported.
+            if errors is not None:
+                errors[surface.name] = f"{type(error).__name__}: {error}"
             return None
         return _with_styles(surface, html, base_url=surface.url)
 

@@ -170,6 +170,19 @@ none is in a test.
   a published page's source comment has been waiting on this decision.
 - The rollout can start before the checker exists, because K-c's index half is report-only first (`0008` S2): a
   gate written before any page is green has no reference to gate against.
+
+  *Amended 2026-09-07 — the deferral was right and its reason expired.* It is stated of **a page**, and per
+  page it still holds: three of twelve read `clear`. But the gate does not have to be per page. Measured
+  across all twelve surfaces, clauses 1, 2, 3, 5, 6 and 7 report **zero `FAIL`** and clause 4's `h1` and
+  eyebrow halves do too — so per **clause** there is a reference to gate against, and it costs no page change.
+  `0008` S-gate makes the index half a **ratchet**: `GATED` in `tools/pagespec/__main__.py` names the keys
+  that are clean everywhere, a closing stage adds its own, and `UNDECIDED` never gates.
+
+  **This bullet is why the amendment is written here rather than only in the code.** `0008` §3.8 records the
+  inverse — a rule in code that no document states — and turning on a gate while the ADR licensing the
+  instrument still says *report-only first* would be the same defect facing the other way. Two other artifacts
+  carried the un-amended claim in a stronger form: `pagespec.yml` and the checker's own docstring both said
+  `0008` scheduled the gate, and it scheduled none (`0008` §4.11).
 - **K-c is reversible into K-a** if a repository ever needs to enforce the spec without the index present. The
   reverse is the expensive direction, which is why the cheap one is taken first.
 - The counter-argument stays on the record: a checker in the *private* index means the twelve public

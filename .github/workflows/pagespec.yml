@@ -7,9 +7,18 @@
 # themselves when a submodule is absent, so a fetch that fails degrades to a green skip
 # rather than to a false failure about a page nobody touched.
 #
-# Report mode only, per 0008 S2: the checker prints and exits zero. This workflow runs its
-# tests, not the checker as a gate. Turning it into a gate is a rollout decision, and the
-# test that guards it is `test_the_checker_exits_zero_on_a_page_that_fails_every_clause_it_can`.
+# Since 0008 S-gate the checker also decides: it exits non-zero when a clause in `GATED`
+# fails, when a committed surface could not be read, or when a same-origin stylesheet the
+# page names could not be opened. The gate is a ratchet and is deliberately partial —
+# clause 8 and clause 4-<title> are outside it until S9 and S10 land, and they still print.
+# The guards are `tests/test_report.py` (the gate's own behaviour, no submodule needed) and
+# `test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing` in
+# `tests/test_published_surfaces.py`, which refuses a `GATED` widened past its measurement.
+#
+# This paragraph said the opposite until S-gate, and named a test that no longer exists. It
+# is called out rather than quietly rewritten because ADR-0004 §6 and 0008 §4.12 both make
+# claims about this file, and for one commit those claims were true of the checker's
+# docstring and false of the workflow beside it — which is the defect they describe.
 
 name: pagespec
 
@@ -31,8 +40,12 @@ on:
             'pl-review-sense', 'wroclaw-air-insights']
   schedule:
     # `wroclaw-air-insights` rebuilds daily and commits no HTML, so its row can go stale
-    # with nothing in this repository changing at all.
-    - cron: '0 7 * * 1'
+    # with nothing in this repository changing at all. Daily rather than the Monday this
+    # was, because the `live` job below is now the only thing that reads that page: at
+    # weekly, a regression on the one surface that exists nowhere but the wire could stand
+    # for six days. 0008 §4.11 policy 3 said "a daily job gates twelve" and the cron it
+    # shipped against was the inherited weekly one.
+    - cron: '0 7 * * *'
   workflow_dispatch:
 
 permissions:
@@ -67,9 +80,33 @@ jobs:
         run: python -m pip install --disable-pip-version-check --quiet pytest
       - name: Sweep the working trees
         run: python -m pytest -q -m submodules
-      - name: Print the conformance table
-        # The output that replaces 0007 §3. Read from the log rather than gated on, until
-        # 0008 schedules the gate. --fetch is deliberately absent: the live URL belongs to a
-        # scheduled run, not to every push, and a network failure here would read as a page
-        # regression.
+      - name: The conformance table, and the gate over the eleven committed surfaces
+        # The output that replaces 0007 §3, and since 0008 S-gate it also decides. The gate
+        # is a ratchet: `GATED` in __main__.py names the finding keys that report zero FAIL
+        # everywhere, and a closing stage adds its own. Clause 8 and clause 4-<title> are
+        # deliberately outside it and still print — 0008 S9 and S10 are what bring them in.
+        #
+        # --fetch stays absent here and only here. The live URL belongs to the scheduled run
+        # below: a network failure on a push would read as a page regression, which is the
+        # reason this flag was excluded before there was a gate at all, and it survives the
+        # gate unchanged.
         run: python -m tools.pagespec --detail
+
+  live:
+    # wroclaw-air-insights commits no HTML and rebuilds daily, so its row can go stale with
+    # nothing in this repository changing — which is what the schedule above was added for.
+    # It never served that purpose: no job passed --fetch, so no CI anywhere could read that
+    # page. This job is the one that does, and it is separate from `surfaces` so a wire
+    # failure reddens a scheduled run rather than a merge.
+    name: the live surface
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: All twelve, including the one that exists only at a URL
+        run: python -m tools.pagespec --fetch --detail
