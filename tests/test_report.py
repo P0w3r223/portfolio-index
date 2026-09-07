@@ -8,8 +8,14 @@ a guard that vanishes along with the thing it guarded is the silent-green shape 
 exists to catch.
 
 **Every test here runs with no submodule on disk.** That is the `core` job's contract, and it
-is why the ratchet's corpus check lives in `test_published_surfaces.py` instead — a claim
+is why the ratchet's corpus checks live in `test_published_surfaces.py` instead — a claim
 about what `GATED` may contain can only be asserted against the real trees.
+
+The one `GATED`-adjacent test that does live here is the `NOT_A_CLAUSE` pin, and the split is
+the same rule read the other way: the floor and ceiling are *measurements* and need the
+corpus, while the exemption set is a **policy list** and its pin compares two frozensets. It
+sits in the job a contributor runs while editing that constant, which is the job that would
+otherwise not see it.
 """
 
 from __future__ import annotations
@@ -18,6 +24,7 @@ from pathlib import Path
 
 import pytest
 
+from conftest import NOT_A_CLAUSE
 from tools.pagespec import __main__ as report
 from tools.pagespec import clauses, sources
 
@@ -66,22 +73,42 @@ def test_a_page_failing_a_gated_clause_makes_the_checker_refuse(tree, capsys):
     """The reversal of `test_the_checker_exits_zero_...`, which stood here until `0008`
     S-gate and is replaced rather than deleted: it was the guard on report-only mode, and
     the workflow named it as such, so dropping it silently is the shape this suite exists to
-    catch. `ADR-0004` §6 is the normative home and was amended in the same change."""
+    catch. `ADR-0004` §6 is the normative home and was amended in the same change.
+
+    **The clause is asserted below the header, not anywhere in the output.** `assert "1 tokens"
+    in out` was satisfied by the ordinary per-surface detail line, which prints for any `FAIL`
+    whether or not it gated — so under `GATED = ("6 ",)`, where `1 tokens` is not gated at all,
+    this test still passed: the fixture also fails `6 back-link` and gated on that instead. It
+    proved *some clause gated*, under a name promising it was this one.
+    """
     assert report.main(["--root", str(tree), "--only", "mlops-car-price"]) == 1
     out = capsys.readouterr().out
-    assert "gate — a clause in GATED failed" in out
-    assert "1 tokens" in out
+    header = "gate — a clause in GATED failed"
+    assert header in out
+    assert "1 tokens" in out.split(header, 1)[1], (
+        "the clause is in the report but not in the gate's own list, so what refused the "
+        "build was a different clause")
 
 
-def test_a_page_failing_only_an_ungated_clause_still_passes(tree, capsys):
+def test_a_page_failing_only_an_ungated_clause_still_passes(tree, capsys, monkeypatch):
     """**The test that proves the ratchet is a ratchet.** Without it every guard here would
     also pass on a gate that simply gated everything — which would go red on S9's own first
     commit, and on every surface it had not reached yet.
 
-    The page below fails exactly the two clauses outside `GATED`: a comma-grouped figure
-    (clause 8) and a `<title>` leading with the directory (clause 4's `<title>` half). Both
-    print, neither gates.
+    The page below fails exactly two clauses: a comma-grouped figure (clause 8) and a `<title>`
+    leading with the directory (clause 4's `<title>` half). Both print, neither gates.
+
+    **The ungated set is constructed rather than borrowed**, and that is what keeps this test
+    alive. It read the two real gaps in `GATED`, and those gaps are exactly what `0008` S9 and
+    S10 exist to close: once both land, `GATED` covers every key that can be `FAIL`, `_gated`
+    becomes equivalent to `status == FAIL`, and this test has no construction left — it would
+    be deleted as unsatisfiable at precisely the moment it is the last guard on the
+    distinction. Removing the two prefixes here is a no-op today and is the whole test
+    afterwards.
     """
+    monkeypatch.setattr(report, "GATED",
+                        tuple(prefix for prefix in report.GATED
+                              if prefix not in ("8 ", "4 title")))
     page = (tree / "ab-lab" / "docs" / "index.html").read_text(encoding="utf-8")
     page = page.replace("<title>A 5% test is only 5% if you look once — ab-lab</title>",
                         "<title>ab-lab — A 5% test is only 5% if you look once</title>")
@@ -335,3 +362,27 @@ def test_the_census_is_printed_when_every_surface_was_read(tree, capsys):
     """The other half: suppression that suppressed always would pass the test above."""
     report.main(["--root", str(tree)])
     assert "role census" in capsys.readouterr().out
+
+
+def test_the_exemption_set_is_pinned_because_it_is_policy_and_not_a_measurement():
+    """Adding a key here must take two deliberate edits and carry a proof.
+
+    The corpus check in the floor guard refuses an exempt key the eleven surfaces report
+    `PASS` or `FAIL`, which catches the careless case with a good message. It cannot catch the
+    dangerous one: `1 composited` and `4 h1` are `UNDECIDED` on every surface, so the check is
+    vacuous on exactly the two keys the floor guard's own docstring names when it rejects the
+    PASS-derived alternative. Measured — dropping `"4 h1"` from `GATED` **and** adding it here
+    left all 394 tests green and the checker exiting 0, with clause 4's `h1` silently no longer
+    gating twelve surfaces.
+
+    So this set is pinned. Every other floor here is derived from the corpus on purpose, and
+    this one is not a measurement at all: it is a policy list, and a policy list that can be
+    extended by one word in one place is the hiding place the docstring below says it is not.
+    An addition means editing this assertion too, and bringing what `stylesheets` brought —
+    `test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemption_safe`, a
+    proof that the key cannot reach `FAIL` rather than an observation that it has not yet.
+    """
+    assert NOT_A_CLAUSE == frozenset({"stylesheets"}), (
+        "NOT_A_CLAUSE changed. Every entry needs a test proving the key can never be FAIL — "
+        "the corpus check in the floor guard is a weaker, corpus-scoped proxy and is vacuous "
+        "for a key that is UNDECIDED everywhere, which is what the dangerous ones are.")

@@ -1,6 +1,9 @@
 """The eight clauses of `0007` §5, as checks over one loaded surface.
 
-Pure functions over already-read bytes: no file access, no network. What a clause cannot
+Pure functions over already-read bytes: no file access, no network — still true of every
+function here, though the module now imports `sources` for one thing: `describe`, the single
+rendering of an unreadable-stylesheet pair. The pair is `sources` data, so its formatter
+lives with it; nothing on this side calls anything that opens a file. What a clause cannot
 decide, it says so rather than guessing — `0007` §7 exists because the instrument that
 produced the original table was wrong three times, twice caught only by review, and a
 checker that reports a confident verdict it did not earn is that failure automated.
@@ -11,7 +14,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from . import colour, css as cssmod, render
+from . import colour, css as cssmod, render, sources
 
 PASS, FAIL, UNDECIDED, NOT_APPLICABLE = "pass", "fail", "undecided", "n/a"
 
@@ -37,13 +40,29 @@ CARD_META = ("description", "og:type", "og:title", "og:description", "og:url", "
 PROFILE = "github.com/P0w3r223"
 
 #: A whole grouped figure: 1-3 digits, then one or more (separator + exactly three digits),
-#: with nothing numeric and no `:` or `.` touching either end. The bound is what makes this a
-#: measurement — without it `07:00 203.0.113.42` scores as a grouped figure, which is how one
-#: page was credited with nineteen it does not have. The separator class is spelled out
-#: rather than using `\s`, because `\s` matches the newline `rendered_text` puts between
-#: adjacent nodes and would weld two numbers back together.
+#: an optional decimal tail, and nothing numeric and no `:` or `.` touching either end. The
+#: bound is what makes this a measurement — without it `07:00 203.0.113.42` scores as a grouped
+#: figure, which is how one page was credited with nineteen it does not have. The separator
+#: class is spelled out rather than using `\s`, because `\s` matches the newline
+#: `rendered_text` puts between adjacent nodes and would weld two numbers back together.
+#:
+#: **The decimal tail sits inside the bound, not instead of it.** Without it `8 612.50` matched
+#: nothing at all and the page read `n/a — no grouped figure`, and `1 234 567.89` scored one
+#: separator instead of two: `car-price-ml` prints PLN amounts throughout, so once `0008` S9
+#: brings this clause into `GATED`, rewriting `8 612` as `8 612.50` would have moved a surface
+#: from `FAIL` to `n/a` and past the gate while still using a plain space. The obvious repair —
+#: relaxing the trailing bound to `(?![\d:])` — was measured against the corpus and reddens
+#: `auth-log-scan` with four `FAIL`s out of `40 198.51.100.77` and its neighbours, which is
+#: exactly what the bound was written to prevent. Re-applying it *after* the tail keeps both.
+#:
+#: **U+2009 is in the class because it is a wrong separator and not an absent one.** The thin
+#: space is what a hand edit reaches for during a migration to the narrow no-break space, and
+#: while it was outside the class `1<U+2009>234` matched nothing and the page reported
+#: `n/a — no grouped figure`: a page grouping its thousands with the wrong codepoint read as a
+#: page grouping nothing. Both shapes measure zero on all eleven committed surfaces today, so
+#: neither change moves a cell of the table.
 _GROUPED = re.compile(
-    r"(?<![\d.:])(\d{1,3})((?:[ \u202f\u00a0,](?:\d{3}))+)(?![\d.:])"
+    r"(?<![\d.:])(\d{1,3})((?:[ \u2009\u202f\u00a0,](?:\d{3}))+)(?:\.\d+)?(?![\d.:])"
 )
 #: Why CSS discarded a declaration, and the sentence the report prints for each. A cycle
 #: and a dangling reference have the same effect and different causes, and naming the wrong
@@ -68,7 +87,38 @@ _BORDER_ROLES = frozenset({"border"})
 #: painted *outside* the house scheme, so a house role appearing there is the defect rather
 #: than the exemption.
 _HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES
-_LENGTH = re.compile(r"(\d+(?:\.\d+)?)px")
+#: **`_LENGTH` had the identical hole and was fixed one commit later**, which is the shape
+#: this branch is named for: the repair landed on one of two sibling patterns, three lines
+#: apart, and the commit message called the other one safe. It is not — it reads a number
+#: and a unit straight out of a token's name, and it is evaluated *first*, so it shadows the
+#: anchored branch in both directions. `border-left: solid var(--rule-2rem)` exempted a
+#: hairline; `border-left: thick solid var(--rule-1px)` scavenged `1px` from the name, beat
+#: the keyword, and failed a genuine 5px rail.
+#: A border width in `px`, `rem` or `em` — the three a stylesheet here writes. `pt` and the
+#: viewport units are not read and report as no width at all, which is the old defect at a
+#: smaller radius; narrow the sentence rather than claim coverage. `px` alone was the whole
+#: pattern, so a rail written `0.2rem` matched nothing, took no exemption, and reported
+#: `1 usage roles FAIL` — a key `"1 "` gates on, about a page that is conforming. `0008` S9
+#: rewrites five stylesheets, which is where a unit changes.
+#:
+#: The root font size is not read and 16 is CSS's initial value. That is an assumption and
+#: it is a safe one here: this distinguishes a **rail** from a hairline, so the threshold is
+#: 1px against widths that are three to five times it, not a measurement anything turns on.
+_LENGTH = re.compile(r"(?<![-\w.])(\d+(?:\.\d+)?|\.\d+)(px|rem|em)(?![-\w])")
+_PER_UNIT = {"px": 1.0, "rem": 16.0, "em": 16.0}
+#: The keyword widths, at their usual computed values. `medium` is the CSS initial value for
+#: `border-width`, so `border-left: medium solid var(--warn)` is a rail written without a
+#: number — and it read as no width at all.
+#:
+#: **Both patterns are anchored past the hyphen, because `\b` is not.** The keyword version
+#: searched the whole
+#: declaration for the bare word, and a declaration always contains `var(--<role>)`: `-` is a
+#: non-word character, so `\bthick\b` matched inside `var(--thick-rule)` and exempted a
+#: hairline as a rail. A false *exemption* on a key `"1 "` gates — the silent-green shape
+#: §3.9 and §4.9 record.
+#:
+_WIDTH_KEYWORD = re.compile(r"(?<![-\w])(thin|medium|thick)(?![-\w])")
+_WIDTH_KEYWORDS = {"thin": 1.0, "medium": 3.0, "thick": 5.0}
 #: The states a border may change colour under without being the box's edge. Not a list of
 #: pseudo-classes in general: `:first-child` is not a state a reader entered.
 #:
@@ -83,14 +133,19 @@ _INTERACTION_STATE = re.compile(r":(?:hover|focus|active)\b")
 #: two carriers disagreeing on what counts is what this clause is here to end.
 _HEX_LITERAL = re.compile(r"#[0-9a-fA-F]{3,8}\b")
 
-#: The token a `var()` names, and the literal a `var()` falls back to.
+#: The token a `var()` names. **The fallback is not matched here**, and the missing constant is
+#: worth a sentence: `_VAR_FALLBACK` was a regex accepting a 3- or 6-digit hex and nothing else,
+#: so every other legal fallback fell through to `_DANGLING` and `var(--stack, monospace)`
+#: reported *"names a token that resolves to nothing"* about a declaration the browser paints.
+#: A regex could not be widened into the repair — a fallback may hold a nested `var()` and
+#: `[^)]*` stops at the inner close paren — so `_fallback_argument` balances instead.
 _VAR_NAME = re.compile(r"var\(\s*(--[\w-]+)")
-_VAR_FALLBACK = re.compile(r"var\(\s*--[\w-]+\s*,\s*(#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?)\s*\)")
 
 #: An `@import` or a `@font-face` `src:` pointing off-origin. Quotes are stripped by the
 #: caller rather than matched here, which keeps the class free of quote characters.
 _REMOTE_URL = re.compile(r"(?:@import|src\s*:)[^;{}]*?url\(([^)]*)\)", re.IGNORECASE)
-_SEPARATOR_NAMES = {" ": "space", " ": "U+202F", " ": "U+00A0", ",": "comma"}
+_SEPARATOR_NAMES = {" ": "space", " ": "U+2009", " ": "U+202F",
+                    " ": "U+00A0", ",": "comma"}
 
 
 @dataclass
@@ -145,6 +200,31 @@ def clause_1_tokens(page, css: str) -> list[Finding]:
     return findings
 
 
+def _fallback_argument(value: str, start: int) -> str | None:
+    """The fallback of the `var(` opening at `start`, balanced to its own closing paren.
+
+    `None` when that `var()` has no comma at its own depth — which is the only shape CSS
+    discards when the token is undeclared. Anything else is painted, whatever its type, so
+    this returns the text rather than judging it: a fallback the reader cannot measure is
+    `_unusable_values`' UNDECIDED to give, not this function's FAIL.
+    """
+    depth, comma = 0, -1
+    for index in range(start, len(value)):
+        char = value[index]
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                if comma < 0:
+                    return None
+                argument = value[comma + 1:index].strip()
+                return argument or None
+        elif char == "," and depth == 1 and comma < 0:
+            comma = index
+    return None
+
+
 def _resolve_chain(name: str, palette: dict[str, str]) -> tuple[str | None, str]:
     """The value a role finally paints, and — when there is none — *why* there is none.
 
@@ -185,9 +265,14 @@ def _resolve_chain(name: str, palette: dict[str, str]) -> tuple[str | None, str]
         first = False
         if target not in palette:
             # `var(--brand, #2563eb)` paints the fallback when the token is undeclared, so a
-            # value with a literal fallback is usable even though its first hop goes nowhere.
-            fallback = _VAR_FALLBACK.search(value)
-            return (fallback.group(1), "") if fallback else (None, _DANGLING)
+            # value with a fallback is usable even though its first hop goes nowhere — and
+            # the fallback need not be a hex. `var(--stack, monospace)` is painted too, and
+            # calling it a dangling reference is the confident wrong sentence over a wrong
+            # verdict. The scan is anchored at *this* `var(`, not searched across the whole
+            # value: a second `var()` later in the same declaration has its own fallback and
+            # is not this one's.
+            fallback = _fallback_argument(value, reference.start())
+            return (fallback, "") if fallback else (None, _DANGLING)
         value = palette[target]
 
 
@@ -343,8 +428,12 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
     and `0007` §5 clause 1's *"the same fact twice"* is why they are not reported again.
     """
     if prop in _SIDE_BORDERS and role not in _HOUSE_ROLES:
-        width = _LENGTH.search(_declaration(body, prop) or "")
-        if width and float(width.group(1)) > 1:
+        declared = _declaration(body, prop) or ""
+        width = _LENGTH.search(declared)
+        keyword = _WIDTH_KEYWORD.search(declared)
+        pixels = (float(width.group(1)) * _PER_UNIT[width.group(2)] if width
+                  else _WIDTH_KEYWORDS[keyword.group(1)] if keyword else None)
+        if pixels is not None and pixels > 1:
             return "rail"
     if (prop in _GROUND_PROPERTIES and _declaration(body, "color")
             and role not in _HOUSE_ROLES):
@@ -362,7 +451,8 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
 
 
 def _usage_sites(css: str):
-    """Every `(selector, body, property, role, scheme)` a token is painted at, outside `:root`.
+    """Every `(selector, body, property, role, scheme, fallback)` a token is painted at,
+    outside `:root`.
 
     **Sites come light-half first, then dark**, rather than in source order: the two halves
     are walked separately. No caller depends on the order — `declarations()` is where source
@@ -402,8 +492,13 @@ def _usage_sites(css: str):
                 prop = prop.strip().lower()
                 if not prop or "var(" not in value or "color-mix(" in value:
                     continue
-                for name in _VAR_NAME.findall(value):
-                    yield selector.strip(), body, prop, name.lstrip("-"), scheme
+                for reference in _VAR_NAME.finditer(value):
+                    # The fallback travels with the site. Computing it here rather than in the
+                    # caller keeps the one paren-balancing scan in one place, and keeps a
+                    # caller from re-searching the value and finding a *different* `var()`'s
+                    # fallback — the shape the palette half already had.
+                    yield (selector.strip(), body, prop, reference.group(1).lstrip("-"),
+                           scheme, _fallback_argument(value, reference.start()))
 
 
 def clause_1_usage(css: str) -> list[Finding]:
@@ -445,15 +540,26 @@ def clause_1_usage(css: str) -> list[Finding]:
     broken: list[str] = []
     wrong: list[str] = []
     unnamed = False
-    for selector, body, prop, role, scheme in _usage_sites(css):
+    for selector, body, prop, role, scheme, fallback in _usage_sites(css):
         site = selector + " {" + prop + ": var(--" + role + ")}"
         if role not in declared[scheme]:
-            broken.append(site + " — undeclared")
-            continue
-        resolved, reason = _resolve_chain(role, palettes[scheme])
-        if resolved is None:
-            broken.append(site + " — " + _DISCARDED[reason])
-            continue
+            # The same hole the palette half had, one level out: this branch did not consult
+            # the fallback at all, so `.card { color: var(--brand, #2563eb) }` on an
+            # undeclared `--brand` reported *undeclared* about a declaration CSS paints. It
+            # is dead on today's corpus — `1 usage refs` is PASS on all eleven surfaces — so
+            # repairing it moves nothing, which is the reason to repair it before S9 rewrites
+            # five stylesheets rather than during.
+            if fallback is None:
+                broken.append(site + " — undeclared")
+                continue
+            # The reference is kept, and the role rule below still applies: naming a token
+            # the palette does not declare for a ground or a border is not excused by having
+            # somewhere to fall back to.
+        else:
+            resolved, reason = _resolve_chain(role, palettes[scheme])
+            if resolved is None:
+                broken.append(site + " — " + _DISCARDED[reason])
+                continue
         if prop in _GROUND_PROPERTIES:
             allowed = _GROUND_ROLES
         elif prop in _BORDER_PROPERTIES:
@@ -535,20 +641,37 @@ def clause_3_tables(page, css: str) -> Finding:
     if not scrolling and not table_itself:
         return Finding("3 tables", FAIL, "no class in the stylesheet scrolls")
 
-    unwrapped = sum(1 for own, ancestors in page.tables
-                    if not ((own | ancestors) & scrolling) and not table_itself)
+    # **A table with no wrapper is `undecided`, not silently `pass`.** `table_itself` is a
+    # property of the sheet, and it used
+    # to zero `unwrapped` for *every* table on the page: one bare `table { overflow-x: auto }`
+    # anywhere — including inside a `@media` block, which `rules()` flattens by design — made
+    # each table read as handled. The caveat was then attached to the *report* branch
+    # (`table_itself and not named`), so a page holding both a named wrapper and the element
+    # rule printed a flat `ok` while a table wearing neither was invisible.
+    #
+    # Not live: `table_itself` is False on all eleven committed surfaces, and `wroclaw` — the
+    # only page with the rule — is fetch-only and reports `undecided` today because it has no
+    # house scroller name. It becomes reachable the moment that name is given, which `0008` §5
+    # carries as wanted-but-unscheduled, on the one surface with no committed HTML to diff.
+    rest = [table for table in page.tables
+            if not ((table[0] | table[1]) & scrolling)]
+    # A table with no wrapper class is carried by the bare `table` rule if the sheet has one —
+    # and whether that rule applies at this width is the thing the reader cannot know.
+    by_the_element = rest if table_itself else []
+    unwrapped = [] if table_itself else rest
+
     named = sorted(scrolling & set().union(*(own | anc for own, anc in page.tables)))
     wrappers = [f".{name}" for name in named] + (["the table itself"] if table_itself else [])
     detail = f"{len(page.tables)} table(s), scroller(s): {', '.join(wrappers) or 'none'}"
     if unwrapped:
-        return Finding("3 tables", FAIL, f"{detail}; {unwrapped} with nothing that scrolls")
-    if table_itself and not named:
-        # The whole verdict rests on a rule this reader cannot width-scope: `rules()`
-        # deliberately drops the media condition, so a scroller declared only under
-        # `max-width: 640px` reads as scrolling everywhere. Say so rather than print a bare
-        # ok — clause 4 already returns `undecided` for the half it cannot judge.
+        return Finding("3 tables", FAIL,
+                       f"{detail}; {len(unwrapped)} with nothing that scrolls")
+    if by_the_element:
+        # Say so rather than print a bare ok — clause 4 already returns `undecided` for the
+        # half it cannot judge, and this is the same refusal for the same kind of reason.
         return Finding("3 tables", UNDECIDED,
-                       f"{detail}; no wrapper class, and the media condition is not read")
+                       f"{detail}; {len(by_the_element)} rest on the bare `table` rule, "
+                       "whose media condition is not read")
     return Finding("3 tables", PASS, detail)
 
 
@@ -612,7 +735,10 @@ def clause_7_webfont(page, css: str) -> Finding:
     third_party = [link["href"] for link in page.links
                    if link.get("href", "").startswith(("http://", "https://", "//"))
                    and "font" in link.get("href", "").lower()]
-    for target in _REMOTE_URL.findall(css):
+    # Comments stripped first. `clause_1_literals` goes through `rules()` and therefore
+    # already does; this read the raw sheet, so `/* never do this: @import url(...) */`
+    # reported `FAIL 7 webfont` — and `"7 "` gates, so a comment refused the build.
+    for target in _REMOTE_URL.findall(cssmod.strip_comments(css)):
         target = target.strip().strip(chr(34)).strip(chr(39))
         if target.startswith(("http://", "https://", "//")):
             third_party.append(target)
@@ -622,6 +748,20 @@ def clause_7_webfont(page, css: str) -> Finding:
 
 
 def clause_8_separator(page) -> Finding:
+    """The separator inventory of every grouped figure the page prints.
+
+    **`n/a` means the page groups nothing, and that is the clause read as written.** §5 clause
+    8 says *thousands are separated by U+202F*: its subject is how a grouped figure separates
+    its thousands, so a page printing `1234` has no separator to be wrong about. The reading is
+    stated here rather than left implicit because it leaves a real escape once `0008` S9 brings
+    this clause into `GATED` — **deleting the grouping is a cheaper route to green than
+    migrating to U+202F**, and nothing here would notice.
+
+    That escape is a gap in the spec and not a defect in the checker, and closing it means §5
+    gaining a sentence it does not have — *a figure of four or more digits is grouped* — which
+    is an amendment to `0007` and not a change to this function. Recorded for whoever takes
+    S9: the instrument implements the clause it was given, and says so.
+    """
     counts: dict[str, int] = {}
     for _, tail in _GROUPED.findall(page.rendered_text):
         for character in tail:
@@ -655,5 +795,7 @@ def check(loaded) -> list[Finding]:
     findings.append(clause_8_separator(page))
     if loaded.unreadable:
         findings.append(Finding("stylesheets", UNDECIDED,
-                                "unread: " + ", ".join(loaded.unreadable)))
+                                "unread: " + ", ".join(
+                                    sources.describe(entry)
+                                    for entry in loaded.unreadable)))
     return findings

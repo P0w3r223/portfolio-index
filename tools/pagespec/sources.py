@@ -24,8 +24,25 @@ from pathlib import Path
 
 from . import render
 
+#: Why a sheet was not read, when the reason is *by design*. Declared here, beside the only
+#: code that writes it, and imported by the readers — `0008` §5 carries "the marker is prose
+#: built in one module and matched in two others" as a residual, and this is that closed.
+THIRD_PARTY = "third party, not read"
+
 USER_AGENT = "pagespec (portfolio conformance checker)"
+
 FETCH_TIMEOUT = 30
+
+
+def describe(entry: tuple[str, str]) -> str:
+    """One unreadable sheet, as a line. The pair is the value; this is the only rendering.
+
+    `clauses` and `__main__` each built this string independently for one revision. Nothing
+    parsed either, so the divergence was harmless — but the two are printed under different
+    gate headers about the same fact, and a reader comparing them is entitled to one wording.
+    """
+    href, why = entry
+    return f"{href} ({why})"
 
 
 @dataclass(frozen=True)
@@ -71,7 +88,12 @@ class Loaded:
     html: str
     css: str
     stylesheets: list[str] = field(default_factory=list)
-    unreadable: list[str] = field(default_factory=list)
+    #: `(href, why)` and not prose. Three readers have now had to recover the href from a
+    #: formatted string: the first split on ", " and the third-party marker contains that
+    #: separator; the second split on " (" and a later change put an em dash before it. The
+    #: structured value was available at every one of those sites, and `_unread_same_origin`
+    #: had already written that sentence down before the third reader was added.
+    unreadable: list[tuple[str, str]] = field(default_factory=list)
 
 
 def _fetch(url: str) -> str:
@@ -114,6 +136,32 @@ def load(surface: Surface, root: Path, *, allow_fetch: bool,
     return _with_styles(surface, html, base_path=page_path)
 
 
+def _local_sheet(base_path: Path, href: str) -> Path:
+    """The file a same-origin href names, resolved as a URL reference the way the fetch
+    branch resolves it — plus one fallback the wire does not have.
+
+    An href is a URL reference and not a path: the query string is not part of it, and
+    `%20` means a space. `urljoin` has always done both for the fetched surface; this branch
+    joined the raw string, so `styles.css?v=2` reported a file sitting right there as
+    unreadable — and an unread same-origin sheet **refuses the build**.
+
+    **The literal name is tried second, and that is an asymmetry rather than parity.**
+    `urljoin` sends `%20` to the server, which decodes it, so a file genuinely called
+    `my%20x.css` on the origin would 404 on the wire and is read here. Decoding is right
+    by the spec,
+    but a file genuinely called `my%20x.css` would then be reported unreadable, and this
+    function's whole subject is that a false gate is worse than a missing one. Reading either
+    candidate answers the question the clauses are about to ask; refusing a page over which
+    of two spellings is on disk answers nothing.
+    """
+    without_query = urllib.parse.urlparse(href).path
+    decoded = base_path.parent / urllib.parse.unquote(without_query)
+    if decoded.is_file():
+        return decoded
+    literal = base_path.parent / without_query
+    return literal if literal.is_file() else decoded
+
+
 def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
                  base_url: str | None = None) -> Loaded:
     """Inline `<style>` blocks plus every same-origin `<link>`ed sheet, concatenated.
@@ -125,20 +173,36 @@ def _with_styles(surface: Surface, html: str, *, base_path: Path | None = None,
     page = render.parse(html)
     parts = list(page.inline_styles)
     names: list[str] = ["<style>"] * len(page.inline_styles)
-    unreadable: list[str] = []
+    unreadable: list[tuple[str, str]] = []
 
     for href in page.stylesheet_hrefs():
         if href.startswith(("http://", "https://", "//")):
-            unreadable.append(f"{href} (third party, not read)")
+            unreadable.append((href, THIRD_PARTY))
             continue
         try:
             if base_path is not None:
-                parts.append((base_path.parent / href).read_text(
+                # The href is a URL reference, not a path. `styles.css?v=2` named a file that
+                # exists on disk and was reported unreadable — and since `0008` S-gate an
+                # unread same-origin sheet *gates*, so that was CI refusing a page that is
+                # fine, under a message pointing at a stylesheet the reader can open. The
+                # fetch branch below has always been right about this, through `urljoin`.
+                #
+                # A root-relative href stays unreadable, and deliberately: `/assets/x.css` on a
+                # GitHub Pages *project* site resolves under the site root and not under the
+                # repository, so there is no file here to read and saying so is correct.
+                parts.append(_local_sheet(base_path, href).read_text(
                     encoding="utf-8", errors="replace"))
             else:
                 parts.append(_fetch(urllib.parse.urljoin(base_url, href)))
             names.append(href)
-        except Exception:
-            unreadable.append(href)
+        except Exception as error:
+            # The cause, not just the fact — the same argument the fetch path above already
+            # makes, on a path that now gates daily. A rename, a permission error and a
+            # missing file arrive as one identical line without it, and `0008` §5 has carried
+            # this as a residual since the S-gate review.
+            # `strerror` where the exception carries one: the href already names the file,
+            # and `str(error)` repeats it as an absolute machine path into the gate output.
+            why = getattr(error, "strerror", None) or str(error)
+            unreadable.append((href, f"{type(error).__name__}: {why}"))
 
     return Loaded(surface, html, "\n".join(parts), names, unreadable)

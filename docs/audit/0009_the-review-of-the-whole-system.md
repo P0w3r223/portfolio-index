@@ -254,9 +254,9 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | # | change | closes | size | state |
 |---|---|---|---|---|
 | 1 | Session-start hook + a root `CLAUDE.md` | §6.2 rows 1–3 | S | **done — `#81`, `743cb34`** |
-| 2 | The three code defects before S9 touches five stylesheets: `_VAR_FALLBACK`, `clause_3_tables` per table, `sources.py:141`'s cause | W2, W3, N5 | S | open |
-| 3 | A **`GATED` floor guard** — every key reporting zero `FAIL` must be in the tuple — plus the assertion repair in §5.2 row 2 and the rebuild of the ratchet test before it becomes unsatisfiable | §5.1 | S | open, and **S9/S10 both edit that tuple** |
-| 4 | Clause 8's regex in the bound-preserving form (§4.1), and a stated decision on `n/a` and `U+2009` | §4.1, §5.2 | S | open — zero corpus delta, safe now |
+| 2 | The three code defects before S9 touches five stylesheets: `_VAR_FALLBACK`, `clause_3_tables` per table, `sources.py:141`'s cause | W2, W3, N5 | S | **done — `#83`**, and widened: see the note below |
+| 3 | A **`GATED` floor guard** — every key reporting zero `FAIL` must be in the tuple — plus the assertion repair in §5.2 row 2 and the rebuild of the ratchet test before it becomes unsatisfiable | §5.1 | S | **done — `#83`** |
+| 4 | Clause 8's regex in the bound-preserving form (§4.1), and a stated decision on `n/a` and `U+2009` | §4.1, §5.2 | S | **done — `#83`**; the `n/a` reading is stated and left to S9 as a spec question |
 | 5 | A **clause registry** — `CLAUSES` keyed by clause-sentence id, each carrying `carried_by: index \| repo-test \| review \| none`, with a `core`-job test that every entry has a check or an explicit reason | W1, and gives clause 9 and the geometry half an honest home | S | open — the artifact whose absence produced all three occurrences |
 | 6 | Re-scope S9's first commit: no permanent source census; reconcile against the checker's existing per-surface inventory and let the ratchet carry recurrence | W4 | *a saving* | open — the ledger's own evidence supports it |
 | 7 | S9 and S10, with `wroclaw/tests/test_report.py:1524` widened in the same commit that moves the separator | the two failing clauses | 2.5–3 d | open, per `0008` |
@@ -266,6 +266,14 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | 11 | Bring the **profile README** into the system — at minimum a `Surface` read by `--fetch` in `live`, plus the quotation rule | the asymmetry in §9 | S | open |
 | 12 | **Contrast at the usage site** — a clause using the existing `colour.resolve()`/`composite()`, `UNDECIDED` for `color-mix`, `opacity < 1` and SVG paint order, threshold per usage site | N4, `0007` §7's largest gap | M | open — ships report-only, enters `GATED` only when a stage closes it |
 | 13 | Registry-drift test (N1) · resolve N3 (implement the geometry half or amend `ADR-0004` §4 to say it is deferred and unowned) · clean `autoMode.environment` | N1, N3, §6.2 row 4 | S | open, each independent |
+
+**Rows 2, 3 and 4 landed together in `#83`, and row 2 grew.** It was written as three defects
+and took five: the two others are §4.2's `sources.py` query string (an href joined verbatim, so
+`styles.css?v=2` reported a file that exists as unreadable — a *false* gate, which is worse than
+a missing one) and §4.2's `_LENGTH` and clause-7 pair, which the review escalated on the grounds
+that the argument for taking the first three applies to them verbatim: all five are invisible
+today and all five become reachable when S9 rewrites five stylesheets. Two things that turned up
+while closing them are recorded in §11.
 
 **What not to change:** `UNDECIDED` as a status that never gates; fail-closed on an unread surface;
 the `core`/`surfaces` job split; and `ADR-0004`'s K-c decision against vendoring. Each is
@@ -333,3 +341,55 @@ discipline turned on this file.
 - **Anything about `pl-jobs-lora`'s or `doc-extract`'s open milestones.** They are portfolio work,
   not page-spec work, and `doc-extract` M7's one genuinely open item — a real held-out set on
   documents nobody generated — is recorded in its own repository.
+
+## 11. Two things `#83` turned up, neither of them about `#83`
+
+**The twelfth surface's `3 tables` detail moves, and its status does not.** Clause 3 now
+classifies each table rather than the stylesheet, so `wroclaw-air-insights` reads
+*4 table(s), scroller(s): the table itself; 4 rest on the bare `table` rule, whose media
+condition is not read* where it read *no wrapper class, and the media condition is not read*.
+`UNDECIDED` both ways, no cell and no gate moves — but "the conformance table is byte-identical"
+is true of the eleven committed surfaces and not of the twelfth, and the only place that text is
+printed is the scheduled `live` job. Stated because a reader meeting the new line there would
+otherwise have to work out whether something had changed.
+
+**`wroclaw`'s `<title>` passes clause 4 while leading with the project's name.** Fetched
+2026-09-07: `Wrocław Air Insights — live PM2.5 forecast` reports `ok`, because
+`named_after_the_directory` is `startswith(repo.lower())` and `wrocław air insights` is not a
+prefix of `wroclaw-air-insights` — a different letter and no hyphens. That is §4.2's `4 title`
+weakness with a live instance rather than a constructed one, and it bears directly on S10:
+**the stage's scope is four surfaces or three depending on whether the rule compares the
+repository's *name* or its *directory string*.** `0008` S10's row says four. Settle the reading
+before the stage, because after it the answer is a ratchet.
+
+**A sequencing constraint S9 inherits, and it is the floor guard's doing.** The guard sweeps
+the eleven committed surfaces; the gate covers twelve. So when S9 cleans clause 8 on the
+committed pages while `wroclaw-air-insights` still prints a comma, the guard reddens and
+demands the widening — and widening reddens the scheduled `live` job instead, because the
+`surfaces` job never fetches. There is no green path between those two states, and that is
+correct rather than a defect: **the stage owns both halves, so the index pointer bump that
+cleans the eleven must not land before the twelfth is done.** The guard's failure message
+names all three outcomes rather than the one it used to imply. Recorded here because it is a
+constraint on *how S9 is landed*, which is `0008`'s business and not this file's.
+
+*Two qualifications, because the first telling of this was wider than the fact.* The deadlock
+is the invariant's consequence rather than an accident — `GATED` is one tuple read by two jobs
+that see different corpora, so **any** floor derived from eleven surfaces will demand something
+the twelve-surface gate cannot honour. But the commit calling it *"resolved, in the only
+direction it can be"* was overstated: at least one other direction exists and was never weighed
+— leave only the ceiling assertion in the `surfaces` job and run the floor over `--fetch` in
+`live`. That trades a push-time guard for a scheduled one, which is a real cost and the reason
+the workflow keeps the wire off the push path; it is not, however, no direction. And
+`pagespec.yml`'s `live` job is `workflow_dispatch`able, so the twelfth surface can be **read on
+a chosen ref before a merge** rather than trusted — the one lever that makes the sequencing
+constraint verifiable instead of a promise, and neither the guard's message nor this paragraph
+named it. Both do now.
+
+**One residual is closed and a second of the same shape survives, named rather than implied.**
+`#83` made `unreadable` a `(href, why)` pair and `sources.THIRD_PARTY` a constant compared
+rather than searched, which closes §5's *"the marker is prose built in one module and matched
+in two others"* for the stylesheet case — mutation-proven: changing the marker's text is now a
+no-op. The same shape survives at `__main__`'s `"needs --fetch"`, built as prose in one place
+and compared in another; it is guarded (the end-to-end test asserts both the exit code and the
+string), so it is a smaller instance and not the one §5 describes, but the claim *"the residual
+is closed"* is true of the stylesheet marker only.
