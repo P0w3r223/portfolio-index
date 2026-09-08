@@ -887,9 +887,17 @@ class GroupedFigure:
     #: with the verdict it explains is worse than no census, and two passes over one regex
     #: is exactly how that happens.
     separators: tuple[str, ...]
-    #: The innermost enclosing tag, `svg ` prefixed inside a chart. `0008` S9c's exemption
-    #: turns on this and on nothing else.
+    #: Where the figure sits: the innermost tag, prefixed with `code ` or `svg ` when one of
+    #: those encloses it, or `meta <key>` for a figure in published metadata. **The exemption
+    #: is decided by the ancestry, not by this string** — `where` is what the census prints,
+    #: and it names the enclosing element precisely so that the two cannot disagree about
+    #: which figure was spared and why.
     where: str
+
+    #: Clause 8a: a specimen of another system's format, quoted rather than written. Carried
+    #: on the figure rather than filtered out of the inventory, because §4.11 requires the
+    #: exemption **censused** — an exemption you cannot count is one that widens in silence.
+    exempt: bool = False
 
     @property
     def display(self) -> str:
@@ -921,13 +929,32 @@ class GroupedFigure:
             for character in self.text)
 
 
+#: Clause 8a's checkable form. `<code>` and not a literal string, and not the whole surface:
+#: `0008` §4.11 requires the exemption censused so it cannot silently widen, and an element
+#: is countable where a value is not. Read over the whole **ancestry**, so a figure inside
+#: `<code><td>` is a specimen too — the alternative reading is that markup inside a specimen
+#: block cancels the exemption, which would make the rule turn on how the block is laid out.
+_SPECIMEN = "code"
+
+
 def _where(ancestry: tuple[str, ...]) -> str:
+    """Where a figure sits, naming the **enclosing** element that decides its treatment.
+
+    `svg` is prefixed because a chart label and a paragraph are different write sites, and
+    `code` because it is what grants clause 8a's exemption. Naming only the innermost tag put
+    those two apart: `<code><td>` reported `td`, so a figure was spared by an element the
+    census did not print, and `0008` §4.11 admits the exemption only while it is countable.
+    Found by review; the flat reading was green over both alternatives.
+    """
     if not ancestry:
         return "(root)"
     innermost = ancestry[-1]
-    if "svg" in ancestry and innermost != "svg":
-        return f"svg {innermost}"
+    for enclosing in (_SPECIMEN, "svg"):
+        if enclosing in ancestry:
+            return innermost if innermost == enclosing else f"{enclosing} {innermost}"
     return innermost
+
+
 
 
 def grouped_figures(page) -> list[GroupedFigure]:
@@ -946,18 +973,51 @@ def grouped_figures(page) -> list[GroupedFigure]:
     other side of the same migration, the figures those sites reach, and it counts them on
     every run.
     """
+    def separators_of(match) -> tuple[str, ...]:
+        return tuple(_SEPARATOR_NAMES[character] for character in match.group(2)
+                     if character in _SEPARATOR_NAMES)
+
     found: list[GroupedFigure] = []
     for text, ancestry in page.text_nodes:
         for match in _GROUPED.finditer(text):
-            separators = tuple(_SEPARATOR_NAMES[character]
-                               for character in match.group(2)
-                               if character in _SEPARATOR_NAMES)
-            found.append(GroupedFigure(match.group(0), separators, _where(ancestry)))
+            found.append(GroupedFigure(match.group(0), separators_of(match), _where(ancestry),
+                                       exempt=_SPECIMEN in ancestry))
+    # Clause 8b: the metadata a search result and a social card display, which a reader meets
+    # before the page. Scoped to clause 5's six keys rather than to every attribute, because
+    # those six are the ones the page *publishes* and clause 5 already requires all six —
+    # borrowing that list keeps one definition of "published metadata" instead of two.
+    # *`og:url` was named here as an example of a key too machine-facing to score, which was
+    # wrong twice over: it is one of the six and it is scored.* A meta figure is never a
+    # specimen — there is no `<code>` in an attribute.
+    for entry in page.metas:
+        # Either attribute, matching `Page.meta`'s own reading: preferring `name` made the
+        # two readers of the same tag disagree about which key a `<meta>` carries.
+        keys = {entry.get("name"), entry.get("property")} & set(CARD_META)
+        if not keys:
+            continue
+        # A tag carrying both a `name` and a `property` in scope is one write site and is
+        # counted once; which of the two names the row is arbitrary, so it is made stable.
+        key = sorted(keys)[0]
+        # Flattened the way a text node is. A `content` wrapped across source lines, or one
+        # holding a double space, otherwise yields no figure while the same bytes in a `<p>`
+        # fail — a hole in exactly the write site 8b exists to expose. No live surface needs
+        # it today, which is why it would have kept.
+        for match in _GROUPED.finditer(render.flatten(entry.get("content", ""))):
+            found.append(GroupedFigure(match.group(0), separators_of(match), f"meta {key}"))
     return found
 
 
 def clause_8_separator(page) -> Finding:
-    """The separator inventory of every grouped figure the page prints.
+    """The separator inventory of every grouped figure the page prints, per `0007` §5 clause 8.
+
+    **Three amendments this function implements, all landed by S9c 2026-09-08.** 8a: a figure
+    displayed as a specimen of another system's format is quoted rather than written, and is
+    reported without failing — the exemption is read over the ancestry, `_SPECIMEN` says why.
+    8b: scoring reaches the metadata the page publishes, scoped to clause 5's six keys, which
+    is how `car-price-ml/app`'s `<meta name="description">` write site became visible at all.
+    8c: the escape below stays open and the sentence once proposed to close it is not taken —
+    the corpus holds ungrouped four-digit tokens of both kinds and no digit rule separates
+    them. `0007` §5 clause 8a–8c is the normative text; this restates it and adds no rule.
 
     **`n/a` means the page groups nothing, and that is the clause read as written.** §5 clause
     8 says *thousands are separated by U+202F*: its subject is how a grouped figure separates
@@ -966,21 +1026,32 @@ def clause_8_separator(page) -> Finding:
     this clause into `GATED` — **deleting the grouping is a cheaper route to green than
     migrating to U+202F**, and nothing here would notice.
 
-    That escape is a gap in the spec and not a defect in the checker, and closing it means §5
-    gaining a sentence it does not have — *a figure of four or more digits is grouped* — which
-    is an amendment to `0007` and not a change to this function. Recorded for whoever takes
-    S9: the instrument implements the clause it was given, and says so.
+    That escape is a gap in the spec and not a defect in the checker. **The sentence that
+    would close it — *a figure of four or more digits is grouped* — was put to the corpus by
+    S9c and declined**: `doc-extract` prints `9894 values` ungrouped on a page where it groups
+    `183<U+202F>798`, which the sentence would rightly catch, and `auth-log-scan`'s
+    `2026-03-14` and `mini-traceroute`'s base port `33434`, which it would wrongly catch.
+    Separating them needs a page to declare which of its numbers are quantities. `0007` §5
+    clause 8c records it; the instrument implements the clause it was given, and says so.
     """
     counts: dict[str, int] = {}
+    exempt: dict[str, int] = {}
     for figure in grouped_figures(page):
+        tally = exempt if figure.exempt else counts
         for name in figure.separators:
-            counts[name] = counts.get(name, 0) + 1
+            tally[name] = tally.get(name, 0) + 1
     # The unit here is separator *characters*, which equals the figure count on every page
     # today because none prints a figure at or above a million. The first that does makes
     # this inventory non-comparable with §3, which counts figures.
+    # Reported whatever the verdict, and reported even when it is the only grouped figure on
+    # the page: a surface reading `n/a — no grouped figure` while displaying a specimen would
+    # be true about the clause and misleading about the page.
+    aside = ("; " + ", ".join(f"{name} {count} specimen, exempt"
+                             for name, count in sorted(exempt.items())) if exempt else "")
     if not counts:
-        return Finding("8 separator", NOT_APPLICABLE, "no grouped figure on the page")
-    inventory = ", ".join(f"{name} {count}" for name, count in sorted(counts.items()))
+        return Finding("8 separator", NOT_APPLICABLE,
+                       "no grouped figure on the page" + aside)
+    inventory = ", ".join(f"{name} {count}" for name, count in sorted(counts.items())) + aside
     if set(counts) == {"U+202F"}:
         return Finding("8 separator", PASS, inventory)
     return Finding("8 separator", FAIL, inventory)

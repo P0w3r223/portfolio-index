@@ -30,13 +30,13 @@ def test_a_narrow_no_break_space_survives_being_flattened():
     ordinary spaces, so every page would read as separating thousands with a plain space.
     Revert `_ASCII_WHITESPACE` to `\\s+` and this fails.
     """
-    assert render._flat(f"183{NARROW}798") == f"183{NARROW}798"
-    assert render._flat(f"3{NBSP}466,62") == f"3{NBSP}466,62"
+    assert render.flatten(f"183{NARROW}798") == f"183{NARROW}798"
+    assert render.flatten(f"3{NBSP}466,62") == f"3{NBSP}466,62"
 
 
 def test_flattening_still_collapses_the_whitespace_markup_introduces():
     """The fix must not stop doing the job: indentation and line breaks still collapse."""
-    assert render._flat("  in 183 798\n\tbytes;\r\n XSD 1.0  ") == "in 183 798 bytes; XSD 1.0"
+    assert render.flatten("  in 183 798\n\tbytes;\r\n XSD 1.0  ") == "in 183 798 bytes; XSD 1.0"
 
 
 def test_the_page_that_prints_narrow_spaces_still_prints_them_after_parsing():

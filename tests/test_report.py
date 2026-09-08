@@ -1038,3 +1038,71 @@ def test_a_page_with_no_grouped_figure_is_listed_rather_than_omitted(tree, capsy
     assert report.main(["--root", str(tree), "--report-only"]) == 0
     out = capsys.readouterr().out
     assert "mlops-car-price          no grouped figure" in out
+
+
+def test_the_census_calls_an_exempt_separator_exempt_and_not_non_conforming():
+    """`not clause 8` on a separator every one of whose figures is a clause-8a specimen names
+    the codepoint correctly and the page wrongly.
+
+    The census is what a stage reads to scope its edits, so a row telling S9 that
+    `doc-extract` has a non-conforming separator would send it to a page that needs no edit —
+    and the page it would edit is the one whose whole point is quoting a foreign format.
+    """
+    lines = report._separator_census([("d", f"<code>3{NBSP}466</code>")], False)
+    row = next(line for line in lines if line.strip().startswith("U+00A0"))
+
+    assert "exempt (8a)" in row, f"an exempt-only separator was called non-conforming: {row!r}"
+    assert "not clause 8" not in row
+
+
+def test_a_separator_with_one_exempt_and_one_ordinary_figure_is_not_exempt():
+    """The boundary, and it is where a per-separator verdict could go wrong.
+
+    The census tallies by separator and the exemption is per *figure*, so a page mixing a
+    specimen with an ordinary figure of the same codepoint must not have the ordinary one
+    hidden behind the exemption. Without this, one `<code>` block would clear a whole
+    separator across a surface.
+    """
+    lines = report._separator_census(
+        [("d", f"<code>3{NBSP}466</code><p>9{NBSP}999</p>")], False)
+    row = next(line for line in lines if line.strip().startswith("U+00A0"))
+
+    assert "not clause 8" in row, f"one specimen exempted an ordinary figure too: {row!r}"
+
+
+def test_the_detail_row_marks_which_figure_took_the_exemption():
+    """Two figures, same codepoint, one exempt — and `--detail` is where a reader checks which."""
+    lines = report._separator_census(
+        [("d", f"<code>3{NBSP}466</code><p>9{NBSP}999</p>")], True)
+    rows = [line for line in lines if "<code>" in line or "<p>" in line]
+
+    assert any("specimen, exempt (8a)" in line and "3<U+00A0>466" in line for line in rows)
+    assert not any("specimen" in line and "9<U+00A0>999" in line for line in rows)
+
+
+def test_the_surface_row_marks_the_exemption_where_a_stage_actually_looks():
+    """The portfolio roll-up said `exempt (8a)`; the per-surface row did not.
+
+    `doc-extract  5 figure(s)  U+00A0 1 · U+202F 4` read identically to a non-conforming
+    surface, and the surface row is the first thing a stage reads to scope its edits — an
+    unmarked `U+00A0 1` sends it to the one page whose whole subject is quoting a foreign
+    format. Found by review, after the roll-up had been guarded and this had not.
+    """
+    rows = report._separator_census(
+        [("spared", f"<code>3{NBSP}466</code>"), ("plain", f"<p>9{NBSP}999</p>")], False)
+
+    spared = next(line for line in rows if line.strip().startswith("spared"))
+    plain = next(line for line in rows if line.strip().startswith("plain"))
+    assert "U+00A0 1 exempt" in spared, f"the surface row hides the exemption: {spared!r}"
+    assert "exempt" not in plain, f"an ordinary figure was marked exempt: {plain!r}"
+
+    # **Both figures on one surface, which is the case the two above cannot reach.** With the
+    # exemption and the ordinary figure on separate surfaces, "all of them are exempt" and
+    # "any of them is exempt" behave identically, so the guard was green over the widening.
+    # Here the counts differ — two U+00A0, one spared — and only the strict reading is right:
+    # marking the row `exempt` would tell a stage the surface needs no edit when it does.
+    mixed = report._separator_census(
+        [("both", f"<code>3{NBSP}466</code><p>9{NBSP}999</p>")], False)
+    row = next(line for line in mixed if line.strip().startswith("both"))
+    assert "U+00A0 2" in row and "exempt" not in row, (
+        f"one specimen marked the whole separator exempt on this surface: {row!r}")

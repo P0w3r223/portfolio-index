@@ -115,7 +115,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
 | **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `297e3c5` on `main` with CI green **on `main`**. *The first version of this cell cited `043bf72` + `38f26a9`, which are branch commits: this repository squash-merges, so neither is reachable from `main` and neither ever will be — §4.12's last paragraph.* **Fifteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and **two that reddened nothing at all** until a later pass found the guard absent or out of reach (rows 9 and 15). **Four review passes**, the last three finding fixes that displaced a defect rather than removing it; §4.12 |
-| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | **first commit closed** — the census prints on every run; §4.15. The rest is open, and the stage's order is now **S9c second, not last**: it changes no page and `8 separator` cannot enter `GATED` before it lands. Then S9a's four repositories, each its own commit carrying its own test change — the commit that changes `wroclaw`'s separator widens `test_report.py:1524` **and** re-pins `:377` in the same change (§4.13). The `GATED` widening is a separate index commit, after `wroclaw` rebuilds; §4.15's last paragraph is why |
+| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | **first commit and S9c closed** — the census prints on every run (§4.15) and clause 8's two amendments plus one recorded refusal have landed (§4.16); `doc-extract` reads clear and no page was edited. **S9a and S9b remain.** Then S9a's four repositories, each its own commit carrying its own test change — the commit that changes `wroclaw`'s separator widens `test_report.py:1524` **and** re-pins `:377` in the same change (§4.13). The `GATED` widening is a separate index commit, after `wroclaw` rebuilds; §4.15's last paragraph is why |
 | **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open — the `car-price-ml/app` title is `docs/app/index.html:6` and rides with S9b's `:7` and `:27`; §4.13 |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
@@ -1698,6 +1698,188 @@ pointer bump that cleans the eleven arms the floor guard while the twelfth still
 guard's own failure message is the procedure: land the siblings, **do not bump the pointers**,
 confirm the twelfth with `--fetch` or a `live` dispatch, then bump and widen in one commit.
 The same trap applies to `4 title` after S10, where `wroclaw` is one of the four surfaces.
+
+### 4.16 What S9c closed, and the sentence the corpus refused
+
+Taken 2026-09-08, straight after S9's first commit and before any sibling edit — which is the
+order S9-0 made possible, because the exemption's discriminator is a thing the census prints.
+**No page was edited in any repository.** `doc-extract`'s `build_index.py:1590` already writes
+`U+202F`; the stage was always *"a spec amendment and not an edit"*, and it stayed one.
+
+`0007` §5 clause 8 gains two sentences and records one refusal. Each was measured over all
+twelve surfaces **before** being written.
+
+#### 8a — the specimen, and why it is an element
+
+A figure the page displays as a specimen of another system's format is quoted, not written.
+`doc-extract` prints `3<U+00A0>466,62` to say *this is the shape the extractor reads*, and
+requiring `U+202F` there would require the page to misquote the format it documents.
+
+**Scoped to `<code>` rather than to a value, a surface or a separator**, because §4.11 admits
+the exemption only on the condition that it is censused *"so it cannot silently widen"*. Two
+things follow, and both are guarded: the clause reports the exempt figure in its own detail
+**even where the page would otherwise read `n/a`** — a page displaying a specimen and a page
+grouping nothing are different states — and the census prints it with its element on every run.
+Measured: **one** such figure on the twelve, and it is the portfolio's only `U+00A0`.
+
+#### 8b — the metadata, and the write site the old rule could not see
+
+Scoring widened from *the page's rendered text* to that **and the metadata it publishes**,
+scoped to clause 5's six keys. §4.15's fourth finding is what forced it: `car-price-ml/app`
+writes `1<space>200` from **two** sites, `docs/app/index.html:7` and `:27`, and the old rule
+reached only the second — so a stage fixing the body alone would have turned the surface green
+while the description a search result renders kept a plain space.
+
+Measured before amending: six grouped figures in metadata across three surfaces, five
+non-conforming, and **widening moves no surface's verdict**. It moves three counts:
+`car-price-ml` `space 16 → 20`, `car-price-ml/app` `space 1 → 2`, and `doc-extract`
+`U+202F 3 → 4`. *This paragraph said two and omitted the third, contradicting §4.15's own list
+of the six metadata figures by an enumeration that read as complete — the exemption cannot add
+a `U+202F`, so `doc-extract`'s fourth is 8b's doing and nothing else's.* A write site the stage
+must fix became a figure the stage's own instrument can see.
+
+#### 8c — the escape stays open, and why no number is written down for it
+
+*"A figure of four or more digits is grouped"* is the closure named in `clause_8_separator`'s
+docstring and in `tools/spec.py`'s `c8.s1` — **those two and no others.** It is not taken.
+
+**The first version of this section said the corpus refutes it, and gave a count and a
+characterisation. Both were wrong, and the review caught them.** The claim was *27 ungrouped
+four-digit tokens, and they are years, dates, the traceroute base port and identifiers —
+figures that are not quantities at all.* The corpus says otherwise:
+
+| named token | surface | what it is |
+|---|---|---|
+| `9894` in *"every one of the 9894 values"* | `doc-extract` | **a quantity**, ungrouped, on the page that groups `183<U+202F>798` — the exact inconsistency the sentence exists to catch |
+| `3989` in *"every one of those 3989 values"* | `doc-extract` | a quantity |
+| `6570` in *"6570 of 6571 listed today"* | `it-job-radar` | a count of job offers — **this section called it an identifier** |
+| `2026-03-14` | `auth-log-scan` | a date, which the sentence would catch wrongly |
+| `33434` | `mini-traceroute` | the traceroute base port, likewise |
+
+So the sentence is **not refuted — it is undecidable by a static read.** It would catch real
+violations and real false positives together, and the page that S9c turns green is itself one
+of the pages it would rightly catch. Separating the two needs a page to declare which of its
+numbers are quantities, and that is a larger amendment than this one. *That conclusion is
+stronger than the one it replaces and it costs the same nothing to act on, which is worth
+noticing: the wrong evidence was not supporting a wrong decision, it was supporting the right
+decision badly.*
+
+**And no total for that population is written anywhere — which is not the same as "no figure
+is."** `0007` §5 states 8a's *one* and 8b's *six*, both frozen and both reproducible, and the
+erratum above quotes the withdrawn `27` in order to withdraw it. `ADR-0004` §5 admits a
+measurement into a normative document **once it is frozen**; the omission here is that this
+one could not be. *The first version of this paragraph claimed no figure was written at all,
+twenty lines below one and in a document carrying two more — the same absolute-claim shape the
+section is about, committed while writing it.* Four attempts to measure the
+population produced **four different answers** — the first matched inside hex strings because
+it did not exclude letter adjacency; the second and third disagreed with each other because
+the character class turned on a codepoint that is **invisible in a terminal**, and the shell
+rendered it one way in one run and another way in the next. That is precisely the failure this
+stage's own census was built to end, reproduced by the person building it, four times, inside
+the amendment that ends it.
+
+*`0007` §5 carries the rule and names the counterexamples; it carries no count. `ADR-0004` §5
+is the reason — a document that states measurements cannot be accepted without freezing them,
+and this one could not be frozen because it could not be measured twice the same way.*
+
+#### What the review found, and it blocked on the normative half
+
+**A measurement written into `0007` §5 that did not reproduce, and a characterisation the
+corpus refuted.** That is the worst place in this repository for a wrong figure: `ADR-0004` §5
+accepts §5 as normative precisely on the condition that it states rules and not measurements,
+and this one carried both a count and a claim about what the counted things *are*. The claim
+was refuted by `doc-extract` — **the surface this very stage turns green** — which prints
+`9894 values` ungrouped on a page where it groups `183<U+202F>798`. The section above is the
+rewrite; the count is gone from every document and the demonstration is named tokens.
+
+**Two guards green over the mutation their name claims, and three properties with no guard.**
+
+- The metadata-scope guard was named for clause 5's **six** keys and exercised **one**.
+  Narrowing the production filter to two keys left the whole suite green — it caught widening
+  past clause 5 and nothing on the narrowing side, which is the direction a later stage takes
+  to make a surface pass. Now parametrised over `CARD_META` itself.
+- **Clause 8a shipped with two incompatible readings and nothing pinned either.** The code
+  exempts on the whole ancestry; the docstring said the innermost tag. Both were green. Under
+  the flat reading a figure in `<code><td>` keeps its exemption while the census prints
+  `in td` — *spared by an element the census does not name*, which breaks the condition §4.11
+  grants the exemption under. Settled as ancestry-wide, and `_where` now prints `code td` the
+  way it already printed `svg text`.
+- Unguarded entirely: metadata read raw where body text is flattened (so a `content` holding
+  a doubled space hid the figure the same bytes show in a `<p>`); the exemption unmarked on
+  the **per-surface** census row, which is the row a stage reads first; and — found by
+  mutating my own repair of that row — the row marked `exempt` whenever *any* figure was
+  spared rather than all of them.
+
+*Four counts, one nesting reading, and three unguarded properties, in a stage whose subject is
+that a figure nobody measured is a figure nobody should quote.* The stage did the thing it was
+built to prevent, in the amendment that prevents it, and it took a review pass to see it.
+
+Six further mutations after the repairs, each red on the guard that names it. Suite **488 →
+497**, `core` **437**.
+
+#### The second review pass, and the two it blocked on
+
+**A sentence in `0007` §5 that §5 itself refutes.** The withdrawal was justified with *"this
+document states rules; `ADR-0004` §5 is why a measurement cannot be accepted into it."* The ADR
+says the opposite of that flat reading — *"cannot be accepted **without freezing them**"* — and
+§5 carries three frozen measurements, two of them in the same amendment and one of them four
+lines above the sentence. The justification for omitting an unfreezable figure declared the
+frozen ones inadmissible. *Right conclusion, wrong reason, in a normative document* — the same
+pairing as 8c itself, one review round later.
+
+**And the repaired scope guard leaned on an unpinned constant, so the hole moved up rather than
+closed.** Parametrising over `CARD_META` catches a narrowing of the *filter*; it cannot catch a
+narrowing of `CARD_META`. Measured: dropping `og:type` from the tuple left the **whole suite
+green** — the parametrised guard loses one case and says nothing. And the constant feeds
+**clause 5, which is in `GATED`**, so one edit silently narrows a gated clause and clause 8b's
+scope together. `tools/spec.py` quotes the six from `0007` §5 and the registry is held to the
+document, so the registry could not drift; the constant could drift out from under it. Now
+pinned literally, because a guard that reads the constant it guards asserts nothing — which is
+how the hole survived a round of being repaired.
+
+The pass also replaced 8c's two named false positives with a stronger witness it found in the
+corpus: `doc-extract` prints *"mandatory since 2026 — is `183<U+202F>798`"* in **one sentence**,
+and `9894 values` on the same page. The originals, `2026-03-14` and `33434+`, both carry
+adjacent punctuation a digit rule could key on, so a reader testing the claim against exactly
+the evidence given could defeat it. One page, both kinds, nothing lexical between them.
+
+*Counting this stage honestly: **six** guards or claims of the green-over-its-own-defect and
+wider-than-its-measurement families, across two review passes and one self-audit, in the
+amendment whose whole subject is that a figure nobody measured is a figure nobody should quote.*
+
+#### One trade this stage takes, recorded because it comes due later
+
+`og:url` is one of clause 5's six keys, so 8b puts it in clause 8's scoring scope, and the
+parametrised guard pins it there. **Nothing on the twelve matches** — the census finds metadata
+figures only under `description` and `og:description`. But once S9 brings clause 8 into `GATED`,
+a canonical URL carrying a `_GROUPED` match, say `?n=1,234`, would **refuse the build** on a
+string no reader reads as a quantity.
+
+Taken deliberately, and the alternative was worse: excluding `og:url` means clause 8b's scope
+stops being *"the six keys of clause 5"* and becomes a second, hand-maintained list of what
+counts as published metadata — which is the drift `CARD_META` exists to prevent, and which the
+review of this same stage found unpinned. Recorded here so the day it fires it reads as a known
+trade rather than as a defect, and so the amendment that would undo it has its reason written
+down: **a URL is machine-facing text inside a human-facing set, and the set is the thing worth
+keeping whole.**
+
+#### What moved
+
+| | before | after |
+|---|---|---|
+| clause 8 failing, committed surfaces | 6 | **5** — `doc-extract` reads `ok 8 separator U+202F 4; U+00A0 1 specimen, exempt` |
+| grouped figures censused, eleven surfaces | 88 | **94** — six in metadata |
+| normative sentences in the registry | 31 | **33**, uncarried still 4 |
+
+`GATED` is untouched and clause 8 stays outside it: five committed surfaces and `wroclaw` still
+fail. The conformance table **moved on purpose**, which is what separates this stage from S9-0 —
+and the two counts that moved are the metadata write sites becoming visible, not a page changing.
+
+Six mutations, each red on the guard that names it. The one pre-existing test that had to move
+is `test_the_recorded_narrow_spaced_page_reproduces_its_inventory`: **its fixture did not
+change, the clause did**, and the reduction was re-checked against the live `doc-extract` page
+before the expectation was rewritten — a fixture of record that had drifted from its origin
+would have made that a rewrite of the evidence rather than of the verdict.
 
 ## 5. What is carried, not scheduled
 
