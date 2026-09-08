@@ -104,6 +104,41 @@ stays exactly where it is — `wroclaw-air-insights/.claude/skills/verify-publis
 merged and already generalised over two review rounds — and is *invoked* for the geometry column rather than
 copied.
 
+*Amended 2026-09-08 — the geometry half is **deferred and unowned**, and the present tense above was an
+intention.* `0009` N3 named it; the trees confirm the conclusion and **refute the evidence it was given**.
+
+**What reproduces.** `measure_page.py` is tracked at that path and `wroclaw` tests it properly: a pure layer
+that runs everywhere, and a browser layer — `test_the_walk_returns_the_verdict_the_fixture_expects` — that
+calls `measure_page.measure()` against a real Chromium and skips where there is none. So N3's *"it appears in
+two comments and no call"* is wrong: there are calls, and one of them drives the engine.
+
+**What has no carrier is narrower and worse.** Every one of those calls points the instrument at **the skill's
+own fixtures**. Nothing points it at a published surface. `measure()` has never been run against the twelve as
+a scheduled or gated act, so the geometry column the sentence above promises does not exist and never has —
+the instrument is tested and it is not aimed. *A sweep asking "is this file called?" answers yes and moves on;
+the question the ADR's sentence actually makes is "is it called **on the pages**", and the two have opposite
+answers.*
+
+**The resolution is this amendment rather than the implementation, and two arguments agree.** §2.2 prices the
+rendered half at `requests`, `websocket-client` and a Chromium binary, while the sentence directly above chose
+K-c on *"no vendoring, no pin, no new CI wiring, no new dependency"* — so building the geometry column into the
+index checker spends exactly the currency K-c was selected for, which reopens K-c rather than closing a task
+inside it. And the repository that owns the instrument has already reached the same place independently:
+`test_verify_published_page.py:18-22` keeps its browser layer **skipped in CI on purpose**, on the grounds that
+*"the walk is measured in a real engine or it is not measured at all — reimplementing CSS overflow in Python to
+keep CI green would test the reimplementation."* A gate that skips wherever it runs is not a gate, and that is
+the honest state of the only mechanism there is.
+
+**Where the gap is visible now.** `tools/spec.py` carries clause 3's geometry sentence as `c3.s2` with a `why`
+and **no carrier**, so `python -m tools.spec` prints it uncarried on every run. That is the home `ADR-0005` was
+taken for and it is stronger than this paragraph: prose can be read past, and the registry's guards refuse a
+clause that claims a carrier it does not have.
+
+**What would reopen it**, stated so the deferral reads as a decision and not an omission: a static proxy for
+*"has somewhere to scroll"* that needs no browser; or `wroclaw`'s existing browser layer aimed at the published
+surfaces rather than at its fixtures, which costs **that** repository the dependency it already carries instead
+of costing it to all twelve — §2.4's pattern, applied to the one clause half this ADR could not place.
+
 Coverage of all twelve, stated here rather than discovered later. The seven of §2.4 carry assertions of their
 own **and** are read by the index checker. Three more — **`mini-traceroute`, `mlops-car-price` and
 `pl-jobs-lora`**, the hand-written pages in repositories with no Python page test — are covered by the index

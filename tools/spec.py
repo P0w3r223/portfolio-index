@@ -228,10 +228,13 @@ CLAUSES: tuple[Clause, ...] = (
         id="c3.s2",
         cite="0007 §5 clause 3, the geometry half",
         quote="The wrapper must actually have somewhere to scroll when the table needs it",
-        why="0009 N3 and §7 row 13 — `measure_page.py` is the carrier `ADR-0004` §4 names "
-            "for this half, and it is invoked from nowhere. The row is to implement it or to "
-            "amend `ADR-0004` §4 to say the half is deferred and unowned; it is currently "
-            "claimed and neither.",
+        why="0009 N3, resolved 2026-09-08 as deferred and unowned — the decision is now "
+            "written into `ADR-0004` §4, where the sentence claiming this carrier stood. "
+            "N3's evidence does not reproduce: `measure_page.py` has calls, and one drives a "
+            "real Chromium. They all point it at the skill's own fixtures, and nothing has "
+            "ever pointed it at a published surface — the instrument is tested and it is not "
+            "aimed. `wroclaw` keeps that browser layer skipped in CI deliberately, so there "
+            "is no green gate to inherit even where the dependency is paid for.",
         note="`3 tables` checks the ancestry and the declared `overflow-x`. Whether the "
              "wrapper has anywhere to scroll is a rendered width, which no static read gives.",
     ),

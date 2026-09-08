@@ -592,6 +592,129 @@ def test_the_recorded_narrow_spaced_page_reproduces_its_inventory():
     assert (finding.status, finding.detail) == (clauses.FAIL, "U+00A0 1, U+202F 3")
 
 
+def test_a_figure_reports_the_element_that_encloses_it():
+    """`0008` S9c's exemption turns on this and on nothing else.
+
+    `doc-extract` prints `3<U+00A0>466,62` inside `<code>` as a **displayed specimen** of the
+    Polish invoice format its extractor reads — a quotation of a foreign convention, not the
+    page speaking. Every other grouped figure on the twelve sits in ordinary body text. The
+    stage's amendment exempts the first and must not reach the second, and §4.11 requires the
+    exemption censused *"so it cannot silently widen"*.
+
+    Before `text_nodes`, `Page` kept a flat list of strings and these two figures were the
+    same kind of thing. An exemption written then could only have named the literal string,
+    which widens the moment the specimen's value changes and narrows to nothing the moment a
+    second repository quotes a foreign format.
+    """
+    figures = clauses.grouped_figures(
+        page(f"<body><p>1{NBSP}234</p><code>3{NBSP}466,62</code></body>"))
+
+    assert [figure.where for figure in figures] == ["p", "code"]
+    assert {figure.separators for figure in figures} == {("U+00A0",)}, (
+        "the two figures differ by element and by nothing else, which is the whole point")
+
+
+def test_a_figure_drawn_into_a_chart_is_marked_as_svg_rather_than_as_body_text():
+    """`car-price-ml` renders 12 conforming figures into SVG `<text>` from `charts.py` and 16
+    non-conforming ones from the template and `build.py`, spread across five different
+    elements. Same page, same figures, two formatters — and the element is what tells the
+    formatters apart in the census, which is how the stage knows `charts.py` is already the
+    reference implementation and must not be "unified" toward the wrong one.
+
+    *The element list that stood here named three of those five.* Enumerating them is not
+    what this guard needs — `svg text` against everything else is — and an enumeration is a
+    figure that goes stale silently, which is the whole argument for the census."""
+    figures = clauses.grouped_figures(
+        page(f"<svg><text>8{NARROW}612</text></svg><p>8 612</p>"))
+
+    assert [(figure.where, figure.separators) for figure in figures] == [
+        ("svg text", ("U+202F",)), ("p", ("space",))]
+
+
+def test_the_clause_and_the_census_never_disagree_because_one_is_read_from_the_other():
+    """The clause counts separator **characters**; the census counts figures as well.
+
+    `clause_8_separator`'s docstring states that the two are equal *"because none prints a
+    figure at or above a million"* — an assumption about the corpus, asserted in a comment.
+    A figure with two separators is where they part, and the clause must still report two.
+
+    This is the tie that makes the census trustworthy: the clause is *expressed over*
+    `grouped_figures` rather than running the regex a second time, so a reader comparing the
+    two is comparing one measurement in two units and never two measurements.
+    """
+    markup = page(f"<p>12{NARROW}345{NARROW}678</p>")
+    figures = clauses.grouped_figures(markup)
+
+    assert len(figures) == 1, "one figure"
+    assert figures[0].separators == ("U+202F", "U+202F"), "carrying two separators"
+    assert clauses.clause_8_separator(markup).detail == "U+202F 2", (
+        "the clause reports separators, so a single figure grouped twice counts twice")
+
+
+def test_a_figure_is_never_read_across_two_text_nodes():
+    """`auth-log-scan`'s stat tiles print `5` and `315` in adjacent elements.
+
+    Welded, they read as the grouped figure `5 315`, which that page does not contain — the
+    mechanism behind every wrong separator tally in the record. `rendered_text` forbids it
+    with a newline between nodes, and `grouped_figures` reads the nodes *individually*, so
+    it must inherit the same refusal rather than reintroduce the defect by another route.
+
+    **The whitespace between the two elements is the whole fixture.** Written
+    `<span>5</span><span>315</span>`, a welded read yields `5315`, which matches `_GROUPED`
+    under no reading at all — so the guard passed with the nodes joined, green over the one
+    defect its name claims. The real markup has the newline that indentation puts there, and
+    `auth-log-scan`'s tiles, which this docstring cites, are separated exactly so. Found by
+    review, after two guards of the same shape had already been found by mutation in this
+    stage.
+    """
+    tiles = "<span>5</span>\n<span>315</span>"
+
+    assert clauses.grouped_figures(page(tiles)) == []
+    assert clauses.clause_8_separator(page(tiles)).status == clauses.NOT_APPLICABLE
+
+
+def test_the_printable_form_names_its_separators_and_is_pure_ascii():
+    """The census printed a page's own bytes back, and the `--detail` run CI executes died.
+
+    `UnicodeEncodeError: 'charmap' codec can't encode character ' '` on a cp1250
+    console, taking the whole report with it — found on this census's first run. Every other
+    line in this checker already names codepoints instead of emitting them, and that turns
+    out to be load-bearing rather than tidy.
+
+    The second reason survives any encoding: `1 234` separated by a space, a thin space, a
+    no-break space and a narrow no-break space are **one string** in a terminal, in a diff
+    and in a grep. A census whose reader cannot tell its rows apart is the hand count with an
+    instrument's authority, which is what `0008` §4.13 objects to.
+    """
+    figures = clauses.grouped_figures(
+        page(f"<p>1{NARROW}234</p><p>2{NBSP}345</p><p>3 456</p><p>4,567</p>"))
+
+    printed = [figure.display for figure in figures]
+    assert printed == ["1<U+202F>234", "2<U+00A0>345", "3<space>456", "4,567"]
+    for form in printed:
+        assert form.isascii(), f"{form!r} cannot reach the console the report is printed to"
+
+
+def test_a_figure_in_non_ascii_digits_is_still_printable():
+    r"""`_GROUPED` matches `\d`, which in a `str` pattern is every Unicode decimal digit.
+
+    So naming the separators is not on its own enough to make `display` printable: a page
+    grouping Devanagari or Arabic-Indic digits would carry them straight through and could
+    re-raise the `UnicodeEncodeError` this property exists to prevent. No page in the
+    portfolio does it, which is exactly why the hole would have kept.
+
+    Narrowing `_GROUPED` to `[0-9]` was the other candidate and was rejected: it changes what
+    clause 8 *scores*, on a corpus where it happens to change nothing, and this commit's
+    contract is that the conformance table does not move. `display` is a printing concern and
+    is made total where the printing happens.
+    """
+    figures = clauses.grouped_figures(page("<p>१० २३४</p>"))
+
+    assert len(figures) == 1, ("Devanagari digits are digits to r`\\d`, the premise here")
+    assert figures[0].display.isascii(), (
+        f"{figures[0].display!r} would raise UnicodeEncodeError on the console CI prints to")
+
+
 def test_the_recorded_welding_table_reports_no_figure_at_all():
     """Welded, this table alone credited `pl-review-sense` with nine separators."""
     finding = clauses.clause_8_separator(page(fixture("welded_cells.html")))

@@ -101,8 +101,16 @@ _HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES
 #: viewport units are not read and report as no width at all, which is the old defect at a
 #: smaller radius; narrow the sentence rather than claim coverage. `px` alone was the whole
 #: pattern, so a rail written `0.2rem` matched nothing, took no exemption, and reported
-#: `1 usage roles FAIL` — a key `"1 "` gates on, about a page that is conforming. `0008` S9
-#: rewrites five stylesheets, which is where a unit changes.
+#: `1 usage roles FAIL` — a key `"1 "` gates on, about a page that is conforming.
+#:
+#: *This said `0008` S9 rewrites five stylesheets, which is where a unit changes. It does
+#: not.* S9 is scoped by **formatter**, and §4.11's write-site table names fourteen files
+#: across `.py`, `.j2` and `.html` with no stylesheet among them — the claim came from `0009`
+#: W3 and §7 row 2, which carry it about S7 and S9 together, and only S7 rewrote CSS. So the
+#: hazard is real and its trigger is not scheduled: **no open stage rewrites a stylesheet**,
+#: and this pattern's exposure is whatever the next one does. Left named rather than deleted
+#: for the reason §4.11 gives about two artifacts pointing at a stage that did not exist —
+#: a comment aimed at the wrong stage sends a reader to check the wrong diff.
 #:
 #: The root font size is not read and 16 is CSS's initial value. That is an assumption and
 #: it is a safe one here: this distinguishes a **rail** from a hairline, so the threshold is
@@ -868,6 +876,86 @@ def clause_7_webfont(page, css: str) -> Finding:
     return Finding("7 webfont", PASS, "system stack")
 
 
+@dataclass(frozen=True)
+class GroupedFigure:
+    """One grouped figure a page renders, and where on the page it sits."""
+
+    text: str
+    #: One name per separator *character*, in the order they appear — so `1 234 567` yields
+    #: two. This is the unit `clause_8_separator` counts, and expressing the clause over this
+    #: list rather than over its own second `findall` is the point: a census that disagrees
+    #: with the verdict it explains is worse than no census, and two passes over one regex
+    #: is exactly how that happens.
+    separators: tuple[str, ...]
+    #: The innermost enclosing tag, `svg ` prefixed inside a chart. `0008` S9c's exemption
+    #: turns on this and on nothing else.
+    where: str
+
+    @property
+    def display(self) -> str:
+        """The figure with each separator named in place, which is the only printable form.
+
+        **Two reasons, and the first one crashed.** Printing `text` sends U+202F and U+00A0
+        to the terminal; the `--detail` run CI executes died with `UnicodeEncodeError` on a
+        cp1250 console the first time this census ran, taking the whole report with it. Every
+        other line in this checker already names codepoints rather than emitting them, and
+        that convention turns out to be load-bearing rather than tidy.
+
+        The second reason is why naming them is better even where the encoding would hold:
+        the four wrong separators and the right one are **invisibly different**. `1 234` with
+        a plain space, a thin space, a no-break space and a narrow no-break space are one
+        string in a terminal, in a diff and in a grep. A census a reader cannot check is the
+        hand count with an instrument's authority, which is the thing `0008` §4.13 objects to.
+        """
+        named = {character: f"<{name}>"
+                 for character, name in _SEPARATOR_NAMES.items() if name != "comma"}
+        # Every remaining non-ASCII character, not only the separators. `_GROUPED` matches
+        # `\d`, which is every Unicode decimal digit, so a page grouping Devanagari or
+        # Arabic-Indic numerals would carry them through and re-raise the encode error this
+        # property exists to prevent. Narrowing the pattern to `[0-9]` was the other
+        # candidate and would change what clause 8 *scores*; this changes only what is
+        # printed, which is where the problem is.
+        return "".join(
+            named.get(character)
+            or (character if character.isascii() else f"<U+{ord(character):04X}>")
+            for character in self.text)
+
+
+def _where(ancestry: tuple[str, ...]) -> str:
+    if not ancestry:
+        return "(root)"
+    innermost = ancestry[-1]
+    if "svg" in ancestry and innermost != "svg":
+        return f"svg {innermost}"
+    return innermost
+
+
+def grouped_figures(page) -> list[GroupedFigure]:
+    r"""Every grouped figure on the page, with its separators and its element context.
+
+    **Read per text node rather than over `rendered_text`, and the two agree by
+    construction.** `rendered_text` is those same nodes joined with `chr(10)`, the separator
+    class contains no newline, and neither bound — `(?<![\d.:])`, `(?![\d.:])` — is
+    affected by one, so a match at a node edge is a match at a newline and there is no third
+    case. What the per-node read adds is the ancestry, which the join destroys.
+
+    Nothing here judges. It is the inventory two callers read: `clause_8_separator` for the
+    verdict, and `__main__` for the census `0008` §4.13 requires — *a stage scoped by a
+    figure no instrument prints is scoped by whoever counted last.* Three hand counts of the
+    write sites gave fifteen, eighteen and nineteen against a true twenty; this counts the
+    other side of the same migration, the figures those sites reach, and it counts them on
+    every run.
+    """
+    found: list[GroupedFigure] = []
+    for text, ancestry in page.text_nodes:
+        for match in _GROUPED.finditer(text):
+            separators = tuple(_SEPARATOR_NAMES[character]
+                               for character in match.group(2)
+                               if character in _SEPARATOR_NAMES)
+            found.append(GroupedFigure(match.group(0), separators, _where(ancestry)))
+    return found
+
+
 def clause_8_separator(page) -> Finding:
     """The separator inventory of every grouped figure the page prints.
 
@@ -884,11 +972,9 @@ def clause_8_separator(page) -> Finding:
     S9: the instrument implements the clause it was given, and says so.
     """
     counts: dict[str, int] = {}
-    for _, tail in _GROUPED.findall(page.rendered_text):
-        for character in tail:
-            if character in _SEPARATOR_NAMES:
-                counts[_SEPARATOR_NAMES[character]] = counts.get(
-                    _SEPARATOR_NAMES[character], 0) + 1
+    for figure in grouped_figures(page):
+        for name in figure.separators:
+            counts[name] = counts.get(name, 0) + 1
     # The unit here is separator *characters*, which equals the figure count on every page
     # today because none prints a figure at or above a million. The first that does makes
     # this inventory non-comparable with §3, which counts figures.

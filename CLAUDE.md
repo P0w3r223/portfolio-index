@@ -28,11 +28,11 @@ to be written in a recruiter's register. Do not repair one and assume the other 
 ```
 tools/pagespec/       the checker — standard library only
   sources.py            the surface registry and the ONLY I/O; everything else is pure
-  render.py             HTML -> Page (title, headline, tables with ancestry, rendered text)
+  render.py             HTML -> Page (title, headline, tables and text nodes with ancestry)
   css.py                CSS -> rules, with comments stripped and media conditions flattened
   colour.py             WCAG arithmetic; contrast() ships, resolve()/composite() are unused
   clauses.py            clauses 1-8 as pure checks over one Loaded
-  __main__.py           the report, the role census, and the GATED ratchet
+  __main__.py           the report, two censuses, and the GATED ratchet
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
@@ -91,6 +91,14 @@ python -m pytest -m submodules           # only the tests that read a working tr
 
 ## What not to do
 
+- **Do not widen `GATED` from the eleven alone.** `wroclaw` commits no HTML and republishes
+  from a Pages artifact rebuilt daily, so its page does not move when its pull request merges,
+  while the floor guard reads the eleven at the pinned gitlinks and **demands** the widening
+  the moment those eleven go clean. A pointer bump that cleans the eleven therefore arms the
+  guard while the twelfth still fails, and the morning's `live` run goes red on a merge that
+  was green. Land the siblings, *do not bump the pointers*, confirm the twelfth with
+  `--fetch` or a `live` dispatch, then bump and widen in **one** commit. The guard's own
+  failure message says this; `0008` §4.15 says when it bites, which is S9 and again S10.
 - **Do not hand-edit `GATED`** (`tools/pagespec/__main__.py`) as part of unrelated work. It is a
   ratchet: it names the finding keys that report zero `FAIL` across every surface read, and a
   closing stage adds its own. Widening it past the measurement is caught by

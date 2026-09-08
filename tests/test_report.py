@@ -851,3 +851,190 @@ def test_a_submodule_nobody_checked_out_is_not_a_page_somebody_deleted(
     (populated / surface.repo / "README.md").write_text("here", encoding="utf-8")
     assert report.main(["--root", str(populated), "--only", surface.name, "--fetch"]) == 1
     assert "commits a page has none" in capsys.readouterr().out
+
+
+# -- the separator census, which 0008 §4.13 requires of S9's first commit --------------------
+
+NARROW = "\u202f"
+NBSP = "\u00a0"
+
+
+def _group(tree: Path, repo: str, figure: str) -> None:
+    """Put one grouped figure on a surface, leaving the rest of the page alone.
+
+    The `tree` fixture's two pages print none, which is correct for what they were built to
+    exercise and is why the census has to be given something to count. **Appended rather
+    than written over**, because `ab-lab`'s fixture page satisfies every other clause and the
+    exit-status guard below needs a surface whose only failure is the one being added.
+    """
+    target = tree / repo / "docs" / "index.html"
+    original = target.read_text(encoding="utf-8")
+    # A `replace` that matches nothing returns the string unchanged, so a fixture losing its
+    # `</body>` would leave every caller asserting against a page with no figure on it. Four
+    # tests would go red loudly and one — the `--only` guard — would go **green**, which is
+    # the second time that guard has been at risk of passing for the wrong reason.
+    assert "</body>" in original, f"{repo}'s fixture has no </body> for the figure to precede"
+    target.write_text(original.replace("</body>", f"<p>{figure}</p></body>"), encoding="utf-8")
+
+
+def test_the_census_prints_every_grouped_figure_and_asserts_nothing(tree, capsys, monkeypatch):
+    """`0008` §4.13: *a stage scoped by a figure no instrument prints is scoped by whoever
+    counted last.* Three hand counts of the write sites gave fifteen, eighteen and nineteen
+    against a true twenty.
+
+    The write sites are lines of Python in eleven other repositories, and `0009` §7 row 6 is
+    the decision not to bring them here — `sources.py` is the I/O boundary and nothing else.
+    **The figures those sites reach are these bytes**, and this is what the checker can count
+    honestly. It prints and it decides nothing: the exit status must not move.
+
+    **The seeded figure is non-conforming, and that is the whole guard.** Seeded with a
+    U+202F figure this test was green over a census that appends to `blocked` — the census
+    had nothing to object to, so a gating census and a printing one behaved identically. It
+    is the second time in this stage a guard was written against the conforming case and
+    proved nothing; the first is recorded in `0008` §4.15.
+
+    `GATED` drops `"8 "` so clause 8's own `FAIL` stays out of the gate, which leaves the
+    census as the only thing that could move the status. One surface, so nothing is unread.
+    """
+    _group(tree, "ab-lab", "1 234 resamples")
+
+    monkeypatch.setattr(sources, "SURFACES",
+                        tuple(one for one in sources.SURFACES if one.name == "ab-lab"))
+    monkeypatch.setattr(report, "GATED",
+                        tuple(prefix for prefix in report.GATED if prefix != "8 "))
+
+    assert report.main(["--root", str(tree)]) == 0, (
+        "the census moved the exit status, which is what `printed and never asserted` denies")
+    out = capsys.readouterr().out
+
+    assert "separator census" in out
+    assert "printed and never asserted" in out
+    assert "gate —" not in out, "a census that gated would be a second clause 8"
+
+    # **Not `--report-only`, and that is the finding this line records.** With the flag,
+    # `main` returns 0 at the `if args.report_only` branch *before* any gate section is
+    # printed, so both assertions above hold whether the census gates or not. Measured: a
+    # census appending to `blocked` left this green and reddened exactly one test in the
+    # suite — in `test_published_surfaces.py`, whose module is `submodules`-marked. A pull
+    # request green on `core` alone proved nothing about the invariant this guard is named
+    # for, which is the hazard `CLAUDE.md` states about `GATED`. Found by review.
+
+
+def test_the_verdict_column_says_which_separator_is_the_conforming_one():
+    """`assert "clause 8" in out` was the whole guard on this column, and `not clause 8`
+    contains it.
+
+    Measured: inverting the conditional, and replacing it with the constant `"clause 8"`,
+    both left the **entire suite** green — a census telling a reader that every separator on
+    the portfolio conforms would have shipped, and S9 reads its edit order off this column.
+    The row is asserted rather than a token in it. `0009` §12.1.2 records the same substring
+    shape costing a figure in a document; this is it costing a verdict in an instrument.
+
+    Called directly, which is the role census's own precedent
+    (`test_the_census_counts_references_per_family_and_names_the_minority`) and reaches four
+    things `main` cannot be made to show cheaply.
+    """
+    lines = report._separator_census(
+        [("conforming", f"<p>1{NARROW}234</p>"), ("not", "<p>5 678</p><td>9,012</td>")], False)
+
+    # Selected by what the row *starts* with: a per-surface row names its separators too,
+    # and picking the first line containing "U+202F" finds that one instead.
+    narrow = next(line for line in lines if line.strip().startswith("U+202F"))
+    assert "not clause 8" not in narrow, "the conforming separator was labelled non-conforming"
+    assert "clause 8" in narrow
+
+    for wrong in ("space", "comma"):
+        row = next(line for line in lines if line.strip().startswith(wrong))
+        assert "not clause 8" in row, f"{wrong} was labelled as satisfying clause 8"
+
+
+def test_the_census_prints_both_units_so_a_seven_digit_figure_makes_them_disagree():
+    """The reason for printing figures *and* separators, and no fixture ever exercised it.
+
+    `clause_8_separator`'s docstring says the two counts are equal *"because none prints a
+    figure at or above a million"* — an assumption about the corpus. The census exists to
+    turn that into a printed fact, so the branch that fires when it stops being true is the
+    claim, and collapsing it to the constant left the whole suite green.
+    """
+    one_each = report._separator_census([("s", f"<p>1{NARROW}234</p>")], False)
+    assert "1 figure(s), 1 separator(s) — one separator each" in chr(10).join(one_each)
+
+    over_a_million = report._separator_census([("s", f"<p>1{NARROW}234{NARROW}567</p>")], False)
+    assert "1 figure(s), 2 separator(s) — 1 figure(s) at or above a million" in (
+        chr(10).join(over_a_million))
+
+
+def test_the_summary_names_where_each_separator_was_found():
+    """The **other** `in` column, and the one that prints without `--detail`.
+
+    There are two: the per-figure row `in <code>` that `--detail` prints, and this summary
+    row — `in code 1, p 1` — that every run prints under the portfolio totals. The guard
+    below covered the first, and deleting the second left the **whole suite** green. Found by
+    the second review pass, which also noted the consequence: the element distribution that
+    was briefly hand-typed into `render.py`'s docstring was a hand sum across these rows, and
+    the line that would have kept it honest was the unguarded one. The docstring no longer
+    carries the figure; this makes the row that replaces it checkable.
+    """
+    lines = report._separator_census(
+        [("s", f"<code>3{NBSP}466</code><p>1{NBSP}234</p>")], False)
+
+    placed = [line for line in lines if line.strip().startswith("in ")]
+    assert placed, (
+        "the portfolio summary names no element at all; the row that says where each "
+        "separator was found is gone. Census was: " + chr(10).join(lines))
+    assert "code 1" in placed[0] and "p 1" in placed[0], (
+        f"the summary does not say where the figures were found: {placed[0]!r}")
+
+
+def test_the_detail_row_names_the_element_each_figure_sits_in():
+    """The `in <element>` column is S9c's discriminator, and dropping it left the suite
+    green. Asserted here rather than through `main` because `--detail` output is long and a
+    substring of it is what the two findings above were."""
+    lines = report._separator_census([("s", f"<code>3{NBSP}466,62</code>")], True)
+    assert any("in <code>" in line and "3<U+00A0>466" in line for line in lines), (
+        "the figure is `3<U+00A0>466`; `,62` is the Polish decimal tail and `_GROUPED`'s "
+        "trailing bound ends the token there, which is the pattern behaving as written")
+
+
+def test_the_census_names_its_separators_rather_than_printing_them(tree, capsys):
+    """The first run of this census died on `UnicodeEncodeError` in the `--detail` mode CI
+    runs, on a console whose codepage cannot encode U+202F. Naming the codepoint is not a
+    formatting preference here — it is what lets the report reach a terminal at all, and it
+    is what makes four invisibly-different separators tellable apart."""
+    _group(tree, "ab-lab", f"1{NARROW}234</p><p>5{NBSP}678")
+
+    assert report.main(["--root", str(tree), "--report-only", "--detail"]) == 0
+    out = capsys.readouterr().out
+
+    assert "1<U+202F>234" in out and "5<U+00A0>678" in out
+    census = out[out.index("separator census"):]
+    assert NARROW not in census and NBSP not in census, (
+        "the census emitted the codepoint it is reporting on")
+
+
+def test_one_surface_gets_no_census_because_a_census_of_one_is_a_row(tree, capsys):
+    """The role census makes the same choice, for the same reason: both are portfolio-wide
+    distributions, and `--only` is the flag for looking at a single page.
+
+    **The figure is what makes this assert anything**, and its first version had none. With
+    the fixture's pages as built, no surface groups a thousand, so the census returns nothing
+    to print and the test passed whether `--only` suppressed it or not — green over the
+    mutation removing the suppression. It is put on the surface being selected, so the census
+    has something to say and silence can only mean the flag.
+    """
+    _group(tree, "ab-lab", f"1{NARROW}234")
+
+    report.main(["--root", str(tree), "--report-only", "--only", "ab-lab"])
+    assert "census" not in capsys.readouterr().out
+
+
+def test_a_page_with_no_grouped_figure_is_listed_rather_than_omitted(tree, capsys):
+    """An absent row and a row reading zero are different claims, and only one of them is
+    checkable. Four of the twelve surfaces print no grouped figure at all; a census that
+    simply left them out would be indistinguishable from a census that failed to read them —
+    the silent-green shape `0008` §3.7, §3.9 and §4.9 each record in another guard."""
+    _group(tree, "ab-lab", f"1{NARROW}234")
+
+    assert report.main(["--root", str(tree), "--report-only"]) == 0
+    out = capsys.readouterr().out
+    assert "mlops-car-price          no grouped figure" in out
