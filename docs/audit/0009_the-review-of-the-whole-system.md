@@ -270,8 +270,9 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | 8 | The scheduled `live` job hashes all twelve fetched surfaces against their committed files, reporting a mismatch under its own finding key | **C1**, both halves | S | **done — `#90`**. Eleven, not twelve: `wroclaw` has no committed file. And it grew a half the row did not name — a hash says the two *disagree*, not which clause the public page now fails, so the clauses are answered from the served bytes too |
 | 9 | Split `0008`: ledger, **a failure-taxonomy document**, measurements to the report | §6.2 row 5 | S | open — after S9/S10, so the file is smaller when split |
 | 10 | **Sx** — 11 `pyproject.toml`, 70 `Author:` fields | dead weight | 0.5 d | **done** — eleven sibling pull requests plus `b416c83` and `d550066`. Both figures now read **0**. `d550066` is green on `main`; `b416c83` is `docs/**` only, which the paths filter excludes, so it has no run. `0008` §4.14 records what the stage measured, including a deprecation date the record did not have |
-| 11 | Bring the **profile README** into the system — at minimum a `Surface` read by `--fetch` in `live`, plus the quotation rule | the asymmetry in §9 | S | open |
-| 12 | **Contrast at the usage site** — a clause using the existing `colour.resolve()`/`composite()`, `UNDECIDED` for `color-mix`, `opacity < 1` and SVG paint order, threshold per usage site | N4, `0007` §7's largest gap | M | open — ships report-only, enters `GATED` only when a stage closes it |
+| 11 | Bring the **profile README** into the system — ~~at minimum a `Surface` read by `--fetch` in `live`~~, plus the quotation rule | the asymmetry in §9 | **M, not S** | open, and **re-scoped by measurement 2026-09-08** — §14 |
+| 12 | **Contrast at the usage site** — a clause using the existing `colour.resolve()`/`composite()`, `UNDECIDED` for `color-mix`, `opacity < 1` and SVG paint order, threshold per usage site | N4, `0007` §7's largest gap | M | open, and **next after row 13b** — it is the only open row where a published page can harm a reader, which is §3.1's promotion rule. Ships report-only with a `NOT_A_CLAUSE` entry stating that as a decision; it enters `GATED` when a stage closes it, and **that admission is what makes row 13b due first** |
+| 13b | **Close the eleven/twelve asymmetry in the instrument** — parametrise `_sweep()`'s fetch mode in `tests/test_published_surfaces.py`, make the expected surface count follow that mode, and give the scheduled `live` job a `pytest -m submodules` step | the trap `CLAUDE.md` spends a paragraph on | S | open — **designed and deliberately not taken during S9/S10**, because §13.6 forbids repairing a guard in the window that guard is carrying a stage. Its feasibility is reasoned rather than run: `live` already checks out submodules and the fetch-refusal guard in `tests/test_report.py:484` permits it there, but the mode-dependent count needs its own mutation proof and a wire failure must not be able to redden a floor guard. **Take it before row 12, not during** — row 12's key is the next admission to `GATED`, and this is the procedure that admission needs |
 | 13 | Registry-drift test (N1) · resolve N3 (implement the geometry half or amend `ADR-0004` §4 to say it is deferred and unowned) · clean `autoMode.environment` | N1, N3, §6.2 row 4 | S | **N1 and N3 done — 2026-09-08.** N1: the workflow's two `paths:` filters are tied to `sources.SURFACES` by a `core` test, which is the half §12.4 leaves and the one this row correctly calls the silent failure. N3: deferred and unowned, in `ADR-0004` §4 and `tools/spec.py` `c3.s2` — **its evidence did not reproduce**, §8 row 7. `autoMode.environment` is **open** and is the user's global settings rather than this repository |
 
 **Rows 2, 3 and 4 landed together in `#83`, and row 2 grew.** It was written as three defects
@@ -678,3 +679,87 @@ should be read against — the instrument moved a great deal and the portfolio m
 found by looking at the instrument. The instrument is now considerably better at refusing things
 that have never happened, and the two clauses that actually fail on real pages — the separator
 and the `<title>` — are exactly where they were this morning.
+
+
+## 14. The landing surface, measured — and why §7 row 11 cannot be done the way it is written
+
+Taken 2026-09-08, straight after S9/S10 closed, because row 11's cost was entirely determined
+by a measurement nobody had taken and the measurement costs one fetch. §9 argues the asymmetry;
+this is what is actually on the other side of it.
+
+### 14.1 The row's own prescription fails on contact
+
+Row 11 says *"at minimum a `Surface` read by `--fetch` in `live`"*. Fetched
+`https://github.com/P0w3r223` and parsed it with the checker's own `render.parse`:
+
+| what the checker would read | value |
+|---|---|
+| `<title>` | `P0w3r223 (Piotr Cząstkiewicz) · GitHub` |
+| headline | `Piotr Cząstkiewicz P0w3r223` |
+| `.eyebrow` | absent |
+| `og:title` | `P0w3r223 - Overview` |
+| anchors ending at the profile | **10** |
+| grouped figures | 0 |
+
+**Adding that surface to `SURFACES` today reddens the `live` job on its first run**, on four
+gated clauses at once: `4 title` (leads with the identity), `4 h1` (equals the profile name),
+`4 eyebrow` (absent) and `6 back-link` (the clause asks for exactly one; there are ten).
+
+And every one of those four is a property of **GitHub's chrome, not of the README**. The title,
+the header, the navigation and nine of the ten profile links are markup this portfolio does not
+author and cannot change. The clauses were written for a self-hosted `docs/index.html` where the
+repository owns every byte; pointed at a rendered profile they measure the host.
+
+*So the row is not "small" and it is not "add a Surface". It is a scoping decision the record
+has never taken: **which clauses can even be asked of a surface somebody else renders.*** Two
+routes exist and both were confirmed reachable — the rendered fragment isolates cleanly at
+`<article class="markdown-body …">`, and the raw markdown is 4320 bytes at
+`raw.githubusercontent.com`. Neither is free: the first parses a container GitHub can rename,
+the second is Markdown and the whole checker reads HTML.
+
+### 14.2 What the surface actually says, which is the stronger half of §9's argument
+
+**Six of the twelve are linked from it. Six are not.**
+
+| linked | `ab-lab`, `apply-scout`, `car-price-ml`, `doc-extract`, `mlops-car-price`, `token-budget` |
+|---|---|
+| **not linked** | `auth-log-scan`, `it-job-radar`, `mini-traceroute`, `pl-jobs-lora`, `pl-review-sense`, `wroclaw-air-insights` |
+
+§9 says the landing surface has no instrument. The sharper fact is that it **omits half the
+portfolio** — including every one of the six repositories S9 and S10 spent a day polishing. A
+recruiter arriving at the profile cannot reach `wroclaw`'s live forecast, `it-job-radar`'s forty
+figures or `pl-review-sense` at all. *Whether that is an editorial decision or an omission is
+not something an instrument can answer, which is exactly why it belongs in this document and
+not in the checker.*
+
+### 14.3 And it quotes two figures, one of which is already rounded past its artifact
+
+The README carries two claims with figures, both sourced from other repositories:
+
+| claim | artifact says |
+|---|---|
+| *"the Ministry's KSeF FA(3) schema carries **328** enumerations"* | `doc-extract/docs/index.html` prints `328 enumerations` — **agrees** |
+| *"turn a true null into a **25–66%** false positive rate"* | `ab-lab/docs/index.html` prints **`25.3%`** and **`65.7%`** |
+
+The second is prose rounding and defensible as prose. It is also, precisely, what `0007` §5.0
+governs — *every figure a surface prints is a figure a committed artifact prints* — and **nothing
+anywhere checks it.** `ab-lab` re-recorded its evidence during S9 (§4.17 item 5 in `0008`); the
+rates happened to reproduce to the digit, so the profile survived. A seed change, a package
+change or a re-run on different data moves `65.7` and the landing surface goes stale silently,
+on the one page a reader reaches first.
+
+*This is `0008` §5's carried README row — twelve of thirteen READMEs hand-typed with no carrier
+— arriving at the thirteenth and worst instance. The row says a provenance reader "should follow
+S9 rather than ride inside it." S9 has now landed, and this is the surface that should be its
+first target rather than its last.*
+
+### 14.4 What this changes about the order
+
+Row 11 stops being an S-sized "add a surface" and becomes an M-sized stage with a decision in
+front of it. It also stops being interchangeable with `0008` §5's README-provenance row: they
+are the same build aimed at the same class of defect, and §14.3 is the evidence that the
+profile is where that build pays first.
+
+**It does not move ahead of row 12.** A page that fails WCAG harms a reader now; a figure that
+may go stale harms one later, and the artifact it quotes reproduced this week. §3.1's promotion
+rule reaches row 12 and not this one.
