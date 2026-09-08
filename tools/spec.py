@@ -151,7 +151,10 @@ CLAUSES: tuple[Clause, ...] = (
         carriers=_index("1 usage roles", "1 composited"),
         note="`1 composited` is the honest half: resolving a `color-mix()` needs the ground "
              "the mark is drawn over, so those usage sites report `undecided` rather than a "
-             "verdict. `0008` §3.2.",
+             "verdict. `0008` §3.2. **It reads the markup as well as the stylesheet since "
+             "`0008` S12**, because alpha reaches a pixel from three places and it read two: "
+             "a *data-driven* alpha has nowhere to live but a presentation attribute, and the "
+             "one surface that emits one was failing SC 1.4.3 underneath it.",
     ),
     Clause(
         id="c1.s4b",

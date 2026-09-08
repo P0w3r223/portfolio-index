@@ -318,3 +318,63 @@ def test_a_self_closed_tag_pops_the_ancestry_and_a_void_one_never_pushed_it():
         ("body", "p"), ("body", "p"), ("body", "p"), ("body", "div")], (
         "a void tag must not push, and a self-closed non-void tag must pop what it pushed")
     assert parsed.unclosed == 0, "the class stack came back down too"
+
+
+def test_a_paint_alpha_in_the_markup_is_collected_with_the_element_that_carries_it():
+    """SVG's three alpha presentation attributes, and the element they belong to.
+
+    Collected here rather than grepped out of the HTML because an attribute is structure, and
+    `0007` §2's whole subject is answering a question about the rendered page from something
+    that is not it. The classes travel with it **for the clause that will name the site** —
+    `1 composited` prints a count and not the sites today, exactly as it does for its CSS
+    branch, and S13's walk is what needs to say *which* rect. Recorded that way round because
+    the first version of this sentence described a detail line the checker does not print.
+    """
+    parsed = render.parse(
+        '<svg><rect class="cell dense" fill-opacity="0.524"></rect>'
+        '<line stroke-opacity="0.3"/><g opacity="0.85"><circle/></g></svg>')
+
+    assert parsed.paint_alphas == [
+        ("rect", frozenset({"cell", "dense"}), "fill-opacity", "0.524"),
+        ("line", frozenset(), "stroke-opacity", "0.3"),
+        ("g", frozenset(), "opacity", "0.85"),
+    ]
+
+
+def test_a_self_closed_element_contributes_its_alpha_exactly_once():
+    """`handle_startendtag` delegates to `handle_starttag` and then unwinds the stacks, so a
+    collector added to the start handler runs once — and would run twice if it were also added
+    to the end-tag path.
+
+    Asserted because every counter in this parser has been wrong in one of those directions at
+    least once, and this collector sits in the same handler as all of them.
+    """
+    parsed = render.parse('<svg><rect fill-opacity="0.4"/><rect fill-opacity="0.4"></rect></svg>')
+    assert len(parsed.paint_alphas) == 2
+    assert parsed.unclosed == 0
+
+
+def test_a_void_element_carrying_an_alpha_is_collected_too():
+    """The other direction, and **the docstring above claimed it before this test existed.**
+
+    It read *"or zero times if it were added only to the branch that pushes"* — a claim of
+    coverage the guard did not have. `<rect>` is not in `_VOID`, so the push branch runs for
+    both of its spellings and the case above cannot tell the two placements apart: moving the
+    collector inside `if tag not in _VOID:` left all 502 tests green. Found by the
+    `code-reviewer` pass mutating inside the space the docstring named, which is the one place
+    a claim of coverage can be checked.
+
+    A void tag is where the two placements differ, and the collector belongs outside the push
+    branch because an alpha is an attribute of the element rather than of its subtree.
+    """
+    parsed = render.parse('<img opacity="0.4"><svg><rect fill-opacity="0.3"/></svg>')
+    assert [one[0] for one in parsed.paint_alphas] == ["img", "rect"], (
+        "a void element carries no subtree, so a collector inside the branch that pushes one "
+        "never sees it")
+
+
+def test_a_colour_in_a_presentation_attribute_is_not_a_paint_alpha():
+    """`fill="#2563eb"` is still the declared colour. Only an alpha changes the value between
+    the declaration and the pixel, which is what `1 composited` is about."""
+    parsed = render.parse('<svg><rect fill="#2563eb" stroke="var(--accent)"/></svg>')
+    assert parsed.paint_alphas == []

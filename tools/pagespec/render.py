@@ -18,6 +18,17 @@ _VOID = frozenset({"area", "base", "br", "col", "embed", "hr", "img", "input", "
                    "meta", "param", "source", "track", "wbr"})
 _SKIPPED = frozenset({"style", "script"})
 
+#: SVG's three paint-alpha presentation attributes. `fill` and `stroke` themselves are *not*
+#: here: a colour in an attribute is still the declared colour, and this list is about the
+#: page painting something other than what it declared. An alpha is the only one of the three
+#: that changes the value between the declaration and the pixel.
+#:
+#: **Complete for this corpus rather than for SVG.** `style="fill-opacity:.5"` and a
+#: gradient stop's `stop-opacity` are two more routes and neither appears on any of the
+#: eleven committed surfaces — checked. Stated as the scope it has, because *three places*
+#: written as an absolute is the sentence that stops the next reader re-checking.
+_PAINT_ALPHA = ("opacity", "fill-opacity", "stroke-opacity")
+
 
 _ASCII_WHITESPACE = re.compile("[ \t\r\n\f\v]+")
 
@@ -73,6 +84,22 @@ class Page(HTMLParser):
         #: because `wroclaw-air-insights` makes the table itself the scroller under
         #: `max-width: 640px` — a fourth mechanism, and the one that broke `measure_page.py`.
         self.tables: list[tuple[frozenset[str], frozenset[str]]] = []
+        #: `(tag, classes, attribute, value)` for every element carrying a paint alpha as a
+        #: **presentation attribute** rather than in the stylesheet.
+        #:
+        #: `clause_1_composited` read CSS `opacity` and `color-mix()` and nothing else, which
+        #: made it blind on the one surface that composites per element: `pl-review-sense`
+        #: emits `fill-opacity="0.524"` on each confusion-matrix cell, computed from the data,
+        #: and draws two text labels over it. The clause whose whole subject is *this page
+        #: paints a value that is not the declared one* could not see the page doing exactly
+        #: that — and the page's own guard was reading the stylesheet too, where the number is
+        #: not. A live SC 1.4.3 failure sat between the two carriers for as long as both
+        #: existed.
+        #:
+        #: Collected here rather than grepped from the markup because an `<svg>` attribute is
+        #: structure, and `0007` §2's whole subject is answering a question about the rendered
+        #: page from something that is not it.
+        self.paint_alphas: list[tuple[str, frozenset[str], str, str]] = []
         self._open: list[frozenset[str]] = []
         #: The same stack as `_open`, holding tag names instead of classes, and it is pushed
         #: and popped in lockstep with it. Two stacks rather than one stack of pairs because
@@ -100,6 +127,11 @@ class Page(HTMLParser):
         elif tag == "table":
             ancestors = frozenset().union(*self._open) if self._open else frozenset()
             self.tables.append((frozenset(attributes.get("class", "").split()), ancestors))
+
+        for name in _PAINT_ALPHA:
+            if name in attributes:
+                self.paint_alphas.append((tag, frozenset(attributes.get("class", "").split()),
+                                          name, attributes[name]))
 
         if tag not in _VOID:
             self._open.append(frozenset(attributes.get("class", "").split()))
