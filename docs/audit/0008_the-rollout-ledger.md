@@ -111,12 +111,12 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S2** | **The checker**, report mode, over all twelve. Static core composed from the two halves of `ADR-0004` §2.1 | `tools/pagespec/`, 253 tests, CI in two jobs | 1.5–2 d | **closed** — `current_projects` `ef3d8c0` on `main`, CI green **on `main`**. §3.5 |
 | **S3** | **`apply-scout`** (`0007` row 1) — tokens, dark override, card metadata, `.table-wrap`, drop Inter | 1 hand-written page + its acceptance test | 1 d | **closed** — `apply-scout` `33a8559`, `current_projects` `6b7d3b8`, both on `main` with CI green **on `main`**, not on the PR. Both carriers read a usage site; three review passes were needed to guard all four of the role rule's exception shapes, and §3.10 records why the corpus sweep could not find the last one |
 | **S4** | **`mlops-car-price` + `pl-jobs-lora`** (`0007` row 2 = `0006` B4), with clause 9's `mlops` half in the same pass, both pages' card tags (§4.3), **eight tiles now that §5.1's exemption is struck**, and every rounded figure re-quoted | 2 hand-written pages · 14 card tags · **22 literal declaration sites** with one two-role trap on each · 8 tiles · 2 new page tests | ~2 d | **closed** — `mlops-car-price` `e1d797e`, `pl-jobs-lora` `9be52a2`, `current_projects` `d2e96b8`, all on `main` with CI green **on `main`**. The review's four HIGH are fixed and merged too — `mlops-car-price` `9641f07`, `pl-jobs-lora` `879b5df`, both on `main`; the first version of this row said "fixed in #21 / #14" while both were still open, which read as merged and was the same defect §1 forbids. Both pages read `clear`; §4.7 re-derived the scope before the stage, §4.8 records what the quotation rule caught once it was executable, §4.9 what the review found once the guards were mutated |
-| **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | open — **taken inside the `car-price-ml` pass with S9b and S10's app title**, which regenerate the same page and edit three adjacent lines of `docs/app/index.html`; §4.13 |
+| **S5** | **Clause 9 on `car-price-ml`** (`0007` row 3, other half) | 1 generated page + regeneration | 0.5 d | **closed** — `car-price-ml` `f1e61a1` on `main`, taken inside the S9b pass exactly as this cell predicted. The bridge names this page's measurement and points at `mlops-car-price` **without quoting its figures**, which §5.0 would forbid; `7140e46` then gave it the guard its twin has had since S4, because the page change alone left it carried by CI's byte-diff — an instrument that would go on passing with the bridge deleted from both sides. §4.17 |
 | **S6** | **Back-link + card metadata** (`0007` row 4 = `0006` B5) | 9 repositories, 10 surfaces, measured at entry and reproducing the recorded scope exactly. Card metadata only where a surface had none — §4.3 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clause 6 passes on all eleven committed surfaces; §4.3 says what was deliberately left |
 | **S7** | **Naming, the pinned values where nothing paints them, and two live SC 1.4.11 repairs** (`0007` row 6, plus §3.2's two carried items) | **Nine repositories** — the row named four items and one set; the stage re-derived it to nine, §4.6 | 1.5 d | **closed** — nine repositories on `main`, CI green **on `main`**. Clauses 2 and 3 now pass on every committed surface |
 | **S-gate** | **Make the checker able to fail**, by clause. A ratchet: gate on the set reporting zero `FAIL` across every surface read, and extend it by one clause as each stage closes | `tools/pagespec/__main__.py`, `.github/workflows/pagespec.yml`, the two tests that pin the exit code, **and `ADR-0004` §6** — the normative home, which still read *"report-only first"*. **No page changes** — §4.11 | 0.5 d | **closed** — `current_projects` `297e3c5` on `main` with CI green **on `main`**. *The first version of this cell cited `043bf72` + `38f26a9`, which are branch commits: this repository squash-merges, so neither is reachable from `main` and neither ever will be — §4.12's last paragraph.* **Fifteen** mutations — twelve red on the guard that names them, one red on nothing in this repository by design (row 8), and **two that reddened nothing at all** until a later pass found the guard absent or out of reach (rows 9 and 15). **Four review passes**, the last three finding fixes that displaced a defect rather than removing it; §4.12 |
-| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | **first commit and S9c closed** — the census prints on every run (§4.15) and clause 8's two amendments plus one recorded refusal have landed (§4.16); `doc-extract` reads clear and no page was edited. **S9a and S9b remain.** Then S9a's four repositories, each its own commit carrying its own test change — the commit that changes `wroclaw`'s separator widens `test_report.py:1524` **and** re-pins `:377` in the same change (§4.13). The `GATED` widening is a separate index commit, after `wroclaw` rebuilds; §4.15's last paragraph is why |
-| **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | open — the `car-price-ml/app` title is `docs/app/index.html:6` and rides with S9b's `:7` and `:27`; §4.13 |
+| **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | **closed** — `ab-lab` `5f3a802`, `it-job-radar` `7e64bd8`, `pl-review-sense` `6f908ec`, `wroclaw-air-insights` `bb881da`, `car-price-ml` `f1e61a1`, all on `main`; the gate widened in `current_projects`. Clause 8 reads `clear` on all **twelve**, and the twelfth was confirmed from the wire before the pointers moved. **S9a was not build-only in any of the four**, not two — §4.17's first finding. *What follows is the state before that closure.* **first commit and S9c closed** — the census prints on every run (§4.15) and clause 8's two amendments plus one recorded refusal have landed (§4.16); `doc-extract` reads clear and no page was edited. **S9a and S9b remain.** Then S9a's four repositories, each its own commit carrying its own test change — the commit that changes `wroclaw`'s separator widens `test_report.py:1524` **and** re-pins `:377` in the same change (§4.13). The `GATED` widening is a separate index commit, after `wroclaw` rebuilds; §4.15's last paragraph is why |
+| **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | **closed** — `auth-log-scan` `ddfac46`, `mini-traceroute` `b875b28`, `car-price-ml` `f1e61a1` (the app title, riding with S9b's `:7` and `:27` as §4.13 required), `wroclaw-air-insights` `bb881da`, all on `main`. **The copy cost nothing**: all four are the same words in the other order, and `wroclaw`'s is not a copy decision at all once the comment beside its tags is read — *"figure-free, like every standing sentence on this page"* rules out the alternatives. `og:title` moved with each `<title>`, which the row did not enumerate. §4.17 |
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
@@ -1880,6 +1880,296 @@ is `test_the_recorded_narrow_spaced_page_reproduces_its_inventory`: **its fixtur
 change, the clause did**, and the reduction was re-checked against the live `doc-extract` page
 before the expectation was rewritten — a fixture of record that had drifted from its origin
 would have made that a rewrite of the evidence rather than of the verdict.
+
+### 4.17 What closing S9, S10 and S5 measured — and the sweep that was wrong a third time
+
+Taken 2026-09-08, in **one** ratchet cycle rather than the two §3 schedules. The fallback was
+already written into the architecture pass that designed this closure: take one cycle if S10's
+copy is approved before S9a's pull requests are ready, because the only argument for two was
+that a bounded correctness fix should not wait on unbounded writing. The copy was approved in
+the first minutes and turned out not to be copy at all — see below — so the cycle collapsed to
+one, and `wroclaw`'s eleven-minute rebuild and the twelfth-surface confirmation were each paid
+once instead of twice.
+
+Eight sibling pull requests, then one index commit bumping seven pointers and admitting both
+keys. **Every figure below comes from `python -m tools.pagespec`, `--fetch` or a mutation.**
+
+#### 1. S9a was not build-only in *any* of the four, and the sweep that said so was wrong a third time
+
+§4.13's first erratum corrected §4.11's sweep — *"no submodule test asserts which separator a
+page writes"* — by finding **two** that do, both asserting a comma. Its own italic names the
+mechanism: *"this one was searched for tests that assert `U+202F`; a test that asserts a comma
+answers a different query."*
+
+**A test that asserts a plain space answers a third, and five exist.** Swept with a pattern for
+a digit, a separator character and three digits, across the tests of all five repositories:
+
+| test | assertion | reached by |
+|---|---|---|
+| `it-job-radar/tests/test_coverage_series.py:110` | `assert "of 6 603 listed" in svg` | `site/build.py:355` |
+| `pl-review-sense/tests/test_site.py:655` | `assert "0.944 at n=5 264" in markup` | `site/charts.py:294` |
+| `pl-review-sense/tests/test_site.py:667` | `">4 800</text>" in markup` | `site/charts.py:284` |
+| `pl-review-sense/tests/test_site.py:669` | `'…middle">5 264</text>' **not** in markup` | `site/charts.py:284` |
+| `pl-review-sense/tests/test_site.py:671` | `assert "at n=5 264" in markup` | `site/charts.py:294` |
+
+So the cost cell's *"**not** build-only in two of the four"* understates it: the stage edits a
+test in every one of the four. **Three sweeps of the same question have now produced three
+answers** — none, two, seven — and all three were wrong in the same direction, because each
+searched for a spelling rather than for the property. `0009` §8's closing note is the diagnosis
+and this is its fourth instance: *a sweep is worth what its query is worth, and the query is the
+part that does not appear in the finding.*
+
+*The instrument that would have answered it in one line did not exist until S9's own first
+commit: the census prints every grouped figure with its element, and a sweep for **assertions
+containing a grouped figure** is the same shape one layer out. That is worth noticing rather
+than acting on — a test-corpus census is `0009` §7 row 6's refused shape, and refusing it was
+right.*
+
+#### 2. One of those five is negative, and it goes green over its own subject
+
+```python
+# pl-review-sense/tests/test_site.py:669
+assert (
+    'text-anchor="middle">5 264</text>' not in markup
+), "on a log axis the last two sizes sit a few pixels apart; two numbers there read as neither"
+```
+
+Once the formatter emits `5<U+202F>264`, the forbidden string can never appear again. The
+assertion becomes vacuously true and the tick-collision rule it guards becomes unguarded,
+silently, with the suite green.
+
+**Demonstrated rather than argued**, which is the only form this record accepts. Disabling the
+collision rule (`if position - drawn_at < 44` → `if False`):
+
+| assertion spelling | rule disabled | result |
+|---|---|---|
+| re-pinned to U+202F | yes | **FAILED** |
+| plain space, i.e. before the stage | yes | **passed** — the guard is vacuous |
+
+This is §4.13 item 3's shape — *the guard is correct today, the stage is correct today, only the
+composition is wrong* — in a repository that section did not name, and it is the second of two,
+not the only one. Item 3 called itself *"the only item in this ledger that cannot be found after
+the fact."* That was true of the item and not of the class.
+
+#### 3. `wroclaw`'s provenance guard needed two lines, and a fixture that reaches them
+
+§4.13 item 3 names `tests/test_report.py:1524`, the `_NUMBER` pattern. The strip at `:1530` is
+equally load-bearing and the section does not name it: widening the pattern alone makes
+`float("1<U+202F>752")` raise, so the two must move together. Both did.
+
+**And neither would have been noticed by the guard's own fixture.** `_fresh_metadata()` carries
+`n_train = 800` and `n_test = 200`, so **no four-digit figure has ever entered its `measured`
+set** and `_NUMBER`'s grouping branch has never run under it. Widening a pattern no fixture
+reaches is not a repair. `test_the_card_description_check_can_read_a_grouped_figure_at_all`
+lands with it and reddens on each half separately — `AssertionError` when the pattern is
+narrowed, `ValueError` when the strip is.
+
+*Three of this stage's findings are the same sentence at three depths: a query narrower than the
+claim (1), a guard narrower than its name (2), a fixture narrower than its guard (3).*
+
+#### 4. A sixth `car-price-ml` write site, reached by no rebuild
+
+§4.11's table credits `car-price-ml` with `charts.py:76`, `build.py:76`, `export.py:179` and
+three template literals. After all six were corrected and the page rebuilt, the checker still
+read `FAIL 8 separator U+202F 28, space 5`.
+
+The five are the refusals table's `34 093`, `33 576`, `38 399` and `37 248`, in `<span>`. They
+are written by `export.py` into `docs/data/refusals.json` and reach the page **from the JSON**,
+and `site.build` does not run the exporter — CI diffs `docs/index.html`, `docs/app/styles.css`
+and `docs/app/config.json`, and re-runs neither `export` nor anything that would notice. So a
+formatter change lands, the page rebuilds, and five figures keep the old glyph with every local
+guard green.
+
+`site.export` was re-run rather than the JSON hand-edited. Every measured value came back
+byte-identical and the browser-parity check reported `worst 3.97e-06 PLN over 200 adverts`; only
+`commit` moved, which is the field recording the HEAD the export was taken at.
+
+**The general form, and it is the one worth carrying forward:** a page's figures do not all come
+from the page's build. Where a committed *data* artifact holds pre-formatted text, the formatter
+and the artifact are two hops apart and only the index checker spans them.
+
+#### 5. `ab-lab`'s recorded evidence named a version two releases old
+
+Re-running `examples/validation_table.py --record` moved three fields, not one. The scenario
+string was the intended one; `recorded_on` was `2026-08-21`; and **`ab_lab_version` was
+`0.3.0.dev0` against a package at `0.4.1`** — the published provenance naming a version that no
+longer exists.
+
+**Every one of the five measured rates reproduced to the digit** — 0.0538, 0.0497, 0.8077,
+0.7929, 0.0110 — so the seed is honest and two minor releases moved no result. That is the check
+worth having, and it is why the re-record is reported here rather than assumed. *§4.13's cost
+table called this half "a simulation re-record" and priced it as work; it was work, and it also
+turned out to be a measurement nobody had taken.*
+
+#### 6. What `tests/test_record.py:86` actually guards, which is not what its name suggests
+
+The obvious mutation — `examples/validation_table.py:130` back to its own `{:,}` — left it
+**green**. The guard reads `docs/data/findings.json`, a committed artifact, and an un-recorded
+script edit does not touch it. Mutating the recorded string reddens it; mutating the script *and*
+re-recording reddens it.
+
+So the guard is live over the evidence and over the script *through* a re-record, and
+deliberately blind to a script edit alone. That is correct — `findings.json` is the artifact —
+but it is not what *"still names the size the design solves for"* suggests to a reader deciding
+whether the write site is covered. Written down because the first reading was mine.
+
+#### 7. The escape, and the one literal left standing
+
+The portfolio's two already-conforming write sites — `car-price-ml/site/charts.py:76` and
+`doc-extract/docs/build_index.py:1590` — both wrote U+202F as **the character**. Every site this
+stage touched writes it as `"\u202f"` instead, and the argument is this stage's own subject: in a
+diff, a terminal and a `grep`, U+0020 and U+202F are the same string, so a reviewer asked to
+approve twenty write sites could not verify one of them by eye. Markdown and HTML templates keep
+the character, having no escape.
+
+*The convention broke on the author before it was written down.* Three separate attempts to type
+the escape into a commit message and a patch spec emitted the character instead, each time
+silently. The patcher that applied this stage builds both spellings with `chr()` and refuses an
+edit whose search string is not present at the expected multiplicity — which is what caught it,
+twice, without a single wrong byte reaching a repository. §4.15's second mistake, met from the
+other side: there it was a terminal that could not show the difference, here an author who could
+not type it.
+
+**`doc-extract/docs/build_index.py:1590` is left as a literal**, and that is a decision rather
+than an oversight: it is outside S9's scope, its page has read `clear` since S9c, and changing it
+costs a pull request and a pointer bump for zero behaviour change. It is the one site where the
+portfolio's convention is now split, and §5 carries it.
+
+#### 8. What moved
+
+| | before | after |
+|---|---|---|
+| clause 8 failing, twelve surfaces | 6 | **0** |
+| clause 4 `<title>` failing, twelve surfaces | 4 | **0** |
+| grouped figures, eleven surfaces | 94 — `U+202F` 24, space 67, comma 2, `U+00A0` 1 | **95** — `U+202F` 94, `U+00A0` 1 exempt |
+| grouped figures, twelve surfaces | 97 — plus `wroclaw`'s comma 3 | **98** — `U+202F` 97, `U+00A0` 1 exempt |
+| `GATED` | 8 prefixes | **10** — every clause key |
+| suite | 498 / core 438 | 498 / core 438 |
+
+The ninety-fifth figure is new rather than converted: clause 9's bridge prints
+`{{ thousands(metrics.n_train) }}`, so S5 added a grouped figure to the page S9b was clearing.
+*The total moving by one while the stage converted every one of the eleven surfaces' sixty-nine
+non-conforming figures is exactly the kind of delta a hand count absorbs without noticing, and
+the census made it a sentence.*
+
+`served` reads `ok` on eleven of eleven: every published page is byte-identical to its committed
+file, digests equal, after seven merges in one afternoon.
+
+#### 9. The eleven/twelve trap, watched rather than avoided
+
+It fired exactly where `CLAUDE.md` says. With the eleven working trees updated and the pointers
+untouched, `pytest -m submodules` reported:
+
+```
+4 title reports no failure on any committed surface and is not in GATED:
+the ratchet was narrowed, so a clause that passes everywhere has stopped gating.
+```
+
+That is the floor guard **demanding** a widening that would have reddened the next morning's
+`live` run, because `wroclaw` had not rebuilt yet. The procedure held: siblings landed, pointers
+stayed, `refresh.yml` was watched to completion — eleven minutes, triggered by the push to
+`src/**` exactly as §4.5 records — `--fetch` reported all twelve `clear`, and only then did the
+pointers and `GATED` move in one commit.
+
+**It is spent, not gone.** The next key admitted to `GATED` meets it again, and `0009` §7 row 12's
+contrast clause is the one on the table. The architecture pass that designed this closure proposed
+closing the asymmetry in the instrument — parametrise the sweep's fetch mode and give the `live`
+job a `pytest` step — and it was **deliberately not taken**: its feasibility was reasoned rather
+than run, and §13.6's rule is that a fix inherits the blast radius of the thing it fixes. Changing
+the two ratchet guards in the window those guards were carrying the stage is the wrong week for it.
+§5 carries it.
+
+#### 10. The gate, and the test that was written for this moment
+
+`GATED` now holds every finding key a clause can fail on, so `_gated` and `status == FAIL`
+coincide for everything except `served`. Three mutations:
+
+| mutation | result |
+|---|---|
+| one U+202F on `pl-review-sense`'s page back to a plain space | checker **exits 1** |
+| `mini-traceroute`'s title back to leading with the name | checker **exits 1** |
+| both new prefixes removed from `GATED` | floor guard **reds** in `surfaces` |
+
+The first two are the point of the whole stage: **the gate now refuses a build on a wrong
+separator and on a title that leads with the project's name**, which it has never been able to do.
+
+And `test_a_page_failing_only_an_ungated_clause_still_passes` survives, as its own docstring
+predicted one stage early: it constructs its ungated set by *removing* these two prefixes rather
+than borrowing whatever `GATED` holds. *"Removing the two prefixes here is a no-op today and is
+the whole test afterwards."* Today is afterwards.
+
+
+#### 11. What the review found, and it blocked on a guard this stage wrote
+
+**The stage's own subject, committed inside the guard against it, and green over the half it
+could not see.**
+
+`car-price-ml/tests/test_site.py`'s clause-9 guard shipped its `<style>`/`<script>` strip as
+
+```
+re.sub(r"<(style|script)\x08.*?</\x01>", ...)
+```
+
+— `\b` and `\1` written as the **bytes** U+0008 and U+0001, inside a raw string, so `re` looked
+for a backspace and an SOH and matched nothing. Cause: that one edit was authored through a
+shell heredoc rather than through the patcher item 7 describes, and the heredoc consumed the
+backslashes. In a diff, `git show`, a terminal and a `grep` the line renders as
+`<(style|script).*?</>` — **indistinguishable from the correct one**, which is this stage's
+entire subject arriving in a form the stage had not anticipated: not an invisible *separator*
+but an invisible *escape*.
+
+The consequence was a live hole. With the bridge paragraph moved from the page body into a
+`<style>` element, the guard **passed** — clause 9's bridge invisible to every reader, the suite
+green, and CI's byte-diff content because template and page still agreed.
+
+**And the mutation that "proved" the repair could not have caught it.** Item 7 of the previous
+commit reports three mutations, one of which found the comment hole and reddened after the fix.
+That mutation exercises `r"<!--.*?-->"`, which carries **no backslash to lose**. The half that
+was broken was never mutated, because the repair and its proof were written in the same breath
+and the proof was aimed at the defect already known. *A mutation confirms the branch it enters.
+Repairing two branches and mutating one is the same arithmetic as a sweep whose query is
+narrower than its claim — findings 1, 2 and 3 of this section, at a fourth depth, inside the
+commit that names the first three.*
+
+**Two more the review measured that this section had stated otherwise:**
+
+- **Item 4's "sixth write site" is a seventh.** `car-price-ml/site/build.py`'s `_megabytes` kept
+  `f"{size / 1e6:,.0f} MB"` three lines from the helper this stage extracted, and it feeds the
+  `<h1>` claim. It is dormant rather than live — no artifact in the portfolio reaches four
+  digits of megabytes — but the rival is already 590 MB, and now that clause 8 gates, the first
+  bake-off winner over a gigabyte refuses the build during an unrelated retrain. Routed through
+  `thousands()`; the page does not move.
+- **Item 7's "one site where the convention is now split" was two.** `car-price-ml/tests/test_site.py:194`
+  held a literal U+202F beside a literal U+0020, so `.replace(…).replace(…)` read as a duplicated
+  call. It predates the stage and the sentence claiming a single split site does not — measured
+  after writing it would have found both. Written as an escape now; `doc-extract` remains the one
+  deliberate literal, and §5 carries it.
+
+**One the review found that the guard's twin already had.** The clause-9 guard does not read
+`<meta>` content, and `mlops-car-price`'s does, with its reason written down: those tags carry
+figures, and stripping tags alone drops them. This page publishes **six** grouped figures inside
+`<meta>`, so a sibling's cell pasted into the description would have passed while reaching every
+search result and shared link — the second of the two readers clause 4 names. The commit
+introducing the guard said it was *"built deliberately like its twin, including the two details
+that twin's docstring records paying for."* There were three.
+
+**And `ab-lab`'s README came out of this stage carrying both spellings** where it had been
+consistent in one: `:317` moved because the page carries the same sentence, and three hand-typed
+figures did not. `:178` and `:325` follow; `:189` deliberately does not, because it is inside a
+fenced code block a reader copies and the README is not a surface `0007` §5 governs.
+
+*Counting this stage honestly, and the count is the finding: **five** of the green-over-its-own-
+subject family — the negative assertion at `pl-review-sense:669`, `wroclaw`'s unreachable
+fixture, the inert `<style>` strip, its unmutated half, and a guard narrower than the twin it
+cites. The first two this stage found and fixed; the last three it committed, and a review found
+them.* `0009` §13.6 once more: a fix inherits the blast radius of the thing it fixes, and every
+one of these is inside the repair for the one before it.
+
+**What the review confirmed rather than found**, which is worth as much: the eleven/twelve
+procedure reproduces step by step from the record alone; `wroclaw`'s two-line widening reddens
+on each half separately; `pl-review-sense:669` reds on the collision rule; every figure in item 8
+reproduces from the checker; and across every source this stage touched there are **zero**
+literal U+202F in Python outside the two now named.
 
 ## 5. What is carried, not scheduled
 
