@@ -48,21 +48,33 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: twelfth.
 #: Gating by the number would either pull `4 title` in before S10 or hold the other two out.
 #:
-#: Measured 2026-09-07 over twelve surfaces with `--fetch`: every `FAIL` in the portfolio is
-#: `4 title` (**4**) or `8 separator` (7), and nothing else fails anywhere. *The `4 title`
+#: Measured 2026-09-07 over twelve surfaces with `--fetch`: every `FAIL` in the portfolio was
+#: `4 title` (**4**) or `8 separator` (7), and nothing else failed anywhere. *The `4 title`
 #: figure read three until the audit of that evening: three is the eleven-surface count, and
-#: this sentence says twelve. `#86` settled the reading that moved the twelfth and its own
+#: that sentence said twelve. `#86` settled the reading that moved the twelfth and its own
 #: commit body says four — a hand-typed figure the instrument had already refuted, in the
-#: comment block `CLAUDE.md` sends a stage editor to.* So this set costs no
-#: page change today — it starts refusing the moment one of them regresses, which is the point.
-#: `8 separator` enters with S9; `4 title` with S10.
+#: comment block `CLAUDE.md` sends a stage editor to.*
+#:
+#: **Both of those are now in, and the ratchet is complete over the clauses.** `0008` S9 and
+#: S10 closed them together, and with `4 title` and `8 ` here every finding key a clause can
+#: report `FAIL` on is gated: `_gated` and `status == FAIL` now coincide for everything except
+#: `served`. Re-measured over twelve with `--fetch`, 2026-09-08: **zero `FAIL` portfolio-wide.**
+#: That is what licenses this tuple, and it starts refusing the moment one of them regresses.
+#:
+#: *`test_a_page_failing_only_an_ungated_clause_still_passes` in `tests/test_report.py` is the
+#: test that keeps the distinction alive past this point, and it survives on purpose: it
+#: constructs its ungated set by removing these two prefixes rather than borrowing whatever
+#: `GATED` happens to hold. Removing them was a no-op before this commit and is the whole test
+#: after it — which its own docstring predicted, one stage early.*
 #:
 #: **The two guards on this tuple read eleven surfaces, not twelve.** `test_published_surfaces`
 #: sweeps without `--fetch`, so neither the ceiling (no gated clause fails) nor the floor
-#: (every clean clause is gated) can see `wroclaw-air-insights`. Widen this tuple only after
-#: `python -m tools.pagespec --fetch` agrees: the `surfaces` job cannot see the twelfth
-#: surface, so a widening that is premature merges green and reddens the scheduled `live`
-#: run instead.
+#: (every clean clause is gated) can see `wroclaw-air-insights`. That is spent, not gone: it
+#: bites again for the **next** key admitted here — `0009` §7 row 12's contrast clause is the
+#: one on the table. Widen this tuple only after `python -m tools.pagespec --fetch` agrees:
+#: the `surfaces` job cannot see the twelfth surface, so a widening that is premature merges
+#: green and reddens the scheduled `live` run instead. It was navigated by hand for S9/S10,
+#: with `refresh.yml`'s rebuild watched to completion before this line moved.
 #: **`served` is deliberately absent, and the reason is not that it fails.** It reports zero
 #: `FAIL` across every surface read, which is this tuple's own entry condition. It is out
 #: because *neither ratchet guard can see it*: both derive from a sweep hardcoding
@@ -74,7 +86,8 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: the daily run as ordinary portfolio work proceeds — the cries-wolf failure `conftest.py`
 #: warns about. It may be that gating it is never right; that is worth settling deliberately
 #: rather than inheriting.
-GATED: tuple[str, ...] = ("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "5 ", "6 ", "7 ")
+GATED: tuple[str, ...] = ("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "4 title",
+                          "5 ", "6 ", "7 ", "8 ")
 
 
 

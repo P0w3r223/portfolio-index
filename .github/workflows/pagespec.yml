@@ -9,8 +9,9 @@
 #
 # Since 0008 S-gate the checker also decides: it exits non-zero when a clause in `GATED`
 # fails, when a committed surface could not be read, or when a same-origin stylesheet the
-# page names could not be opened. The gate is a ratchet and is deliberately partial —
-# clause 8 and clause 4-<title> are outside it until S9 and S10 land, and they still print.
+# page names could not be opened. The gate was a deliberately partial ratchet until S9 and
+# S10 closed clause 8 and clause 4-<title>; every clause key is now gated, and what stays
+# outside is `served` and every `UNDECIDED` status, both for reasons __main__.py states.
 # The guards are `tests/test_report.py` (the gate's own behaviour, no submodule needed) and
 # `test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing` in
 # `tests/test_published_surfaces.py`, which refuses a `GATED` widened past its measurement.
@@ -90,8 +91,8 @@ jobs:
       - name: The conformance table, and the gate over the eleven committed surfaces
         # The output that replaces 0007 §3, and since 0008 S-gate it also decides. The gate
         # is a ratchet: `GATED` in __main__.py names the finding keys that report zero FAIL
-        # everywhere, and a closing stage adds its own. Clause 8 and clause 4-<title> are
-        # deliberately outside it and still print — 0008 S9 and S10 are what bring them in.
+        # everywhere, and a closing stage adds its own. S9 and S10 brought in the last two,
+        # so this job now refuses on any clause failing on any of the eleven it can read.
         #
         # --fetch stays absent here and only here. The live URL belongs to the scheduled run
         # below: a network failure on a push would read as a page regression, which is the

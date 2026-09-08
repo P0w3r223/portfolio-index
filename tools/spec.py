@@ -408,12 +408,17 @@ CLAUSES: tuple[Clause, ...] = (
         cite="0007 §6, clause 9",
         quote="a number that appears on more than one page names the measurement it comes "
               "from, and points at the other",
-        carriers=(*_human("review, plus a within-repo test where a stage has supplied one"),
+        carriers=(*_human("review, plus a within-repo test on each side of the pair"),
                   *_repo("mlops-car-price:tests/test_docs_page.py::"
+                         "test_the_page_names_its_own_measurement_and_points_at_the_sibling"),
+                  *_repo("car-price-ml:tests/test_site.py::"
                          "test_the_page_names_its_own_measurement_and_points_at_the_sibling")),
-        note="`0008` S4 took the `mlops-car-price` half and S5 takes `car-price-ml`'s. The "
-             "clause is deliberately outside the index checker: see c9.s2, which is the "
-             "clause stating its own limit.",
+        note="`0008` S4 took the `mlops-car-price` half and S5 took `car-price-ml`'s, "
+             "2026-09-08 — the pair is now carried from both sides. The second guard shipped "
+             "one commit after the page change, because the page change alone left the bridge "
+             "carried by CI's byte-diff, which asserts the page matches its template and would "
+             "go on doing so with the bridge deleted from both. The clause stays outside the "
+             "index checker: see c9.s2, which is the clause stating its own limit.",
     ),
     Clause(
         id="c9.s1b",

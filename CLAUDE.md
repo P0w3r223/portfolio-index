@@ -109,8 +109,13 @@ python -m pytest -m submodules           # only the tests that read a working tr
   seven clauses at once, still passes `pytest -m 'not submodules'`. *This paragraph said
   narrowing was caught by nothing at all, which stopped being true at `#83` and was found by
   the audit of 2026-09-07 — a reader who believed it would not trust the guard that would have
-  stopped them.* Clause 8 enters with S9 and clause 4-`<title>` with S10, and both stages edit
-  this tuple.
+  stopped them.* Clause 8 and clause 4-`<title>` entered with S9 and S10 on 2026-09-08, so the
+  tuple covers every clause the spec carries **today**. That does not retire it: a new clause
+  enters the same way it always has — measured clean on all twelve with `--fetch`, then added —
+  and `0009` §7 row 12's contrast clause is the one on the table. *An earlier version of this
+  sentence said the next edit is "an admission, not a closure", which a stage editor could read
+  as `do not add row 12's key`; the floor guard will **demand** it the moment that clause goes
+  clean on the eleven, which is the trap above, not an exemption from it.*
 - **Do not weaken a guard to make it pass.** A guard that has started failing is a finding.
 - **Do not add a dependency.** The checker is standard library only and `pytest` is the sole
   test dependency; the `core` CI job installs nothing else.
