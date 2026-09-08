@@ -30,7 +30,9 @@ from tools.pagespec import clauses
 #: against what the checker really says rather than against a list of what it is believed to
 #: say. Measured 2026-09-07: this emits every key the eleven committed surfaces emit, plus
 #: `stylesheets`, which they do not currently produce because none of them has an unreadable
-#: same-origin sheet. `1 composited` needs a `color-mix()` usage site and nothing else does.
+#: same-origin sheet. `1 composited` needs a compositing site and nothing else here does — a `color-mix()`
+#: declaration is the one this page carries, and since S12 a `fill-opacity` attribute in the
+#: markup would serve equally. This page has no SVG, so the CSS route is the live one.
 _EVERY_KEY_HTML = (
     '<html><head><title>a claim</title></head><body>'
     '<p class="eyebrow">eyebrow</p><h1>a claim about something</h1>'
@@ -40,9 +42,10 @@ _EVERY_KEY_HTML = (
     '</body></html>'
 )
 #: `clause_1_composited` scans `background`, `background-color`, `fill`, `stroke` and `color`
-#: for `color-mix(`, and `opacity` for a value strictly between 0 and 1. A first version of
-#: this rule used `border-color`, which is in neither list, so the key was never emitted and
-#: the width guard above is what said so.
+#: for `color-mix(`, `opacity` for a value strictly between 0 and 1, and — since S12 — the
+#: markup's `opacity` / `fill-opacity` / `stroke-opacity` presentation attributes on the same
+#: bound. A first version of this rule used `border-color`, which is in none of those lists,
+#: so the key was never emitted and the width guard above is what said so.
 _COMPOSITED = "\n.mark { background: color-mix(in srgb, var(--accent) 40%, transparent); }"
 
 

@@ -126,6 +126,56 @@ def test_a_non_numeric_opacity_is_skipped_rather_than_crashing():
     assert clauses.clause_1_composited(".a { opacity: var(--fade) }") == []
 
 
+def test_alpha_in_a_presentation_attribute_is_a_composited_usage_too():
+    """**The third place alpha reaches a pixel, and the clause read two.**
+
+    A stylesheet cannot hold one value per cell, so a *data-driven* alpha has nowhere to live
+    but the markup. `pl-review-sense` emits `fill-opacity` per confusion-matrix cell and draws
+    two text labels over it — and the clause whose subject is *this page paints a value that
+    is not the declared one* reported nothing about the one surface in the portfolio that does
+    exactly that.
+
+    Not a hypothetical: the page it came from was failing SC 1.4.3 on the second label, at
+    2.69:1 light and 2.47:1 dark, and **both** carriers missed it for the same reason. This
+    one read only the stylesheet; the repository's own palette guard read the stylesheet too.
+    """
+    marked = page('<svg><rect class="cell" fill-opacity="0.524"/>'
+                  '<circle class="dot" opacity="0.85"></circle></svg>')
+    findings = clauses.clause_1_composited("", marked)
+    assert [finding.status for finding in findings] == [clauses.UNDECIDED]
+    assert "2 usage(s)" in findings[0].detail
+
+
+def test_an_attribute_alpha_of_zero_or_one_paints_what_it_declares():
+    """The same bound the CSS branch uses, and the corpus needs it: `pl-review-sense` emits
+    `fill-opacity="0.000"` for the one empty cell of its nine. Counting that would report a
+    page as compositing where it is drawing nothing at all."""
+    opaque = page('<svg><rect fill-opacity="1"/><rect fill-opacity="0.000"/>'
+                  '<rect stroke-opacity="none"/></svg>')
+    assert clauses.clause_1_composited("", opaque) == []
+
+
+def test_the_clause_still_answers_when_no_page_is_passed():
+    """`page` is optional so every hand-built `Loaded` in this suite keeps working. A page
+    that is not passed contributes no attribute sites — a narrower answer, never a wrong
+    one."""
+    assert clauses.clause_1_composited(".a { opacity: 0.5 }")[0].status == clauses.UNDECIDED
+
+
+def test_check_passes_the_page_to_the_compositing_clause():
+    """The wiring, which is the half a unit test on the clause cannot reach.
+
+    `clause_1_composited(loaded.css)` and `clause_1_composited(loaded.css, page)` both run and
+    both return findings; only the second sees the markup. Without this the whole repair is a
+    parameter nothing supplies — the shape `0008` §4.11 calls an instrument that cannot fail.
+    """
+    found = clauses.check(loaded(fixture("data_driven_alpha.html"),
+                                 ":root { --bg: #ffffff }"))
+    detail = detail_of(found, "1 composited")
+    assert "1 usage(s)" in detail, (
+        f"the fixture's one non-zero fill-opacity did not reach the clause: {detail}")
+
+
 # -- clause 2: a tile is .kpi ---------------------------------------------------------------
 
 

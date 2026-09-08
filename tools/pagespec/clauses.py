@@ -336,13 +336,34 @@ def _unusable_values(palettes: dict[str, dict[str, str]]) -> list[Finding]:
     return findings
 
 
-def clause_1_composited(css: str) -> list[Finding]:
+def clause_1_composited(css: str, page=None) -> list[Finding]:
     """Usages whose painted value is not the declared one.
 
     Reported, never decided. Resolving these needs the ground each mark is *drawn over*, and
     paint order inside an SVG is not recoverable from the stylesheet alone — which is exactly
     what the `auth-log-scan` revert turned on: the band and the marks are siblings, and the
     band is still the marks' ground because it is painted first.
+
+    **The markup composites too, and this clause could not see it.** Alpha reaches a pixel
+    from three places and this read two of them: CSS `opacity`, `color-mix()`, and SVG's
+    `fill-opacity` / `stroke-opacity` / `opacity` **presentation attributes**. The third is
+    where a *data-driven* alpha lives, because a stylesheet cannot hold one value per cell —
+    `pl-review-sense` emits `fill-opacity="0.524"` per confusion-matrix cell and draws two
+    text labels over it. So the clause whose subject is *this page paints a value that is not
+    the declared one* reported nothing on the one surface in the portfolio that does it per
+    element, and a live SC 1.4.3 failure sat under both carriers: this one was reading only
+    the stylesheet, and the repository's own guard was reading the stylesheet too.
+
+    `page` is optional so every existing caller and every hand-built `Loaded` in the suite
+    still works; a page that is not passed contributes no attribute sites, which is a
+    narrower answer and never a wrong one.
+
+    **The argument order breaks this file's `clause_N(page, css)` convention, and the default
+    is why.** Making `page` first would make it required, which is the property the paragraph
+    above is about; making it first *and* defaulted is not expressible. `None` is tested for
+    explicitly rather than reached through `getattr`, so an object that is not a page raises
+    here instead of silently contributing nothing — a silent narrowing is exactly what the
+    optional argument is otherwise inviting.
     """
     composited: list[str] = []
     for prop in ("background", "background-color", "fill", "stroke", "color"):
@@ -355,6 +376,21 @@ def clause_1_composited(css: str) -> list[Finding]:
                 composited.append(f"{selector.strip()} {{opacity: {value.strip()}}}")
         except ValueError:
             continue
+    for tag, classes, attribute, value in (page.paint_alphas if page is not None else []):
+        try:
+            alpha = float(value.strip())
+        except ValueError:
+            continue
+        # The same bound the CSS branch uses, and for the same two reasons: `1` paints the
+        # declared value and `0` paints nothing at all. A page emitting `fill-opacity="0.000"`
+        # for an empty matrix cell — which `pl-review-sense` does once, on the one empty cell
+        # of nine — would otherwise be reported as compositing where it is drawing nothing.
+        # *Nine was written here and it is the cell count, not the zero count; the report
+        # prints `9 usage(s)` for the same surface, so there were two different nines to
+        # confuse. Found by review, counted at the gitlink.*
+        if 0 < alpha < 1:
+            named = "." + ".".join(sorted(classes)) if classes else ""
+            composited.append(f"<{tag}{named} {attribute}=\"{value}\">")
     if not composited:
         return []
     return [Finding("1 composited", UNDECIDED,
@@ -1180,7 +1216,7 @@ def check(loaded) -> list[Finding]:
     findings = clause_1_tokens(page, loaded.css)
     findings += clause_1_usage(loaded.css)
     findings.append(clause_1_literals(loaded.css))
-    findings += clause_1_composited(loaded.css)
+    findings += clause_1_composited(loaded.css, page)
     findings.append(clause_2_tiles(page))
     findings.append(clause_3_tables(page, loaded.css))
     findings += clause_4_opening(page, loaded.surface.repo)

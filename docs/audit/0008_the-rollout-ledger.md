@@ -121,6 +121,8 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
+| **S12** | **The contrast finding, and the clause that could not see it** — `0009` §7 row 12, opened by measurement. **S12a** `pl-review-sense`'s heatmap share label, a live SC 1.4.3 failure in both schemes · **S12b** `clause_1_composited` learns to read paint alpha in the markup | 1 sibling page + its palette guard · `render.py`, `clauses.py`, one fixture of record | 0.5 d | **closed** — §4.19. **S13 is the rest of row 12** and is scheduled below rather than folded in |
+| **S13** | **Contrast at the usage site** — the rest of `0009` §7 row 12, and the sentence `0007` §5 clause 1 carries that nothing enforces: *the threshold is the one the page's own usage implies*. An element walk, a small selector matcher, grounds by paint order, and three finding keys shipping **report-only** | `render.py` (an element stream), a new `tools/pagespec/contrast.py`, `css.rules_with_conditions()`, `clauses.check`, `GATE`, `NOT_A_CLAUSE`, `tools/spec.py` `c1.s6`, a census | **1.5–2 d** | open — designed §3.11, and the design is why it is not M |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -257,6 +259,96 @@ the rest stay in S7 and S8, but it should be *planned* as one repository rather 
 > **Erratum — §4.11.** *"The rest stay in S7 and S8"* did not hold for the `<title>`: **S7 closed without it
 > and S8's scope list never contained it.** §4.11 calls this the sharper instance of the whole finding — an
 > item routed to two stages, neither of which was going to carry it. It is **S10** now.
+
+### 3.11 S13's design, taken before the stage rather than during it
+
+§4.7's precedent, applied to the largest open row. Every figure below is measured against the
+pinned gitlinks; §4.19 is where the measurements are.
+
+**What a usage site is: an element, not a selector.** `auth-log-scan` settles this on its own.
+`.ev-failed { fill: var(--accent); opacity: 0.85 }` matches elements in three places on that
+page — a legend swatch on `--bg`, chart 1 on `--bg`, and chart 2 inside
+`<g class="row">` → `<rect class="lane">` → `<rect class="window-band">`. A rule-keyed clause has
+to pick one ground for that selector and is wrong twice. `0008` §3.2 is the record of a checker
+resolving against the nearest card and clearing the change that had to be reverted.
+
+**Grounds by paint order, and the verdict is asymmetric.** This is what lets the clause ship
+without a geometry engine, which is the part that would make it L:
+
+| verdict | against what | why it is earned |
+|---|---|---|
+| `PASS` | **every** candidate ground — the ancestor chain and every preceding painted sibling in the enclosing `<svg>` | a universal over a superset of the true ground |
+| `FAIL` | the **ancestor chain only** | containment is structural; a sibling's coverage is geometric and unknown |
+| `UNDECIDED` | a site clearing its guaranteed ground and failing a candidate | names the candidate and the ratio, and hands it to that repository's own page test |
+
+Worked against the corpus, measured: `auth-log-scan`'s `.ev-failed` marks clear `--bg`
+(**3.98:1**), the lane (**3.79:1**) and the band (**3.09:1**, which is the figure that page's own CSS comment carries), so they `PASS` **without the
+clause ever knowing which marks touch the band** — that band is 13.2 units wide on a 466-unit
+lane in one row and 358.5 in another, which is exactly the geometry this avoids needing.
+
+**Three keys, and not one of them may start with `1 `.** `_gated` tests
+`clause.startswith(prefix)` and `GATED` already holds `"1 "`, so `1 contrast text` would gate
+from its first commit — the opposite of shipping report-only. `contrast text` (SC 1.4.3),
+`contrast marks` (SC 1.4.11) and `contrast ground` (the ground could not be resolved;
+`UNDECIDED` by construction, the twin of `1 composited`).
+
+**Where each key goes, and this is what S11 built.** `contrast ground` is `NOT_A_CLAUSE` — it
+can never be `PASS` or `FAIL`, which is that set's entry condition and its own pin. The other
+two are `Ratchet(prefix, REPORT_ONLY_STATE, reason)` in `GATE`, and adding them means editing
+the `report_only()` pin, which is the second deliberate edit S11's review insisted on. *Row 12
+said `NOT_A_CLAUSE` for all of it; that route is refused by the guard beside it, since a
+contrast clause passes on a conforming page.* And `_CSS_DERIVED` gains `"contrast "`, or an
+unread stylesheet produces contrast failures on a sheet the run never opened.
+
+**What must be `UNDECIDED` rather than guessed**, each with the corpus reason it is on the list:
+an unresolvable value (`resolve()` returns `None`); a 4- or 8-digit hex, which `colour.rgb`
+already refuses; an ancestor chain reaching no painted background — **do not assume white**; an
+ancestor carrying `opacity`, which flattens its whole subtree; a rule inside a non-`prefers-`
+`@media` block, because `css.rules()` drops the condition by design and such a rule currently
+reads as unconditional; font size or weight unresolvable, since the 4.5/3.0 split turns on it;
+and **a selector matching no element in the static document** — `mini-traceroute` builds its
+entire diagram in `app.js`, so sixteen paint rules there match nothing, and that is
+`contrast ground`, never `n/a` and never a pass.
+
+**One departure from row 12's wording, stated rather than taken quietly.** The row says
+`UNDECIDED` for `color-mix()`. Over a *known* ground it is decidable with `resolve()` +
+`composite()`, which is what those two functions were built for and why they have shipped
+unused since S2. Decide it.
+
+**A fourth verdict row, and the review of S12b is what found it missing.** An element that a
+later sibling in the same `<svg>` may be drawn over is `UNDECIDED` **as a mark**, with its ratio
+printed. Not because its ratio is unknown — it is not — but because *whether it is a mark at
+all* is unknown: a region another element is painted onto is a ground in every page in this
+corpus, and no structural signal separates a highlight band from a data mark. This is the same
+asymmetry as the rows above, one notch further out: the clause refuses to `FAIL` where the
+answer is not guaranteed, and a **role** it cannot establish is such a case.
+
+*Note what this costs and what it does not.* Every mark that has something drawn over it drops
+to `UNDECIDED`, which on this corpus is chart furniture and highlight regions. Every leaf mark
+— the ones a reader is meant to read a value from — keeps its verdict.
+
+**And that is why the governing-rule escape stays deferred.** `auth-log-scan`'s window band
+measures 1.27:1 against its lane and **1.29:1 against `--bg`**, and the page measured that and
+wrote the reason in a CSS comment — which `0007` §5.0 says wins and no checker can read. It
+looked like this forced a `data-contrast="by-design"` amendment to §5, on clause 3's
+`data-scroll` precedent. Under the row above it does not: the band is a candidate ground for
+the marks that follow it, so it reports `UNDECIDED` with 1.29:1 printed, and a reader sees the
+number without the gate claiming anything.
+
+*The first version of this paragraph deferred the amendment on a rule that does not exclude the
+band — "the band has marks drawn over it, so it is a ground and not a site, and v1 scopes marks
+to elements with no painted descendants." The marks are the band's **siblings**, as this section
+says three paragraphs above, so the band has no descendants at all and neither clause reaches
+it; under the `FAIL` row it would have measured against its ancestor chain and reported 1.29:1
+as a failure on a page that recorded its reason. A design deferring an amendment on a rule that
+does not do the work is the confident-wrong-verdict shape this whole package refuses, written
+into the design for it.*
+
+**Sequencing.** The element stream and the matcher land first with their own guards, then the
+clause; `spec.py` `c1.s6`, `GATE`, `NOT_A_CLAUSE`, `_CSS_DERIVED`, `test_published_surfaces`'s
+`CLAUSES` tuple and the census go in **the same commit as the clause**, because each of them
+fails silently on its own. `clauses.py` is 1 225 lines against this project's own 800 ceiling,
+so the clause is a new module and not another function there.
 
 ### 3.6 S3 was written and was not done — the defect it fixes was unguarded by both carriers
 
@@ -2266,6 +2358,87 @@ gate section said *"two clauses print and do not gate — clause 8 and clause 4'
 sentence describing the partiality outlived the partiality it described by one day, in the file a
 session loads first. **That is the argument for `gate policy` being printed by the run**: a
 policy written in prose ages against an instrument that does not.
+
+### 4.19 What S12 measured — and the three claims about row 12 that did not survive it
+
+`0009` §7 row 12 is *contrast at the usage site*, and it was taken as an architecture pass plus
+a measurement before any of it was built. The measurement refuted the pass's headline, found a
+different failure that is real, and re-scoped the row. All three are the reason the stage
+splits.
+
+**1. The pass's "single most likely surprise" is not live.** The claim: `--accent-soft` measures
+**2.93:1** on `--surface` (reproduced exactly), so any chart inside a
+`.card { background: var(--surface) }` crosses SC 1.4.11's 3:1 floor in light mode. The pass
+spot-checked two surfaces and cleared them. **Measured across all eleven: 35 `<svg>` elements,
+zero of them inside an element carrying `card`.** Seven surfaces declare that rule and none puts
+a chart in one, so the marks sit on `--bg` at **3.12:1** and pass — by 0.12, which is worth
+knowing and is not a finding.
+
+**2. A rule-keyed clause would be almost entirely false positives.** The cheap design — every
+paint declaration against the page's two grounds — was run over the eleven: **500 sites, 59
+under 4.5:1, 48 under 3:1**. Every text hit is `color: var(--bg)` on a *filled control* whose
+ground is its own background; **24 of the 32** graphic hits under 1.3:1 are chart furniture
+(`.axis`, `.grid`, `.lane-line`, `.track`) painted `--border` on purpose, and the other eight
+are shapes filled with a page ground itself — `.chart .lane` on `--surface`, `.diagram .node`
+and `.series-dot.observed` on `--bg`. None is a real finding; the first version of this
+sentence put all 32 in the named list, which is a characterisation wider than the sweep. That is the measured argument
+for the element-keyed, paint-order design and against the shortcut, and it is why **S13 is
+sized from the walk rather than from the arithmetic**.
+
+**3. The one live failure is in the place neither carrier was looking.**
+`pl-review-sense`'s confusion matrix draws two text labels on each cell, and the cell's alpha is
+a **presentation attribute** computed per cell from the data:
+
+| label | token | densest committed cell | at the ramp's cap |
+|---|---|---|---|
+| `.cell-text`, the count | `--text` | 7.01:1 light · 5.21:1 dark | 6.70 · 4.91 |
+| `.cell-share`, "95% of row" | `--muted` | **2.69:1 · 2.47:1** | **2.57 · 2.33** |
+
+**Three of the nine cells failed, not one** — the whole diagonal, at 2.69/2.71/2.77:1 light and 2.47/2.47/2.59:1 dark. Counted by the `code-reviewer` pass on the sibling half, which is the second figure this stage got from a review rather than from its own sweep. With both labels on `--text` the worst cell is **7.01:1 light and 5.21:1 dark**.
+
+**And the reasoning that should have caught it was already written down.**
+`_CELL_MAX_OPACITY = 0.55` caps the shading ramp under a comment recording *why* — switching ink
+by density puts the chart's worst contrast at the switch, 2.5:1, measured — and concluding that
+capping *"keeps a single label colour above 4.5:1 everywhere, in both colour schemes."* True of
+the count. The cell carries two labels. The repository's guard,
+`test_every_confusion_cell_keeps_its_count_readable`, is correct and covers the same one; its
+docstring carries the same singular.
+
+*This is `0007` §5.0's governing rule from the inside: a page measured a reason and recorded it,
+and the measurement reached one of the two things it licensed. The record's own class — a claim
+wider than the measurement under it — arriving in a comment written to prevent it.*
+
+**Why the index could not see it either.** `clause_1_composited` read CSS `opacity` and
+`color-mix()`. Alpha reaches a pixel from **three** places and a data-driven one has nowhere to
+live but the markup, because a stylesheet cannot hold a value per cell. So the clause whose
+whole subject is *this page paints a value that is not the declared one* reported **1 usage** on
+the one surface in the portfolio that composites per element; it now reports **9**, and no other
+surface moved. S12b is that repair, with `data_driven_alpha.html` as the fixture of record cut
+from the page at `6f908ec`, before it was fixed.
+
+**What the S12b review found, and none of it was in the code.** Five claims wider than the
+measurement under them, in a stage whose subject is a measurement nobody had taken:
+`fill-opacity="0.000"` appears **once**, on the one empty cell of nine, and *nine* was the cell
+count written as the zero count — beside a report that prints `9 usage(s)` for the same
+surface, so there were two different nines to confuse. `.cell-text`'s dark figure read 5.24
+where this document's own next paragraph says **5.21**. *Every* graphic hit under 1.3:1 was
+called `--border` chart furniture; **24 of 32** are, and the other eight are shapes filled with
+a page ground. The clause was said to read *one* of alpha's three routes where two other files
+edited in the same commit say **two**. And a guard docstring named a mutation — *"zero times if
+it were added only to the branch that pushes"* — that **does not redden it**: `<rect>` is not
+void, so both spellings take the push branch and moving the collector inside it left all 502
+tests green. A void-tag case now makes the claim true, and reddens.
+
+*The pattern is one thing: a stage that reproduced every figure it took from an architecture
+pass wrote five of its own that it had not. The measurements were checked; the sentences around
+them were not.*
+
+**Both halves were mutation-proven.** In the sibling: reverting the share to `--muted` reddens
+the widened guard at 40% of the ramp with the ratio in the message — *and with the token
+hardcoded back to `text` the same revert passes*, which is what makes reading it out of
+`styles.css` the load-bearing half rather than a tidiness. In the index: five mutations, each
+red on the guard that names it, including `check()` no longer passing the page — the wiring a
+unit test on the clause cannot reach.
 
 ## 5. What is carried, not scheduled
 
