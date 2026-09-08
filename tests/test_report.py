@@ -390,6 +390,197 @@ def test_the_exemption_set_is_pinned_because_it_is_policy_and_not_a_measurement(
         "for a key that is UNDECIDED everywhere, which is what the dangerous ones are.")
 
 
+# -- the gate registry, and the two branches no corpus can exercise ---------------------------
+#
+# `0009` §7 row 13b turned `GATED` from a tuple into `GATE`, a registry of `(prefix, state,
+# reason)`. Its `pending` state exists for a situation that arises once per clause admission —
+# three times in this system's life — so **the working trees cannot exercise it**: nothing
+# fails anywhere today, and a guard written only against the corpus would ship both of its
+# branches unexecuted. That is why the arithmetic is in `__main__` and proved here, in the job
+# that runs with no submodule on disk.
+
+
+def _statuses(**pairs) -> dict[str, set[str]]:
+    """A corpus sweep's product, fabricated. The keys are finding keys, the values statuses."""
+    return {clause: set(seen) for clause, seen in pairs.items()}
+
+
+def test_every_row_the_gate_does_not_refuse_on_carries_a_reason():
+    """The difference between an exemption and a place for a key to hide is one sentence.
+
+    A gated prefix needs none — the ceiling guard re-takes its licensing measurement on every
+    run over the real trees. Anything outside the gate is a decision instead of a measurement,
+    and `served` spent two stages outside it under an argument that lived in a comment block
+    and a test docstring, where no reader of the table could find it.
+    """
+    for one in report.GATE:
+        if one.state == report.GATED_STATE:
+            continue
+        assert one.reason.strip(), (
+            f"{one.prefix!r} is {one.state} and says nothing about why. A state outside the "
+            "gate is a decision; a decision with no reason beside it is the silence this "
+            "registry replaced.")
+
+
+def test_the_registry_holds_one_row_per_prefix_and_every_state_is_a_known_one():
+    """Two ways a second membership axis becomes the hiding place it was built to close.
+
+    A prefix in two rows makes its treatment depend on iteration order — `explained` returns
+    the first match and `GATED` collects every gated one, so a key could be both refused on
+    and exempted from the floor. A misspelled state is worse and quieter: it matches no
+    derivation at all, so the prefix silently stops gating *and* stops being demanded.
+
+    **Nested, not only identical** — and the identical-strings version of this test shipped
+    while its own docstring claimed the stronger property. `explained` matches by
+    `startswith`, so `Ratchet("4 ", REPORT_ONLY_STATE, …)` declared above `4 eyebrow` answers
+    for every clause-4 key while `GATED` still contains all three: one clause, two
+    descriptions, arbitrated by tuple order. Measured green across all 510 tests. Clause 4's
+    split is the registry's stated reason for keying on prefixes at all, and `ADR-0005` §5
+    records `1 dark` / `1 dark --positive` as a live pair in the same vocabulary — so this is
+    a shape the corpus already has, not a hypothetical.
+    """
+    prefixes = [one.prefix for one in report.GATE]
+    assert len(prefixes) == len(set(prefixes)), f"a prefix is declared twice: {prefixes}"
+    nested = [(a, b) for a in prefixes for b in prefixes if a != b and a.startswith(b)]
+    assert not nested, (
+        f"one row's prefix is inside another's: {nested}. `explained` returns whichever comes "
+        "first in the tuple, so the registry would describe one clause two ways and the "
+        "answer would depend on declaration order")
+    for one in report.GATE:
+        assert one.state in report.STATES, (
+            f"{one.prefix!r} is {one.state!r}, which is not one of {report.STATES}: it would "
+            "gate nothing and be demanded by nothing")
+
+
+def test_the_report_only_set_is_pinned_because_it_is_policy_and_not_a_measurement():
+    """**The narrowing route the registry added, and the floor cannot see.**
+
+    Under the tuple there was one way to un-gate a clause — delete the prefix — and
+    `clean_but_unexplained` catches it, because the key is then covered by no row. The
+    registry adds a second: leave the row and change its state. `Ratchet("8 ",
+    REPORT_ONLY_STATE, "a stage is mid-flight")` un-gates clause 8 permanently, `GATED`
+    silently becomes nine prefixes, and **all 510 tests pass** — measured, with the fetching
+    floor simulated from the working trees: `clean_but_unexplained` returns nothing, because
+    a report-only row *is* an explanation.
+
+    `GATED_STATE → PENDING_STATE` is caught, by the fetching floor demanding the promotion.
+    `report-only` is the hole, and it is a hole precisely because report-only is the one state
+    that answers no question the corpus can ask.
+
+    So this set is pinned, exactly as `NOT_A_CLAUSE` is pinned five tests up and for the
+    reason that test's docstring gives: *a policy list that can be extended by one word in one
+    place is the hiding place*. An addition means editing this assertion too — which is the
+    second deliberate edit, and the reason to write down why.
+
+    *`ADR-0005` §4 predicted this when it refused to derive `GATED` from the clause registry:
+    deriving it would add "a third cause — a registry row flipped — that the message does not
+    name". `ADR-0006` took the derivation anyway, on different grounds, and inherited the cause
+    without the message. The ceiling guard now names it.*
+    """
+    assert set(report.report_only()) == {"served"}, (
+        "report_only() changed. It is a policy list and not a measurement: every entry is a "
+        "decision that a key which CAN fail will never gate, and nothing in the corpus can "
+        "refute one. Adding a row here un-gates whatever it covers, silently, in every job.")
+
+
+def test_gated_is_derived_from_the_registry_rather_than_typed_beside_it():
+    """`0009` N1's shape — two lists of one vocabulary tied by nothing — refused in the file
+    that would otherwise be its next instance. Every guard and monkeypatch predating the
+    registry reads `GATED`, so the derivation is what keeps their meaning."""
+    assert report.GATED == tuple(one.prefix for one in report.GATE
+                                 if one.state == report.GATED_STATE)
+    # Pairwise, and the first version chained all three with `&`. That is empty whenever *any*
+    # one of them is, and `pending()` is empty by design — so the assertion could not fire:
+    # a prefix duplicated into `gated` and `report-only` left it passing. An intersection of
+    # three sets is not three intersections, and one of the three is always empty here.
+    gated, waiting, printed = set(report.GATED), set(report.pending()), set(report.report_only())
+    assert not gated & waiting and not gated & printed and not waiting & printed, (
+        f"a prefix is in two states at once: gated={sorted(gated & (waiting | printed))}, "
+        f"pending∩report-only={sorted(waiting & printed)}")
+
+
+def test_the_run_prints_every_key_the_gate_does_not_refuse_on(tree, capsys):
+    """Policy legible to a reader of the output, not only to a reader of the source.
+
+    The precedent is `test_no_exempt_key_is_claimed_as_a_carrier` in `test_spec.py`, which
+    makes the same claim about `NOT_A_SENTENCE`: a list that decides what an instrument will
+    not say must appear in what the instrument says.
+
+    **Asserted through `main`, not through `_policy()`** — and the first version of this test
+    did the latter, under a name saying *the run prints*. Deleting the two lines in `main` that
+    print the block left all 510 tests green. That is verbatim the defect
+    `test_a_stylesheet_the_wire_dropped_is_printed_and_refuses_nothing` records this suite
+    having already paid for once: *"The previous guard asserted `report._unreachable_sheets`
+    — the helper, never the output … Nothing was printed."* Same shape, same file, one stage
+    later, in the guard for `ADR-0006`'s headline consequence.
+
+    It carries more than a docstring's worth here, because with the registry's demotion route
+    the printed block is the **only** trace a reader of CI output has that a key stopped
+    gating.
+    """
+    report.main(["--root", str(tree), "--report-only"])
+    printed = capsys.readouterr().out
+    assert "gate policy" in printed, "the run does not print the keys it refuses to refuse on"
+    for one in report.GATE:
+        if one.state == report.GATED_STATE:
+            # The gated rows are deliberately absent: the table above already says what they
+            # decided. Asserted, because `outside = list(GATE)` is one edit and turns the
+            # block into ten lines of noise around the rows that matter — green, measured.
+            assert f"  {one.prefix:<12}{report.GATED_STATE}" not in printed, (
+                f"{one.prefix!r} gates and is listed under `gate policy`, which is the list "
+                "of what does not")
+            continue
+        assert one.prefix in printed and one.state in printed, (
+            f"{one.prefix!r} is outside the gate and the run does not say so")
+        assert one.reason.split(":")[0][:40] in printed, (
+            f"{one.prefix!r} is printed without its reason, which is the half that matters")
+
+
+def test_a_clean_key_no_row_covers_is_what_the_floor_reports():
+    """The floor's own arithmetic, over statuses rather than over the twelve trees."""
+    statuses = _statuses(**{"1 tokens": [clauses.PASS], "9 novel": [clauses.PASS],
+           "stylesheets": [clauses.UNDECIDED]})
+    assert report.clean_but_unexplained(statuses) == ["9 novel", "stylesheets"]
+    assert report.clean_but_unexplained(
+        statuses, exempt=NOT_A_CLAUSE) == ["9 novel"]
+    # A key that fails is not the floor's business — that is the ceiling's, and conflating the
+    # two is how the ratchet came to be guarded in one direction only (`0009` §5.1).
+    assert report.clean_but_unexplained(_statuses(**{"9 novel": [clauses.FAIL]})) == []
+
+
+def test_a_pending_row_the_eleven_report_failing_is_refuted(monkeypatch):
+    """Pending is a confirmation the registry is waiting on, not a waiting room."""
+    monkeypatch.setattr(report, "GATE",
+                        report.GATE + (report.Ratchet("9 ", report.PENDING_STATE, "under test"),))
+    refuted = report.pending_refuted(_statuses(**{"9 novel": [clauses.FAIL]}), fetching=False)
+    assert refuted and refuted[0][0] == "9 " and "failing" in refuted[0][1]
+
+
+def test_a_pending_row_clean_on_the_twelve_demands_its_promotion(monkeypatch):
+    """The fetching half, and the reason `pending` is not simply `report-only` with a wish.
+
+    This is S9's and S10's hand navigation as an assertion: the twelfth was confirmed by a
+    person running `--fetch` and watching `refresh.yml` rebuild, and the tuple then moved
+    because they remembered to move it.
+    """
+    monkeypatch.setattr(report, "GATE",
+                        report.GATE + (report.Ratchet("9 ", report.PENDING_STATE, "under test"),))
+    refuted = report.pending_refuted(_statuses(**{"9 novel": [clauses.PASS]}), fetching=True)
+    assert refuted and refuted[0][0] == "9 " and "published surfaces" in refuted[0][1]
+
+
+def test_a_pending_row_the_run_never_emitted_is_not_a_confirmation(monkeypatch):
+    """Absence is not a measurement.
+
+    Without the `matching` test, a pending prefix for a clause that emits nothing at all —
+    a stage half-landed, a key renamed — reports no failure and would be promoted into the
+    gate on the strength of never having been asked.
+    """
+    monkeypatch.setattr(report, "GATE",
+                        report.GATE + (report.Ratchet("9 ", report.PENDING_STATE, "under test"),))
+    assert report.pending_refuted(_statuses(**{"1 tokens": [clauses.PASS]}), fetching=True) == []
+
+
 # -- the served page, and the wire that must stay off the push path ---------------------------
 
 
@@ -521,7 +712,17 @@ def test_the_wire_never_reaches_the_push_path():
         stripped = one.strip()
         if one.startswith("  ") and not one.startswith("    ") and stripped.endswith(":"):
             job = stripped[:-1]
-        if job and stripped.startswith("if:"):
+        # **A *job-level* `if:`, at exactly four spaces.** A step's `if:` sits at eight and
+        # guards that step's execution, not the job's trigger — so reading one as a job guard
+        # exempts every `--fetch` in the job from this check. Measured: a step in `surfaces`
+        # carrying `if: always()` and `python -m tools.pagespec --fetch` passed this guard with
+        # the wire on the merge path. **The enabling edit is in the same commit as this fix**:
+        # `live`'s new `if: always()` is the first step-level `if:` this workflow has ever had,
+        # so the shape went from hypothetical to demonstrated inside the file the guard reads.
+        # Fourth time this predicate has been too narrow, and the first time it was widened
+        # before something used it.
+        indent = len(one) - len(one.lstrip(" "))
+        if job and stripped.startswith("if:") and indent == 4:
             # **Guarded means the condition excludes the push triggers, not that it mentions
             # a dispatch.** Asking for the substring `workflow_dispatch` read
             # `if: github.event_name == 'schedule'` as unguarded — a false red — and
@@ -540,6 +741,21 @@ def test_the_wire_never_reaches_the_push_path():
     )
     assert offenders, "no job fetches at all — the live surface stops being read by anything"
 
+    #: And the ratchet's own fetching run, which is a *different* claim from "something
+    #: fetches". Dropping `--fetch` from the pytest step leaves the checker's own `--fetch`
+    #: line above satisfying `offenders`, so the assertion passes while the two ratchet halves
+    #: silently sweep eleven surfaces in the one job built to sweep twelve — and `pending`
+    #: would then be promoted by nothing, ever. That is the whole of `0009` §7 row 13b at the
+    #: CI layer, reverted by deleting six characters. Measured green before this line existed.
+    swept = [(job, line) for job, line in offenders
+             if "pytest" in line and "-m submodules" in line]
+    assert swept, (
+        "no job runs `pytest -m submodules --fetch`, so the ratchet's corpus is eleven "
+        "surfaces everywhere and the gate covers twelve — the asymmetry 0009 §7 row 13b "
+        "closed, reopened without a red test")
+    assert all(job in guarded for job, _line in swept), (
+        f"the fetching ratchet runs on the merge path: {swept}")
+
 
 def test_served_is_deliberately_outside_the_gate_and_the_reason_is_recorded():
     """**Report-only, and this is where that decision lives rather than in a silence.**
@@ -548,21 +764,35 @@ def test_served_is_deliberately_outside_the_gate_and_the_reason_is_recorded():
     gated, and `served` reports exactly that — eleven of eleven, measured 2026-09-07. So the
     rule says gate it. It is not gated, for a reason the rule does not cover:
 
-    **neither ratchet guard can see this key.** Both derive from `_sweep()`, which hardcodes
+    **neither ratchet guard can see this key.** Both derived from `_sweep()`, which hardcoded
     `allow_fetch=False`, and `served` is emitted only when bytes were fetched. Putting it in
     `GATED` would add a prefix that the ceiling guard cannot check and the floor guard cannot
     demand — *a place for a key to hide*, which is the phrase the floor guard's own docstring
     is written against.
 
-    Closing that needs the eleven/twelve asymmetry `0009` §11 records to be resolved first, and
-    that is not this stage's business. Until then the honest state is: the finding prints, a
-    mismatch is visible in the scheduled run, and this test is the record that it was a
-    decision rather than an oversight.
+    *That reason expired with `0009` §7 row 13b, and this test now asserts the one that did
+    not.* The sweep takes its mode as a parameter, so the fetching floor **does** see this key
+    — and sees it clean, eleven of eleven, which under the floor's own rule is a demand that it
+    be gated. There was no green state: `test_the_ratchet_cannot_be_narrowed_either…` demanded
+    the gating, this test refused it, and `test_spec.py` closed the obvious escape by refusing
+    `served` in `NOT_A_CLAUSE` — correctly, since that set's pin demands a proof the key can
+    never be `FAIL` and `served` fails whenever a sibling publishes ahead of a pointer bump.
+    Three guards, no arrangement satisfying all three. `REPORT_ONLY_STATE` is the third answer
+    the taxonomy needed, and `0009` §7 row 8 is where it was first noticed missing.
+
+    So the claim asserted here is now the *substantive* one, which was always the stronger
+    half: a mismatch is routinely not a defect, so gating this key would redden the daily run
+    as ordinary portfolio work proceeds. It is in the registry, it prints under `gate policy`
+    with that reason, and it does not gate.
     """
     assert "served" not in report.GATED
     assert not any("served".startswith(prefix) for prefix in report.GATED), (
-        "a GATED prefix now covers `served`, which neither ratchet guard can measure"
+        "a GATED prefix now covers `served`, and a mismatch is routinely not a defect"
     )
+    assert "served" in report.report_only(), (
+        "served has left the registry: report-only is a recorded decision, and a key that "
+        "gates nothing while no row explains it is the silence row 13b closed")
+    assert "publishing" in report.report_only()["served"]
 
 
 def test_the_clauses_are_answered_from_the_served_bytes_and_not_from_the_file(

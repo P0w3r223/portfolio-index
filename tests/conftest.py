@@ -35,6 +35,29 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NOT_A_CLAUSE = frozenset({"stylesheets"})
 
 
+def pytest_addoption(parser):
+    """The sweep's fetch mode, **spelled exactly as the checker spells it**.
+
+    `0009` §7 row 13b needs the ratchet guards to read the same twelve surfaces the gate
+    covers, and that means a knob. The knob is `--fetch` and not `--live`, `--wire` or an
+    environment variable, because `test_the_wire_never_reaches_the_push_path` reads
+    `pagespec.yml` and scans job lines for the literal string `--fetch`: a differently-spelled
+    knob opens a door onto the merge path that the one guard against that door cannot see.
+    That guard's own docstring records it being too narrow twice; this is the third shape it
+    would have missed, and the cheapest fix is to give it nothing new to learn.
+    """
+    parser.addoption(
+        "--fetch", action="store_true", default=False,
+        help="sweep the published surfaces over the wire — all twelve, including the one "
+             "that commits no file. Only the scheduled `live` job passes it.")
+
+
+@pytest.fixture(scope="session")
+def fetching(request) -> bool:
+    """Whether this run reads the wire. The ratchet's corpus follows it."""
+    return bool(request.config.getoption("--fetch"))
+
+
 def fixture(name: str) -> str:
     """One fixture of record, read as text. See `fixtures/README.md` for provenance."""
     return (FIXTURES / name).read_text(encoding="utf-8")

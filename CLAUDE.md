@@ -32,7 +32,7 @@ tools/pagespec/       the checker — standard library only
   css.py                CSS -> rules, with comments stripped and media conditions flattened
   colour.py             WCAG arithmetic; contrast() ships, resolve()/composite() are unused
   clauses.py            clauses 1-8 as pure checks over one Loaded
-  __main__.py           the report, two censuses, and the GATED ratchet
+  __main__.py           the report, two censuses, and the GATE ratchet with its three states
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
@@ -73,6 +73,9 @@ python -m tools.pagespec --fetch         # include wroclaw, which commits no HTM
 python -m pytest                         # the whole suite
 python -m pytest -m 'not submodules'     # what CI's `core` job runs — no sibling on disk
 python -m pytest -m submodules           # only the tests that read a working tree
+python -m pytest -m submodules --fetch   # what the scheduled `live` job runs: the same
+                                         #   guards over the twelve the gate covers, not
+                                         #   the eleven that commit a file. Reads the wire
 ```
 
 ## Working rules
@@ -91,31 +94,41 @@ python -m pytest -m submodules           # only the tests that read a working tr
 
 ## What not to do
 
-- **Do not widen `GATED` from the eleven alone.** `wroclaw` commits no HTML and republishes
-  from a Pages artifact rebuilt daily, so its page does not move when its pull request merges,
-  while the floor guard reads the eleven at the pinned gitlinks and **demands** the widening
-  the moment those eleven go clean. A pointer bump that cleans the eleven therefore arms the
-  guard while the twelfth still fails, and the morning's `live` run goes red on a merge that
-  was green. Land the siblings, *do not bump the pointers*, confirm the twelfth with
-  `--fetch` or a `live` dispatch, then bump and widen in **one** commit. The guard's own
-  failure message says this; `0008` §4.15 says when it bites, which is S9 and again S10.
-- **Do not hand-edit `GATED`** (`tools/pagespec/__main__.py`) as part of unrelated work. It is a
-  ratchet: it names the finding keys that report zero `FAIL` across every surface read, and a
-  closing stage adds its own. Widening it past the measurement is caught by
+- **Do not hand-edit `GATE`** (`tools/pagespec/__main__.py`) as part of unrelated work. It is a
+  ratchet: each row names a finding prefix, what the gate does with it, and — for anything the
+  gate does not refuse on — why. Widening it past the measurement is caught by
   `test_the_ratchet_holds_no_clause_the_committed_surfaces_report_failing`, and **narrowing it
-  is caught by `test_the_ratchet_cannot_be_narrowed_either_every_clean_clause_is_gated` — but
-  only in the `surfaces` job.** Both guards read the sibling working trees, so a pull request
-  green on `core` alone proves nothing about this tuple: `GATED = ("1 ",)`, which un-gates
-  seven clauses at once, still passes `pytest -m 'not submodules'`. *This paragraph said
-  narrowing was caught by nothing at all, which stopped being true at `#83` and was found by
-  the audit of 2026-09-07 — a reader who believed it would not trust the guard that would have
-  stopped them.* Clause 8 and clause 4-`<title>` entered with S9 and S10 on 2026-09-08, so the
-  tuple covers every clause the spec carries **today**. That does not retire it: a new clause
-  enters the same way it always has — measured clean on all twelve with `--fetch`, then added —
-  and `0009` §7 row 12's contrast clause is the one on the table. *An earlier version of this
-  sentence said the next edit is "an admission, not a closure", which a stage editor could read
-  as `do not add row 12's key`; the floor guard will **demand** it the moment that clause goes
-  clean on the eleven, which is the trap above, not an exemption from it.*
+  now has two shapes with two guards, in two different jobs.** *Deleting* a row is caught by
+  `test_the_ratchet_cannot_be_narrowed_either_every_clean_clause_is_gated` — but only in the
+  `surfaces` and `live` jobs, because it reads the sibling working trees, so a pull request
+  green on `core` alone proves nothing: dropping every row but `1 `, which un-gates seven
+  clauses at once, still passes `pytest -m 'not submodules'`. *Demoting* a row to
+  `report-only` un-gates it just as completely and **no corpus can see it**, because a
+  report-only row is an explanation — so that one is caught by
+  `test_the_report_only_set_is_pinned_because_it_is_policy_and_not_a_measurement`, in `core`,
+  and adding a row there means editing that pin too. The second shape arrived with the
+  registry and shipped green for one commit; `ADR-0005` §4 had predicted it for a derivation
+  nobody had taken yet.
+  *This paragraph said narrowing was caught by nothing at all, which stopped being true at
+  `#83` and was found by the audit of 2026-09-07 — a reader who believed it would not trust the
+  guard that would have stopped them.* Clause 8 and clause 4-`<title>` entered with S9 and S10
+  on 2026-09-08, so the registry covers every clause the spec carries **today**, and
+  `0009` §7 row 12's contrast clause is the one on the table.
+- **The eleven/twelve trap is now the instrument's, not yours — and the price is that a new
+  clause enters in two steps rather than one.** `wroclaw` commits no HTML and republishes from
+  a Pages artifact rebuilt daily, so its page does not move when its pull request merges, while
+  the floor guard reads the eleven at the pinned gitlinks. Until `0009` §7 row 13b that guard
+  **demanded** the widening the moment those eleven went clean, so a pointer bump armed it while
+  the twelfth still failed and the morning's `live` run went red on a merge that was green —
+  S9 and S10 both navigated that by hand. Since row 13b the sweep takes its mode as a parameter:
+  `surfaces` reads the eleven, the scheduled `live` job reads the twelve with `--fetch`, and
+  the registry has a `pending` state for exactly this gap. So: land the siblings, bump the
+  pointers, add the key as `Ratchet(prefix, PENDING_STATE, reason)` — the fetchless floor
+  accepts that and the ceiling still refuses a regression — then let the next `live` run
+  **demand** its promotion to `GATED_STATE`, or leave it pending if the twelfth still fails.
+  Confirming by hand with `python -m tools.pagespec --fetch` or a `live` dispatch still works
+  and is faster; what changed is that forgetting to is no longer silent. `0008` §4.15 records
+  when the trap bit, and §4.18 what closing it cost.
 - **Do not weaken a guard to make it pass.** A guard that has started failing is a finding.
 - **Do not add a dependency.** The checker is standard library only and `pytest` is the sole
   test dependency; the `core` CI job installs nothing else.
@@ -142,10 +155,16 @@ answering 4xx, and a surface whose committed file has gone missing while the wir
 place, both refuse.
 
 The gate is **deliberately partial**. `UNDECIDED` never gates, which is what lets the checker be
-honest about `color-mix()`, an unread media condition, and a headline it cannot judge. Two
-clauses print and do not gate — clause 8 (the thousands separator) and clause 4's `<title>` half
-— and they are the open work, not an oversight. `python -m tools.pagespec` exiting 0 today
-therefore means *no gated clause failed*, and not *every clause passes*.
+honest about `color-mix()`, an unread media condition, and a headline it cannot judge.
+`python -m tools.pagespec` exiting 0 therefore means *no gated clause failed*, and not *every
+clause passes*. What else stays outside the gate is now printed by the run itself, under
+`gate policy`, with the reason beside it — `served` is the only row there today.
+
+*This paragraph said until 2026-09-08 that clause 8 and clause 4's `<title>` half print and do
+not gate, "the open work, not an oversight". S9 and S10 closed both the day before, and the
+sentence describing the partiality outlived the partiality it described. Found while closing
+`0009` §7 row 13b, by a reader who came for the paragraph below it — which is the argument for
+printing the policy rather than writing it down.*
 
 Half the specification cannot be carried from here at all, by construction: a repository's own
 artifacts, and `0007` §5.0's rule that every figure a surface prints is a figure a committed

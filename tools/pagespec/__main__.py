@@ -3,8 +3,9 @@
 `0007` §3 was corrected five times across two sessions because a per-page measurement was
 kept in a normative document. This is what replaces it.
 
-**The gate is a ratchet, not a verdict on the page.** `GATED` names the finding keys that
-report zero `FAIL` across every surface read; a stage that closes adds its own. `0008` §4.11
+**The gate is a ratchet, not a verdict on the page.** `GATE` names each finding prefix, what
+the gate does with it, and why for anything it does not refuse on; a prefix is gated once it
+reports zero `FAIL` across every surface read, and a stage that closes adds its own. `0008` §4.11
 is why it exists at all: clauses 8 and 4-`<title>` drifted across seven surfaces while four
 stages rebuilt those pages and five rebuild-and-compare guards passed, because a guard asking
 *does the page still match its inputs* cannot ask *are the inputs right*.
@@ -13,7 +14,7 @@ stages rebuilt those pages and five rebuild-and-compare guards passed, because a
 is the stage that built this file and is closed, and not by any other. Two other artifacts
 said the same thing, and `0008` §4.11 records all three.*
 
-    python -m tools.pagespec              # the twelve committed surfaces, gated
+    python -m tools.pagespec              # the committed surfaces, gated
     python -m tools.pagespec --fetch      # judge all twelve on the served bytes,
                                           #   and compare them with the committed files
     python -m tools.pagespec --detail     # every finding, not just the failures
@@ -33,6 +34,8 @@ from __future__ import annotations
 
 import argparse
 import sys
+import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 
 from . import clauses, render, sources
@@ -40,13 +43,50 @@ from . import clauses, render, sources
 _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
          clauses.UNDECIDED: "?", clauses.NOT_APPLICABLE: "-"}
 
-#: The ratchet — `0008` §4.11. A finding key enters here once a run reports zero `FAIL` for it
-#: across every surface read, and each closing stage adds its own. **Keyed on the finding
-#: prefix rather than the clause number, because clause 4's halves disagree**: `4 h1` and
-#: `4 eyebrow` have been clean on all twelve surfaces since S6 while `4 title` fails — on
-#: three of the eleven committed surfaces, and on four of the twelve once `--fetch` reads the
-#: twelfth.
-#: Gating by the number would either pull `4 title` in before S10 or hold the other two out.
+#: **The two guards read eleven surfaces, and the gate covers twelve.** `test_published_surfaces`
+#: swept without `--fetch`, so neither the ceiling (no gated clause fails) nor the floor
+#: (every clean clause is gated) could see `wroclaw-air-insights` — and the floor would then
+#: *demand* a widening measured on eleven. S9 and S10 navigated that by hand. `0009` §7 row 13b
+#: is the row that closes it, and `PENDING_STATE` below is the half of the answer this file
+#: holds: the sweep now follows the mode, and a key clean on the eleven can be declared
+#: pending until a fetching run has seen the twelfth.
+GATED_STATE = "gated"
+#: Clean on the eleven committed surfaces and **not yet confirmed on the twelfth**. The
+#: fetchless floor accepts it; a fetching run that finds it clean over all twelve *demands*
+#: its promotion, and one that finds it failing leaves it here. This is the state that was a
+#: `CLAUDE.md` paragraph, a three-outcome failure message and a hand-watched `refresh.yml`
+#: rebuild — the procedure S9 and S10 executed by reading rather than by running.
+PENDING_STATE = "pending"
+#: Prints, never gates, and **says why in the output rather than in a docstring**. Not the
+#: same claim as `conftest.NOT_A_CLAUSE`, which is a proof that a key can never be `FAIL`;
+#: this is a decision taken about a key that can.
+REPORT_ONLY_STATE = "report-only"
+STATES = (GATED_STATE, PENDING_STATE, REPORT_ONLY_STATE)
+
+
+@dataclass(frozen=True)
+class Ratchet:
+    """One finding prefix and what the gate does with it.
+
+    `reason` is required for every state except `gated`, and a guard enforces it. A gated
+    prefix needs no prose — the measurement licenses it and the ceiling guard re-takes that
+    measurement on every run. Anything *outside* the gate is a decision, and a decision with
+    no reason recorded beside it is the silence this registry exists to end.
+    """
+
+    prefix: str
+    state: str
+    reason: str = ""
+
+
+#: The ratchet — `0008` §4.11 — a tuple until `0009` §7 row 13b made it a registry.
+#:
+#: A prefix enters `gated` once a run reports zero `FAIL` for it across every surface read,
+#: and each closing stage adds its own. **Keyed on the finding prefix rather than the clause
+#: number, because clause 4's halves disagree**: `4 h1` and `4 eyebrow` have been clean on all
+#: twelve surfaces since S6 while `4 title` failed — on three of the eleven committed
+#: surfaces, and on four of the twelve once `--fetch` reads the twelfth. Gating by the number
+#: would either pull `4 title` in before S10 or hold the other two out.
 #:
 #: Measured 2026-09-07 over twelve surfaces with `--fetch`: every `FAIL` in the portfolio was
 #: `4 title` (**4**) or `8 separator` (7), and nothing else failed anywhere. *The `4 title`
@@ -59,37 +99,110 @@ _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
 #: S10 closed them together, and with `4 title` and `8 ` here every finding key a clause can
 #: report `FAIL` on is gated: `_gated` and `status == FAIL` now coincide for everything except
 #: `served`. Re-measured over twelve with `--fetch`, 2026-09-08: **zero `FAIL` portfolio-wide.**
-#: That is what licenses this tuple, and it starts refusing the moment one of them regresses.
+#: That is what licenses these rows, and it starts refusing the moment one of them regresses.
 #:
 #: *`test_a_page_failing_only_an_ungated_clause_still_passes` in `tests/test_report.py` is the
 #: test that keeps the distinction alive past this point, and it survives on purpose: it
 #: constructs its ungated set by removing these two prefixes rather than borrowing whatever
-#: `GATED` happens to hold. Removing them was a no-op before this commit and is the whole test
+#: `GATED` happens to hold. Removing them was a no-op before S9/S10 and is the whole test
 #: after it — which its own docstring predicted, one stage early.*
-#:
-#: **The two guards on this tuple read eleven surfaces, not twelve.** `test_published_surfaces`
-#: sweeps without `--fetch`, so neither the ceiling (no gated clause fails) nor the floor
-#: (every clean clause is gated) can see `wroclaw-air-insights`. That is spent, not gone: it
-#: bites again for the **next** key admitted here — `0009` §7 row 12's contrast clause is the
-#: one on the table. Widen this tuple only after `python -m tools.pagespec --fetch` agrees:
-#: the `surfaces` job cannot see the twelfth surface, so a widening that is premature merges
-#: green and reddens the scheduled `live` run instead. It was navigated by hand for S9/S10,
-#: with `refresh.yml`'s rebuild watched to completion before this line moved.
-#: **`served` is deliberately absent, and the reason is not that it fails.** It reports zero
-#: `FAIL` across every surface read, which is this tuple's own entry condition. It is out
-#: because *neither ratchet guard can see it*: both derive from a sweep hardcoding
-#: `allow_fetch=False`, so gating it adds a prefix the ceiling cannot check and the floor
-#: cannot demand — a place for a key to hide. And the stronger reason, which is about the key
-#: rather than the guards: **a mismatch is routinely not a defect at all.** This repository
-#: re-points submodules constantly, so served-differs-from-committed is the normal state
-#: between a sibling publishing and the index bumping its gitlink. Gated, this key would redden
-#: the daily run as ordinary portfolio work proceeds — the cries-wolf failure `conftest.py`
-#: warns about. It may be that gating it is never right; that is worth settling deliberately
-#: rather than inheriting.
-GATED: tuple[str, ...] = ("1 ", "2 ", "3 ", "4 eyebrow", "4 h1", "4 title",
-                          "5 ", "6 ", "7 ", "8 ")
+GATE: tuple[Ratchet, ...] = (
+    Ratchet("1 ", GATED_STATE),
+    Ratchet("2 ", GATED_STATE),
+    Ratchet("3 ", GATED_STATE),
+    Ratchet("4 eyebrow", GATED_STATE),
+    Ratchet("4 h1", GATED_STATE),
+    Ratchet("4 title", GATED_STATE),
+    Ratchet("5 ", GATED_STATE),
+    Ratchet("6 ", GATED_STATE),
+    Ratchet("7 ", GATED_STATE),
+    Ratchet("8 ", GATED_STATE),
+    Ratchet(
+        "served", REPORT_ONLY_STATE,
+        "a mismatch is routinely not a defect: this repository re-points submodules "
+        "constantly, so served-differs-from-committed is the normal state between a sibling "
+        "publishing and the index bumping its gitlink. Gated, it would redden the daily run "
+        "as ordinary portfolio work proceeds. The reason it was outside the gate before "
+        "0009 §7 row 13b — that neither ratchet guard could see it — has expired; this one "
+        "has not, and it is the one that was always about the key rather than the guards",
+    ),
+)
+
+#: Derived, so the two spellings of one vocabulary cannot diverge — `0009` N1's shape, which
+#: this file would otherwise be a fresh instance of. Every guard and every monkeypatch that
+#: predates the registry reads this name and keeps its meaning.
+GATED: tuple[str, ...] = tuple(one.prefix for one in GATE if one.state == GATED_STATE)
 
 
+def pending() -> tuple[str, ...]:
+    """Prefixes clean on the eleven and not yet confirmed on the twelfth. Empty at rest."""
+    return tuple(one.prefix for one in GATE if one.state == PENDING_STATE)
+
+
+def report_only() -> dict[str, str]:
+    """Prefixes that print and never gate, each with the reason it does not."""
+    return {one.prefix: one.reason for one in GATE if one.state == REPORT_ONLY_STATE}
+
+
+def explained(clause: str) -> Ratchet | None:
+    """The registry entry covering this finding key, whatever its state.
+
+    The floor guard's question, and it is a different one from `_gated`'s: *has anybody said
+    anything about this key at all*. A clean key covered by no entry is the ratchet narrowed.
+    """
+    for one in GATE:
+        if clause.startswith(one.prefix):
+            return one
+    return None
+
+
+def clean_but_unexplained(statuses: dict[str, set[str]], *,
+                          exempt: frozenset[str] | set[str] = frozenset()) -> list[str]:
+    """Finding keys the corpus never reports failing that no row of `GATE` covers.
+
+    **The ratchet's floor, as arithmetic rather than as a loop inside one test.** It lives
+    here and not in the suite because it is a statement about this registry, and because the
+    corpus that can exercise its `pending` branches does not exist: no clause fails anywhere
+    today, so a guard written only against the working trees would ship both branches
+    unexecuted. `tests/test_report.py` proves them over synthetic statuses in the `core` job,
+    which needs no submodule and no wire.
+
+    `exempt` is the caller's — `conftest.NOT_A_CLAUSE`, a set whose entries carry a proof that
+    the key can never be `FAIL`. That is a different question from anything this registry
+    answers, and `tools/spec.py`'s own comment records what it cost to have one set answer two.
+    """
+    clean = {clause for clause, seen in statuses.items()
+             if clauses.FAIL not in seen} - set(exempt)
+    return sorted(clause for clause in clean if explained(clause) is None)
+
+
+def pending_refuted(statuses: dict[str, set[str]], *, fetching: bool) -> list[tuple[str, str]]:
+    """Pending rows this corpus contradicts, each with what contradicts it.
+
+    `pending` is a claim with two halves — *clean on the eleven*, and *the twelfth is not yet
+    confirmed* — and each half is refutable by a different sweep:
+
+    - **fetchless**, a pending prefix reporting `FAIL` refutes the first half. The state is a
+      confirmation the registry is waiting on, not a waiting room for a key whose stage has
+      not closed.
+    - **fetching**, a pending prefix that fails nowhere across all twelve refutes the second:
+      the confirmation has arrived and the row must be promoted. That promotion is what S9 and
+      S10 did by hand, watching a sibling's rebuild before editing a tuple.
+    """
+    refuted: list[tuple[str, str]] = []
+    for prefix in pending():
+        matching = {clause: seen for clause, seen in statuses.items()
+                    if clause.startswith(prefix)}
+        failing = sorted(clause for clause, seen in matching.items() if clauses.FAIL in seen)
+        if not fetching and failing:
+            refuted.append((prefix, f"the {sum(1 for one in sources.SURFACES if not one.must_fetch)}"
+                                    f" committed surfaces report {failing} failing"))
+        # A prefix the run never emitted says nothing either way, and calling that a
+        # confirmation would promote a key on the strength of its own absence.
+        if fetching and matching and not failing:
+            refuted.append((prefix, f"no failure on any of the {len(sources.SURFACES)} "
+                                    "published surfaces, this run's fetch-only one included"))
+    return refuted
 
 
 def _unread_same_origin(loaded: sources.Loaded) -> list[str]:
@@ -304,6 +417,31 @@ def _separator_census(pages: list[tuple[str, str]], detailed: bool) -> list[str]
     return lines + ([""] + detail if detail else [])
 
 
+def _policy() -> list[str]:
+    """Every key the gate does not refuse on, and the reason it does not.
+
+    **Printed, because a decision legible only to somebody already reading `__main__.py` is
+    the silence this registry replaced.** `served` sat outside the gate for two stages under
+    an argument that lived in a comment block and a test docstring; a reader of the table saw
+    `ok served` and no indication that the key could not refuse. `tools/spec.py` prints its own
+    exemptions for the same reason, and `test_no_exempt_key_is_claimed_as_a_carrier` is the
+    precedent for guarding that it does.
+
+    Gated prefixes are deliberately absent: the table above already says what they decided,
+    and a list of ten prefixes that behave as documented is noise around the four lines that
+    do not.
+    """
+    outside = [one for one in GATE if one.state != GATED_STATE]
+    if not outside:
+        return []
+    lines = ["gate policy — the keys the gate does not refuse on, and why\n"]
+    for one in outside:
+        lines.append(f"  {one.prefix:<12}{one.state}")
+        lines.append(textwrap.fill(one.reason, width=92,
+                                   initial_indent=" " * 6, subsequent_indent=" " * 6))
+    return lines + [""]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pagespec", description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2],
@@ -398,6 +536,9 @@ def main(argv: list[str] | None = None) -> int:
         print("role census — across every surface read, printed and never asserted\n")
         print("\n".join(census))
         print()
+
+    for line in _policy():
+        print(line)
 
     if unread:
         print("not read: " + ", ".join(unread))
