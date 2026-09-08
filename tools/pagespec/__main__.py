@@ -35,7 +35,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import clauses, sources
+from . import clauses, render, sources
 
 _MARK = {clauses.PASS: "ok", clauses.FAIL: "FAIL",
          clauses.UNDECIDED: "?", clauses.NOT_APPLICABLE: "-"}
@@ -185,6 +185,91 @@ def _census(sheets: list[tuple[str, str]]) -> list[str]:
     return lines
 
 
+def _separator_census(pages: list[tuple[str, str]], detailed: bool) -> list[str]:
+    """Every grouped figure the surfaces render, by separator and by where it sits.
+
+    **What `0008` §4.13 asked for, and the half of it an instrument here can carry.** That
+    erratum refuses to re-type the write-site count — three hand counts gave fifteen,
+    eighteen and nineteen against a true twenty — and rules that *a stage scoped by a figure
+    no instrument prints is scoped by whoever counted last.* The write sites are lines of
+    Python in eleven other repositories and `sources.py` is the I/O boundary and nothing
+    else, so they are not this module's to count; `0009` §7 row 6 is the decision to leave
+    them out. **The figures those sites reach are these bytes**, and this counts them.
+
+    It is how the twentieth site was found. §4.13 records the reconciliation by hand: the
+    checker said `ab-lab` prints two comma figures where the census named one write site,
+    and the second turned out to be `examples/validation_table.py:130` — a formatter the
+    repository's own ADR names and no sweep of generators had looked for. That comparison is
+    the method, and printing this side of it on every run is what makes it repeatable.
+
+    Three things it prints that the clause-8 row cannot:
+
+    - **Figures beside separators.** `clause_8_separator` counts separator *characters* and
+      its docstring says the two are equal *"because none prints a figure at or above a
+      million"* — an assumption about the corpus stated in a comment. Printing both measures
+      it instead, and the first figure that reaches seven digits makes the two disagree here
+      rather than silently in a tally.
+    - **Where each figure sits.** `doc-extract` prints `3<U+00A0>466,62` inside `<code>` as a
+      displayed specimen of a foreign invoice format. That is S9c's exemption, and §4.11
+      requires it censused *"so the exemption cannot silently widen"*. An exemption scoped to
+      an element is checkable; one scoped to a literal string is a carve-out.
+    - **Which surfaces each separator is on**, which is S9's edit order.
+
+    Printed and asserted by nothing, exactly as the role census is — a census that gated
+    would be a second clause 8 under a key no normative sentence claims.
+    """
+    tally: dict[str, int] = {}
+    figures_total = 0
+    where: dict[str, set[str]] = {}
+    contexts: dict[str, dict[str, int]] = {}
+    rows: list[str] = []
+    detail: list[str] = []
+
+    for name, html in pages:
+        figures = clauses.grouped_figures(render.parse(html))
+        if not figures:
+            rows.append(f"  {name:<24} no grouped figure")
+            continue
+        per_surface: dict[str, int] = {}
+        for figure in figures:
+            for separator in figure.separators:
+                per_surface[separator] = per_surface.get(separator, 0) + 1
+                tally[separator] = tally.get(separator, 0) + 1
+                where.setdefault(separator, set()).add(name)
+                contexts.setdefault(separator, {})
+                contexts[separator][figure.where] = (
+                    contexts[separator].get(figure.where, 0) + 1)
+        figures_total += len(figures)
+        inventory = " · ".join(
+            f"{separator} {count}" for separator, count in sorted(per_surface.items()))
+        rows.append(f"  {name:<24}{len(figures):>4} figure(s)   {inventory}")
+        if detailed:
+            for figure in figures:
+                detail.append(f"      {name:<24}{figure.display:<28} "
+                              f"in <{figure.where}>")
+
+    if not tally:
+        return []
+
+    separators = sum(tally.values())
+    lines = rows + [""]
+    # Stated as an equality that holds today rather than as a fact, because the clause's own
+    # tally is in the other unit and a reader comparing the two is owed the reason they match.
+    agreement = ("one separator each" if separators == figures_total
+                 else f"{separators - figures_total} figure(s) at or above a million")
+    lines.append(f"  {'portfolio':<24}{figures_total:>4} figure(s), {separators} separator(s) "
+                 f"— {agreement}")
+    for separator, count in sorted(tally.items(), key=lambda pair: (-pair[1], pair[0])):
+        verdict = "clause 8" if separator == "U+202F" else "not clause 8"
+        seen = ", ".join(sorted(where[separator]))
+        placed = ", ".join(f"{element} {number}" for element, number
+                           in sorted(contexts[separator].items(),
+                                     key=lambda pair: (-pair[1], pair[0])))
+        lines.append(f"      {separator:<10}{count:>4}  {verdict:<13} {seen}")
+        lines.append(f"      {'':<10}{'':>4}  in {placed}")
+    return lines + ([""] + detail if detail else [])
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pagespec", description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2],
@@ -216,6 +301,7 @@ def main(argv: list[str] | None = None) -> int:
     fetch_errors: dict[str, str] = {}
     missing = False
     sheets: list[tuple[str, str]] = []
+    markup: list[tuple[str, str]] = []
     for surface in sources.SURFACES:
         if args.only and args.only != surface.name:
             continue
@@ -240,6 +326,7 @@ def main(argv: list[str] | None = None) -> int:
             continue
 
         sheets.append((surface.name, loaded.css))
+        markup.append((surface.name, loaded.html))
         findings = clauses.check(loaded)
         blocked += [f"{surface.name}  {finding.clause}: {finding.detail}"
                     for finding in findings if _gated(finding)]
@@ -264,6 +351,12 @@ def main(argv: list[str] | None = None) -> int:
         for finding in findings:
             if args.detail or finding.status in (clauses.FAIL, clauses.UNDECIDED):
                 print(f"      {_MARK[finding.status]:<5} {finding.clause:<20} {finding.detail}")
+        print()
+
+    separators = _separator_census(markup, args.detail) if not args.only else []
+    if separators:
+        print("separator census — every grouped figure, printed and never asserted\n")
+        print("\n".join(separators))
         print()
 
     census = _census(sheets) if not args.only else []

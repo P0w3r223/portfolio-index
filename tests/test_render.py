@@ -274,3 +274,47 @@ def test_a_self_closed_tag_inside_a_heading_does_not_clear_the_collector():
     # this module, and binding a guard to it is the class this suite was just audited for.
     # The heading cases above are the subject, and `<title/>`'s own shape is pinned by
     # `test_a_self_closed_title_or_heading_does_not_strand_its_collector`.
+
+
+def test_the_rendered_text_is_exactly_its_text_nodes_joined():
+    """One flattening rule, in one place, read by two callers.
+
+    `rendered_text` answers clauses 4 and 8; `text_nodes` answers the separator census and
+    `0008` S9c's element exemption. They were one list of strings until the census needed the
+    ancestry, and the risk in adding it is that the two drift — a census describing text the
+    clauses never saw is worse than no census. Derived rather than parallel, so they cannot.
+    """
+    parsed = render.parse("<p>one</p><style>.x{}</style><p>  two   three </p><script>y</script>")
+
+    assert parsed.rendered_text == chr(10).join(text for text, _ in parsed.text_nodes)
+    assert [text for text, _ in parsed.text_nodes] == ["one", "two three"], (
+        "runs of ASCII whitespace collapse, <style> and <script> stay out, empties drop")
+
+
+def test_a_text_node_carries_the_tags_enclosing_it_outermost_first():
+    parsed = render.parse("<body><div><p>deep</p></div></body>")
+    assert parsed.text_nodes == [("deep", ("body", "div", "p"))]
+
+
+def test_a_self_closed_tag_pops_the_ancestry_and_a_void_one_never_pushed_it():
+    """`_tags` is pushed and popped in lockstep with `_open`, in all three places it moves.
+
+    `_open` already carries this hazard on the record: `handle_startendtag`'s counters *"did
+    not come back down"*, and the repair that fixed it then broke `<br/>` inside a heading by
+    lowering them for **every** self-closed tag. A second stack popping in only two of the
+    three places would drift silently — the ancestry stays a tuple of plausible tag names,
+    just the wrong ones, and no clause notices because only the census reads it.
+
+    **Both shapes, because the first version of this guard had only the second and shipped
+    green over the mutation it was written for.** `<br/>` and `<img>` are in `_VOID`, so they
+    never enter the branch that pops at all; a test built from those exercises nothing. It
+    takes a **non-void** self-closed tag — `<span/>` here, `<h1/>` in the comment that records
+    the earlier repair — to reach it. Found by mutating, which is the only way it could be.
+    """
+    parsed = render.parse(
+        "<body><p>before<br/>after<img src='x'>end</p><span/><div>outside</div></body>")
+
+    assert [ancestry for _, ancestry in parsed.text_nodes] == [
+        ("body", "p"), ("body", "p"), ("body", "p"), ("body", "div")], (
+        "a void tag must not push, and a self-closed non-void tag must pop what it pushed")
+    assert parsed.unclosed == 0, "the class stack came back down too"

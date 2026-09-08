@@ -41,14 +41,29 @@ class Page(HTMLParser):
     Attributes are collected here where `_Rendered` deliberately dropped them, because the
     spec asks about `<meta>` names, `<link>` hrefs and class names — all attributes, none of
     them text a reader sees. The text/markup separation that mattered to `apply-scout` is
-    kept in `text`, which still excludes `<style>` and `<script>`.
+    kept in `nodes`, which still excludes `<style>` and `<script>`.
     """
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.title = ""
         self.headline = ""
-        self.text: list[str] = []
+        #: One entry per text node: the text, and the tag names enclosing it, outermost
+        #: first. The ancestry is what clause 8's census reads — `doc-extract` prints
+        #: `3<U+00A0>466,62` inside `<code>` as a *displayed specimen* of a foreign format,
+        #: and it is **the only grouped figure inside `<code>` on the twelve**. Flattened to
+        #: a list of strings, the specimen and a body figure are the same node and `0008`
+        #: S9c's exemption could only be written as a literal-string carve-out — the
+        #: "silently widen" failure §4.11 forbids of exactly this exemption.
+        #:
+        #: *This said "every other grouped figure sits in `<p>`, `<td>` or SVG `<text>`",
+        #: which the census in the same commit refutes — fourteen counterexamples. It was
+        #: then rewritten as the distribution spelled out, which is a hand-typed figure in a
+        #: docstring and goes stale in silence: `0009` §8 row 1 is the record refusing to
+        #: type a census for exactly that reason. **The distribution is what the census
+        #: prints on every run**; the only fact the exemption needs is uniqueness of
+        #: `<code>`, and that is the one sentence left here.*
+        self.nodes: list[tuple[str, tuple[str, ...]]] = []
         self.metas: list[dict[str, str]] = []
         self.links: list[dict[str, str]] = []
         self.anchors: list[str] = []
@@ -59,6 +74,11 @@ class Page(HTMLParser):
         #: `max-width: 640px` — a fourth mechanism, and the one that broke `measure_page.py`.
         self.tables: list[tuple[frozenset[str], frozenset[str]]] = []
         self._open: list[frozenset[str]] = []
+        #: The same stack as `_open`, holding tag names instead of classes, and it is pushed
+        #: and popped in lockstep with it. Two stacks rather than one stack of pairs because
+        #: `handle_starttag` unions `_open` to build a table's ancestry, and a stack of pairs
+        #: would put a tag name into a set of class names.
+        self._tags: list[str] = []
         self._skipped = 0
         self._style: list[str] | None = None
         self._title: list[str] | None = None
@@ -83,6 +103,7 @@ class Page(HTMLParser):
 
         if tag not in _VOID:
             self._open.append(frozenset(attributes.get("class", "").split()))
+            self._tags.append(tag)
 
         if tag in _SKIPPED:
             self._skipped += 1
@@ -109,6 +130,7 @@ class Page(HTMLParser):
         self.handle_starttag(tag, attrs)
         if tag not in _VOID and self._open:
             self._open.pop()
+            self._tags.pop()
         if tag in _SKIPPED:
             self._skipped = max(self._skipped - 1, 0)
             if tag == "style":
@@ -130,6 +152,7 @@ class Page(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag not in _VOID and self._open:
             self._open.pop()
+            self._tags.pop()
         if tag in _SKIPPED:
             self._skipped = max(self._skipped - 1, 0)
             if tag == "style" and self._style is not None:
@@ -150,7 +173,7 @@ class Page(HTMLParser):
             self._style.append(data)
         if self._skipped:
             return
-        self.text.append(data)
+        self.nodes.append((data, tuple(self._tags)))
         for sink in (self._title, self._heading):
             if sink is not None:
                 sink.append(data)
@@ -168,6 +191,18 @@ class Page(HTMLParser):
         return len(self._open)
 
     @property
+    def text_nodes(self) -> list[tuple[str, tuple[str, ...]]]:
+        """Each text node that carries something, flattened, with the tags enclosing it.
+
+        The one place a text node is flattened and the one place an empty one is dropped.
+        `rendered_text` is this joined, and `clauses.grouped_figures` reads it directly for
+        the ancestry the join destroys — so the census and the clause cannot disagree about
+        what the page says, only about what to do with it.
+        """
+        carrying = ((_flat(text), ancestry) for text, ancestry in self.nodes)
+        return [(text, ancestry) for text, ancestry in carrying if text]
+
+    @property
     def rendered_text(self) -> str:
         """The page's text, with a hard break between adjacent text nodes.
 
@@ -177,7 +212,7 @@ class Page(HTMLParser):
         every wrong separator tally in the record, and the break is what forbids it — a grouped
         figure lives inside one text node or it is not one figure.
         """
-        return chr(10).join(_flat(node) for node in self.text if node.strip())
+        return chr(10).join(text for text, _ in self.text_nodes)
 
     def meta(self, key: str) -> str | None:
         """The content of `<meta name=key>` or `<meta property=key>`, whichever exists."""

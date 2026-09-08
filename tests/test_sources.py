@@ -10,6 +10,7 @@ No test in this file touches the network. `_fetch` is the single seam and it is 
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -205,6 +206,71 @@ def test_the_registry_holds_twelve_surfaces_across_eleven_repositories():
     assert len(sources.SURFACES) == 12
     assert len({surface.repo for surface in sources.SURFACES}) == 11
     assert "token-budget" not in {surface.repo for surface in sources.SURFACES}
+
+
+#: A `paths:` entry that names a repository rather than a pattern: no directory separator and
+#: no extension. `tools/**` and `pyproject.toml` are patterns; `ab-lab` is a submodule.
+_A_REPOSITORY = re.compile(r"^[^/.]+$")
+
+WORKFLOW = ROOT / ".github" / "workflows" / "pagespec.yml"
+
+
+def _path_filters(workflow: str) -> list[frozenset[str]]:
+    """Every `paths:` list in the workflow, as the set of repositories each one names.
+
+    A parser rather than a `yaml.safe_load` because the checker and its suite are standard
+    library only — `ADR-0004` K-c, and the `core` job installs nothing but `pytest`. The
+    shape it reads is the shape the file commits: a bracketed, comma-separated, single-quoted
+    list that may wrap across lines.
+    """
+    lists = re.findall(r"paths:\s*\[(.*?)\]", workflow, re.S)
+    return [frozenset(entry for entry in
+                      (raw.strip().strip("'\"") for raw in block.split(","))
+                      if _A_REPOSITORY.match(entry))
+            for block in lists]
+
+
+def test_the_workflow_triggers_on_every_repository_the_registry_publishes():
+    """`0009` N1: four registries name these repositories and nothing ties any to any.
+
+    `.gitmodules` and `SURFACES` were tied by `test_entry_state.py::…_name_the_same_
+    repositories`; this closes the half N1 calls **the one that fails silently**. The other
+    three registries fail loudly — a surface missing from `SURFACES` is a missing row, a
+    missing gitlink is a missing directory. The workflow's filter fails the other way: a
+    repository absent from `paths:` is a page whose pointer can move with **no run at all**,
+    and the report a reader then quotes is the one from before the move. Nothing is red, and
+    the table is simply older than it looks.
+
+    Asserted as equality rather than as containment. Containment alone accepts `'ab_lab'`
+    beside `'ab-lab'` — the shape a typo takes here — because the misspelling is extra and
+    the real name is still present, and a filter entry matching no path in the repository is
+    exactly as silent as an absent one.
+
+    `token-budget` is the twelfth submodule, publishes no surface, and belongs in neither
+    list; deriving the expectation from `SURFACES` rather than from `.gitmodules` is what
+    keeps it out without naming it.
+    """
+    filters = _path_filters(WORKFLOW.read_text(encoding="utf-8"))
+    publishing = frozenset(surface.repo for surface in sources.SURFACES)
+
+    assert filters, "no `paths:` filter was parsed; the workflow's shape moved under this guard"
+    for named in filters:
+        assert named == publishing, (
+            "the workflow's paths filter and the surface registry have drifted: "
+            f"absent from the filter {sorted(publishing - named)}, "
+            f"named by the filter and publishing nothing {sorted(named - publishing)}"
+        )
+
+
+def test_both_of_the_workflow_filters_are_asserted_and_not_only_the_first():
+    """`push` and `pull_request` carry the same list twice, so drift can land in one of them.
+
+    The guard above loops, which is only worth something if the loop has two iterations —
+    a `findall` that silently matched once would assert the push filter and leave the pull
+    request's blind, and every symptom would be identical. `0008` §4.12 records two guards
+    that turned out not to be redundant for this reason.
+    """
+    assert len(_path_filters(WORKFLOW.read_text(encoding="utf-8"))) == 2
 
 
 def test_car_price_ml_publishes_two_surfaces_from_one_repository():

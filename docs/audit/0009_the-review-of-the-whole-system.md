@@ -265,14 +265,14 @@ Ordered by what unblocks what. Nothing here is scheduled; a row enters `0008` wh
 | 3 | A **`GATED` floor guard** — every key reporting zero `FAIL` must be in the tuple — plus the assertion repair in §5.2 row 2 and the rebuild of the ratchet test before it becomes unsatisfiable | §5.1 | S | **done — `#83`** |
 | 4 | Clause 8's regex in the bound-preserving form (§4.1), and a stated decision on `n/a` and `U+2009` | §4.1, §5.2 | S | **done — `#83`**; the `n/a` reading is stated and left to S9 as a spec question |
 | 5 | A **clause registry** — `CLAUSES` keyed by clause-sentence id, each carrying `carried_by: index \| repo-test \| review \| none`, with a `core`-job test that every entry has a check or an explicit reason | W1, and gives clause 9 and the geometry half an honest home | S | **done — `#85`, `35ae5a9`**, and it found two more occurrences on its first walk: clause 7's first sentence and clause 3's `data-scroll` escape. `ADR-0005` is the decision; §12 |
-| 6 | Re-scope S9's first commit: no permanent source census; reconcile against the checker's existing per-surface inventory and let the ratchet carry recurrence | W4 | *a saving* | open — the ledger's own evidence supports it |
+| 6 | Re-scope S9's first commit: no permanent source census; reconcile against the checker's existing per-surface inventory and let the ratchet carry recurrence | W4 | *a saving* | **done — taken 2026-09-08**, over an architecture pass recommending a probed `WRITE_SITES` registry in `sources.py`. That pass's own measurement is the best argument for this row: a discovery sweep is ~80 % false positive, and a declared registry records the hand count rather than replacing it. The census counts the **figures** the write sites reach, which the checker already holds. `0008` §4.15 |
 | 7 | S9 and S10, with `wroclaw/tests/test_report.py:1524` widened in the same commit that moves the separator | the two failing clauses | 2.5–3 d | open, per `0008` |
 | 8 | The scheduled `live` job hashes all twelve fetched surfaces against their committed files, reporting a mismatch under its own finding key | **C1**, both halves | S | **done — `#90`**. Eleven, not twelve: `wroclaw` has no committed file. And it grew a half the row did not name — a hash says the two *disagree*, not which clause the public page now fails, so the clauses are answered from the served bytes too |
 | 9 | Split `0008`: ledger, **a failure-taxonomy document**, measurements to the report | §6.2 row 5 | S | open — after S9/S10, so the file is smaller when split |
 | 10 | **Sx** — 11 `pyproject.toml`, 70 `Author:` fields | dead weight | 0.5 d | **done** — eleven sibling pull requests plus `b416c83` and `d550066`. Both figures now read **0**. `d550066` is green on `main`; `b416c83` is `docs/**` only, which the paths filter excludes, so it has no run. `0008` §4.14 records what the stage measured, including a deprecation date the record did not have |
 | 11 | Bring the **profile README** into the system — at minimum a `Surface` read by `--fetch` in `live`, plus the quotation rule | the asymmetry in §9 | S | open |
 | 12 | **Contrast at the usage site** — a clause using the existing `colour.resolve()`/`composite()`, `UNDECIDED` for `color-mix`, `opacity < 1` and SVG paint order, threshold per usage site | N4, `0007` §7's largest gap | M | open — ships report-only, enters `GATED` only when a stage closes it |
-| 13 | Registry-drift test (N1) · resolve N3 (implement the geometry half or amend `ADR-0004` §4 to say it is deferred and unowned) · clean `autoMode.environment` | N1, N3, §6.2 row 4 | S | open, each independent |
+| 13 | Registry-drift test (N1) · resolve N3 (implement the geometry half or amend `ADR-0004` §4 to say it is deferred and unowned) · clean `autoMode.environment` | N1, N3, §6.2 row 4 | S | **N1 and N3 done — 2026-09-08.** N1: the workflow's two `paths:` filters are tied to `sources.SURFACES` by a `core` test, which is the half §12.4 leaves and the one this row correctly calls the silent failure. N3: deferred and unowned, in `ADR-0004` §4 and `tools/spec.py` `c3.s2` — **its evidence did not reproduce**, §8 row 7. `autoMode.environment` is **open** and is the user's global settings rather than this repository |
 
 **Rows 2, 3 and 4 landed together in `#83`, and row 2 grew.** It was written as three defects
 and took five: the two others are §4.2's `sources.py` query string (an href joined verbatim, so
@@ -314,6 +314,25 @@ standard, and three of these were this session's.
 6. **A naive `git grep -c "Author: P0w3r223"` returns 71 across the portfolio, not 70.** The
    seventy-first is `0008` §2.1 quoting the pattern it is counting. The ledger's figure is right;
    an instrument for Sx must match the header form `^Author: `, not the substring.
+7. **N3's evidence is wrong and its conclusion is right — found closing it, 2026-09-08.** The row
+   reads *"it appears in two comments and no call"*. `measure_page.py` has calls:
+   `wroclaw-air-insights/tests/test_verify_published_page.py` loads it by path, exercises its pure
+   layer everywhere, and at `:271-280` calls `measure_page.measure()` against a **real Chromium**.
+   A sweep asking *is this file called* answers yes.
+
+   **What is uncarried is narrower than the row said, and worse.** Every call points the instrument
+   at the skill's **own fixtures**; nothing has ever pointed it at a published surface. So the
+   sentence in `ADR-0004` §4 is false for a reason the row did not reach — not *"the tool is dead"*
+   but *"the tool is alive, tested, and aimed somewhere else"*. **The two readings prescribe
+   different work**: the row's implies wiring up a call, and the true one implies aiming a
+   browser-dependent instrument at twelve public URLs, which is the K-c decision reopened. Resolved
+   as **deferred and unowned** in `ADR-0004` §4 and in `tools/spec.py`'s `c3.s2`.
+
+   *This is the seventh entry in this section and the third of its exact shape* — row 1's page-test
+   census, row 6's `Author:` substring, and now this. All three are sweeps whose **query** was
+   narrower than the **claim** built on the answer, and all three were found by someone acting on
+   the claim rather than by re-reading it. A sweep is worth what its query is worth, and the query
+   is the part that does not appear in the finding.
 
 ## 9. The asymmetry worth naming
 
