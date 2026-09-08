@@ -66,6 +66,20 @@ the ceiling guard's failure message incomplete (a third cause — *a registry ro
 the message does not name), and it would put the ratchet in a file edited routinely, against
 `CLAUDE.md`'s rule that `GATED` is not hand-edited as part of unrelated work.
 
+> *Amended 2026-09-08 — `GATED` **is** derived now, and by `ADR-0006`, which is a different
+> derivation from the one refused here.* This paragraph refused deriving it from **this**
+> registry, in `tools/spec.py`, and the second reason is why: that file is edited whenever a
+> normative sentence is read, and the ratchet must not move with it. `ADR-0006` derives `GATED`
+> from `GATE` in `__main__.py` — the ratchet's own file — so the second reason does not reach
+> it and the decision above still holds for `tools/spec.py`.
+>
+> **The first reason does reach it, and was inherited unnamed for one commit.** The ceiling
+> guard's message named two causes while a third — a row demoted from `gated` to `report-only`
+> — un-gated a clause across all 510 tests, green. The `code-reviewer` pass on S11 found it and
+> cited this paragraph, which had predicted the failure for a derivation nobody took. The
+> message now names the third cause and `report_only()` is pinned. *A refusal's stated reason
+> outliving the refusal is worth more than the refusal was.*
+
 ## 5. What the corpus refuted
 
 Two invariants the design specified did not survive contact:

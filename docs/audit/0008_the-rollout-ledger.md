@@ -120,6 +120,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S8a** | **The text layers, public half** — the four About codes and their README twins, L3, H3, `pl-review-sense` C3 | **8 READMEs** publish a code, not ≥6 — §4.11 | 1.5–2 d | open, blocked on L3 |
 | **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11 | 0.5 d | open |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
+| **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -2170,6 +2171,101 @@ procedure reproduces step by step from the record alone; `wroclaw`'s two-line wi
 on each half separately; `pl-review-sense:669` reds on the collision rule; every figure in item 8
 reproduces from the checker; and across every source this stage touched there are **zero**
 literal U+202F in Python outside the two now named.
+
+### 4.18 What closing S11 measured — and the row that could not be done as written
+
+`0009` §7 row 13b, taken 2026-09-08 straight after S9/S10 and the landing-surface measurement,
+because §7 row 12's own state cell says this is the procedure that admission needs.
+
+**The row does not land as written, and the reason is the finding.** Row 13b asks for one
+change — parametrise the sweep's fetch mode and let the expected count follow it. Applied
+literally, the fetching floor emits `served`, sees it `PASS` on eleven of eleven, and under its
+own rule *demands* that it be gated. `test_report.py` refuses `served` in `GATED`. `test_spec.py`
+refuses it in `NOT_A_CLAUSE`, and is right to: that set's pin demands a proof the key can never
+be `FAIL`, and `served` fails whenever a sibling publishes ahead of a pointer bump. **Three
+guards, each correct, and no arrangement satisfying all three.** `0009` §7 row 8 had already
+written down the shape of what was missing and left it; `ADR-0006` is the decision that supplies
+it.
+
+**Four ways a fetching corpus is incomplete, where the row implies one.** The twelfth not
+answering is the one a count catches. The other three are silent, and the third is the dangerous
+one:
+
+| # | how | what the floor would then do |
+|---|---|---|
+| 1 | the twelfth did not answer | `read` is eleven against an expectation of twelve — caught |
+| 2 | one of the eleven fell back to its committed file | certify a key clean on *the twelve published surfaces* from a file nobody served |
+| 3 | a same-origin **stylesheet** the wire dropped | `_undecided_where_the_stylesheet_is_incomplete` rewrites every clause-1 and clause-3 `FAIL` to `UNDECIDED`, so a **failing** clause reads clean and its admission is *demanded* on a sheet the run never opened |
+| 4 | the mode never reaching `sources.load` | the wire is taken from all twelve, the corpus is incomplete, and the guard **skips** — green, with the row's whole subject unmeasured |
+
+All four skip rather than fail, because none is a statement about a page. Number 4 needed its own
+assertion for the reason that makes it worth recording: **a skip is a pass.** With `_fetch`
+stubbed to answer from disk no fetch can fail, so an incomplete corpus there has exactly one
+cause and the guard fails instead of skipping.
+
+#### The twenty mutations
+
+Stated as *break this, watch that go red*, in §4.12's form, because that section's own erratum
+rules that **a mutation named in prose is not a mutation** and its count is not reproducible
+until the list is written down. Thirteen were run before the `code-reviewer` pass; the pass
+found **seven** more that shipped **green across all 510 tests**, and those are rows 14-20.
+
+| # | mutation | what reddened |
+|---|---|---|
+| 1 | `_sweep` ignores its mode argument | `…reads_the_twelfth_surface_the_fetchless_one_cannot` — **green on the first attempt**, see below |
+| 2a | `_expected` pinned at `len(COMMITTED)` | the same test, fetching case |
+| 2b | `_expected` pinned at `len(SURFACES)` | the same test, fetchless case |
+| 3 | the incomplete-corpus skip removed | the three wire-failure guards |
+| 4 | the unreachable-stylesheet branch removed | `…stylesheet_the_wire_dropped_skips_the_fetching_sweep` |
+| 5 | a prefix declared in two rows | `…one_row_per_prefix_and_every_state_is_a_known_one` |
+| 6 | a state nobody derives from (`"gatd"`) | the same |
+| 7 | a non-gated row with an empty reason | `…every_row_the_gate_does_not_refuse_on_carries_a_reason` |
+| 8 | `_policy` returns nothing | `…prints_every_key_the_gate_does_not_refuse_on` |
+| 9 | a clean key dropped from the registry | the floor, `…cannot_be_narrowed_either…` |
+| 10 | `explained` matches exactly instead of by prefix | the floor, and the `core` arithmetic test |
+| 11 | `served` renamed out of the registry | `…served_is_deliberately_outside_the_gate…` |
+| 12 | the `--fetch` pytest step moved into `surfaces` | `test_the_wire_never_reaches_the_push_path` |
+| 13 | `pending_refuted`'s fetching branch disabled | `…pending_row_clean_on_the_twelve_demands_its_promotion` |
+| **14** | **a gated row demoted to `report-only`** | **nothing — see below.** Now `…report_only_set_is_pinned…` |
+| **15** | **`main` stops printing the policy block** | **nothing.** Now `…prints_every_key…`, asserted through `main` |
+| **16** | **a `--fetch` step in `surfaces` behind a step-level `if:`** | **nothing.** Now `test_the_wire_never_reaches_the_push_path` |
+| **17** | **`--fetch` dropped from `live`'s pytest step** | **nothing.** Now the same guard's positive half |
+| **18** | **`_policy` lists the gated rows too** | **nothing.** Now `…prints_every_key…` |
+| **19** | **a nested prefix (`"4 "`) above `4 eyebrow`** | **nothing.** Now `…one_row_per_prefix…` |
+| **20** | **a prefix duplicated across two states** | **nothing** — the disjointness assertion chained three sets with `&`, which is empty whenever any one is, and `pending()` is empty by design. Now `…gated_is_derived_from_the_registry…`, pairwise |
+
+**Rows 14-20 are the finding, and the first four are one shape between them.** Each is a claim this
+stage made in prose that no test held: *the registry cannot be narrowed* (14), *the policy is
+printed* (15), *the wire never reaches a push* (16), *the ratchet reads twelve in `live`* (17).
+Rows 14 and 15 are the two the brief warned about — a guard green over the defect it names,
+and a fix that displaces one. **Row 16 is the sharpest**: `live`'s new `if: always()` is the
+first step-level `if:` this workflow has ever carried, so the change that needed the guard
+widened is the change that demonstrated the shape inside the file the guard reads.
+
+**Two things about the doing.** Both are method rather than subject:
+
+- **Row 1 was GREEN on the first attempt**, because the guard degraded to a skip rather than
+  to a failure. That is incompleteness #4 above, found by the battery and not by reasoning.
+  `pytest.fail` inside the skip handler is the repair, and *a skip is a pass* is the sentence
+  worth carrying.
+- **The battery's own first run was invalid.** Each detector was invoked as
+  `pytest <path> -k a or b or c` with the expression split on whitespace into separate argv
+  items, so pytest read `or` as a file path and exited non-zero — and *every* mutation reported
+  RED, including two that were not caught at all. A mutation battery whose failure mode is
+  indistinguishable from success proves nothing. Fixed by passing each `-k` expression as one
+  argument **and by running every detector green against unmutated code first**, which is the
+  baseline the first battery had no reason to skip and did.
+
+**What did not move.** The conformance table is byte-identical on the eleven; `--fetch` reports
+all twelve `clear`; `GATED` derives to the same ten prefixes it held before. Suite 498 → **511**;
+`core` 438 → **447**, the thirteen new guards split nine to `core` and four to `surfaces`.
+
+**And one correction to `CLAUDE.md`, found by a reader who came for a different paragraph.** Its
+gate section said *"two clauses print and do not gate — clause 8 and clause 4's `<title>` half
+— and they are the open work"*. S9 and S10 closed both on 2026-09-08, the morning before. The
+sentence describing the partiality outlived the partiality it described by one day, in the file a
+session loads first. **That is the argument for `gate policy` being printed by the run**: a
+policy written in prose ages against an instrument that does not.
 
 ## 5. What is carried, not scheduled
 
