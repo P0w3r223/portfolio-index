@@ -318,19 +318,54 @@ CLAUSES: tuple[Clause, ...] = (
         quote="Thousands are separated by `U+202F`, the narrow no-break space",
         carriers=_index("8 separator"),
         note="`n/a` where the page groups nothing is the clause read as written — its subject "
-             "is how a grouped figure separates its thousands. That leaves an escape once S9 "
-             "gates it: deleting the grouping is cheaper than migrating. Closing it means §5 "
-             "gaining a sentence it does not have — a figure of four or more digits is "
-             "grouped — which is an amendment to `0007` and not a change to the checker.",
+             "is how a grouped figure separates its thousands. That leaves an escape once "
+             "S9 gates it: deleting the grouping is cheaper than migrating. **The sentence "
+             "this note and the checker's docstring both propose — a figure of four or more "
+             "digits is grouped — was put to the corpus by S9c and not taken.** It is "
+             "undecidable by a static read: `doc-extract` prints `9894 values` ungrouped on "
+             "a page where it groups `183 798`, which the sentence would rightly catch, and "
+             "`auth-log-scan`'s `2026-03-14` and `mini-traceroute`'s base port `33434`, "
+             "which it would catch wrongly. `0007` §5 clause 8c is the record. **No count is "
+             "stated for that population** — `ADR-0004` §5 admits a measurement once it is "
+             "frozen, and this one could not be: four attempts, four answers. Other figures "
+             "in this registry and in §5 are frozen and stand; `0008` §4.16 says what the "
+             "unfreezable one cost.",
     ),
     Clause(
         id="c8.s2",
         cite="0007 §5 clause 8, the scoring rule",
         quote="Scored over whole grouped figures in each page's rendered text",
         carriers=_index("8 separator"),
-        note="The bound on the whole token is what makes this a measurement: three earlier "
+        note="**Superseded in scope by c8.s4** (S9c, 2026-09-08), which widens the reading "
+             "from the rendered text alone to that plus the metadata the page publishes. The "
+             "sentence is still the document's, and the bound it states is still what makes "
+             "this a measurement: three earlier "
              "tallies were wrong, twice because the pattern matched across two adjacent "
              "numbers.",
+    ),
+    Clause(
+        id="c8.s3",
+        cite="0007 §5 clause 8a, the specimen exemption",
+        quote="A figure the page displays as a specimen of another system's format is "
+              "quoted, not written, and this clause does not reach it",
+        carriers=_index("8 separator"),
+        note="Entered by S9c, 2026-09-08. The checkable form is a grouped figure inside "
+             "`<code>`, and the element rather than a literal string is what `0008` §4.11 "
+             "demands so the exemption can be censused. Every exempt figure prints with its "
+             "element on every run, and the clause reports it in its own detail even where "
+             "the page would otherwise read `n/a`.",
+    ),
+    Clause(
+        id="c8.s4",
+        cite="0007 §5 clause 8b, the widened scoring rule",
+        quote="Scored over the page's rendered text and over the metadata it publishes",
+        carriers=_index("8 separator"),
+        note="Entered by S9c, 2026-09-08, superseding c8.s2's scope. `car-price-ml/app` "
+             "writes `1<space>200` from two sites — its `<meta name=\"description\">` and "
+             "its body — and the old rule reached only the second, so a stage fixing the "
+             "body alone would have turned the surface green. Scoped to clause 5's six keys "
+             "rather than to every attribute. Measured before amending: six grouped figures "
+             "in metadata across three surfaces, and widening moved no verdict.",
     ),
     Clause(
         id="q.s1",

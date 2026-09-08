@@ -587,9 +587,22 @@ def test_a_figure_grouped_twice_over_counts_both_of_its_separators():
 
 
 def test_the_recorded_narrow_spaced_page_reproduces_its_inventory():
-    """The doc-extract reduction — the row `0007` §3 records as `U+202F` 3, `U+00A0` 1."""
+    """The doc-extract reduction — the row `0007` §3 records as `U+202F` 3, `U+00A0` 1.
+
+    **The fixture did not change; the clause did.** S9c amended `0007` §5 clause 8 twice, and
+    this one reduction demonstrates both: its `U+00A0` sits in `<code>` and is a specimen
+    under 8a, and it carries a fourth `U+202F` in `<meta name="description">` that 8b brings
+    into scope. So the page that was the record's one `U+00A0` surface now reads `pass`, with
+    the exempt figure still named in the detail.
+
+    Checked against the live page before this expectation was moved: the working tree's
+    `doc-extract/docs/index.html` yields the same five figures, the same elements and the same
+    one exemption. A fixture of record that had drifted from its origin would make this a
+    rewrite of the evidence rather than of the verdict.
+    """
     finding = clauses.clause_8_separator(page(fixture("narrow_spaces.html")))
-    assert (finding.status, finding.detail) == (clauses.FAIL, "U+00A0 1, U+202F 3")
+    assert (finding.status, finding.detail) == (
+        clauses.PASS, "U+202F 4; U+00A0 1 specimen, exempt")
 
 
 def test_a_figure_reports_the_element_that_encloses_it():
@@ -713,6 +726,157 @@ def test_a_figure_in_non_ascii_digits_is_still_printable():
     assert len(figures) == 1, ("Devanagari digits are digits to r`\\d`, the premise here")
     assert figures[0].display.isascii(), (
         f"{figures[0].display!r} would raise UnicodeEncodeError on the console CI prints to")
+
+
+# -- clause 8a: the specimen, and 8b: the metadata --------------------------------------------
+
+
+def test_a_specimen_inside_code_does_not_fail_the_clause_but_is_still_reported():
+    """`0007` §5 clause 8a. `doc-extract` prints a Polish invoice total to say *this is the
+    shape the extractor reads*; requiring `U+202F` would require it to misquote the format it
+    documents.
+
+    **Reported is half the rule.** `0008` §4.11 admits the exemption only on the condition
+    that it is censused *"so it cannot silently widen"*, so an exempt figure that vanished
+    from the output would satisfy the clause and break the reason the clause was allowed.
+    """
+    finding = clauses.clause_8_separator(page(f"<code>3{NBSP}466,62</code>"))
+
+    assert finding.status != clauses.FAIL, "a specimen was judged as if the page wrote it"
+    assert "specimen, exempt" in finding.detail, "the exemption is not visible in the output"
+    assert "U+00A0" in finding.detail, "the exempt separator is not named"
+
+
+def test_the_same_figure_outside_code_still_fails():
+    """The exemption is the element and nothing else, and this is the pair that says so.
+
+    Identical bytes, identical separator; only the markup differs. Without this the exemption
+    could be widened to the separator, to the surface, or to the value, and every one of those
+    reads as "the specimen case works" on a corpus with exactly one specimen in it.
+    """
+    inside = clauses.clause_8_separator(page(f"<code>3{NBSP}466</code>"))
+    outside = clauses.clause_8_separator(page(f"<p>3{NBSP}466</p>"))
+
+    assert inside.status != clauses.FAIL
+    assert outside.status == clauses.FAIL, "a plain body figure took the specimen exemption"
+
+
+def test_a_page_whose_only_figure_is_a_specimen_says_so_rather_than_saying_nothing():
+    """`n/a — no grouped figure` would be true about the clause and false about the page.
+
+    The clause's own docstring settles that `n/a` means the page groups nothing. A page that
+    groups exactly one figure and has it exempted is a different state, and printing them
+    identically is how an exemption stops being countable.
+    """
+    finding = clauses.clause_8_separator(page(f"<code>3{NBSP}466</code>"))
+
+    assert finding.status == clauses.NOT_APPLICABLE
+    assert "specimen, exempt" in finding.detail, (
+        f"a page displaying a specimen reported as though it printed nothing: {finding.detail!r}")
+
+
+def test_a_figure_in_published_metadata_is_scored():
+    """`0007` §5 clause 8b. `car-price-ml/app` writes `1<space>200` from two sites — its
+    `<meta name="description">` and its body — and the old scoring rule reached only the
+    second, so a stage fixing the body alone would have turned the surface green while the
+    description a search result renders kept a plain space."""
+    finding = clauses.clause_8_separator(
+        page('<html><head><meta name="description" content="the same 1 200 trees">'
+             "</head><body><p>nothing grouped here</p></body></html>"))
+
+    assert finding.status == clauses.FAIL, "metadata the page publishes was not scored"
+    assert finding.detail == "space 1"
+
+
+def test_the_six_card_keys_are_the_ones_the_document_names():
+    """`CARD_META` is the single definition of *published metadata*, and nothing pinned it.
+
+    Every guard that names those keys derives them from this constant — clause 5's own two,
+    the report's, and clause 8b's parametrised scope below. So **dropping `og:type` from the
+    tuple leaves the whole suite green**: the parametrised guard simply loses a case, and one
+    edit narrows clause 5 — which **is** in `GATED` — and clause 8's scoring scope together,
+    with nothing red anywhere.
+
+    `tools/spec.py` quotes the six from `0007` §5 clause 5 and
+    `test_every_quote_is_still_the_document_s_own_words` holds that quote to the document, so
+    the *registry* cannot drift. The constant could drift out from under it. Written literally
+    here rather than derived, because a guard that reads the same constant it guards asserts
+    nothing — which is how this hole survived.
+    """
+    assert clauses.CARD_META == (
+        "description", "og:type", "og:title", "og:description", "og:url", "twitter:card")
+
+
+@pytest.mark.parametrize("key", clauses.CARD_META)
+def test_every_one_of_clause_5_s_six_keys_is_in_clause_8_s_scope(key):
+    """Parametrised over the constant, because naming one key proves one key.
+
+    The first version exercised `description` in and `generator` out. Narrowing the production
+    filter from `CARD_META` to `("description", "og:description")` — dropping four keys from
+    clause 8's scope — left the **whole suite green**: the guard caught widening past clause 5
+    and nothing on the narrowing side, which is the direction a later stage takes to make a
+    surface pass. Found by review, and it is the shape `0008` records seven times.
+    """
+    attribute = "property" if key.startswith("og:") else "name"
+    scored = page(f'<meta {attribute}="{key}" content="1 200 trees">')
+
+    assert clauses.clause_8_separator(scored).status == clauses.FAIL, (
+        f"a figure in <meta {key}> was not scored; clause 8b names all six of clause 5's keys")
+
+
+def test_metadata_is_flattened_the_way_a_text_node_is():
+    """The same bytes must score the same in a description and in a paragraph.
+
+    A text node passes through `render.flatten`, which collapses runs of ASCII whitespace; a
+    `<meta content>` is an attribute and never does. So a `content` wrapped across source
+    lines, or one holding a doubled space, yielded **no figure at all** while the identical
+    string in a `<p>` failed — a hole in exactly the write site 8b exists to expose, and one
+    no live surface needs today, which is why it would have kept.
+    """
+    wrapped = '<meta name="description" content="the same 1  200 trees">'
+    body = "<p>the same 1  200 trees</p>"
+
+    assert clauses.clause_8_separator(page(wrapped)).status == clauses.FAIL, (
+        "a doubled space in metadata hid the figure the same bytes show in a paragraph")
+    assert (clauses.clause_8_separator(page(wrapped)).detail
+            == clauses.clause_8_separator(page(body)).detail)
+
+
+def test_a_meta_outside_clause_5_s_keys_is_not_scored():
+    """The other side of the same boundary. A rule reaching every attribute would score
+    `viewport`, a build stamp, and any bespoke `<meta>` a page invents."""
+    ignored = page('<meta name="generator" content="built 1 200 times">')
+
+    assert clauses.clause_8_separator(ignored).status == clauses.NOT_APPLICABLE, (
+        "a <meta> outside clause 5's six keys was scored")
+
+
+def test_a_specimen_stays_a_specimen_when_markup_sits_between_it_and_the_code_block():
+    """The exemption is read over the **ancestry**, and this is the pair that pins which.
+
+    `<code><span>` and `<code><td>` are ordinary inside a displayed block. Reading only the
+    innermost tag would cancel the exemption whenever a specimen carries any markup, making
+    the rule turn on how the block is laid out rather than on what it is. Both readings were
+    green until this guard: the flat one exempted the figure while the census printed `td`,
+    so the element that granted the exemption was not visible — and `0008` §4.11 admits the
+    exemption only while it is countable.
+    """
+    nested = clauses.grouped_figures(page(f"<code><div><td>3{NBSP}466</td></div></code>"))
+
+    assert [figure.exempt for figure in nested] == [True]
+    assert nested[0].where == "code td", (
+        f"the census would not name the element that spared this figure: {nested[0].where!r}")
+
+
+def test_a_metadata_figure_reports_the_key_it_was_found_under():
+    """The census is read to scope a stage's edits, and `meta description` against `p` is the
+    difference between two write sites in one file."""
+    figures = clauses.grouped_figures(
+        page('<html><head><meta property="og:description" content="1 200 trees">'
+             "</head><body><p>2 300 more</p></body></html>"))
+
+    assert {figure.where for figure in figures} == {"meta og:description", "p"}
+    assert all(not figure.exempt for figure in figures), "no metadata figure is a specimen"
 
 
 def test_the_recorded_welding_table_reports_no_figure_at_all():

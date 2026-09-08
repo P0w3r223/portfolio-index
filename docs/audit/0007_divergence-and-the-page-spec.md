@@ -440,6 +440,56 @@ it is an instruction.
    on one page. The reason is in the glyph: a plain space breaks across a line and cuts a number in half.
    The majority here is the unconsidered choice and `U+202F` is the considered one.
 
+   ***Amended 2026-09-08 by S9c, two sentences and one refusal.*** *Each was measured against all
+   twelve surfaces before being written; the first two move no page's verdict, and the third
+   declines a sentence this record proposed, on the grounds that the corpus cannot decide it.*
+
+   **8a. A figure the page displays as a *specimen of another system's format* is quoted, not
+   written, and this clause does not reach it. The checkable form is a grouped figure inside
+   `<code>`.** `doc-extract` prints `3<U+00A0>466,62` — a Polish invoice total, shown to say
+   *this is the shape the extractor reads*. Requiring `U+202F` there would require the page to
+   misquote the format it is documenting. The exemption is scoped to an **element** and not to a
+   literal string because `0008` §4.11 requires it censused *"so it cannot silently widen"*, and
+   `python -m tools.pagespec` prints every exempt figure with the element it sits in on every run.
+   Measured 2026-09-08: **one** such figure on the twelve, and it is the portfolio's only
+   `U+00A0`.
+
+   **8b. Scored over the page's rendered text *and over the metadata it publishes* — the six keys
+   of clause 5.** `<meta name="description">` and `og:description` are text a search result and a
+   social card display, and a reader meets them before the page. `car-price-ml/app` prints
+   `1<space>200` in its description and `1<space>200` in its body from two different write sites;
+   the scoring rule reached only the second, so a stage fixing the body alone would have turned
+   the surface green while the description kept a plain space. Measured before amending: **six
+   grouped figures live in metadata across three surfaces, five of them non-conforming, and
+   widening the rule changes no surface's verdict today** — it makes a write site visible that
+   the clause closing it could not see.
+
+   **8c. The escape stays open, and the sentence proposed to close it is not taken.**
+   `clause_8_separator`'s docstring and `tools/spec.py`'s `c8.s1` each named the same closure —
+   *a figure of four or more digits is grouped* — against the escape they also name, that
+   **deleting the grouping is a cheaper route to green than migrating to `U+202F`**. Both now
+   record it as declined, and this is why.
+
+   **`doc-extract` alone carries both kinds, bare and unpunctuated, on one page.** It prints
+   *"mandatory since 2026 — is `183<U+202F>798`"* in a single sentence: a year the sentence
+   would catch wrongly, beside a grouped figure it has no quarrel with. On the same page it
+   prints *"every one of the 9894 values"* and *"those 3989 values"* — ungrouped **quantities**,
+   which is exactly the inconsistency the sentence exists to catch — and `1903` in a table,
+   another bare year. Nothing lexical separates `9894` from `2026`: same length, same
+   surroundings, no adjacent punctuation to key on.
+
+   So the sentence is **not refuted; it is undecidable by a rule stated over digits.** It would
+   catch real violations and real false positives together, on one page, and a page would have
+   to declare which of its numbers are quantities before an instrument could tell them apart.
+   That is a larger amendment than this one.
+
+   *No count is stated for the population, and the omission is the finding rather than a gap.*
+   `ADR-0004` §5 admits a measurement into a normative document **on the condition that it is
+   frozen** — 8a's *one* and 8b's *six* above are frozen and stand. This one could not be:
+   four attempts produced four answers, twice because the measuring pattern turned on a
+   character invisible in a terminal. `0008` §4.16 records what that cost. An unfreezable
+   figure is one no reader can check, and the named tokens above are what replaces it.
+
 ### 5.0 What counts as quoting a cell
 
 `ADR-0012` says the page quotes and never retypes, and every stage since has leaned on that without the

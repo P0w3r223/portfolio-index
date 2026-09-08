@@ -219,6 +219,7 @@ def _separator_census(pages: list[tuple[str, str]], detailed: bool) -> list[str]
     would be a second clause 8 under a key no normative sentence claims.
     """
     tally: dict[str, int] = {}
+    spared: dict[str, int] = {}
     figures_total = 0
     where: dict[str, set[str]] = {}
     contexts: dict[str, dict[str, int]] = {}
@@ -231,22 +232,36 @@ def _separator_census(pages: list[tuple[str, str]], detailed: bool) -> list[str]
             rows.append(f"  {name:<24} no grouped figure")
             continue
         per_surface: dict[str, int] = {}
+        # One predicate, feeding the surface row and the portfolio roll-up. They were two
+        # loops over the same list applying the same test — a quantity at two scopes written
+        # in two places, which `sources.describe`'s docstring records this project paying for.
+        spared_here: dict[str, int] = {}
         for figure in figures:
             for separator in figure.separators:
                 per_surface[separator] = per_surface.get(separator, 0) + 1
                 tally[separator] = tally.get(separator, 0) + 1
+                if figure.exempt:
+                    spared_here[separator] = spared_here.get(separator, 0) + 1
+                    spared[separator] = spared.get(separator, 0) + 1
                 where.setdefault(separator, set()).add(name)
                 contexts.setdefault(separator, {})
                 contexts[separator][figure.where] = (
                     contexts[separator].get(figure.where, 0) + 1)
         figures_total += len(figures)
+        # Marked on the surface row too, not only in the portfolio roll-up: this row is the
+        # first thing a stage reads to scope its edits, and an unmarked `U+00A0 1` sends it
+        # to a page that needs no edit — the one page whose whole subject is quoting a
+        # foreign format.
         inventory = " · ".join(
-            f"{separator} {count}" for separator, count in sorted(per_surface.items()))
+            f"{separator} {count}"
+            + (" exempt" if spared_here.get(separator, 0) == count else "")
+            for separator, count in sorted(per_surface.items()))
         rows.append(f"  {name:<24}{len(figures):>4} figure(s)   {inventory}")
         if detailed:
             for figure in figures:
                 detail.append(f"      {name:<24}{figure.display:<28} "
-                              f"in <{figure.where}>")
+                              f"in <{figure.where}>"
+                              + ("   specimen, exempt (8a)" if figure.exempt else ""))
 
     if not tally:
         return []
@@ -260,7 +275,13 @@ def _separator_census(pages: list[tuple[str, str]], detailed: bool) -> list[str]
     lines.append(f"  {'portfolio':<24}{figures_total:>4} figure(s), {separators} separator(s) "
                  f"— {agreement}")
     for separator, count in sorted(tally.items(), key=lambda pair: (-pair[1], pair[0])):
-        verdict = "clause 8" if separator == "U+202F" else "not clause 8"
+        # A separator every one of whose figures is a clause-8a specimen is not a finding
+        # about the page: `not clause 8` there would name the codepoint correctly and the
+        # page wrongly, and the census is read to scope a stage's edits.
+        if separator != "U+202F" and spared.get(separator, 0) == count:
+            verdict = "exempt (8a)"
+        else:
+            verdict = "clause 8" if separator == "U+202F" else "not clause 8"
         seen = ", ".join(sorted(where[separator]))
         placed = ", ".join(f"{element} {number}" for element, number
                            in sorted(contexts[separator].items(),

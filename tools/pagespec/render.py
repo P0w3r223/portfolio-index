@@ -22,7 +22,7 @@ _SKIPPED = frozenset({"style", "script"})
 _ASCII_WHITESPACE = re.compile("[ \t\r\n\f\v]+")
 
 
-def _flat(text: str) -> str:
+def flatten(text: str) -> str:
     """Collapse runs of *ASCII* whitespace only.
 
     `str.split()` splits on Unicode whitespace, and `' '.isspace()` and
@@ -161,11 +161,11 @@ class Page(HTMLParser):
         elif tag == "svg":
             self._in_svg = max(self._in_svg - 1, 0)
         elif tag == "title" and self._title is not None:
-            self.title = _flat("".join(self._title))
+            self.title = flatten("".join(self._title))
             self._title = None
         elif tag == "h1" and self._heading is not None:
             if not self.headline:
-                self.headline = _flat("".join(self._heading))
+                self.headline = flatten("".join(self._heading))
             self._heading = None
 
     def handle_data(self, data: str) -> None:
@@ -199,7 +199,7 @@ class Page(HTMLParser):
         the ancestry the join destroys — so the census and the clause cannot disagree about
         what the page says, only about what to do with it.
         """
-        carrying = ((_flat(text), ancestry) for text, ancestry in self.nodes)
+        carrying = ((flatten(text), ancestry) for text, ancestry in self.nodes)
         return [(text, ancestry) for text, ancestry in carrying if text]
 
     @property
