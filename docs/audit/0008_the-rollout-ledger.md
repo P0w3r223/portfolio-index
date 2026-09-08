@@ -1554,14 +1554,28 @@ its scope figure without knowing the two halves are not the same set.
 #### The twelfth surface's clause-8 figures, counted for the first time
 
 The `live` job dispatched on this branch reads all twelve from the wire, and it is the first
-count of `wroclaw-air-insights` this clause has ever had: **3 figures, `comma` 3** — in `p` 2
-and `b` 1. §4.11's write-site table credits that repository with **five** sites
+count of `wroclaw-air-insights` this clause has ever had: **3 figures, `comma` 3** — in `b` 1,
+`p` 1 and `span` 1. §4.11's write-site table credits that repository with **five** sites
 (`accuracy_section.py:25`, `regime_section.py:25, 46`, `report.py:248, 307`); the page renders
 three figures. Neither number is wrong — a formatter can render none or many depending on the
 data of the day, and `wroclaw` rebuilds daily — but the two are now both printed, which is what
 lets S9a check its `wroclaw` edit against something rather than against a memory.
 
 Portfolio-wide over the twelve: `comma` **5**, not 2 — `ab-lab` 2 plus `wroclaw` 3.
+
+> **Corrected 2026-09-08, and the correction is about the process rather than the number.**
+> This paragraph first said the three sit *"in `p` 2 and `b` 1"*. They sit in `b` 1, `p` 1 and
+> `span` 1. The wrong version was obtained by **subtracting `ab-lab`'s two from the portfolio
+> `comma` row** — `p` 2, `b` 1, `span` 1, `td` 1 — instead of reading the surface, which is a
+> hand derivation off a printed total and lands the total right and the parts wrong.
+>
+> **It is the one commit of this stage that no `code-reviewer` pass saw.** Two passes ran and
+> both blocked on figures; this paragraph was written after the second and merged without a
+> third, on the argument that it was documentation. The stage's own subject is that a figure
+> nobody measured is a figure nobody should quote, and `0008` §3's rule — *figures come from an
+> instrument, not from a hand count* — does not have a docs exemption. `0009` §13.6's shape
+> once more: the fix inherits the blast radius of the thing it fixes, and this paragraph was
+> itself a fix for an unscoped figure.
 
 #### Two mistakes in the doing, and both are the class this file exists to record
 
