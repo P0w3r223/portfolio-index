@@ -118,7 +118,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S9** | **The separator** (clause 8), scoped by formatter rather than by page. **S9a** four repositories, **not build-only in two of them** · **S9b** `car-price-ml`, both surfaces · **S9c** `doc-extract`, a spec amendment and not an edit | **20 non-conforming write sites in 14 files across five repositories and six surfaces**; 7 failing surfaces. *The count is not re-typed again — §4.13 routes the census into the checker's output, and that is S9's first commit* | **2–2.5 d** | **closed** — `ab-lab` `5f3a802`, `it-job-radar` `7e64bd8`, `pl-review-sense` `6f908ec`, `wroclaw-air-insights` `bb881da`, `car-price-ml` `f1e61a1`, all on `main`; the gate widened in `current_projects`. Clause 8 reads `clear` on all **twelve**, and the twelfth was confirmed from the wire before the pointers moved. **S9a was not build-only in any of the four**, not two — §4.17's first finding. *What follows is the state before that closure.* **first commit and S9c closed** — the census prints on every run (§4.15) and clause 8's two amendments plus one recorded refusal have landed (§4.16); `doc-extract` reads clear and no page was edited. **S9a and S9b remain.** Then S9a's four repositories, each its own commit carrying its own test change — the commit that changes `wroclaw`'s separator widens `test_report.py:1524` **and** re-pins `:377` in the same change (§4.13). The `GATED` widening is a separate index commit, after `wroclaw` rebuilds; §4.15's last paragraph is why |
 | **S10** | **Clause 4's `<title>` half** — `auth-log-scan` mechanical; `mini-traceroute`, `car-price-ml/app` and `wroclaw` copy decisions. Folds in the guard defect §4.11 records, **which is what makes it four rather than three** | **4 surfaces** · 1 guard | 0.5 d + copy | **closed** — `auth-log-scan` `ddfac46`, `mini-traceroute` `b875b28`, `car-price-ml` `f1e61a1` (the app title, riding with S9b's `:7` and `:27` as §4.13 required), `wroclaw-air-insights` `bb881da`, all on `main`. **The copy cost nothing**: all four are the same words in the other order, and `wroclaw`'s is not a copy decision at all once the comment beside its tags is read — *"figure-free, like every standing sentence on this page"* rules out the alternatives. `og:title` moved with each `<title>`, which the row did not enumerate. §4.17 |
 | **S8a** | **The text layers, public half** — the four About codes, their README twins, **six published-page sites, ten cross-references and two package docstrings**, L3, H3. ~~`pl-review-sense` C3~~ leaves for S8c | **26 committed sites across all twelve repositories, plus 4 About descriptions**, re-derived 2026-09-09 — **not the 8 READMEs this row implied.** `0003` §2's scope table (line 31) scoped four layers and the live-site one was lost between `0006` §2.3 and §4.11; §4.20 and `ADR-0007` | 1.5–2 d | **closed 2026-09-09 — §4.21.** *What follows is the state at W2.* **W1 and W2 closed 2026-09-09; W3 and W4 remain.** Twelve sibling pull requests merged and the four About descriptions rewritten, so **no public surface in the portfolio publishes a portfolio code**: the census over READMEs, pages and package docstrings reads zero, and the four account descriptions read back clean. What is left is the index's own half — L3's renumber and H3, which are W3 — and the profile README, W4. *Designed and its copy decisions taken, `ADR-0007`, 2026-09-09.* L3 accepted 2026-09-08 §4, so the renumber rides with the deletion. **W0 is discharged**: the four About descriptions are frozen in `ADR-0007` §2, the baseline table reads zero `FAIL`, and no pull request is open anywhere in the portfolio. *The first census was phrase-based and reported 13 sites in 11 repositories; §4.20's erratum is why the figure moved* |
-| **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **all 12**, not 5. A different audience and a different argument — §4.11. **Two of the twelve — `pl-review-sense:8` and `token-budget:7` — are taken by S8a instead**, because they carry the codes L3 moves and M4's argument does not wait for S8b's; `ADR-0007` D2. **Its decoy corpus is larger than §4.11 records**: `doc-extract/CLAUDE.md` carries the same `B0`–`B3` baseline names its README does | 0.5 d | open |
+| **S8b** | **The text layers, contributor half** — the portfolio code in `CLAUDE.md` | **26 sites in 16 files across 10 repositories**, re-derived 2026-09-09 — **not the 12 files this row said**, and the two that are clean are clean because S8a took them (`ADR-0007` D2). Twelve own codes, fourteen cross-references, and **17 decoy hits** in `doc-extract` alone — its own `B0`–`B3` evaluation baselines, in `CLAUDE.md` and in `src/doc_extract/eval/`, where an edit changes behaviour rather than copy | 0.5 d | **closed 2026-09-09 — §4.22.** The row's *"different audience, different argument"* resolved **both ways**, because it is two questions: the fourteen cross-references went and the twelve own codes stayed |
 | **S8c** | **`pl-review-sense`'s adversarial set, made visible** — `0005` §7 C3's intent, taken as a question about the page rather than about its `<h1>` | 1 generated page. **`_headline` is not touched** | S | open — split out of S8a by `ADR-0007` D3. **C3 as written cannot be published and inverting the rule was refused on measurement**: `analysis.probe()` scores one model, so *"both models"* is a figure no artifact prints (`0007` §5.0, S4's trap); and state 1 leads because HerBERT **won** — 0.986 against 0.944, McNemar p = 3.1e-06 — so inverting precedence would lead with the baseline's failure and move the conformance table, since clause 4 prints the `h1`. Scoring HerBERT on the challenge set stays available, unscheduled, and costed as the project it is |
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
@@ -2444,6 +2444,44 @@ hardcoded back to `text` the same revert passes*, which is what makes reading it
 `styles.css` the load-bearing half rather than a tidiness. In the index: five mutations, each
 red on the guard that names it, including `check()` no longer passing the page — the wiring a
 unit test on the clause cannot reach.
+
+### 4.22 What closing S8b measured — one row, two questions, two answers
+
+Three pull requests: `doc-extract` #15, `mlops-car-price` #25, `pl-jobs-lora` #18. Re-derived
+from the trees before the stage, which is now this block's habit and twice its saving.
+
+**The row said "all 12" and the measurement says 10** — and the two files that are clean are
+clean because **S8a took them**, per `ADR-0007` D2. S8a's own row had been wrong upward, from 8
+to 26; this one was wrong downward. The lesson is not the direction, it is that a scope figure
+written before a stage and not re-derived at it has been wrong every time it has been checked.
+
+| class | sites | what it is |
+|---|---|---|
+| own code | 12 | mostly `CLAUDE.md`'s opening line — `Portfolio project **P2**. A Python package for…` |
+| cross-reference | 14 | `A3` meaning `car-price-ml` (7), `P2` meaning `ab-lab`, `P1` meaning `mlops-car-price` (2), `P3`/`P4` in `doc-extract` |
+| **decoy** | **17** | `doc-extract`'s own `B0`–`B3` evaluation baselines, in `CLAUDE.md` and `src/doc_extract/eval/` |
+
+**The row's framing — "a different audience and a different argument" — resolved both ways,
+because it was two questions wearing one row.**
+
+A cross-reference does not depend on who is reading. `A3` is a worse name for `car-price-ml`
+than `car-price-ml` is, for a recruiter and a contributor alike, and five of the fourteen sites
+already wrote the name *beside* the code — `` `car_price_ml` (project A3, pinned to…) ``,
+`P1 mlops-car-price`, ``P3 `apply-scout` `` — so the code was carrying nothing the line did not
+already have. Those went, on `ADR-0007` D5's argument applied one layer down.
+
+An own code does. `CLAUDE.md`'s audience is whoever maintains twelve repositories, and the tier
+in its opening line is what orients them; that is the file's whole purpose. Those stayed.
+
+*One argument against keeping them was raised and not taken, and it is worth recording because
+it is the sharper one: **the key to the codes lives in a private repository.** The tier tables
+are in this index's `README.md`, so a contributor who is not the owner cannot decode `P2` any
+more than a recruiter could — the same diagnosis as `0006` §2.3, put to a different reader. It
+loses to the fact that `CLAUDE.md`'s actual audience today is the owner and the sessions working
+for them, both of which have the key. If that stops being true, this is the row to reopen.*
+
+**Untouched by construction**: `doc-extract`'s seventeen decoys, and `pl-jobs-lora`'s own `P4` in
+`normalize.py` and `vocab.py`, where the code names this project inside its own source.
 
 ### 4.21 What closing S8a measured — zero, on a surface nobody can gate
 
