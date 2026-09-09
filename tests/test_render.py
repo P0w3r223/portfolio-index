@@ -498,3 +498,24 @@ def test_a_run_of_marks_are_siblings_of_one_another_and_the_stream_says_so():
         frozenset({"lane"}), frozenset({"window-band"}), frozenset({"ev-failed"})], (
         "every mark after the first has one of its own colour behind it, which is the "
         "1.00:1 candidate that collapses the verdict")
+
+
+def test_the_first_title_wins_where_one_head_carries_two():
+    """`not self.title` is the first-wins rule, and **two docstrings claimed it was covered
+    elsewhere while nothing covered it.**
+
+    `test_a_title_inside_an_svg_is_not_the_document_title` says it tests `_in_svg` *"with the
+    first-wins rule taken out of the picture"* — which is true, and left the rule itself with
+    no guard at all. Two `<title>` in one `<head>` is the case that separates them.
+    """
+    parsed = render.parse("<html><head><title>the page</title>"
+                          "<title>a later one</title></head><body>x</body></html>")
+    assert parsed.title == "the page"
+
+
+def test_a_meta_carrying_both_a_name_and_a_property_is_found_by_either_key():
+    """`meta()` reads `name` **or** `property`, which is what lets clause 5 ask for `og:*` and
+    the card keys through one call. A tag carrying both is legal and appears in the wild;
+    reading only the first key would report a card as missing metadata the page publishes."""
+    parsed = render.parse('<meta name="og:title" property="og:title" content="A claim">')
+    assert parsed.meta("og:title") == "A claim"

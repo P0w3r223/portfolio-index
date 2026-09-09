@@ -8,7 +8,10 @@ The mutation each test is written against is named in its docstring.
 
 from __future__ import annotations
 
-from tools.pagespec import colour, contrast, render
+import pytest
+
+from conftest import detail_of, loaded
+from tools.pagespec import clauses, colour, contrast, render
 
 PALETTE = ":root { --bg: #ffffff; --surface: #f6f8fa; --accent: #2563eb; --ink: #111111 }"
 
@@ -141,3 +144,46 @@ def test_the_three_keys_are_emitted_on_every_page_whatever_it_contains():
     the emitted set, so a conditional key would drift out of the registry unnoticed."""
     emitted = [one.clause for one in contrast.census(render.parse("<p>nothing</p>"), "")]
     assert emitted == ["contrast text", "contrast marks", "contrast ground"]
+
+
+# -- the crash the audit found, and it took the whole table with it --------------------------
+
+
+@pytest.mark.parametrize("value", [
+    "var(--deep)",                    # a chained alias; `0008` S7 migrates exactly this shape
+    "rebeccapurple",                  # a named colour
+    "rgb(37 99 235)",                 # modern space-separated notation
+    "#11111180",                      # eight-digit hex, an alpha this cannot resolve
+    "light-dark(#111111, #eeeeee)",   # a function whose answer depends on the scheme
+    "oklch(0.5 0.1 250)",             # a colour space `colour.rgb` does not read
+])
+def test_a_token_that_is_not_a_plain_hex_is_reported_and_does_not_take_the_table_down(value):
+    """**`colour.resolve` returns whatever the palette holds, not only a hex.**
+
+    Every value here comes back non-`None` — so nothing marked the site unresolved, it reached
+    `colour.composite`, and `ValueError` left `clauses.check`. One token on one page killed the
+    whole twelve-surface run. Measured: six of six notations fatal.
+
+    The class was already guarded one module to the left: `test_clauses.py` asserts each of
+    these is handled honestly by `clause_1_tokens`, and every one of those tests calls the
+    clause directly rather than `check`. The defect moved and the guard did not, which is this
+    codebase's characteristic failure and why the assertion below goes through `check`.
+
+    Found by the test audit of 2026-09-09, hours after `paint.py`'s docstring claimed a chained
+    token *"would come back unresolved and be reported under `contrast ground`"*. It did not.
+    """
+    css = (":root { --bg: #ffffff; --deep: #123456; --text: " + value + " } "
+           "body { background: var(--bg) } .card { color: var(--text) }")
+    findings = clauses.check(loaded(
+        "<html><head><title>A claim about the data</title></head><body>"
+        '<p class="eyebrow">Data</p><h1>A claim</h1><div class="card">x</div></body></html>',
+        css=css))
+    assert "1 site(s) without a resolved ground" in detail_of(findings, "contrast ground")
+
+
+def test_a_site_whose_colour_is_not_a_hex_scores_nothing_rather_than_raising():
+    """The same guard at the arithmetic rather than at the report, because a `Site` built any
+    other way reaches `ratios` too. `is not None` was the check that let this through."""
+    site = contrast.Site(0, "div", "color", "var(--x)", "var(--deep)", 1.0,
+                         contrast.TEXT_THRESHOLD, (contrast.Ground(1, "#ffffff", True),), 0, 1, "")
+    assert site.ratios == ()

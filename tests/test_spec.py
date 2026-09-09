@@ -26,6 +26,21 @@ from tools import entry_state, spec
 from tools.pagespec import __main__ as report
 from tools.pagespec import clauses, contrast
 
+#: Three tests loop over `spec.uncarried()` and **all three go vacuous together** if it ever
+#: comes back empty. Measured by the test audit of 2026-09-09: making it `return ()` left all
+#: 576 tests green, and `report()` would then print *"0 carried by nothing"* and suppress the
+#: whole block — full coverage announced over the omissions, which is verbatim the defect
+#: `tools/spec.py`'s opening lines say the registry exists to end. `"NOT CARRIED" in printed`
+#: survives it, because that string comes from `clause.carriers` and not from here.
+#:
+#: The same shape as the `assert probed` and `assert noted` guards already in this file. If
+#: the registry ever genuinely reaches zero open rows this fails and says so, which is the
+#: right outcome: the loops would then be testing nothing and should be deleted rather than
+#: left running green over an empty sequence.
+_VACUOUS = ("spec.uncarried() is empty, so every loop over it asserts nothing. Either a "
+            "sentence lost its row silently, or the registry is genuinely closed and these "
+            "guards should be deleted rather than left passing vacuously")
+
 #: A page rich enough to emit the whole finding vocabulary, so guards 2 and 3 can compare
 #: against what the checker really says rather than against a list of what it is believed to
 #: say. Measured 2026-09-07: this emits every key the eleven committed surfaces emit, plus
@@ -200,7 +215,9 @@ def test_an_uncarried_sentence_says_where_it_is_picked_up():
     Clauses 8 and 4-`<title>` drifted across seven surfaces with no stage owning either. An
     uncarried row is allowed; an uncarried row with nowhere to be picked up is not.
     """
-    for clause in spec.uncarried():
+    open_rows = spec.uncarried()
+    assert open_rows, _VACUOUS
+    for clause in open_rows:
         assert clause.why, f"{clause.id} is carried by nothing and says nothing about where"
         assert any(token in clause.why for token in ("0008", "0009", "ADR-")), (
             f"{clause.id}'s why does not cite a document that could pick it up: {clause.why!r}"
@@ -310,7 +327,9 @@ def test_the_report_prints_every_uncarried_sentence_with_its_reason():
     registry was built to end.
     """
     printed = "\n".join(spec.report())
-    for clause in spec.uncarried():
+    open_rows = spec.uncarried()
+    assert open_rows, _VACUOUS
+    for clause in open_rows:
         assert clause.id in printed
         assert clause.quote[:40] in printed
         assert clause.why[:40] in printed
@@ -337,6 +356,7 @@ def test_the_registry_reports_a_count_it_computed():
     """The count is printed and typed into no document — `CLAUDE.md`'s rule, and `0009` §8
     row 1's precedent after three sweeps produced three answers."""
     printed = "\n".join(spec.report())
+    assert spec.uncarried(), _VACUOUS
     assert f"{len(spec.CLAUSES)} normative sentence(s)" in printed
     assert f"{len(spec.uncarried())} carried by nothing" in printed
 

@@ -1646,6 +1646,29 @@ def test_the_census_keys_can_never_fail_because_the_module_cannot_construct_a_ve
         assert status_of(findings, key) == clauses.UNDECIDED
 
 
+def test_clause_3_goes_undecided_and_not_failing_on_a_stylesheet_the_wire_dropped():
+    """`_CSS_DERIVED` names two clauses and **only one of them had a falsifiable guard.**
+
+    Measured by the test audit: narrowing `_CSS_DERIVED` from `("1 ", "3 ")` to `("1 ",)`
+    left all 576 tests green. The guard that names both — `assert "FAIL  1 " not in out and
+    "FAIL  3 " not in out` in `test_report.py` — runs over a fixture page with **no table**,
+    so clause 3 can only ever be `n/a` there and its half of the assertion is unfalsifiable.
+
+    With the sheet dropped this page has a table and no scroller, which is `FAIL 3 tables` on
+    a gated key. A daily Pages blip would then refuse the build under what reads as a CSS
+    regression: the exact displacement `_undecided_where_the_stylesheet_is_incomplete` exists
+    to end, one clause over from where it was caught.
+    """
+    findings = clauses.check(loaded(
+        "<html><head><title>A claim about the data</title></head>"
+        "<body><p class='eyebrow'>Data</p><h1>A claim</h1>"
+        "<table><tr><td>1</td></tr></table></body></html>",
+        unreadable=[("assets/styles.css", "HTTPError: 503")]))
+
+    assert status_of(findings, "3 tables") == clauses.UNDECIDED, (
+        "a clause reading a sheet the wire dropped has not earned a verdict")
+
+
 # -- clause 1: a var() fallback is painted, whatever its type -------------------------------
 
 
@@ -2006,3 +2029,16 @@ def test_a_property_merely_ending_in_src_is_not_a_font_request():
                 "@font-face{font-family:X;src:url(https://fonts.gstatic.com/a.woff2)}",
                 "@font-face{font-family:X; src : url(https://fonts.gstatic.com/a.woff2)}"):
         assert clauses.clause_7_webfont(page_, css).status == clauses.FAIL, css
+
+
+def test_a_figure_inside_an_svg_code_is_labelled_by_the_element_that_exempts_it():
+    """`_where`'s tuple is ordered, and the order is the whole of what it decides.
+
+    `_SPECIMEN` comes before `svg` so that a figure inside `<svg><text><code>` is labelled
+    `code` — the element that grants clause 8a's exemption. Swap the two and it reads `svg
+    code`: the figure is still exempt, but the census no longer counts it under the element
+    that exempted it, and `0008` §4.11 admits the exemption **only while it is countable**.
+    No verdict moves, which is exactly why nothing caught it.
+    """
+    assert clauses._where(("svg", "text", "code")) == "code"
+    assert clauses._where(("svg", "text")) == "svg text"

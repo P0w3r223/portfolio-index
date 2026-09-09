@@ -22,8 +22,17 @@ is asked for per property rather than per element.
 **238 palette tokens across the corpus resolve in a single hop** — there is no
 `--a: var(--b); --b: #fff` anywhere — so `colour.resolve`'s one hop is complete here and
 `clauses._resolve_chain` stays where it is. `ADR-0008` §5 left that move open; this closes it
-the other way. A chained token would come back unresolved and be reported under
-`contrast ground`, which is an admitted unknown and not a wrong colour.
+the other way.
+
+*This paragraph ended **"a chained token would come back unresolved and be reported under
+`contrast ground`, which is an admitted unknown and not a wrong colour"**, and that was false
+in a way that mattered: `colour.resolve` returns whatever the palette holds, so a chained token
+comes back **non-`None`** — the raw `var(--deep)` string — and nothing downstream treated it as
+unresolved. It reached `colour.composite` and raised out of `clauses.check`, taking the whole
+twelve-surface table down. Six notations do this, not just the chain. Found by the test audit
+of 2026-09-09, hours after this sentence was written to explain why a repair was unnecessary.
+The claim is true now because `contrast.Site` was made to check, which is the repair this
+paragraph argued against.*
 """
 
 from __future__ import annotations
