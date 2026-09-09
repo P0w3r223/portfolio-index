@@ -62,8 +62,18 @@ class Site(NamedTuple):
 
     @property
     def ratios(self) -> tuple[float, ...]:
-        """The measured ratio against each resolved ground, in the order they were found."""
-        if self.colour is None or self.alpha is None:
+        """The measured ratio against each resolved ground, in the order they were found.
+
+        **`is_opaque_hex` and not merely `is not None`, because `colour.resolve` returns a
+        palette value whatever its type.** A token holding `rebeccapurple`, `rgb(37 99 235)`,
+        `#11111180`, `light-dark(...)`, `oklch(...)` or another `var()` comes back non-`None`,
+        reaches `composite`, and raises out of `clauses.check` — taking the whole
+        twelve-surface table down over one token on one page. Measured on six notations, all
+        six fatal, and `0008` S7 migrates `--ink`/`--line` aliases, so the alias shape was one
+        commit from firing. The guard for this class was written for `clause_1_tokens` and the
+        defect moved one module to the left of it.
+        """
+        if self.alpha is None or not (self.colour and colour.is_opaque_hex(self.colour)):
             return ()
         return tuple(colour.contrast(colour.composite(self.colour, one.colour, self.alpha),
                                      one.colour) for one in self.grounds)
@@ -117,6 +127,11 @@ def _site(page: Page, element: Element, prop: str, chosen: paint.Candidate,
     reasons = []
     if chosen.colour is None:
         reasons.append(f"unreadable value {chosen.declared!r}")
+    elif not colour.is_opaque_hex(chosen.colour):
+        # `resolve` hands back what the palette holds, hex or not. Saying so here is what
+        # turns a crash into the `contrast ground` row the census exists to print.
+        reasons.append(f"{chosen.declared} resolves to {chosen.colour!r}, "
+                       f"which this cannot read as a colour")
     if multiplier is None:
         reasons.append("two rules declare its alpha and the census has no cascade")
     if len(candidates) > 1:

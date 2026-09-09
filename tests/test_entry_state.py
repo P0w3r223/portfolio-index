@@ -411,6 +411,26 @@ def test_a_submodule_left_on_a_branch_is_a_finding_even_when_its_pointer_agrees(
         "car-price-ml: on branch fix/the-title, not main",)
 
 
+def test_a_submodule_with_uncommitted_changes_is_a_finding_even_when_its_pointer_agrees():
+    """The other half of §6's working-tree row, and **the half nothing tested.**
+
+    Measured by the test audit of 2026-09-09: `if pointer.dirty:` could be deleted with all
+    576 tests green, because no test anywhere constructed `dirty=True` — three build
+    `dirty=False` and one `dirty=None`. The branch half above has had a guard since it was
+    written; this is the n-1-of-n shape the record names seven times.
+
+    It is not a hypothetical half. `CLAUDE.md` spends a paragraph on what it cost: twelve
+    `CLAUDE.md` and eight `README.md` left uncommitted for an hour with two submodules on fix
+    branches, so `python -m tools.pagespec` was reading pages nobody had published.
+    """
+    dirty = entry_state.Pointer(name="doc-extract", sha="832979d", flag=" ", remote="832979d",
+                                branch="main", dirty=True, probed=True)
+
+    assert dirty.matches_index and dirty.matches_remote
+    assert clean_state(pointers=(dirty,)).findings == (
+        "doc-extract: uncommitted changes in the working tree",)
+
+
 def test_the_repository_list_is_derived_from_gitmodules_and_not_typed():
     names = entry_state.submodule_names(
         '[submodule "b"]\n\tpath = b\n\turl = x\n[submodule "a"]\n\tpath = a\n\turl = y\n')
@@ -599,3 +619,17 @@ def test_the_account_the_two_depths_query_is_the_portfolio_owner(monkeypatch):
         "files as `outside the portfolio` — the 2026-09-07 misreading, mechanised"
     )
     assert entry_state.OWNER == "P0w3r223" and entry_state.INDEX == "current_projects"
+
+
+def test_a_conflicted_submodule_does_not_read_as_matching_the_index():
+    """`U` is documented at `tools/entry_state.py:127` and asserted nowhere.
+
+    It is the flag `git submodule status` gives a submodule with a merge conflict — a tree
+    that is neither at the pointer nor cleanly anywhere else. Both readings below are the ones
+    that matter: it must not read as matching the index, and it must not read as
+    uninitialised, because those two are different findings with different repairs.
+    """
+    conflicted = entry_state.Pointer(name="ab-lab", sha="433083d", flag="U")
+
+    assert conflicted.matches_index is False
+    assert conflicted.initialised is True

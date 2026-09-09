@@ -11,6 +11,7 @@ No test in this file touches the network. `_fetch` is the single seam and it is 
 from __future__ import annotations
 
 import re
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -418,3 +419,27 @@ def test_a_stylesheet_href_naming_another_scheme_is_not_fetched(monkeypatch, tmp
     assert loaded.unreachable == [], "a refusal this module made read as a wire failure"
     assert loaded.unreadable, "and it was not reported as the page's business either"
     assert "passwd" in sources.describe(loaded.unreadable[0]), "which href is not named"
+
+
+@pytest.mark.parametrize("error, answered", [
+    (urllib.error.HTTPError("u", 404, "gone", None, None), True),
+    (urllib.error.HTTPError("u", 410, "gone", None, None), True),
+    (urllib.error.HTTPError("u", 429, "slow down", None, None), True),
+    (urllib.error.HTTPError("u", 500, "server error", None, None), False),
+    (urllib.error.HTTPError("u", 503, "deploying", None, None), False),
+    (urllib.error.URLError("connection refused"), False),
+    (TimeoutError("read timed out"), False),
+])
+def test_the_origin_answered_only_below_five_hundred(error, answered):
+    """The boundary this function exists for, asserted **on this function** for the first time.
+
+    Measured by the test audit: `status < 500` could be widened to `isinstance(status, int)`
+    with all 576 tests green. The 503 case is parametrised in `test_report.py`, but it routes
+    through `page_is_gone` and never reaches here — so the stylesheet path's own boundary was
+    unguarded on the stylesheet path.
+
+    What that costs is in this function's own docstring: shipped, a Pages 503 during a deploy
+    is `unreachable` and gates nothing; widened, it is `unreadable` and refuses the build. The
+    defect it was written to end, back again through the seam beside it.
+    """
+    assert sources.origin_answered(error) is answered

@@ -251,3 +251,39 @@ def test_the_partition_keeps_a_selector_off_the_end_of_an_excised_block():
              ".tail { color: black; }")
     light, _ = cssmod.split_schemes(sheet)
     assert [selector for selector, _ in cssmod.rules(light)] == [".tail"]
+
+
+def test_the_last_declaration_in_a_block_keeps_no_space_before_the_brace():
+    """`[^;}]+` captures the space before `}`, so the **last** declaration of every block
+    carries a trailing one unless it is stripped.
+
+    Measured by the audit: without the strip, `1 light --accent-soft` reports
+    `FAIL — "#5b93e4  (3.12:1 on --bg); spec pins #5b93e4"`. A page failed against the exact
+    value it declares, on a key the gate refuses on — a false gate, which this repository
+    ranks worse than a missing one. Nothing asserted the strip.
+    """
+    palette = cssmod.palettes(":root { --a: #ffffff; --accent-soft: #5b93e4 }")["light"]
+    assert palette["accent-soft"] == "#5b93e4", "the last declaration keeps no trailing space"
+
+
+def test_a_palette_declared_on_html_is_read_like_one_declared_on_root():
+    """Reachable and asserted nowhere. Drop the `html` half and a page declaring its tokens
+    there reports `1 tokens FAIL — no custom properties declared at all`: another false gate
+    on a gated clause, over a page that is entirely conforming."""
+    assert cssmod.palettes("html { --bg: #ffffff }")["light"]["bg"] == "#ffffff"
+
+
+def test_the_dark_override_is_found_whatever_case_the_at_rule_is_written_in():
+    """`_DARK_MEDIA` carries `re.IGNORECASE` and nothing asserted it. CSS at-rules and property
+    names are case-insensitive, so a sheet written `@MEDIA (PREFERS-COLOR-SCHEME: DARK)` is
+    valid and would have its whole dark palette read as light — every dark token then reported
+    against the wrong ground on a gated clause."""
+    light, dark = cssmod.split_schemes(
+        ":root { --bg: #ffffff } @MEDIA (PREFERS-COLOR-SCHEME: DARK) { :root { --bg: #0f1319 } }")
+    assert "#0f1319" in dark and "#0f1319" not in light
+
+
+def test_a_property_name_is_matched_whatever_case_it_is_written_in():
+    """The same capability one function over, equally unasserted. `COLOR: #fff` is valid CSS
+    and a case-sensitive reader would report the declaration as absent."""
+    assert cssmod.declarations(".a { COLOR: #ffffff }", "color") == [(".a", "#ffffff")]
