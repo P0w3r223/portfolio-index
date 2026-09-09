@@ -10,7 +10,8 @@ geometry half, deferred and unowned — this reaches part of it and says how it 
 §3 (the `pending` state D3 depends on),
 [`../audit/0007_divergence-and-the-page-spec.md`](../audit/0007_divergence-and-the-page-spec.md)
 §5 clause 1 and §7, [`../audit/0008_the-rollout-ledger.md`](../audit/0008_the-rollout-ledger.md)
-§3.11 (the design this amends) and §4.23 (what the first commit measured),
+§3.11 (the design this amends), §4.23 (what the first commit measured) and §4.25 (S14's scope
+re-derived, which is where D5 and D6 were measured),
 [`../audit/0009_the-review-of-the-whole-system.md`](../audit/0009_the-review-of-the-whole-system.md)
 §7 row 12
 
@@ -24,6 +25,8 @@ geometry half, deferred and unowned — this reaches part of it and says how it 
 | **D2** | S13 ships as a **census**: three keys, `UNDECIDED` by construction, printing every usage site with its ratio and its resolved grounds. The verdicts become **S14** |
 | **D3** | At S14 the two verdict keys enter `GATE` as **`Ratchet(prefix, PENDING_STATE, reason)`**, not `REPORT_ONLY_STATE`. `contrast ground` stays in `NOT_A_CLAUSE` and `NOT_A_SENTENCE` permanently |
 | **D4** | `0007` §5 clause 1 gains the sentence that makes a usage site's threshold an **obligation**, entering the registry as **`c1.s6b`**. Its wording is taken **after** the census prints, because `test_spec`'s guard pins the quote for as long as the sentence exists |
+| **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the two places the approximation is known to be wrong. Taken 2026-09-09 against the census |
+| **D6** | A site's own opaque **background occludes** what is behind it, so the ground walk starts at the element and stops there. Its own `fill` does not, and a **border faces outward** — measured against the other side of the boundary, never against what the element itself paints. §7 |
 
 ## 2. The problem, which is not the one `0008` §3.11 states
 
@@ -141,3 +144,133 @@ strong and got stronger — it has grown from 2 197 to 2 629 lines *because* it 
 §3.11 is one of the sections that grew it. It is not refused, only not taken first: the
 element stream is what makes two of this repository's standing figures reproducible by an
 instrument instead of by hand, and that is worth having before the record it feeds is split.
+
+---
+
+## 7. D5 and D6, taken 2026-09-09 once the census had printed
+
+§4's reason 2 said the census would decide the open questions *"with an instrument rather than
+with this document"*. These two are what it decided. `0008` §4.25 is the measurement; this
+section is the decision and its bound.
+
+### D5 — what the marks key is owed by
+
+**Verdicts over marks with no such rule fail 1 195 of 1 785 measured sites**, on every surface
+at once. The split says why, and it is not close:
+
+| class | sites | measured | below 3.0:1 |
+|---|---|---|---|
+| CSS `border` / `outline` | 1 054 | 1 051 | **1 042** |
+| `accent-color` | 3 | 3 | **0** |
+| SVG `fill` / `stroke` | 1 290 | 731 | **153** |
+
+The arithmetic is right and the obligation is not. SC 1.4.11 asks 3:1 of *user-interface
+components* and of *graphical objects required to understand the content*. A hairline between
+two rows of a table whose data is entirely text is neither: `--border` on white measures
+1.17:1 and is required to measure nothing. **So the key without D5 is not a strict clause, it
+is a broken one** — and it could not even ship `pending`, because `ADR-0006` §3's pending state
+is refutable in both directions and this key would never read clean.
+
+**The rule is the criterion's, and the partition is the instrument's.** D5 attaches the
+obligation to *role*: visual information required to identify a user-interface component, and
+parts of a graphic required to understand the content. The checker cannot read role, so it
+approximates by property name — controls and SVG paint in, structural `border`/`outline` out.
+*The first version of this section called that approximation "a reading of the criterion rather
+than a policy". It is not; it is an approximation of a reading, and it is known to be wrong in
+two places:*
+
+- **48 sites it admits that have the excluded role.** `line.grid` (22), `line.lane-line` (15),
+  `line.axis-line` (8) and `line.axis` (3) are gridlines and axis rules, painted the same
+  `--border` `#e3e7ee` at the same 1.17:1 as the table hairlines D5 excludes. They fall inside
+  only because they are `<line stroke>` rather than `border-bottom`, and
+  `car-price-ml/docs/index.html` carries the author's own comment on that rule — *"Gridlines
+  are a reading aid, not data"*.
+- **3 sites it excludes that have the included role.** `accent-color` on `car-price-ml/app`'s
+  `#year-slider` and `#mileage-slider` and `mini-traceroute`'s `#numeric` is the visible part
+  of a range slider and a checkbox — user-interface components by any reading. They pass at
+  4.85:1, so nothing is hidden today; the classification is still the wrong way round.
+
+**Links styled as buttons are outside D5, and this is a judgement rather than a measurement.**
+Six `<a>` borders on `car-price-ml` measure 1.24:1, and `.actions a` gives them padding, weight
+and a background, so "user-interface component boundary" reaches them on the wording. They are
+excluded because the link is identified by its text and the border carries nothing the reader
+needs. Stated here rather than left in `0008` §4.25's prose, because D5 claims to need no
+judgement per page and this is one.
+
+**Two bounds on what the control half can see**, both structural:
+
+1. **The refused-selector list bounds the control count from below.**
+   `mini-traceroute/docs/assets/styles.css:177` styles `#scenario` and `#base-port` from one
+   declaration, and `.field input[type="number"]` is a `Refusal` — so the census found eight
+   controls where there are nine.
+2. **A control whose boundary is its own background is invisible by construction.**
+   `contrast.sites` iterates `paint.PAINT - paint.GROUND`, so `#submit`, `#year-slider` and
+   `#mileage-slider` — three controls declaring `border: none` — are never sites. Such a
+   control can regress with the marks key green.
+
+**The escape D5 does not take, stated because it was on the table.** SC 1.4.11 exempts a
+graphical object whose information is also available in text, which would lift
+`pl-review-sense`'s heatmap cells: **nine `rect.cell` fills below 3.0:1, two of them at
+1.00:1**. *The first version of this paragraph said "the six 1.00:1 readings", which is neither
+figure — portfolio-wide there are exactly two sites at 1.00:1 and both are these cells.* Taking
+the escape needs the checker to tie a mark to the label carrying its value, which is a build
+and not a rule. **Left out of D5 and available**: the cells report under the marks key until
+something implements it.
+
+### D6 — a site's own ground, and which way a boundary faces
+
+The census measures a foreground against its ancestors and the preceding siblings that contain
+it, so **an element that paints its own background is measured against what is behind that
+background** rather than against it. Two published buttons read 1.00:1 and 1.06:1 for this
+reason and are in fact 5.17:1 — a figure `car-price-ml/docs/app/styles.css:225` had already
+written in prose.
+
+**D6 says *occludes*, and the word is the decision.** An element's own opaque background hides
+what is behind it, so the ground walk starts at the element and stops there — `_grounds`'s
+ancestor loop already has that shape, since it `break`s at the first painted ancestor. *The
+first version of this section said the own background is "a candidate ground", which in this
+module's own vocabulary means appending to `found` — and `Site.ratios` returns one ratio per
+ground while `_measured` takes the `min()`. Under that reading the two buttons keep 1.00:1 and
+1.06:1 and the text half never goes clean.* Measured both ways over the eleven: occluding moves
+28 readings and leaves **0** text failures; adding moves 18 and leaves **2** — the same two
+buttons the whole re-derivation rests on.
+
+**Two bounds, and the first was found by getting it wrong.** Reading a site's own ground
+through `_GROUND_PROPERTIES` as shipped — which holds `fill` — makes every `<text>` its own
+ground, because in SVG one property is a shape's paint *and* a text's foreground. That reading
+reported 684 failures, all of them 1.00:1, every one the question *does this thing contrast
+with itself*. So:
+
+1. **Self-as-ground is `color` over `background`, never `fill`.**
+2. **A border is a boundary and faces outward.** Its visibility comes from the colour on the
+   other side, so it keeps the ancestor ground the census already uses. Correcting
+   `mini-traceroute`'s `<button>` border to the button's own fill gives 1.00:1 — the wrong
+   comparison, confidently computed.
+
+### What both decisions cost — a repair in two schemes, and a key that still cannot gate
+
+D5 admits the boundary of a real control, and **nine of those are failing**: seven form
+controls on `car-price-ml/app` and two on `mini-traceroute`, every one
+`1px solid var(--border)`. The owner took the repair on 2026-09-09 — a token for the control
+boundary, `--border` unchanged everywhere else — which makes it two sibling pull requests and a
+pointer bump.
+
+**Two things about that repair the census could not tell anyone.** The ninth control,
+`#base-port`, is styled by a refused selector and so is absent from the figure the decision was
+taken on. And **the census reads the light palette only** (`contrast.py:89`): the same border
+measures **1.17:1 light and 1.29:1 dark**, so it fails in both and the repair is a two-scheme
+repair. Every figure in this ADR and in `0008` §4.25 carries that qualifier.
+
+**And the repair does not make the marks key gateable.** After it lands, **153 SVG sites still
+measure below 3.0:1** — `auth-log-scan` 101, `ab-lab` 23, `pl-review-sense` 19, `car-price-ml`
+7, `it-job-radar` 3 — and D5 puts SVG graphical objects inside the obligation. *The first
+version of this section was headed "one repair and not a stage" and implied the key could enter
+`GATE` once the controls landed.* It cannot, in any state: the argument this section makes
+against the pre-D5 key — that it could never read clean — reaches the post-D5 key unchanged.
+**S14b gates the text key and not the marks key**, and what would change that is the escape
+above, or a further rule about which of the 153 a reader needs.
+
+*This is the first time a decision in this ADR has required a page to change.* §4 reason 1
+argued the census could be slow because the corpus was clean, and that was true of the harm it
+knew about. It was not true of the corpus, and only the instrument could say so — and, as the
+ninth control shows, not all of it even then.
