@@ -732,6 +732,22 @@ figures or `pl-review-sense` at all. *Whether that is an editorial decision or a
 not something an instrument can answer, which is exactly why it belongs in this document and
 not in the checker.*
 
+> **Corrected 2026-09-09, while opening S8a — the last sentence of that paragraph is false and the
+> table above is measuring one thing while the prose claims another.** The README is unchanged since
+> 2026-09-03, so this is a reading error and not drift. **All twelve are reachable**: the six in the
+> "not linked" row each appear in the *Live demos* table as a bare `https://p0w3r223.github.io/…`
+> URL, which GFM autolinks. What the table actually counts is **repository** links, and there the
+> split holds — six get a `github.com` link, five of them as a described row in the main table and
+> `token-budget` as a bullet under *Also on the profile*; the other six get a *Live demos* row with
+> a raw URL and no repository link at all.
+>
+> *The finding survives in the weaker and more useful form:* the profile does not omit half the
+> portfolio, it **demotes** half of it to a link with no description. §9's asymmetry argument does
+> not depend on the half that was wrong, and §7 row 11's priority is unchanged. **What the error
+> cost is the point**: a row 11 planned on "six projects are unreachable" would have been scoped as
+> a rescue and is in fact a copy edit — which is `0008` §4.1's *"a citation can be invalidated by
+> your own correctness"* in its other direction, a conclusion overreaching a table that was right.
+
 ### 14.3 And it quotes two figures, one of which is already rounded past its artifact
 
 The README carries two claims with figures, both sourced from other repositories:
