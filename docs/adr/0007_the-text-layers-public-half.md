@@ -164,15 +164,29 @@ source** — `src/doc_extract/eval/baselines.py`, `corrupt.py`, `pattern.py` and
 recorded API responses where an edit invalidates a run. Every edit in this stage is made **by named
 site from the table above**, never by pattern.
 
-**The four About descriptions, frozen 2026-09-09 before any edit** — the substitute for an
-instrument on a surface that has none:
+**The four About descriptions, frozen 2026-09-09 before any edit and again after W2** — the
+substitute for an instrument on a surface that has none, and the only record this layer gets:
 
-| repository | description as it stands |
-|---|---|
-| `mini-traceroute` | `A traceroute written from scratch in C++ over raw sockets (UDP probes + ICMP). Portfolio proof B1.` |
-| `auth-log-scan` | `Scan OpenSSH auth logs for brute-force, user enumeration, and suspicious logins. Portfolio proof B2.` |
-| `pl-review-sense` | `Polish review sentiment (3-class): TF-IDF baseline vs HerBERT fine-tuning on PolEmo 2.0. Portfolio A4.` |
-| `pl-jobs-lora` | `P4: QLoRA fine-tune turning Polish IT job-posting prose into structured JSON, with a self-built dataset and an honest accuracy x cost x latency comparison vs API baselines.` |
+| repository | before | after, written 2026-09-09 |
+|---|---|---|
+| `mini-traceroute` | `A traceroute written from scratch in C++ over raw sockets (UDP probes + ICMP). Portfolio proof B1.` (98) | `A traceroute written from scratch in C++ over raw sockets (UDP probes + ICMP) — and a page that runs the same checksum, header parser and reply-matching rule in front of you.` (174) |
+| `auth-log-scan` | `Scan OpenSSH auth logs for brute-force, user enumeration, and suspicious logins. Portfolio proof B2.` (99) | `Scan OpenSSH auth logs for brute-force, user enumeration and logins that succeed from an address that had been failing — 108 failed logins in 7.1 hours, and only some of them are an attack.` (189) |
+| `pl-review-sense` | `Polish review sentiment (3-class): TF-IDF baseline vs HerBERT fine-tuning on PolEmo 2.0. Portfolio A4.` (101) | `Polish review sentiment (3-class) on PolEmo 2.0 — HerBERT reaches 0.986 macro-F1 against a TF-IDF baseline's 0.944, right on 38 reviews it misses and wrong on 7 it gets, p < 0.0001.` (181) |
+| `pl-jobs-lora` | `P4: QLoRA fine-tune turning Polish IT job-posting prose into structured JSON, with a self-built dataset and an honest accuracy x cost x latency comparison vs API baselines.` (169) | `QLoRA fine-tune turning Polish IT job-posting prose into structured JSON, with a self-built dataset and an honest accuracy × cost × latency comparison against API baselines.` (173) |
+
+**Every figure in the "after" column is printed by that repository's own `docs/index.html`, and
+each was checked against the file before it was written.** `108 failed logins in 7.1 hours` and
+`HerBERT reaches 0.986 … 0.944` are those pages' `<h1>` verbatim; `38`, `7` and `p < 0.0001` are
+`pl-review-sense`'s lead, which encodes the comparison as `p &lt; 0.0001` — a grep of the raw
+markup for `p < 0.0001` returns nothing and that near-miss is why the check was made against
+parsed text. `0007` §5.0 has **no carrier on this surface**, so the check is the only thing
+standing between it and a figure no artifact prints.
+
+Three of the four descriptions ended on the code as an appended tag, so deleting it alone would
+have left a sentence that says nothing about the project; the freed characters carry a measured
+claim instead, which is what six of the twelve already did. `pl-jobs-lora`'s change is the
+smallest — the code was its **first two characters** — and its `x` becomes the `×` its own README
+already writes.
 
 Two are worse than *stale*. **`pl-review-sense` publishes `A4`, and `A4` is not a code in this
 portfolio**: Level A ends at `A3` (`README.md:25-27`). Its own README reads `B4`. And
@@ -251,8 +265,8 @@ The index re-points; it never edits a submodule.
 | wave | what | parallel | gate |
 |---|---|---|---|
 | **W0** | Entry state; freeze the four About descriptions **into this document before touching one**; save `python -m tools.pagespec --detail` as the baseline | — | `0008` §6, all rows. **Done 2026-09-09**: §2 above, zero `FAIL`, zero open pull requests across fourteen repositories |
-| **W1** | Twelve sibling pull requests — one per repository, covering all 26 committed sites and D2's two `CLAUDE.md` lines | **yes, fully independent** | each repository's own CI, plus §3.1's two guards |
-| **W2** | The four About edits, **each immediately after its own repository's W1 merge**, never batched — the reviewable artifact lands first and the account window closes in seconds | per repository | none exists; the before/after in §2 *is* the record |
+| **W1** | Twelve sibling pull requests — one per repository, covering all 26 committed sites and D2's two `CLAUDE.md` lines | **yes, fully independent** | each repository's own CI, plus §3.1's two guards. **Done 2026-09-09** — twelve merged: `mini-traceroute` #8 · `doc-extract` #14 · `auth-log-scan` #12 · `car-price-ml` #30 · `it-job-radar` #35 · `wroclaw-air-insights` #40 · `token-budget` #5 · `apply-scout` #37 · `pl-review-sense` #19 · `pl-jobs-lora` #17 · `ab-lab` #20 · `mlops-car-price` #24. The census over all three committed layers reads **zero** |
+| **W2** | The four About edits, **each immediately after its own repository's W1 merge**, never batched — the reviewable artifact lands first and the account window closes in seconds | per repository | none exists; the before/after in §2 *is* the record. **Done 2026-09-09**, after all twelve W1 merges rather than one at a time, because W1 completed in a single sitting and the window the row guards against never opened. Read back from the account and verified: zero codes, every figure sourced, `—` is U+2014 and `×` is U+00D7 |
 | **W3** | One index pull request: twelve pointer bumps + L3 (`README.md:29-37`) + H3 | after W1 | `pagespec` runs, and the conformance table must be **byte-identical** against the W0 baseline — no page's verdict may move |
 | **W4** | The profile README pull request — H3's public half | with W3 | review only; nothing carries this surface |
 | **S8c** | C3's intent, its own sibling pull request, then a second index bump | later | `--only pl-review-sense` clear before the bump, `--fetch` after Pages deploys |
