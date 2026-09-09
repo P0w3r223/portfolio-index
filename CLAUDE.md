@@ -36,7 +36,10 @@ tools/pagespec/       the checker — standard library only
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
-docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the registry
+docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the clause
+                        registry, 0006 the gate registry and the twelfth surface, 0007 S8a's
+                        design. **An ADR number is not an audit number** and 0007 is taken
+                        twice: `ADR-0007` is the text layers, bare `0007` is the page spec
 docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 0008 the plan,
                         0009 the whole-system review and what the passes since got wrong
 .github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled)
