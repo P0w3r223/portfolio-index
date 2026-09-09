@@ -182,10 +182,16 @@ CLAUSES: tuple[Clause, ...] = (
         cite="0007 §5 clause 1, the threshold sentence",
         quote="The threshold is the one the page's own usage implies, and it is read per "
               "page, not per token",
-        why="0009 §7 row 12 — a contrast clause at the usage site. `colour.resolve()` and "
-            "`colour.composite()` ship unused; only `contrast()` is called. The pinned values "
-            "in c1.s5 were derived with this rule, and the rule itself is applied to no other "
-            "usage site in the portfolio.",
+        why="0009 §7 row 12 — a contrast clause at the usage site. The pinned values in "
+            "c1.s5 were derived with this rule, and the rule itself is applied to no other "
+            "usage site in the portfolio. What is uncarried is the *verdict*: `0008` S13 "
+            "shipped the census that measures every usage site, and S14 is the stage that "
+            "may fail one. *This row said until 2026-09-09 that `colour.resolve()` and "
+            "`colour.composite()` ship unused and only `contrast()` is called. S13 calls all "
+            "three — `paint.py` resolves a declared value against the palette, `contrast.py` "
+            "composites a mark over its ground — so a sentence about the checker's own "
+            "reach outlived the reach it described, in the one field this registry prints "
+            "on every run precisely so an open row cannot go stale unseen.*",
         note="The largest single gap `0007` §7 names, and the one uncarried row here that "
              "already has a design written for it.",
     ),

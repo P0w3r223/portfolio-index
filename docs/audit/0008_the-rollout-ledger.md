@@ -123,8 +123,8 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
 | **S12** | **The contrast finding, and the clause that could not see it** — `0009` §7 row 12, opened by measurement. **S12a** `pl-review-sense`'s heatmap share label, a live SC 1.4.3 failure in both schemes · **S12b** `clause_1_composited` learns to read paint alpha in the markup | 1 sibling page + its palette guard · `render.py`, `clauses.py`, one fixture of record | 0.5 d | **closed** — §4.19. **S13 is the rest of row 12** and is scheduled below rather than folded in |
-| **S13** | **The contrast census** — an element stream, a selector matcher with specificity, grounds by static-attribute containment, and three keys `UNDECIDED` **by construction**. Row 12's instrument, without its verdicts | `render.py` (the element stream, **landed**), a new `tools/pagespec/contrast.py`, `clauses.check`, `NOT_A_CLAUSE` **and** `spec.NOT_A_SENTENCE` with both their pins, `tests/test_spec.py`'s static source read, a census | **M, 2–3 d** | **in progress** — `ADR-0008` is the decision, §4.23 what the first commit measured. §3.11 stands except its verdict table: D1 replaces *"every preceding painted sibling"* with containment, because **§3.11's worked example does not survive its own rule** on 133 of 139 sites. No `GATE` row and no `report_only()` edit — a census cannot gate |
-| **S14** | **The verdicts** — `PASS`/`FAIL` over what the census already resolves, plus the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` | **M** | open — `ADR-0008` D2, D3 and D4. Two keys enter as `Ratchet(prefix, PENDING_STATE, reason)` and **not** report-only, which `ADR-0006` §3 built the state for and this is the first row to use. Not before the census prints: D4's sentence is pinned by a guard the moment it is written |
+| **S13** | **The contrast census** — an element stream, a selector matcher with specificity, grounds by static-attribute containment, and three keys `UNDECIDED` **by construction**. Row 12's instrument, without its verdicts | `render.py` (the element stream, **landed**), a new `tools/pagespec/contrast.py`, `clauses.check`, `NOT_A_CLAUSE` **and** `spec.NOT_A_SENTENCE` with both their pins, `tests/test_spec.py`'s static source read, a census | **M, 2–3 d** | **closed** — `current_projects` `6bba74f` on `main` (`#107`, nine commits) with CI green **on `main`**. `ADR-0008` is the decision, §4.23 what the first commit measured and **§4.24 what closing it measured** — including four readings the census refuted before a verdict could ship on any of them, which is D2's argument turning out to be worth more than the section that made it. *This cell read `in progress` for a day after the stage merged, and the row above it is the reason that matters: a reader deciding what to take next reads §3, and §3 said the largest open instrument was still being built.* §3.11 stands except its verdict table: D1 replaces *"every preceding painted sibling"* with containment, because **§3.11's worked example does not survive its own rule** on 133 of 139 sites. No `GATE` row and no `report_only()` edit — a census cannot gate |
+| **S14** | **The verdicts** — `PASS`/`FAIL` over what the census already resolves, plus the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` | **M** | open — `ADR-0008` D2, D3 and D4. Two keys enter as `Ratchet(prefix, PENDING_STATE, reason)` and **not** report-only, which `ADR-0006` §3 built the state for and this is the first row to use. Not before the census prints: D4's sentence is pinned by a guard the moment it is written. **And the census printed two things the design could not have known, which block the stage rather than sizing it — §4.24 measures both.** *First*, **a site's own painted background is not among its candidate grounds.** `_grounds` walks ancestors from `element.parent` and the preceding siblings that contain it, so a `<button>` painting `background: var(--accent)` on itself has its white label measured against `<body>` — `<button> color` at **1.00:1** on `mini-traceroute` and **1.06:1** on `car-price-ml/app`, the two worst text readings in the portfolio, both against a ground the button covers. Neither is a page defect: the real value is 5.17:1, and `car-price-ml/docs/app/styles.css:225` says so in the page's own comment. **S14 cannot read its own census until a site can be its own ground**, and that is not the cascade. *Second*, the marks question is not the one a design would guess: the worst mark is `<rect class="cell"> fill` at **1.00:1** — `pl-review-sense`'s heatmap cells, whose `fill-opacity` *is* the datum — and the 1.17:1 band holds eight `<input>`/`<select>` borders, which are user-interface component boundaries and the first half of SC 1.4.11's own wording. So **S14 cannot fail anything until it has a rule for which marks a reader must perceive**, and the corpus makes that concrete rather than hypothetical. Both are taken at S14's **scope re-derivation from the census's own output** — §4.7's precedent for the fifth time, and `ADR-0008` §4's own reason 2, *"a census decides with an instrument rather than with this document"* — the marks rule entering as `ADR-0008` D5. *The first version of this cell blamed the absent cascade for the two `<button>` readings and told S14 to cascade first; §4.24's erratum is why that would have moved neither number* |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -2689,6 +2689,119 @@ mutations over the element stream, and the first run returned **7 of 8** plus on
 conformance table byte-identical, and `python -m tools.pagespec` still exits 0 on eleven
 surfaces. No clause reads the stream yet, which is what the first commit of an instrument stage
 should be able to say.*
+
+### 4.24 What closing S13 measured — and the two sentences the stage falsified about its own checker
+
+§4.23 recorded the first commit. This records the close, and it is written a day late: the row
+in §3 read `in progress` from the merge of `#107` until this section was written, while the
+stage's code sat on `main` and green. *A reader deciding what to take next reads §3.*
+
+**What shipped.** Five modules rather than the one the row named — `render.Element` plus
+`selector.py`, `geometry.py`, `paint.py` and `contrast.py` — with three keys `UNDECIDED`
+**by construction**: `contrast.py` has no `PASS` and no `FAIL` branch at all, which is a
+stronger claim than a policy and is guarded as one, by a test that reads the module's source
+statically so S14 cannot add a verdict without going red. Both pins were edited
+(`conftest.NOT_A_CLAUSE`, `spec.NOT_A_SENTENCE`), which `ADR-0008` §5 warned would ship green
+if forgotten.
+
+**The population it prints, over the eleven committed surfaces**, computed by the run and not
+typed here from a hand count: **2 347 mark sites** (1 785 measured), **565 text sites** (552
+measured), and **575 sites with no resolved ground**. That last figure is the census being
+honest rather than the census failing: it is what the `contrast ground` key exists to say.
+
+**Four readings the census refuted before a verdict could ship on any of them**, which is the
+whole of `ADR-0008` §4's reason 2 and the best argument this record has for taking an
+instrument before a rule. Each was a plausible reading held by the pass that wrote it, and
+each was wrong on the corpus: `color` inherited to every element, which put **589** text sites
+on `auth-log-scan` where the shipped census reads 43; a background counted as a mark, which
+led six surfaces with a `<code>` background at 1.06:1; a ground's own alpha ignored, so
+`pl-review-sense`'s cells read as full `--accent` and every label on one measured 1.00:1 — *on
+the page that carried the real SC 1.4.3 failure S12 had just fixed*; and a sibling of a mark's
+own colour scored at 1.00:1, which is §3.11's collapse, 133 of 139. **These four are a
+development record and are not reproducible from the shipped code**, which is stated because
+every other figure in this section is, and the difference matters to anyone auditing them.
+
+**Three decisions taken by measurement rather than preference.** `_resolve_chain` stays in
+`clauses.py` — all 238 palette tokens resolve in one hop, which `ADR-0008` §5 left open; two
+rules declaring one alpha is `None` and not a product, on four elements of `auth-log-scan`;
+and `#id` and `*` are refused by the matcher because no paint-carrying selector in the corpus
+uses either. *These three figures, like the four above, were measured during the stage and no
+run prints them; the 519 and the 576 below are the ones a reader can reproduce.*
+
+**Two orphans closed, and the registry now reads two uncarried from four.** `c7.s1` — clause 7
+reads `font-family` through the palette — and `c3.s3`, clause 3 honouring the `data-scroll`
+escape it had been overruling. Of the two that remain, `c3.s2` is a recorded decision
+(`ADR-0004` §4), so **the single genuinely open normative sentence is `c1.s6`, which is S14's**.
+
+**And the stage falsified two sentences about the checker's own reach, in two documents, and
+neither moved for a day.** `colour.resolve()` and `colour.composite()` had shipped unused
+since S2; S13 calls both — `paint.py` resolves a declared value against the palette,
+`contrast.py` composites a mark over its ground. Until this commit, `tools/spec.py`'s `c1.s6`
+`why` said they *"ship unused; only `contrast()` is called"* — **printed by
+`python -m tools.spec` on every run**, in the one field the registry prints so that an open
+row cannot go stale unseen — and `CLAUDE.md`'s architecture block said the same thing one line
+down while listing **six** modules against the ten on disk, omitting all four this stage added.
+*This is the class `0009` §7 row 13b already named and this file already carries twice: a
+sentence describing a partiality outliving the partiality it describes.* The registry field is
+the sharper of the two, because it is the instrument reporting on itself.
+
+**What the census then printed that blocks S14**, both measured and both recorded in the S14
+row.
+
+*A site's own painted background is not among its candidate grounds.* `_grounds` walks
+`page.ancestors(element)`, which starts at `element.parent`, and then the preceding siblings
+that contain the element — so an element that paints its **own** background is measured
+against whatever is behind it instead. The two worst text readings in the portfolio are both
+this shape:
+
+| site | declared | ground the census used | ratio | what the button actually paints on |
+|---|---|---|---|---|
+| `mini-traceroute` `<button id="play">` | `color: var(--bg)` → `#ffffff` | `<body>` `#ffffff` | **1.00:1** | its own `background: var(--accent)` |
+| `car-price-ml/app` `<button id="submit">` | `color: var(--bg)` → `#ffffff` | `<form>` `#f6f8fa` | **1.06:1** | its own `background: var(--accent)` |
+
+**Neither is a page defect.** `#ffffff` on `--accent` `#2563eb` is **5.169:1**, and
+`car-price-ml/docs/app/styles.css:225` carries the measurement in the page's own comment —
+*"the same rule measures 5.17:1 light and 7.71:1 dark"* — written when a literal white was
+replaced by the token for exactly this reason. The page measured its control and recorded why;
+the census cannot see the ground because the ground is the element itself.
+
+*The marks question, measured rather than guessed.* Every mark reading at or below 1.24:1 —
+**153 readings across 152 sites**, the two figures differing because one site has two grounds
+in that band:
+
+| ratio | readings | site |
+|---|---|---|
+| **1.00:1** | 6 | `pl-review-sense` `<rect class="cell">` fill — heatmap cells whose `fill-opacity` *is* the datum |
+| 1.04:1 | 9 | `auth-log-scan` `<line class="lane-line">` stroke |
+| 1.06:1 | 8 | `auth-log-scan` `<rect class="lane">` fill |
+| 1.16:1 | 4 | `car-price-ml` `<line class="grid">` stroke |
+| 1.17:1 | 126 | `ab-lab`'s table borders (93), grid and axis strokes (21), `<code>` borders (3); **eight `<input>`/`<select>` borders** on `car-price-ml/app` and `mini-traceroute`; one `card caution` border |
+
+So the D5 question is **not** about chart furniture. The worst readings are cells encoding a
+value, and the 1.17:1 band contains user-interface component boundaries — which is the first
+half of SC 1.4.11's own wording, not the second.
+
+***Erratum, and it is this section's own.*** The paragraph above said, in its first version,
+that both `<button>` readings *"are the absent cascade"* and that **S14 must cascade before it
+can read its own census**. Both are false. Each of those two sites has `competing=1` — one rule
+reaches it — so no cascade can move either number by a thousandth. The cascade is the right
+diagnosis for `mini-traceroute`'s `#step` and `#reset`, which carry `.secondary`, report
+`competing=2`, and are already reported `unresolved` with the census's own words — *"2 rules
+reach it and the census has no cascade"* — which means **they never enter a `worst` figure at
+all** and were never the sites being explained. The consequence is what makes this expensive
+rather than untidy: the sentence pointed the next stage at a change that would have left both
+numbers exactly where they are. *And the same paragraph called the worst remaining marks
+"separators and gridlines" at `<li> border` 1.24:1 and `<line> stroke` 1.04:1 — a figure that
+travelled out of `#107`'s commit message, through the stage's closing note, into two places
+here, while the run printed `pl-review-sense … worst 1.00:1 at <rect> fill` on its own line the
+whole time and this section's author had already read it.* Both were caught by the stage's
+`code-reviewer` pass, which is what that pass is in the working rules for.
+
+*The measurement that says the stage moved no page: **576 tests** collected at the merge
+against 519 at the stage's own entry, `python -m tools.pagespec` exiting 0 on eleven surfaces
+and on twelve with `--fetch`, all twelve reading `clear`, and the conformance table
+byte-identical across the pointer bump that followed — captured by writing the table to a file
+before and after and diffing it, rather than by reading it twice.*
 
 ## 5. What is carried, not scheduled
 

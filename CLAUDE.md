@@ -28,10 +28,24 @@ to be written in a recruiter's register. Do not repair one and assume the other 
 ```
 tools/pagespec/       the checker — standard library only
   sources.py            the surface registry and the ONLY I/O; everything else is pure
-  render.py             HTML -> Page (title, headline, tables and text nodes with ancestry)
+  render.py             HTML -> Page (title, headline, tables and text nodes with ancestry),
+                          and the element stream S13 added: every element in document order
+                          with its attributes, its parent, and a bounded ancestor walk
   css.py                CSS -> rules, with comments stripped and media conditions flattened
-  colour.py             WCAG arithmetic; contrast() ships, resolve()/composite() are unused
+  colour.py             WCAG arithmetic; all three of contrast(), resolve() and composite()
+                          are called since S13 — the line here said the last two ship unused
+                          until 2026-09-09, and tools/spec.py c1.s6 said it in the same words
   clauses.py            clauses 1-8 as pure checks over one Loaded
+  selector.py           which elements a rule reaches, and the shapes it refuses to answer for
+  geometry.py           whether one shape covers another, from the coordinates the markup
+                          already writes — not ADR-0004 §4's deferred geometry, which needs a
+                          rendered box; ADR-0008 §3 is the distinction and it is load-bearing
+  paint.py              what colour an element is painted, and at what alpha — every
+                          candidate, not the winner
+  contrast.py           the S13 census: every usage site, its implied threshold, and what it
+                          is painted on. Three keys, UNDECIDED **by construction** — the
+                          module has no PASS and no FAIL branch, and a guard reads it
+                          statically so S14 cannot add one silently
   __main__.py           the report, two censuses, and the GATE ratchet with its three states
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths

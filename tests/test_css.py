@@ -287,3 +287,15 @@ def test_a_property_name_is_matched_whatever_case_it_is_written_in():
     """The same capability one function over, equally unasserted. `COLOR: #fff` is valid CSS
     and a case-sensitive reader would report the declaration as absent."""
     assert cssmod.declarations(".a { COLOR: #ffffff }", "color") == [(".a", "#ffffff")]
+
+
+def test_a_comment_separates_what_sits_either_side_of_it_rather_than_welding_it():
+    """`strip_comments` substitutes a **space**, and the space is the whole of it.
+
+    Measured by the audit: substituting `""` left all 576 tests green. It is not cosmetic —
+    `.a/*c*/.b` becomes `.a.b`, a compound selector matching one element that carries both
+    classes, where the page wrote a descendant selector matching a `.b` inside an `.a`. Two
+    different rules, one of them invented by the reader.
+    """
+    assert cssmod.strip_comments(".a/*c*/.b { color: #fff }") == ".a .b { color: #fff }"
+    assert cssmod.declarations(".a/*c*/.b { color: #ffffff }", "color") == [(".a .b", "#ffffff")]

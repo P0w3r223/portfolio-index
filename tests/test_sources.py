@@ -443,3 +443,46 @@ def test_the_origin_answered_only_below_five_hundred(error, answered):
     defect it was written to end, back again through the seam beside it.
     """
     assert sources.origin_answered(error) is answered
+
+
+def test_the_one_network_call_identifies_itself_and_carries_a_timeout(monkeypatch):
+    """The only two knobs on the only fetch this package makes, held by nothing until now.
+
+    Without a timeout the scheduled `live` job hangs on a slow origin instead of reporting a
+    wire failure — and a wire failure is `undecided`, which is the whole reason the fetching
+    run can be trusted to gate. Without a user agent the checker is an anonymous scraper to
+    the origin it reads twelve times a day. Both were measured mutable with the suite green.
+    """
+    seen = {}
+
+    class _Response:
+        def read(self):
+            return b"<html></html>"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+    def _urlopen(request, timeout=None):
+        seen["agent"] = request.get_header("User-agent")
+        seen["timeout"] = timeout
+        return _Response()
+
+    monkeypatch.setattr(sources.urllib.request, "urlopen", _urlopen)
+    assert sources._fetch("https://example.test/index.html") == b"<html></html>"
+    assert seen["agent"] == sources.USER_AGENT and seen["agent"], "the origin is told who is asking"
+    assert seen["timeout"] == sources.FETCH_TIMEOUT and seen["timeout"], "and the call can end"
+
+
+def test_a_surface_is_assumed_checked_out_until_something_says_otherwise():
+    """The default is `True` and the direction is the decision.
+
+    `repo_checked_out` separates *the submodule is not on this machine* from *the page is
+    gone*, and only the second is the page's business. Defaulting to `False` would make every
+    hand-built `Loaded` — every unit test, and any future caller that forgets the flag — read
+    as a machine problem and **gate nothing**: fail-open on the key that decides whether a
+    missing page refuses the build. Unreachable today, and unasserted until now.
+    """
+    assert sources.Loaded.__dataclass_fields__["repo_checked_out"].default is True
