@@ -252,8 +252,11 @@ with itself*. So:
 D5 admits the boundary of a real control, and **nine of those are failing**: seven form
 controls on `car-price-ml/app` and two on `mini-traceroute`, every one
 `1px solid var(--border)`. The owner took the repair on 2026-09-09 — a token for the control
-boundary, `--border` unchanged everywhere else — which makes it two sibling pull requests and a
-pointer bump.
+boundary, `--border` unchanged everywhere else. **It is not two sibling pull requests**: `0007`
+§5 clause 1 gives a border one house role and none of `_role_exception`'s four shapes reaches a
+control boundary, which is still an edge — so the token fails a *gated* clause and the index is
+amended before either sibling moves. `0008` §4.25 records the attempt and the two alternatives
+it refused.
 
 **Two things about that repair the census could not tell anyone.** The ninth control,
 `#base-port`, is styled by a refused selector and so is absent from the figure the decision was
