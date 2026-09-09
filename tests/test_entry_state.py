@@ -633,3 +633,27 @@ def test_a_conflicted_submodule_does_not_read_as_matching_the_index():
 
     assert conflicted.matches_index is False
     assert conflicted.initialised is True
+
+
+def test_git_is_run_with_the_credential_prompt_disabled(monkeypatch):
+    """`GIT_TERMINAL_PROMPT=0`, and `entry_state.py`'s own docstring says what it costs.
+
+    `capture_output` gives a credential prompt a stdin nobody is watching, so a repository
+    that asks for one **blocks the session-start hook until it is killed**. Removing the
+    variable left all 576 tests green: the one line standing between a slow start and a hung
+    one was carried by nothing.
+    """
+    seen = {}
+
+    def _run(argv, **kwargs):
+        seen.update(kwargs)
+        raise OSError("not actually running git")
+
+    monkeypatch.setattr(entry_state.subprocess, "run", _run)
+    entry_state._run(("git", "status"), None)
+
+    assert seen["env"]["GIT_TERMINAL_PROMPT"] == "0"
+    assert "PATH" in seen["env"], (
+        "the variable is added to the inherited environment and does not replace it — "
+        "a bare {'GIT_TERMINAL_PROMPT': '0'} satisfies the line above, loses PATH, and "
+        "fails where nothing is watching: at runtime on a machine, not in CI")

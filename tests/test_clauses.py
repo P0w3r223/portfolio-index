@@ -614,6 +614,13 @@ def test_a_family_the_page_ships_itself_is_not_a_stranger():
     assert finding.status == clauses.PASS
 
 
+# -- clause 3: the escape, added 2026-09-09 -------------------------------------------------
+#
+# Under its own header rather than trailing the clause-7 section, which is where it landed
+# when it was written. The audit of the same day names section drift in this file as a
+# navigation cost at two thousand lines; this is the half of it that arrived today.
+
+
 def test_a_table_the_page_declares_by_design_is_exempt_and_counted():
     """`0007` §5 clause 3's escape, implemented nowhere until 2026-09-09.
 
@@ -1290,11 +1297,6 @@ def test_a_border_matching_its_own_fill_is_exempt():
     assert status_of(findings, "1 usage roles") == clauses.PASS
 
 
-def test_a_focus_ring_is_a_state_rather_than_an_edge():
-    findings = usage("input:focus-visible { border-color: var(--accent); }")
-    assert status_of(findings, "1 usage roles") == clauses.PASS
-
-
 def test_a_composited_usage_is_not_reported_twice():
     """`clause_1_composited` already says `mini-traceroute` paints eleven `color-mix()`
     swatches it cannot resolve. Reporting them again here is `0007` §5 clause 1's *"the same
@@ -1517,11 +1519,6 @@ def test_a_thick_rail_painted_in_a_house_role_is_an_edge_and_not_a_rail():
     """
     findings = usage(".result.pending { border-left: 3px solid var(--surface); }")
     assert status_of(findings, "1 usage roles") == clauses.FAIL
-
-
-def test_the_rail_exemption_still_admits_the_eleven_it_was_measured_from():
-    findings = usage(".card.caution { border-left: 3px solid var(--warn); }")
-    assert status_of(findings, "1 usage roles") == clauses.PASS
 
 
 def test_a_dark_only_token_painted_in_the_light_half_is_still_a_broken_reference():
@@ -2042,3 +2039,43 @@ def test_a_figure_inside_an_svg_code_is_labelled_by_the_element_that_exempts_it(
     """
     assert clauses._where(("svg", "text", "code")) == "code"
     assert clauses._where(("svg", "text")) == "svg text"
+
+
+def test_a_meta_carrying_two_scored_keys_is_counted_once_under_a_stable_name():
+    """`sorted(keys)[0]`, and the code comment beside it says *"it is made stable"* while
+    nothing asserted the stability.
+
+    A `<meta>` in scope under both its `name` and its `property` is one write site. Which of
+    the two names the census row is arbitrary — but it must not depend on set iteration
+    order, or the same page produces a different census between runs and `0008` §4.11's
+    requirement that the exemption be countable stops meaning anything. `keys.pop()` left the
+    suite green.
+    """
+    figures = clauses.grouped_figures(page(
+        f'<meta name="og:description" property="description" content="183{NARROW}798 rows">'))
+
+    assert [one.where for one in figures] == ["meta description"], (
+        "one write site, named by the lower of its two keys, on every run")
+
+
+def test_a_failure_naming_many_broken_references_names_three_and_says_how_many():
+    """`broken[:3]` is a reading budget, and an operator acts on this line.
+
+    Cutting it to one leaves the count honest and the evidence too thin to locate anything;
+    removing the bound entirely puts an unbounded list into a table row. Both left the suite
+    green, so the number was carried by nothing.
+    """
+    css = (":root { --bg: #ffffff }"
+           + " ".join(f".s{n} {{ color: var(--gone{n}) }}" for n in range(5)))
+    detail = detail_of(clauses.clause_1_usage(css), "1 usage refs")
+
+    assert detail.startswith("5: "), "the count is of all of them"
+    assert detail.count(";") == 2, "and exactly three are named"
+
+
+def test_the_served_digest_is_long_enough_to_tell_two_pages_apart():
+    """Twelve hex characters, printed beside `served`. Shortened to four it still differs for
+    these two, and it stops being a digest an operator can trust across twelve surfaces —
+    48 bits against 16. The length was asserted nowhere."""
+    assert len(clauses._digest(b"a")) == 12
+    assert clauses._digest(b"a") != clauses._digest(b"b")

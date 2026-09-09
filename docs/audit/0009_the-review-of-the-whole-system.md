@@ -779,3 +779,151 @@ profile is where that build pays first.
 **It does not move ahead of row 12.** A page that fails WCAG harms a reader now; a figure that
 may go stale harms one later, and the artifact it quotes reproduced this week. §3.1's promotion
 rule reaches row 12 and not this one.
+
+## 15. The test audit of 2026-09-09, and the commit that merged into no branch
+
+§13 is this document's form for an audit and this is the second one. It was commissioned hours
+after S13 merged, on the same reasoning: the stage had shipped five new modules and its guards
+had been reviewed against the stage rather than against each other. **The method is the one
+`CLAUDE.md` states and no other — break the thing a test names, watch it go red, put it back.**
+
+*Recorded here a day late, and that is the first finding.* For one day the whole audit existed
+in commit messages and test docstrings and **nowhere under `docs/`** — which is §13.4's first
+erratum happening again, in the same shape and to the same class of content. The part that
+could not survive there at all is §15.4's.
+
+### 15.1 A production crash, and the guard was one module to the left
+
+`colour.resolve()` returns whatever the palette holds, not only a hex. A token carrying
+`rebeccapurple`, `rgb(37 99 235)`, `#11111180`, `light-dark(…)`, `oklch(…)` or another `var()`
+comes back **non-`None`**, nothing marked the site unresolved, and it reached
+`colour.composite()` and raised out of `clauses.check`. **One token on one page killed the
+whole twelve-surface run** — six of six notations fatal, control passing.
+
+Three things make it this codebase's characteristic failure rather than an ordinary bug, and
+all three are on the record already in other words:
+
+1. **`paint.py`'s docstring claimed the opposite, while arguing that a repair was
+   unnecessary** — *"a chained token would come back unresolved and be reported under
+   `contrast ground`, which is an admitted unknown and not a wrong colour."* It was not
+   unresolved. The paragraph was corrected in place rather than deleted, because the reasoning
+   it carried is the reasoning that was wrong.
+2. **The class was already guarded one module to the left.** Four tests in `test_clauses.py`
+   assert that every one of these notations is handled honestly, and **every one of them calls
+   `clause_1_tokens` directly rather than `check`** — so the defect moved and the guard did
+   not:
+   - `test_a_ground_that_is_not_a_hex_colour_is_reported_rather_than_raised`
+   - `test_an_alpha_hex_token_is_reported_without_a_ratio_rather_than_crashing`
+   - `test_a_colour_notation_this_reader_cannot_parse_is_undecided_not_failed`
+   - `test_a_named_colour_is_undecided_rather_than_failed`
+3. The first of those four carries a docstring describing this exact crash **in the past
+   tense**: *"a `ValueError` that took the whole twelve-surface table down with it."*
+
+*Those four were cited by line number in this section's first version and were each seven low
+by the time it shipped, because the sibling commit in this same pull request inserted a
+seven-line section header above them. A test name cannot drift that way — and this section
+ships alongside two test deletions, which is what makes the point practical rather than
+stylistic.*
+
+It was also one commit from firing on a real stage: `0008` S7 migrates the `--ink`/`--line`
+aliases, and `test_an_alias_that_actually_resolves_is_not_reported` proves `--text: var(--ink)`
+is a shape the plan commits to. The fix is `is_opaque_hex` and not `is not None`; the site now
+reports under `contrast ground` with what the token resolved to, which is what the census is
+for. Guarded twice — parametrised over all six notations **through `clauses.check`**, and at
+`Site.ratios`, because a `Site` built any other way reaches the arithmetic too.
+
+### 15.2 Guards that could not see what they named
+
+Every one of these left the suite green while the thing it names was broken, and each was
+reproduced before anything was written. Five of the first six are on **gated** keys, which is
+where a blind guard costs a refused build or an accepted defect rather than a wrong line:
+
+- **A dirty submodule stopped being a finding.** No test anywhere constructed `dirty=True`.
+  `CLAUDE.md` spends a paragraph on what that costs — twelve `CLAUDE.md` and eight `README.md`
+  uncommitted for an hour with `pagespec` reading pages nobody had published.
+- **`_CSS_DERIVED` could drop clause 3**, because the guard naming both clauses ran over a
+  fixture page with no table, so its clause-3 half was unfalsifiable.
+- **`origin_answered`'s 5xx boundary was unguarded on the stylesheet path** — widened, a Pages
+  503 mid-deploy refuses the build; the defect that function's docstring exists to end.
+- **A trailing space survived on the last declaration of every block**, which fails a value
+  against the exact value it declares: a *false* gate, which this repository ranks worse than
+  a missing one.
+- **A palette declared on `html` was read by nothing**, reporting *"no custom properties
+  declared at all"* on a conforming page.
+- **First-wins on `<title>` was claimed by two docstrings and covered by neither** — one of
+  them says it tests the SVG rule *with first-wins taken out of the picture*, which is exactly
+  true and left the rule itself unguarded. Two `<title>` in one `<head>` separates them.
+- **Three loops over `spec.uncarried()` went vacuous together.** Returning `()` left the suite
+  green while `report()` printed *"0 carried by nothing"* and suppressed the block — **full
+  coverage announced over the omissions**, which is verbatim what `tools/spec.py`'s opening
+  lines say the registry exists to end.
+- **Five documented capabilities no guard could see**: case-insensitive at-rules and property
+  names (dropping the first reads a whole dark palette as light, on a gated clause); the `U`
+  flag for a conflicted submodule, documented in `entry_state.py`'s own comment; a `<meta>`
+  carrying both `name` and `property`; and `_where`'s tuple order, where **no verdict moves**
+  — which is exactly why nothing caught it.
+
+### 15.3 The lower-severity list nobody had measured: 0 of 8
+
+The audit's §2 carried a second list, and the first summary of the audit omitted it as
+housekeeping. Measured, **none of the eight was caught**. Three have real teeth:
+
+- **`strip_comments` substituted a space and nothing said why.** With `""`, `.a/*c*/.b` becomes
+  `.a.b` — a compound selector matching one element carrying both classes, where the page wrote
+  a descendant. Two different rules, one invented by the reader.
+- **`GIT_TERMINAL_PROMPT=0` was carried by nothing.** `capture_output` gives a credential
+  prompt a stdin nobody watches, so the session-start hook blocks until it is killed.
+- **`repo_checked_out` defaulted to `True`, and the direction is the decision** — fail-open on
+  the key deciding whether a missing page refuses the build.
+
+### 15.4 Two duplicates, and the deletion is the half that needed a record
+
+Two guards were deleted: a focus ring and a rail exemption, each a bare restatement of a
+neighbour that carries the reasoning, each asserted a second time with no docstring. **The
+deletion is proved rather than argued** — breaking what each one covered still reddens the
+suite, measured — and that proof is why this section exists. *A green suite cannot detect a
+deleted test.* The proof lived in one commit message on a branch that squash-merge makes
+unreachable, which is precisely §13.4's `#86` shape, and this paragraph is where it becomes
+durable.
+
+### 15.5 The counts, and which two of them are hand counts
+
+Taken from the collector rather than from a summary, because this section is about guards that
+could not count what they claimed:
+
+| point | collected |
+|---|---|
+| `93f79f4`, S13's entry | 519 |
+| `7461e5f`, S13 merged and the pointers bumped | 576 |
+| `d9fd048`, the audit's first four commits (`#109`) | 600 |
+| the lower-severity list and the two deletions | 605 |
+
+`#109` adds **13 test functions** and two parametrisations for **+24** collected;
+the last commit adds **7** and removes **2**, for **+5**. `#109`'s title says *eleven* guards
+and the last commit's message says *eight* items — **both are hand counts of findings, not of
+functions**, and they do not reconcile with the table because they were never meant to: one
+guard asserts two knobs (the single network call's user agent *and* its timeout). Neither
+figure is wrong; **no instrument prints guards-per-finding**, so under this repository's own
+rule they are labelled rather than repeated.
+
+### 15.6 A commit that merged into no branch, and the CI hole under it
+
+The last commit was authored at **15:55 +0200**. Its pull request, `#109`, had squash-merged
+**eighteen minutes earlier, at 15:37 +0200** — the same instant `gh` reports as `13:37Z`, and
+the first version of this sentence put the two figures side by side in different frames, which
+read as a gap of two hours. So the commit sat on a remote branch whose pull request was
+**closed**, and:
+
+- `push` in `pagespec.yml` is filtered to `main`, and `pull_request` needs an open one — so the
+  commit had **no CI run at all**, and in particular never met `core`, the job that checks out
+  no submodules and the only one that would catch a guard depending on a sibling being present.
+- `gh pr list` shows nothing, and `git rev-list --count` reports *five ahead* — four of which
+  are the squash. **Counting says unmerged work; only comparing trees says which.** The method
+  that settles it is the one already on the record: locate the content on `main`, not the
+  commits.
+
+*And the hole is wider than the commit.* `docs/**` appears in neither `paths:` filter, so a
+documentation-only pull request receives no run — `0008`'s Sx row recorded that for `b416c83`
+and it is still true. **That is why this section ships in the same pull request as the guards
+rather than after them**: bundled, the audit's record rides behind a green `core`; split, it
+would be checked by nobody, and the deletions in §15.4 would reach `main` unrun a second time.
