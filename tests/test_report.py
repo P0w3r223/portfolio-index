@@ -207,7 +207,7 @@ def test_a_surface_that_satisfies_the_spec_reports_clear_and_still_says_what_it_
     claiming the one verdict `0007` §7 says it cannot reach."""
     report.main(["--root", str(tree), "--only", "ab-lab"])
     out = capsys.readouterr().out
-    assert "  ab-lab                   clear, 1 undecided" in out
+    assert "  ab-lab                   clear, 4 undecided" in out
     assert "FAIL" not in out
 
 
@@ -384,7 +384,7 @@ def test_the_exemption_set_is_pinned_because_it_is_policy_and_not_a_measurement(
     `test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemption_safe`, a
     proof that the key cannot reach `FAIL` rather than an observation that it has not yet.
     """
-    assert NOT_A_CLAUSE == frozenset({"stylesheets"}), (
+    assert NOT_A_CLAUSE == frozenset({"stylesheets", "contrast text", "contrast marks", "contrast ground"}), (
         "NOT_A_CLAUSE changed. Every entry needs a test proving the key can never be FAIL — "
         "the corpus check in the floor guard is a weaker, corpus-scoped proxy and is vacuous "
         "for a key that is UNDECIDED everywhere, which is what the dangerous ones are.")

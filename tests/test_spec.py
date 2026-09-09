@@ -24,7 +24,7 @@ import pytest
 from conftest import NOT_A_CLAUSE, ROOT, fixture, loaded, require_submodule
 from tools import entry_state, spec
 from tools.pagespec import __main__ as report
-from tools.pagespec import clauses
+from tools.pagespec import clauses, contrast
 
 #: A page rich enough to emit the whole finding vocabulary, so guards 2 and 3 can compare
 #: against what the checker really says rather than against a list of what it is believed to
@@ -80,7 +80,12 @@ def test_the_synthetic_corpus_reaches_every_key_the_checker_can_name():
     the source rather than by calling anything, because the point is to find a key the
     synthetic page does *not* produce.
     """
-    source = pathlib.Path(clauses.__file__).read_text(encoding="utf-8")
+    # **Both modules, because a key's literal moved out of `clauses.py` and this guard
+    # did not follow it.** The census names its three keys in `contrast.py`; reading only
+    # `clauses.py` leaves this test green while covering less than its docstring claims —
+    # the failure `0009` §3.2 names, one level up. `ADR-0008` §5 predicted it by name.
+    source = "".join(pathlib.Path(module.__file__).read_text(encoding="utf-8")
+                     for module in (clauses, contrast))
     literals = set(re.findall(r'Finding\(\s*"([^"]+)"', source))
     # Only what needs exempting. Subtracting the whole set also excused `stylesheets`, which
     # this page *does* reach — half the guard switched off to accommodate one key. Derived

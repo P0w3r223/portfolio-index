@@ -123,7 +123,8 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **Sx** | **L5 + the `Author:` finish**, as one sweep on the L1 pattern | 11 `pyproject.toml`; 70 fields / 10 repos. **Both reproduce to the field, 2026-09-07** | 0.5 d | **closed** — eleven sibling pull requests merged, plus `current_projects` `b416c83` (the index's own eight fields) and `d550066` (the eleven pointers), both on `main`. `d550066` is CI green **on `main`**; `b416c83` touches only `docs/**`, which the workflow's paths filter excludes, so it has **no run at all** — the absence is the filter working and not a check that went missing. Header-form author fields carrying the GitHub handle: **0** portfolio-wide, from 70. The deprecated licence table form: **0**, from eleven. *Neither figure is written here as the string it counts — §12.1.2 of `0009` is what that costs.* No page moved and the conformance table is unchanged. §4.14 |
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
 | **S12** | **The contrast finding, and the clause that could not see it** — `0009` §7 row 12, opened by measurement. **S12a** `pl-review-sense`'s heatmap share label, a live SC 1.4.3 failure in both schemes · **S12b** `clause_1_composited` learns to read paint alpha in the markup | 1 sibling page + its palette guard · `render.py`, `clauses.py`, one fixture of record | 0.5 d | **closed** — §4.19. **S13 is the rest of row 12** and is scheduled below rather than folded in |
-| **S13** | **Contrast at the usage site** — the rest of `0009` §7 row 12, and the sentence `0007` §5 clause 1 carries that nothing enforces: *the threshold is the one the page's own usage implies*. An element walk, a small selector matcher, grounds by paint order, and three finding keys shipping **report-only** | `render.py` (an element stream), a new `tools/pagespec/contrast.py`, `css.rules_with_conditions()`, `clauses.check`, `GATE`, `NOT_A_CLAUSE`, `tools/spec.py` `c1.s6`, a census | **1.5–2 d** | open — designed §3.11, and the design is why it is not M |
+| **S13** | **The contrast census** — an element stream, a selector matcher with specificity, grounds by static-attribute containment, and three keys `UNDECIDED` **by construction**. Row 12's instrument, without its verdicts | `render.py` (the element stream, **landed**), a new `tools/pagespec/contrast.py`, `clauses.check`, `NOT_A_CLAUSE` **and** `spec.NOT_A_SENTENCE` with both their pins, `tests/test_spec.py`'s static source read, a census | **M, 2–3 d** | **in progress** — `ADR-0008` is the decision, §4.23 what the first commit measured. §3.11 stands except its verdict table: D1 replaces *"every preceding painted sibling"* with containment, because **§3.11's worked example does not survive its own rule** on 133 of 139 sites. No `GATE` row and no `report_only()` edit — a census cannot gate |
+| **S14** | **The verdicts** — `PASS`/`FAIL` over what the census already resolves, plus the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` | **M** | open — `ADR-0008` D2, D3 and D4. Two keys enter as `Ratchet(prefix, PENDING_STATE, reason)` and **not** report-only, which `ADR-0006` §3 built the state for and this is the first row to use. Not before the census prints: D4's sentence is pinned by a guard the moment it is written |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -2602,6 +2603,93 @@ figure on paper. Taking S8a as written would have moved it on the day, mid-stage
 requests already open — and the erratum above is what a re-derivation costs when it is done with
 the wrong instrument, which is one review rather than one stage.*
 
+### 4.23 What S13's first commit measured — and three figures the design carried that did not survive it
+
+§4.7's precedent applied a third time, to the one stage that was already designed. §3.11 took
+S13's design before the stage; this is the re-derivation taken before the *work*, and it moved
+the stage's shape before a line was written. `ADR-0008` is the decision; what belongs here is
+what was measured and what the record had wrong.
+
+**The instrument first, because two of the three findings below could not be had without it.**
+S13's first commit adds an element stream to `render.py` — every element in document order with
+its classes, its attributes and a pointer to its parent, plus an ancestor walk and the preceding
+siblings under one parent. `paint_alphas` reads the same markup for one attribute and flattens
+it, so it can say *this page composites somewhere* and cannot say *this cell is painted on that
+rect*. That gap is the whole reason a rule-keyed contrast clause is wrong twice on one selector.
+
+**Two standing figures became reproducible by an instrument on the day it landed.**
+
+| figure | where it stood | measured |
+|---|---|---|
+| `0009` §4.19's scoping claim — 35 `<svg>`, **none inside an element carrying `card`** | a hand count no committed instrument could take; §4.19 says as much | **35 `<svg>`, 0 inside a `card`**, across six surfaces. Reproduces exactly |
+| the population of `.ev-failed` sites on `auth-log-scan` | §3.11 works three of them and asserts a verdict for all | **139 marks, 133 of them with a preceding sibling of their own class**, in runs of 40, 16 and 12 |
+
+**Finding 1 — `0009` §7 row 12's promotion argument has expired, and the row does not say so.**
+It promotes itself as *"the only open row where a published page can harm a reader"*, and the
+harm it names is §4.19's `pl-review-sense` `.cell-share` at 2.69:1. **S12 fixed it**:
+`pl-review-sense/docs/index.html:189` reads `fill: var(--text)` and has since 2026-09-08. So S13
+is a regression guard over a clean corpus. Worth building, and §3.1's promotion rule no longer
+reaches it — which reopens its order against row 9, and row 9 is the one that grows while it
+waits. *The row was promoted on a fact that its own neighbouring stage then closed, and the two
+sections never met.*
+
+**Finding 2 — §3.11's worked example does not survive §3.11's verdict rule.** The rule says a
+site `PASS`es only by clearing **every** candidate ground, *"the ancestor chain and every
+preceding painted sibling in the enclosing `<svg>`"*. Two marks of one class are the same
+declared colour, so the candidate ratio between them is **1.00:1**, and 133 of the 139 marks
+have such a sibling. Under the rule as written they are all `UNDECIDED`; §3.11 says they
+`PASS` at 3.98:1, 3.79:1 and 3.09:1. **The figures are right** — all four reproduce from
+`colour.py` as shipped, and the 1.27:1 one matches the comment `auth-log-scan`'s own stylesheet
+carries — so the rule is what is wrong, and it is wrong in the direction this checker exists to
+refuse: a confident `UNDECIDED` over 96 % of a conforming page. `ADR-0008` D1 takes containment
+instead. **133 is a lower bound**; it counts only the siblings where the collapse is certain.
+
+**Finding 3 — the obligation S13 would enforce is not in the normative slice.** `c1.s6` chooses
+*which* threshold — 4.5 for a token painted as text, 3.0 for a mark. The sentence requiring a
+usage site to **meet** it is not in `0007` §5; it is in §7, *What this spec does not check*,
+which `tools.spec.NORMATIVE_TO` deliberately excludes from the range guard 1 searches. Building
+S13 without amending §5 would put the checker ahead of its spec — the `data-scroll` shape from
+the other side, and that one has been open since 2026-09-07. `ADR-0008` D4 is the amendment,
+and its wording is deliberately deferred until the census prints, because the registry pins the
+quote for as long as the sentence exists.
+
+**Three errata, and one of them is this document's own.**
+
+1. **`0008` §3.11 says `clauses.py` is `1 225` lines. It is 1 235** — S12's `paint_alphas` work,
+   landed after the design was written. The sentence's point stands and is strengthened: the
+   file is further over the 800 ceiling than the argument for a new module claimed. *This is the
+   failure §4.13 and `0009` §8 row 1 both name — a figure typed into prose goes stale in
+   silence — occurring in the section that was written to avoid it.*
+2. **The re-derivation pass reported 1 236 for the same file**, having correctly found the
+   record's figure stale. Neither number came from an instrument; `wc -l` says 1 235. Recorded
+   because a pass that catches a hand count with a hand count has not caught it.
+3. **§3.11's cost note is wrong in its own terms.** It says *"every leaf mark keeps its
+   verdict"* under the sibling rule. On this corpus a leaf mark *is* a preceding sibling of the
+   next leaf mark, so the note describes the case the corpus does not contain.
+
+**What the mutation battery found, which is more than the guards it was written for.** Eight
+mutations over the element stream, and the first run returned **7 of 8** plus one hang.
+
+- **`handle_endtag` could stop popping the element stack with all six new guards green.** Every
+  case they cover opens its elements before any of them closes, so the stack is never read
+  after a pop and the mutation has nowhere to show. A closed element followed by a sibling is
+  the commonest shape on every page in the corpus and had no test. `0008` records at least
+  seven guards that shipped green over the defect they existed to catch; this is the eighth,
+  and the first caught before shipping rather than after.
+- **`ancestors()` hung rather than failing.** An element parenting itself — the first mutation
+  the walk is written against — looped forever appending, to 9.7 GB before the process was
+  killed. The walk is bounded by the element count now: a chain cannot be longer than the page,
+  so the bound is a fact about the data and not a defensive check. **A guard that cannot be run
+  is not a guard**, and a battery that its own subject can stop proves nothing.
+- **The battery's `restore()` discarded an uncommitted fix mid-run.** `git checkout --` is how a
+  mutation is undone and it does not distinguish the mutation from the work beside it. Already
+  on the record; recorded again because knowing it did not prevent it.
+
+*The measurement that says the stage moved no page: 526 tests green against 519 at entry, the
+conformance table byte-identical, and `python -m tools.pagespec` still exits 0 on eleven
+surfaces. No clause reads the stream yet, which is what the first commit of an instrument stage
+should be able to say.*
+
 ## 5. What is carried, not scheduled
 
 | item | state |
@@ -2613,7 +2701,7 @@ the wrong instrument, which is one review rather than one stage.*
 | **The quotation rule has no carrier on `README.md`** | §4.10 applied `0007` §5.0 to `docs/index.html` and found ten of twelve READMEs carrying a figure no artifact prints. The figures were repaired; **nothing detects the next one.** Only `ab-lab` generates and byte-guards README regions (`<!-- generated: -->` at `README.md:14, 45, 49, 92, 96`). Twelve of thirteen are hand-typed prose with no carrier — the same structural shape as §4.11's two clauses, and it wants the same answer, but a README figure-provenance reader is a larger build than a separator and should follow S9 rather than ride inside it |
 | **The S-gate residuals — one of three still stands** | **Closed by `#83`** (`0009` §7 row 2): `sources.py` carries the exception's cause instead of discarding it under a bare `except`, and the third-party marker is `sources.THIRD_PARTY`, declared once beside the only code that writes it and **compared** rather than searched for — mutation-proven, changing its text is now a no-op. **Still open:** `_with_styles` decides *third party* by URL prefix (`http://`, `https://`, `//`) where `_unread_same_origin`'s docstring says *"exist on our side"*. On the eleven committed surfaces the two agree; on the fetch-only surface they do not, so an absolute same-host URL there would be exempted from the gate. S9 does not make it reachable — only a page that writes its own origin absolutely would |
 | **`wroclaw`'s scroller has no house name** | After S7 every other committed surface scrolls its tables in `.table-wrap`; this one uses `table { display: block; overflow-x: auto }` under `max-width: 640px`, so clause 3 reports `undecided` and will keep doing so. Neither the S7 row nor `0007` §9 row 6 names it, and S8a/S8b are the text layers — so it is unscheduled rather than skipped, and recorded here so the next reader does not go looking for it in a stage. **Not folded into S10**: that stage is clause 4, and this is clause 3 |
-| **No submodule ignores `.claude/`, and this repository's own `.gitignore` says why that matters** | Found 2026-09-09 by a working-tree sweep. Five submodules hold an untracked `.claude/` containing `sessions`, `settings.local.json` and in two cases `worktrees` — **exactly the three paths this repository ignores at its root**, with a comment giving the reason: on any other checkout the first permission grant writes one, `git status` sees it, and a standing false finding appears in the instrument whose whole value is that a finding means something. It is reproducing one level down: `git status` reports five submodules as ` M` while `python -m tools.entry_state` reports the tree clean, and §6's own row tells a reader that a dirty submodule means the checker is reading pages nobody published. The two instruments disagree and the working tree is in fact clean. **This repository cannot fix it** — it re-points submodules and does not edit them — but **S8a's W1 opens a pull request in all twelve anyway**, so one `.gitignore` line rides at zero marginal cost. Not folded into the stage's scope, because S8a is the text layers and this is repository hygiene; recorded here so W1 can take it without re-deriving it |
+| **No submodule ignores `.claude/`, and this repository's own `.gitignore` says why that matters** | Found 2026-09-09 by a working-tree sweep. Five submodules hold an untracked `.claude/` containing `sessions`, `settings.local.json` and in two cases `worktrees` — **exactly the three paths this repository ignores at its root**, with a comment giving the reason: on any other checkout the first permission grant writes one, `git status` sees it, and a standing false finding appears in the instrument whose whole value is that a finding means something. It is reproducing one level down: `git status` reports five submodules as ` M` while `python -m tools.entry_state` reports the tree clean, and §6's own row tells a reader that a dirty submodule means the checker is reading pages nobody published. The two instruments disagree and the working tree is in fact clean. **This repository cannot fix it** — it re-points submodules and does not edit them — but **S8a's W1 opens a pull request in all twelve anyway**, so one `.gitignore` line rides at zero marginal cost. Not folded into the stage's scope, because S8a is the text layers and this is repository hygiene; recorded here so W1 can take it without re-deriving it. **W1 did not take it.** Fourteen pull requests went out on 2026-09-09 and the `.gitignore` line rode in none of them, so the item that cost nothing while a stage was open now costs five separate sibling pull requests. The five are `ab-lab`, `auth-log-scan`, `car-price-ml`, `it-job-radar` and `mini-traceroute`, each still reporting `?? .claude/`; the other seven already ignore it. Recorded as the price of a zero-cost rider nobody picked up, which is the second time this row has been written |
 
 ## 6. Assumptions to verify before each stage, not once
 

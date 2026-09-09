@@ -378,3 +378,123 @@ def test_a_colour_in_a_presentation_attribute_is_not_a_paint_alpha():
     the declaration and the pixel, which is what `1 composited` is about."""
     parsed = render.parse('<svg><rect fill="#2563eb" stroke="var(--accent)"/></svg>')
     assert parsed.paint_alphas == []
+
+
+# -- the element stream: the ancestry `paint_alphas` flattened away ----------------------
+#
+# `paint_alphas` answers *this page composites somewhere* and cannot answer *this cell is
+# painted on that rect*, because it keeps a tag and a class set and drops the structure. A
+# contrast question is asked per usage site and a usage site is an element — `0008` §3.11 —
+# so the stream is the first thing that stage needs and the last thing it can fake.
+
+
+def test_an_element_records_the_one_enclosing_it_and_never_itself():
+    """Append before the stack moves, or every element becomes its own parent.
+
+    Move `self.elements.append(...)` below the `if tag not in _VOID:` block and the parent of
+    each non-void element is the index just pushed — its own — so the `ancestors` walk never
+    terminates. The root's `-1` is what makes that walk finite, and it is the whole contract.
+    """
+    parsed = render.parse('<div class="card"><svg><rect/></svg></div>')
+    assert [(one.tag, one.parent) for one in parsed.elements] == [
+        ("div", -1), ("svg", 0), ("rect", 1)]
+
+
+def test_a_void_element_is_recorded_and_adopts_nothing_after_it():
+    """Two mutations in opposite directions, and this corpus reaches both.
+
+    Put the append inside `if tag not in _VOID:` and every `<img>`, `<link>` and `<meta>`
+    leaves the stream — `paint_alphas` has a test of its own proving a void element can carry
+    paint, so dropping them loses usage sites. Push a void element onto `_element_stack`
+    instead and nothing ever pops it, so every element after it on the page reads as its
+    child: on a page whose `<head>` carries four `<meta>`, the whole body would.
+    """
+    parsed = render.parse("<section><img><p>after</p></section>")
+    assert [(one.tag, one.parent) for one in parsed.elements] == [
+        ("section", -1), ("img", 0), ("p", 0)]
+
+
+def test_a_self_closed_element_pops_the_element_stack_with_the_other_two():
+    """Drop `self._element_stack.pop()` from either pop site and the three stacks drift.
+
+    `_open` and `_tags` have carried this case since `apply-scout`; a third stack is in
+    lockstep only if it is popped in the same place, and `unclosed` cannot see the difference
+    because it counts `_open`. With the pop missing from `handle_startendtag` the circle reads
+    as the rect's child — so a mark's ground would resolve against a shape that never
+    contained it, which is the wrong answer given confidently.
+    """
+    parsed = render.parse("<svg><g><rect/><circle/></g></svg>")
+    positions = {one.tag: one for one in parsed.elements}
+    assert positions["circle"].parent == positions["g"].index
+    assert parsed.unclosed == 0
+
+
+def test_an_element_that_has_closed_does_not_adopt_what_comes_after_it():
+    """The other pop site, and **the six guards above all shipped green over it.**
+
+    Drop `self._element_stack.pop()` from `handle_endtag` and the whole suite stayed green:
+    every case above opens its elements before any of them closes, so the stack is never read
+    after a pop and the mutation has nowhere to show. A closed element followed by a sibling
+    is where the two versions differ — the commonest shape on every page in the corpus, and
+    the one no test had. Found by the battery, which is the only way it could have been.
+    """
+    parsed = render.parse("<div><span>a</span><p>after</p></div>")
+    positions = {one.tag: one for one in parsed.elements}
+    assert positions["p"].parent == positions["div"].index, (
+        "an element that has closed cannot be the parent of the one after it")
+    assert parsed.unclosed == 0
+
+
+def test_the_ancestors_run_nearest_first_and_a_root_element_has_none():
+    """Nearest first, because a ground is resolved outwards until one is opaque.
+
+    Reverse the append order and the walk still terminates and still holds the same
+    elements — so this asserts the order and not the membership, which is the half a
+    `set`-shaped assertion would miss.
+    """
+    parsed = render.parse('<figure><div class="chart-wrap"><svg><g><rect/></g></svg></div></figure>')
+    rect = next(one for one in parsed.elements if one.tag == "rect")
+    assert [one.tag for one in parsed.ancestors(rect)] == ["g", "svg", "div", "figure"]
+    assert parsed.ancestors(parsed.elements[0]) == []
+
+
+def test_preceding_siblings_are_the_earlier_elements_under_the_same_parent():
+    """Three mutations, and each returns a ground the element is not painted on.
+
+    `elements[:index]` widened to `[:index + 1]` hands an element itself as a candidate
+    ground, which scores 1.00:1 and turns every site undecidable. Dropping the `parent`
+    filter returns cousins — on `auth-log-scan` that is every shape of the previous chart
+    row. And a *later* sibling is painted over this one rather than under it, so the slice
+    bound is the direction of the whole question.
+    """
+    parsed = render.parse(
+        "<svg><g><rect/><circle/><text>1</text></g><g><line/></g></svg>")
+    elements = {one.tag: one for one in parsed.elements}
+    assert [one.tag for one in parsed.preceding_siblings(elements["text"])] == ["rect", "circle"]
+    assert parsed.preceding_siblings(elements["rect"]) == []
+    assert parsed.preceding_siblings(elements["line"]) == []
+
+
+def test_a_run_of_marks_are_siblings_of_one_another_and_the_stream_says_so():
+    """The shape `0008` §3.11's worked example turns on, reduced to one row.
+
+    Measured on `auth-log-scan` with this stream: **133 of its 139 `.ev-failed` circles have
+    a preceding sibling of their own class**, in runs of forty, sixteen and twelve inside a
+    `<g class="row">`. The six without one are each first in a run, plus the legend swatch,
+    which hangs directly under `svg.chart`. That is a lower bound — same-class is where the
+    candidate ratio is a guaranteed 1.00:1 — and it is why §3.11's rule that a site must
+    clear *every* preceding sibling cannot stand as written. The structure is pinned here;
+    what a verdict does with it is not this module's question.
+    """
+    parsed = render.parse(
+        '<svg class="chart"><g class="row"><rect class="lane"/><rect class="window-band"/>'
+        '<circle class="ev-failed"/><circle class="ev-failed"/></g></svg>')
+    marks = [one for one in parsed.elements if "ev-failed" in one.classes]
+    assert [one.tag for one in parsed.ancestors(marks[0])] == ["g", "svg"]
+    assert [one.classes for one in parsed.preceding_siblings(marks[0])] == [
+        frozenset({"lane"}), frozenset({"window-band"})], (
+        "the first mark of a run has the shapes it is drawn on and no mark before it")
+    assert [one.classes for one in parsed.preceding_siblings(marks[1])] == [
+        frozenset({"lane"}), frozenset({"window-band"}), frozenset({"ev-failed"})], (
+        "every mark after the first has one of its own colour behind it, which is the "
+        "1.00:1 candidate that collapses the verdict")

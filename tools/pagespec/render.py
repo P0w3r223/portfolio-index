@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import re
 from html.parser import HTMLParser
+from typing import NamedTuple
 
 _VOID = frozenset({"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
                    "meta", "param", "source", "track", "wbr"})
@@ -44,6 +45,35 @@ def flatten(text: str) -> str:
     would have been the fourth.
     """
     return _ASCII_WHITESPACE.sub(" ", text).strip()
+
+
+class Element(NamedTuple):
+    """One element of the markup, in document order, with a pointer to its parent.
+
+    `nodes` answers *what does the page say*; this answers *what does the page paint, and on
+    top of what*. A contrast question needs the second, and it needs an element rather than a
+    selector: `.ev-failed` on `auth-log-scan` matches in three places — a legend swatch on
+    `--bg`, a mark on a lane, and a mark on a band inside `<g class="row">` — so a check keyed
+    on the rule has to pick one ground for all three and is wrong twice. `0008` §3.2 is the
+    record of a checker resolving against the nearest card and clearing a change that had to
+    be reverted afterwards.
+
+    `parent` indexes back into `Page.elements` and is `-1` for a root, so the ancestors are a
+    walk up and the preceding siblings are the lower-indexed entries sharing a parent.
+    **The chain means something only where `Page.unclosed` is zero** — the contract
+    `tables` ancestry already carries, for the same reason: one element that never closes
+    makes every element after it read as its child.
+
+    `attributes` keeps SVG's geometry (`x`, `cx`, `width`) as the strings the markup wrote.
+    Parsing them here would put a second reading of the same bytes beside `paint_alphas`,
+    which already stores its alpha unparsed for that reason.
+    """
+
+    index: int
+    tag: str
+    classes: frozenset[str]
+    attributes: dict[str, str]
+    parent: int
 
 
 class Page(HTMLParser):
@@ -100,7 +130,17 @@ class Page(HTMLParser):
         #: structure, and `0007` §2's whole subject is answering a question about the rendered
         #: page from something that is not it.
         self.paint_alphas: list[tuple[str, frozenset[str], str, str]] = []
+        #: Every element, in document order, each pointing at its parent. `paint_alphas` is
+        #: the same markup read for one attribute and flattened — it carries no ancestry and
+        #: no identity, so it can say *this page composites somewhere* and cannot say *this
+        #: cell is painted on that rect*. Clause 1's threshold sentence is read per usage
+        #: site, and a usage site is an element: `0007` §5 clause 1, `0008` §3.11.
+        self.elements: list[Element] = []
         self._open: list[frozenset[str]] = []
+        #: Indices into `elements` for the ones still open, pushed and popped in lockstep
+        #: with `_open` and `_tags`. A third stack rather than a field on the element,
+        #: because `Element` is immutable and a parent is known when the tag opens.
+        self._element_stack: list[int] = []
         #: The same stack as `_open`, holding tag names instead of classes, and it is pushed
         #: and popped in lockstep with it. Two stacks rather than one stack of pairs because
         #: `handle_starttag` unions `_open` to build a table's ancestry, and a stack of pairs
@@ -116,7 +156,8 @@ class Page(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = {name: (value or "") for name, value in attrs}
-        self.classes.update(attributes.get("class", "").split())
+        classes = frozenset(attributes.get("class", "").split())
+        self.classes.update(classes)
 
         if tag == "meta":
             self.metas.append(attributes)
@@ -126,16 +167,22 @@ class Page(HTMLParser):
             self.anchors.append(attributes["href"])
         elif tag == "table":
             ancestors = frozenset().union(*self._open) if self._open else frozenset()
-            self.tables.append((frozenset(attributes.get("class", "").split()), ancestors))
+            self.tables.append((classes, ancestors))
 
         for name in _PAINT_ALPHA:
             if name in attributes:
-                self.paint_alphas.append((tag, frozenset(attributes.get("class", "").split()),
-                                          name, attributes[name]))
+                self.paint_alphas.append((tag, classes, name, attributes[name]))
+
+        # Before the stack moves, so an element's parent is the one enclosing it and never
+        # itself. A void element is recorded and does not open: `<img>` paints and has no
+        # children, and pushing it would adopt every element after it.
+        self.elements.append(Element(len(self.elements), tag, classes, attributes,
+                                     self._element_stack[-1] if self._element_stack else -1))
 
         if tag not in _VOID:
-            self._open.append(frozenset(attributes.get("class", "").split()))
+            self._open.append(classes)
             self._tags.append(tag)
+            self._element_stack.append(len(self.elements) - 1)
 
         if tag in _SKIPPED:
             self._skipped += 1
@@ -163,6 +210,7 @@ class Page(HTMLParser):
         if tag not in _VOID and self._open:
             self._open.pop()
             self._tags.pop()
+            self._element_stack.pop()
         if tag in _SKIPPED:
             self._skipped = max(self._skipped - 1, 0)
             if tag == "style":
@@ -185,6 +233,7 @@ class Page(HTMLParser):
         if tag not in _VOID and self._open:
             self._open.pop()
             self._tags.pop()
+            self._element_stack.pop()
         if tag in _SKIPPED:
             self._skipped = max(self._skipped - 1, 0)
             if tag == "style" and self._style is not None:
@@ -221,6 +270,44 @@ class Page(HTMLParser):
         be reported here. That fails closed, which is the right direction.
         """
         return len(self._open)
+
+    def ancestors(self, element: Element) -> list[Element]:
+        """`element`'s enclosing elements, nearest first. Empty for a root.
+
+        The *guaranteed* half of a contrast question's ground: containment by an ancestor is
+        structural, so it holds whatever the geometry does. A preceding sibling's coverage is
+        not, which is why that is a separate call and `0008` §3.11 gives the two different
+        weight in a verdict.
+
+        Bounded by the element count rather than by `parent >= 0` alone. A chain cannot be
+        longer than the page, so the bound costs nothing and is what makes a broken parent
+        pointer redden a test instead of hanging one: setting an element's parent to itself —
+        the first mutation this walk is written against — otherwise loops forever appending,
+        and took the process to 9.7 GB before it was killed. A guard that cannot be run is not
+        a guard.
+        """
+        chain: list[Element] = []
+        parent = element.parent
+        for _ in range(len(self.elements)):
+            if parent < 0:
+                break
+            chain.append(self.elements[parent])
+            parent = self.elements[parent].parent
+        return chain
+
+    def preceding_siblings(self, element: Element) -> list[Element]:
+        """The elements opened before `element` under the same parent, in document order.
+
+        Painted before it, and therefore *possibly* under it — possibly, because whether one
+        covers the other is geometry and this is structure. The distinction is not academic:
+        one `<g class="row">` on `auth-log-scan` holds forty `.ev-failed` circles, so every
+        mark but the first has thirty-nine of these, each already its own colour. A rule
+        treating every preceding sibling as a ground the element must clear reports all one
+        hundred and thirty-nine marks on that page as undecidable — measured, and the reason
+        this returns the candidates rather than a verdict about them.
+        """
+        return [other for other in self.elements[:element.index]
+                if other.parent == element.parent]
 
     @property
     def text_nodes(self) -> list[tuple[str, tuple[str, ...]]]:

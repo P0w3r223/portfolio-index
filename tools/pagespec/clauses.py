@@ -697,10 +697,29 @@ def clause_3_tables(page, css: str) -> Finding:
                        f"{page.unclosed} element(s) never closed; ancestry unreliable")
     if not page.tables:
         return Finding("3 tables", NOT_APPLICABLE, "no tables")
+    # **`0007` §5 clause 3's escape, and nothing implemented it until 2026-09-09.** The
+    # checkable form ends *"or is a table the page declared with `data-scroll="by-design"`"*,
+    # `data-scroll` appeared nowhere in `tools/`, and the omission made this clause **stricter
+    # than the spec** rather than looser — which is why it survived two audits: no page uses
+    # the escape, so nothing failed, and a page that used it would have been failed wrongly.
+    # `0009` §7 row 5 found it and `tools/spec.py` `c3.s3` carried it as `NOT CARRIED`.
+    #
+    # Paired by document order rather than by identity: `tables` and `elements` are both
+    # appended in `handle_starttag`, so the n-th of one is the n-th of the other. `zip` is the
+    # bound that keeps a future divergence from shifting every flag by one.
+    declared = [element.attributes.get("data-scroll", "").strip().lower() == "by-design"
+                for element in page.elements if element.tag == "table"]
+    tables = [table for table, by_design in zip(page.tables, declared) if not by_design]
+    exempt = len(page.tables) - len(tables)
+    by_design = f"; {exempt} declared by-design" if exempt else ""
+    if not tables:
+        return Finding("3 tables", NOT_APPLICABLE,
+                       f"{len(page.tables)} table(s), all declared by-design")
+
     scrolling = cssmod.scrolling_classes(css)
     table_itself = cssmod.element_scrolls(css, "table")
     if not scrolling and not table_itself:
-        return Finding("3 tables", FAIL, "no class in the stylesheet scrolls")
+        return Finding("3 tables", FAIL, "no class in the stylesheet scrolls" + by_design)
 
     # **A table with no wrapper is `undecided`, not silently `pass`.** `table_itself` is a
     # property of the sheet, and it used
@@ -714,16 +733,17 @@ def clause_3_tables(page, css: str) -> Finding:
     # only page with the rule — is fetch-only and reports `undecided` today because it has no
     # house scroller name. It becomes reachable the moment that name is given, which `0008` §5
     # carries as wanted-but-unscheduled, on the one surface with no committed HTML to diff.
-    rest = [table for table in page.tables
+    rest = [table for table in tables
             if not ((table[0] | table[1]) & scrolling)]
     # A table with no wrapper class is carried by the bare `table` rule if the sheet has one —
     # and whether that rule applies at this width is the thing the reader cannot know.
     by_the_element = rest if table_itself else []
     unwrapped = [] if table_itself else rest
 
-    named = sorted(scrolling & set().union(*(own | anc for own, anc in page.tables)))
+    named = sorted(scrolling & set().union(*(own | anc for own, anc in tables)))
     wrappers = [f".{name}" for name in named] + (["the table itself"] if table_itself else [])
-    detail = f"{len(page.tables)} table(s), scroller(s): {', '.join(wrappers) or 'none'}"
+    detail = (f"{len(tables)} table(s), scroller(s): "
+              f"{', '.join(wrappers) or 'none'}{by_design}")
     if unwrapped:
         return Finding("3 tables", FAIL,
                        f"{detail}; {len(unwrapped)} with nothing that scrolls")
@@ -909,7 +929,67 @@ def clause_7_webfont(page, css: str) -> Finding:
                 third_party.append(target)
     if third_party:
         return Finding("7 webfont", FAIL, ", ".join(sorted(set(third_party))))
+    strangers = _families_that_are_not_the_system_stack(css)
+    if strangers:
+        return Finding("7 webfont", FAIL,
+                       "names " + ", ".join(sorted(strangers)) + ", which is not the system stack")
     return Finding("7 webfont", PASS, "system stack")
+
+
+#: Families a reader already has: the generics, plus the faces the three desktop platforms
+#: ship. Not a list of good fonts — a list of fonts that need no request, which is what
+#: `0007` §5 clause 7's first sentence is about.
+_SYSTEM_FAMILIES = frozenset({
+    "system-ui", "ui-sans-serif", "ui-serif", "ui-monospace", "ui-rounded",
+    "sans-serif", "serif", "monospace", "cursive", "fantasy", "inherit", "initial", "unset",
+    "-apple-system", "blinkmacsystemfont", "segoe ui", "roboto", "helvetica neue", "helvetica",
+    "arial", "noto sans", "liberation sans", "ubuntu", "cantarell", "oxygen", "fira sans",
+    "droid sans", "apple color emoji", "segoe ui emoji", "segoe ui symbol", "noto color emoji",
+    "sfmono-regular", "sf mono", "menlo", "monaco", "consolas", "liberation mono",
+    "courier new", "courier", "dejavu sans mono", "cascadia mono", "georgia", "cambria",
+    "times new roman", "times",
+})
+_FONT_FAMILY = re.compile(r"font-family\s*:\s*([^;}]+)", re.IGNORECASE)
+_FONT_FACE = re.compile(r"@font-face\s*\{[^}]*\}", re.IGNORECASE)
+
+
+def _families_that_are_not_the_system_stack(css: str) -> set[str]:
+    """Families the page names that a reader may not have.
+
+    **This is clause 7's first sentence, and until 2026-09-09 nothing computed it.** The
+    clause read `<link>`, `@import` and `@font-face` `src:` — every way of *requesting* a font
+    over the wire — and then printed `system stack` as its passing detail, which is the second
+    sentence's verdict wearing the first one's words. A page setting a display face from a
+    same-origin `@font-face`, or naming a licensed family it expects to be installed, read
+    `ok 7 webfont system stack`. `0009` §7 row 5 found it; `tools/spec.py` `c7.s1` carried it
+    as `NOT CARRIED` for two days.
+
+    `var()` is resolved through the light palette, because nine of the corpus's eleven
+    `font-family` declarations are `var(--mono)` and a reader that stopped at the token would
+    check nothing on nine of them.
+    """
+    palette = cssmod.palettes(css).get("light", {})
+    body = cssmod.strip_comments(css)
+    # `font-family` inside `@font-face` **declares** a face rather than requiring one, and a
+    # face served from the page's own origin is what clause 7's second sentence explicitly
+    # permits — `test_a_font_face_served_from_the_page_s_own_origin_passes` is that reading,
+    # and it caught this reader counting a vendored family as a stranger. So those blocks are
+    # taken out first and the families they define are added to what a reader has.
+    shipped: set[str] = set()
+    for block in _FONT_FACE.finditer(body):
+        for declared in _FONT_FAMILY.findall(block.group(0)):
+            shipped.add(declared.strip().strip(chr(34)).strip(chr(39)).lower())
+    body = _FONT_FACE.sub(" ", body)
+    strangers: set[str] = set()
+    for value in _FONT_FAMILY.findall(body):
+        reference = _VAR_NAME.search(value)
+        if reference:
+            value = palette.get(reference.group(1).lstrip("-"), "")
+        for family in value.split(","):
+            name = family.strip().strip(chr(34)).strip(chr(39)).lower()
+            if name and name not in _SYSTEM_FAMILIES and name not in shipped:
+                strangers.add(name)
+    return strangers
 
 
 @dataclass(frozen=True)
@@ -1224,6 +1304,13 @@ def check(loaded) -> list[Finding]:
     findings.append(clause_6_back_link(page))
     findings.append(clause_7_webfont(page, loaded.css))
     findings.append(clause_8_separator(page))
+    # Imported here rather than at the top because `contrast` takes `Finding` from this
+    # module, and a module-level import back would reach it before the class exists. The
+    # cycle is real and one-directional; a shared `Finding` module would remove it and is a
+    # larger change than the census is worth — `ADR-0008` D2 keeps the census small on
+    # purpose.
+    from . import contrast
+    findings += contrast.census(page, loaded.css)
     findings += served_matches_committed(loaded)
     findings = _undecided_where_the_stylesheet_is_incomplete(findings, loaded)
     if loaded.unreadable or loaded.unreachable:
