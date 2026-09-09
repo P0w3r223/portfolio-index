@@ -62,7 +62,7 @@ KINDS = (INDEX, REPO, HUMAN)
 #: not exempt from the floor, and `0007` §5 says nothing about it, so no sentence carries it.
 #: A single set would have forced one of two lies — a false proof of impossibility, or a
 #: normative row for a sentence that does not exist.
-NOT_A_SENTENCE = frozenset({"stylesheets", "served"})
+NOT_A_SENTENCE = frozenset({"stylesheets", "served", "contrast text", "contrast marks", "contrast ground"})
 
 
 @dataclass(frozen=True)
@@ -245,10 +245,14 @@ CLAUSES: tuple[Clause, ...] = (
         id="c3.s3",
         cite="0007 §5 clause 3, the checkable form's escape",
         quote="or is a table the page declared with `data-scroll=\"by-design\"`",
-        why="0009 §7 row 5 — found by this walk, 2026-09-07, and new to the record. "
-            "`data-scroll` appears nowhere in `tools/`. The escape makes the checker stricter "
-            "than the spec rather than looser, which is why it survived unnoticed; a page "
-            "using it would be failed wrongly.",
+        carriers=_index("3 tables"),
+        note="**Carried since 2026-09-09.** `0009` §7 row 5 found the escape implemented "
+             "nowhere: `data-scroll` did not appear in `tools/` at all. It is the rare "
+             "omission that made the checker **stricter** than the spec rather than looser, "
+             "which is exactly why it survived two audits — no page uses the escape, so "
+             "nothing failed, and the page that used it would have been the one to find out. "
+             "A table declaring it is exempt and counted; a page whose tables all declare it "
+             "reports `n/a` with the count, rather than passing silently.",
     ),
     Clause(
         id="c4.s1",
@@ -302,12 +306,17 @@ CLAUSES: tuple[Clause, ...] = (
         id="c7.s1",
         cite="0007 §5 clause 7, first sentence",
         quote="Type is the system stack.",
-        why="0009 §7 row 5 — found by this walk, 2026-09-07, and new to the record. "
-            "`font-family` appears nowhere in `tools/`. `clause_7_webfont` implements only "
-            "the second sentence, and its `PASS` detail string is literally `system stack` — "
-            "so the checker prints this sentence as a verdict it never computed. A page "
-            "setting a display face from a local `@font-face` reads `ok 7 webfont system "
-            "stack` today.",
+        carriers=_index("7 webfont"),
+        note="**Carried since 2026-09-09; it was `NOT CARRIED` for two days and the checker "
+             "printed it anyway.** `0009` §7 row 5 found that `font-family` appeared nowhere "
+             "in `tools/`: the clause read every way of *requesting* a font over the wire and "
+             "then printed `system stack` as its passing detail, which is the second "
+             "sentence's verdict wearing the first one's words. Both sentences now share the "
+             "key, on `c8.s1`'s precedent that one key may carry more than one sentence of "
+             "one clause. A family a reader may not have fails; a family the page's own "
+             "`@font-face` ships does not, because clause 7's second sentence permits exactly "
+             "that and the guard for it caught this reader counting a vendored face as a "
+             "stranger.",
     ),
     Clause(
         id="c7.s2",

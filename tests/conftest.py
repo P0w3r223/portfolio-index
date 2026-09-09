@@ -32,7 +32,11 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 #: `UNDECIDED` by construction and can never be `FAIL`, and the gate refuses on it through
 #: `_unread_same_origin` — a separate reason with its own header — so requiring it in `GATED`
 #: would demand a prefix that gates nothing and says the wrong thing about why.
-NOT_A_CLAUSE = frozenset({"stylesheets"})
+NOT_A_CLAUSE = frozenset({"stylesheets", "contrast text", "contrast marks", "contrast ground"})
+#: The three census keys join it for the same reason and by a stronger proof: `contrast.py`
+#: has no `PASS` and no `FAIL` branch at all, so `UNDECIDED` is not a status it happens to
+#: report but the only one it can construct. `ADR-0008` D2 and D3. Two of the three leave
+#: this set at S14, when the verdicts arrive and the keys enter `GATE` as `pending`.
 
 
 def pytest_addoption(parser):

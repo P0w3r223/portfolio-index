@@ -9,12 +9,14 @@ tests that matter most are the ones where a plausible implementation would have 
 
 from __future__ import annotations
 
+import pathlib
+import re
 import unicodedata
 
 import pytest
 
 from conftest import detail_of, fixture, loaded, page, status_of
-from tools.pagespec import clauses, sources
+from tools.pagespec import clauses, contrast, sources
 
 NARROW = "\u202f"
 NBSP = "\u00a0"
@@ -574,6 +576,75 @@ def test_a_font_face_served_from_the_page_s_own_origin_passes():
         page("<body>x</body>"),
         "@font-face { font-family: X; src: url(assets/x.woff2) format(woff2); }")
     assert finding.status == clauses.PASS
+
+
+def test_a_family_the_reader_may_not_have_fails_even_with_no_request_on_the_wire():
+    """Clause 7's **first** sentence, which nothing computed until 2026-09-09.
+
+    The clause read every way of requesting a font over the wire and then printed
+    `system stack` as its passing detail - the second sentence's verdict wearing the first
+    one's words. A page naming a licensed family it expects to be installed makes no request
+    and is not the system stack. Revert `_families_that_are_not_the_system_stack` and this
+    page reads `ok 7 webfont system stack`.
+    """
+    finding = clauses.clause_7_webfont(page("<body>x</body>"),
+                                       "h1 { font-family: Gotham, sans-serif }")
+    assert finding.status == clauses.FAIL
+    assert "gotham" in finding.detail and "system stack" in finding.detail
+
+
+def test_the_family_check_reaches_through_a_token_because_nine_declarations_are_one():
+    """Nine of the corpus's eleven `font-family` declarations are `var(--mono)`. A reader that
+    stopped at the token would check nothing on nine of them, which is a guard that runs and
+    covers almost nothing - the shape this file exists to refuse."""
+    css = ":root { --mono: Operator Mono, monospace } code { font-family: var(--mono) }"
+    assert clauses.clause_7_webfont(page("<body>x</body>"), css).status == clauses.FAIL
+    ok = ":root { --mono: ui-monospace, Menlo, monospace } code { font-family: var(--mono) }"
+    assert clauses.clause_7_webfont(page("<body>x</body>"), ok).status == clauses.PASS
+
+
+def test_a_family_the_page_ships_itself_is_not_a_stranger():
+    """The reconciliation between clause 7's two sentences. The second permits a face served
+    from the page's own origin; the first must not then call that face a font the reader may
+    not have. Drop the `shipped` set and the guard above this one turns red."""
+    finding = clauses.clause_7_webfont(
+        page("<body>x</body>"),
+        "@font-face { font-family: Vendored; src: url(assets/v.woff2) } "
+        "h1 { font-family: Vendored, sans-serif }")
+    assert finding.status == clauses.PASS
+
+
+def test_a_table_the_page_declares_by_design_is_exempt_and_counted():
+    """`0007` §5 clause 3's escape, implemented nowhere until 2026-09-09.
+
+    The omission made the checker **stricter** than the spec, which is why two audits missed
+    it: no page uses the escape, so nothing ever failed, and the page that used it would have
+    been the one to find out. Delete the `zip` and this table is failed for having no
+    scroller, which is the spec being overruled by its own instrument.
+    """
+    finding = clauses.clause_3_tables(
+        page('<div class="wrap"><table data-scroll="by-design"><tr><td>1</td></tr></table>'
+             "<table><tr><td>2</td></tr></table></div>"),
+        ".wrap { overflow-x: auto }")
+    assert finding.status == clauses.PASS
+    assert "1 declared by-design" in finding.detail
+
+
+def test_a_page_whose_tables_all_declare_it_says_so_rather_than_passing_quietly():
+    """`n/a` with the count, not a bare pass: a reader has to be able to tell a page with no
+    tables from one whose tables opted out. Return `PASS` here and the two are the same line."""
+    finding = clauses.clause_3_tables(
+        page('<table data-scroll="by-design"><tr><td>1</td></tr></table>'), "")
+    assert finding.status == clauses.NOT_APPLICABLE
+    assert "all declared by-design" in finding.detail
+
+
+def test_the_escape_is_the_exact_string_and_not_any_value():
+    """`data-scroll="maybe"` is not the declaration the spec names. Matching on the attribute's
+    presence would let any value opt a table out of the clause."""
+    finding = clauses.clause_3_tables(
+        page('<table data-scroll="maybe"><tr><td>1</td></tr></table>'), "")
+    assert finding.status == clauses.FAIL
 
 
 # -- clause 8: thousands are separated by U+202F ---------------------------------------------
@@ -1541,6 +1612,38 @@ def test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemptio
 
     assert status_of(findings, "stylesheets") == clauses.UNDECIDED
     assert "assets/styles.css" in detail_of(findings, "stylesheets")
+
+
+def test_the_census_keys_can_never_fail_because_the_module_cannot_construct_a_verdict():
+    """The proof `NOT_A_CLAUSE`'s pin demands for the three contrast keys, `ADR-0008` D2.
+
+    Stronger than `stylesheets`' and it has to be, because `stylesheets` is the checker
+    reporting on its own inputs while these three report on the page - the very thing a
+    clause does. What keeps them out of the ratchet floor is not their subject but their
+    construction: **`contrast.py` contains no `PASS` and no `FAIL`**, so `UNDECIDED` is not a
+    status it happens to report on this corpus but the only one it can build. An observation
+    alone would be vacuous: a key `UNDECIDED` everywhere is exactly the shape `test_report`'s
+    pin says the corpus check cannot see.
+
+    Read statically as well as run, because the corpus half goes on passing the day someone
+    adds a verdict branch - which is S14, and S14 must move these keys out of `NOT_A_CLAUSE`
+    in the same commit. This is what makes forgetting that loud.
+    """
+    source = pathlib.Path(contrast.__file__).read_text(encoding="utf-8")
+    verdicts = re.findall(r"(PASS|FAIL)", source)
+    assert not verdicts, (
+        f"contrast.py names {sorted(set(verdicts))}, so its keys can reach a verdict and their "
+        f"exemption from the ratchet floor is no longer a proof - move them into GATE")
+
+    findings = clauses.check(loaded(
+        '<html><head><title>A claim about the data</title></head><body>'
+        '<p class="eyebrow">Data</p><h1>A claim</h1>'
+        '<svg class="chart"><rect class="lane" x="0" y="0" width="10" height="10"></rect>'
+        '<circle class="mark" cx="5" cy="5" r="1"></circle></svg></body></html>',
+        css=":root { --bg: #ffffff; --accent: #2563eb }"
+            ".chart .lane { fill: var(--bg) } .chart .mark { fill: var(--accent) }"))
+    for key in ("contrast text", "contrast marks", "contrast ground"):
+        assert status_of(findings, key) == clauses.UNDECIDED
 
 
 # -- clause 1: a var() fallback is painted, whatever its type -------------------------------
