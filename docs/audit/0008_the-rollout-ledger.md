@@ -124,7 +124,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
 | **S12** | **The contrast finding, and the clause that could not see it** — `0009` §7 row 12, opened by measurement. **S12a** `pl-review-sense`'s heatmap share label, a live SC 1.4.3 failure in both schemes · **S12b** `clause_1_composited` learns to read paint alpha in the markup | 1 sibling page + its palette guard · `render.py`, `clauses.py`, one fixture of record | 0.5 d | **closed** — §4.19. **S13 is the rest of row 12** and is scheduled below rather than folded in |
 | **S13** | **The contrast census** — an element stream, a selector matcher with specificity, grounds by static-attribute containment, and three keys `UNDECIDED` **by construction**. Row 12's instrument, without its verdicts | `render.py` (the element stream, **landed**), a new `tools/pagespec/contrast.py`, `clauses.check`, `NOT_A_CLAUSE` **and** `spec.NOT_A_SENTENCE` with both their pins, `tests/test_spec.py`'s static source read, a census | **M, 2–3 d** | **closed** — `current_projects` `6bba74f` on `main` (`#107`, nine commits) with CI green **on `main`**. `ADR-0008` is the decision, §4.23 what the first commit measured and **§4.24 what closing it measured** — including four readings the census refuted before a verdict could ship on any of them, which is D2's argument turning out to be worth more than the section that made it. *This cell read `in progress` for a day after the stage merged, and the row above it is the reason that matters: a reader deciding what to take next reads §3, and §3 said the largest open instrument was still being built.* §3.11 stands except its verdict table: D1 replaces *"every preceding painted sibling"* with containment, because **§3.11's worked example does not survive its own rule** on 133 of 139 sites. No `GATE` row and no `report_only()` edit — a census cannot gate |
-| **S14** | **The verdicts** — `PASS`/`FAIL` over what the census already resolves, plus the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` | **M** | open — `ADR-0008` D2, D3 and D4. Two keys enter as `Ratchet(prefix, PENDING_STATE, reason)` and **not** report-only, which `ADR-0006` §3 built the state for and this is the first row to use. Not before the census prints: D4's sentence is pinned by a guard the moment it is written. **And the census printed two things the design could not have known, which block the stage rather than sizing it — §4.24 measures both.** *First*, **a site's own painted background is not among its candidate grounds.** `_grounds` walks ancestors from `element.parent` and the preceding siblings that contain it, so a `<button>` painting `background: var(--accent)` on itself has its white label measured against `<body>` — `<button> color` at **1.00:1** on `mini-traceroute` and **1.06:1** on `car-price-ml/app`, the two worst text readings in the portfolio, both against a ground the button covers. Neither is a page defect: the real value is 5.17:1, and `car-price-ml/docs/app/styles.css:225` says so in the page's own comment. **S14 cannot read its own census until a site can be its own ground**, and that is not the cascade. *Second*, the marks question is not the one a design would guess: the worst mark is `<rect class="cell"> fill` at **1.00:1** — `pl-review-sense`'s heatmap cells, whose `fill-opacity` *is* the datum — and the 1.17:1 band holds eight `<input>`/`<select>` borders, which are user-interface component boundaries and the first half of SC 1.4.11's own wording. So **S14 cannot fail anything until it has a rule for which marks a reader must perceive**, and the corpus makes that concrete rather than hypothetical. Both are taken at S14's **scope re-derivation from the census's own output** — §4.7's precedent for the fifth time, and `ADR-0008` §4's own reason 2, *"a census decides with an instrument rather than with this document"* — the marks rule entering as `ADR-0008` D5. *The first version of this cell blamed the absent cascade for the two `<button>` readings and told S14 to cascade first; §4.24's erratum is why that would have moved neither number* |
+| **S14** | **The verdicts**, and since §4.25 it is two halves on S12's precedent. **S14a — the control boundaries**, **nine** form controls on two surfaces against SC 1.4.11's 3:1 — 1.17:1 light and 1.29:1 dark, so it is a two-scheme repair — given a token of their own. A sibling stage. *The ninth, `mini-traceroute`'s `#base-port`, is styled by a refused selector and is invisible to the census that found the other eight, so the scope comes from the stylesheets and not from the instrument.* **S14b — the verdicts themselves**: `PASS`/`FAIL` over what the census already resolves, D6's own-background ground, and the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` — **plus, since §4.25, `ADR-0008` D5 and D6, and whatever the nine control boundaries need, in both schemes**. Re-derived 2026-09-09 from the census: text goes to **zero failures** on the self-as-ground correction alone, the cascade is **542 sites and 525 of them `fill`**, and verdicts over marks without D5 fail **1 195 of 1 785** | **M** for S14b; S14a is S. *The row carried M before §4.25 and the estimate did not move when the scope did — two sibling pull requests, a pointer bump, D5 and D6 to implement, and a 153-site population D5 leaves open* | open — `ADR-0008` D2, D3 and D4, and **§4.25 is the scope re-derivation, which found the row's central assumption false**: this is not a regression guard over a clean corpus, because nine form-control boundaries on two surfaces read 1.17:1 light and 1.29:1 dark against SC 1.4.11's 3:1. **One key enters as `Ratchet(prefix, PENDING_STATE, reason)`, not two** — the text key, which D6 takes to zero failures. The marks key does not enter `GATE` in any state at S14: 153 SVG sites still measure below 3.0:1 after S14a lands, and `ADR-0006` §3's pending state is refutable in both directions, so a key that can never read clean cannot hold it. `ADR-0008` §7. Not before the census prints: D4's sentence is pinned by a guard the moment it is written. **And the census printed two things the design could not have known, which block the stage rather than sizing it — §4.24 measures both.** *First*, **a site's own painted background is not among its candidate grounds.** `_grounds` walks ancestors from `element.parent` and the preceding siblings that contain it, so a `<button>` painting `background: var(--accent)` on itself has its white label measured against `<body>` — `<button> color` at **1.00:1** on `mini-traceroute` and **1.06:1** on `car-price-ml/app`, the two worst text readings in the portfolio, both against a ground the button covers. Neither is a page defect: the real value is 5.17:1, and `car-price-ml/docs/app/styles.css:225` says so in the page's own comment. **S14 cannot read its own census until a site can be its own ground**, and that is not the cascade. *Second*, the marks question is not the one a design would guess: the worst mark is `<rect class="cell"> fill` at **1.00:1** — `pl-review-sense`'s heatmap cells, whose `fill-opacity` *is* the datum — and the 1.17:1 band holds eight `<input>`/`<select>` borders, which are user-interface component boundaries and the first half of SC 1.4.11's own wording. So **S14 cannot fail anything until it has a rule for which marks a reader must perceive**, and the corpus makes that concrete rather than hypothetical. Both are taken at S14's **scope re-derivation from the census's own output** — §4.7's precedent for the fifth time, and `ADR-0008` §4's own reason 2, *"a census decides with an instrument rather than with this document"* — the marks rule entering as `ADR-0008` D5. *The first version of this cell blamed the absent cascade for the two `<button>` readings and told S14 to cascade first; §4.24's erratum is why that would have moved neither number* |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -2802,6 +2802,135 @@ against 519 at the stage's own entry, `python -m tools.pagespec` exiting 0 on el
 and on twelve with `--fetch`, all twelve reading `clear`, and the conformance table
 byte-identical across the pointer bump that followed — captured by writing the table to a file
 before and after and diffing it, rather than by reading it twice.*
+
+### 4.25 S14's scope, re-derived from the census — and the row is not the stage it describes
+
+§4.7's precedent, fifth application, and the first one where the instrument the previous stage
+shipped is what does the deriving. `ADR-0008` §4's reason 2 said a census would decide these
+questions *"with an instrument rather than with this document"*. It did, and it moved three of
+them.
+
+*Every figure in this section is the **eleven committed surfaces in the light palette**. `wroclaw` commits no HTML and is read only with `--fetch`; `contrast.py:89` takes `palettes(css).get("light", {})`. `GATE` covers twelve, so a marks or text key admitted on these figures is a light-scheme gate over eleven until something says otherwise.*
+
+**Q1 — self-as-ground closes the two worst text readings and opens nothing.** 35 text sites
+paint their own background; correcting the ground moves **17** ratios that already had one and
+produces **zero** failures. *The definition matters and the first version did not give it:
+counting every reading that changes gives **28**, because 11 `<body> color` sites have no
+painted ancestor today and gain a first ground at 15.62:1, taking the measured text population
+from 552 to 563. An implementer checking against 17 alone will see 28 and think they are
+wrong.* The two the S14 row names go the right way and land exactly where the pages say they
+should:
+
+| site | census today | with the site's own ground |
+|---|---|---|
+| `mini-traceroute` `<button id="play">` | 1.00:1 | **5.17:1** |
+| `car-price-ml/app` `<button id="submit">` | 1.06:1 | **5.17:1** |
+| `car-price-ml` `<a>` ×6 | 5.17:1 | 4.85:1 — still clear of 4.5 |
+
+`car-price-ml/docs/app/styles.css:225` predicted the 5.17 in prose two stages ago. **Text is
+then clean across the eleven**: 2 of 552 measured sites read below 4.5:1 today and both are these
+buttons, so the correction takes the text half to zero without touching a page.
+
+***The trap this measurement walked into first, recorded because it produced a confident wrong
+answer for one run.*** Reading a site's own ground through `_GROUND_PROPERTIES` as the module
+holds it — `("background", "background-color", "fill")` — makes **every `<text>` element its
+own ground**, because in SVG one property is a shape's paint *and* a text's foreground. That
+version reported 704 moved ratios and **684 failures**, all of them `1.00:1`, and every one was
+an artifact of asking whether a thing contrasts with itself. Two corrections fall out and both
+are D6's substance: self-as-ground is a question about `color` over `background` and never
+about `fill`; and **a border is a boundary, so its visibility comes from the colour on the
+other side** — correcting `mini-traceroute`'s `<button> border` to its own background gives
+1.00:1, which is the wrong comparison confidently computed.
+
+**Q2 — the cascade population is 542 sites, and it is not where the row implies.** Sites
+reporting `competing ≥ 2` with no ratio, by surface: `it-job-radar` 226, `pl-review-sense` 134,
+`auth-log-scan` 70, `car-price-ml` 59, `doc-extract` 49, `car-price-ml/app` 2,
+`mini-traceroute` 2. **525 of the 542 are `fill`** — chart marks reached by two rules — and 2
+are `color`. So the cascade is a *marks* problem with a two-site text tail, where the row
+describes it as the general prerequisite.
+
+**Q3 — and this is what resizes the stage. Verdicts over marks, with no rule about which marks
+are owed one, fail 1 195 of 1 785 measured sites**, across all eleven:
+
+| class | sites | measured | below 3.0:1 | |
+|---|---|---|---|---|
+| CSS `border`/`outline` | 1 054 | 1 051 | **1 042** | 99 % of what is measured — table rules, card edges, `<h2>` top rules, `<pre>` borders. Three declare `border: none` and are not measured |
+| `accent-color` | 3 | 3 | **0** | two range sliders and a checkbox, all 4.85:1 |
+| SVG `fill`/`stroke` | 1 290 | 731 | **153** | 21 % of what is measured — the actual chart marks. The unmeasured 559 are `contrast ground`'s population |
+
+*The first version of this table headed one column `measured` and printed 1 054 and 731 under
+it — a site count beside a measured count — and reached 1 785 only by folding the three
+`accent-color` sites into the border row, which is the wrong side of D5. Both are corrected
+above.*
+
+The arithmetic is right and the obligation is not: a light rule under a table row is
+`--border` on white at 1.17:1, and SC 1.4.11 asks for 3:1 from *user-interface components* and
+from *graphical objects required to understand the content* — a horizontal rule between two
+rows of a table whose data is entirely text is neither. **So `ADR-0008` D5 is not a refinement
+of the marks key; it is the question of whether that key can exist at all.** A `pending` row
+admitted before D5 would demand its own promotion the first time a `live` run read it clean,
+and it would never read clean.
+
+**And inside that border population there is one the criterion does reach.** Twenty-three sites
+sit on a control tag, and they are three different things: **17 `border`, of which 14 measure
+below 3.0:1**; 3 `accent-color`, which are not a boundary and pass at 4.85:1; and 3 declaring
+`border: none`, which are not measured at all. The fourteen divide:
+
+- **Six `<a>` borders on `car-price-ml` at 1.24:1** — links rendered as cards. The link is
+  identified by its text, so the border carries no information the criterion requires. *This is
+  a judgement, and it is the one D5 claims not to need — `ADR-0008` §7 states it rather than
+  leaving it here.*
+- **Eight form controls at 1.17:1**, every one `1px solid var(--border)` → `#e3e7ee`:
+  `car-price-ml/app`'s `#mark`, `#model`, `#year`, `#mileage`, `#vol_engine`, `#fuel` and
+  `#province`, and `mini-traceroute`'s `#scenario`. **This is the boundary that says where the
+  field is**, which is SC 1.4.11's own worked example.
+
+***The eight is nine, and the ninth is why a scope taken from the census would have been
+wrong.*** `mini-traceroute/docs/assets/styles.css:177` writes
+`.field select, .field input[type="number"]` over one `border: 1px solid var(--border)`.
+`paint.read_rules` splits the list and parses each half: `.field select` yields `#scenario`,
+and **`.field input[type="number"]` comes back a `Refusal`** — an attribute selector this
+matcher does not read. So `#base-port` (`mini-traceroute/docs/index.html:103`) carries the same
+border at the same ratio and **is invisible to the census that found the other eight**. A
+repair scoped to what the instrument printed would leave it failing *and the control population
+reading clean* — the shape `CLAUDE.md` names, a guard green over the defect it exists to catch.
+**The refused-selector list bounds the control count from below**, and that bound is recorded
+beside D5.
+
+***And every figure in this section is the light palette only.*** `contrast.py:89` reads
+`palettes(css).get("light", {})`, so the census has one scheme, and neither this section's
+first version nor `ADR-0008` §7's said so. The same controls measure **1.29:1 in dark** —
+`--border` `#263041` on `--surface` `#161c25` — so they fail in both, and a repair sized from
+1.17:1 alone would fix one scheme and leave the other. `car-price-ml/docs/app/styles.css`'s own
+button comment records both schemes for exactly this reason, and the S12 row above says *"a
+live SC 1.4.3 failure in both schemes"*. **The repair is a two-scheme repair.**
+
+*One correction to the sentence this paragraph replaces: it called these "the same class of
+live failure S12 found and fixed on `pl-review-sense`". The **procedural** precedent holds — a
+sibling page repair scheduled from the index — but S12a was SC **1.4.3**, text contrast, and
+these are SC **1.4.11**, non-text. This record is precise about criteria everywhere else.*
+
+*That last group is the finding of this re-derivation.* It means S14 is not the regression
+guard over a clean corpus that §4.23 and `ADR-0008` §4's reason 1 both assumed: **the corpus is
+clean for text and is not clean for controls.**
+
+**Both decisions were taken by the owner the same day, and they are `ADR-0008` §7.** D5 scopes
+the marks obligation to user-interface component boundaries and SVG graphical objects, leaving
+structural CSS borders outside it — the reading that makes the key a clause rather than a
+portfolio-wide red. D6 makes a site's own opaque background **occlude** what is behind it, with
+`fill` excluded and a border kept facing outward. **The nine controls are repaired** in both
+schemes: a token for the control boundary, `--border` untouched elsewhere. That is two sibling
+pull requests and a pointer bump, which this repository schedules and does not author — it
+re-points submodules and does not edit them.
+
+**What the repair does not do is make the marks key gateable, and the first version of this
+section implied it would.** After the nine land, **153 SVG sites still measure below 3.0:1** —
+`auth-log-scan` 101, `ab-lab` 23, `pl-review-sense` 19, `car-price-ml` 7, `it-job-radar` 3 —
+and D5 puts SVG graphical objects *inside* the obligation. So §7's own argument against the
+pre-D5 key, that it *"could never read clean"*, still reaches the post-D5 key. **The marks key
+does not enter `GATE` at S14 in any state**, and what would change that is a further rule about
+which of those 153 are required to understand the content — the escape D5 leaves available. The
+text key is the one S14b can gate, and after D6 it is clean.
 
 ## 5. What is carried, not scheduled
 
