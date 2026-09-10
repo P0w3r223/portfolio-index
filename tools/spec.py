@@ -62,7 +62,11 @@ KINDS = (INDEX, REPO, HUMAN)
 #: not exempt from the floor, and `0007` §5 says nothing about it, so no sentence carries it.
 #: A single set would have forced one of two lies — a false proof of impossibility, or a
 #: normative row for a sentence that does not exist.
-NOT_A_SENTENCE = frozenset({"stylesheets", "served", "contrast text", "contrast marks", "contrast ground"})
+#: *`contrast text` and `contrast marks` left this set at S14b, 2026-09-10, because `c1.s6` and
+#: `c1.s6b` now claim them as carriers and a key cannot both carry a sentence and be exempt from
+#: claiming one. `contrast ground` stays permanently, `ADR-0008` D3: it reports what the checker
+#: could not read, which `0007` §5-§6 says nothing about and never will.*
+NOT_A_SENTENCE = frozenset({"stylesheets", "served", "contrast ground"})
 
 
 @dataclass(frozen=True)
@@ -221,18 +225,32 @@ CLAUSES: tuple[Clause, ...] = (
         cite="0007 §5 clause 1, the threshold sentence",
         quote="The threshold is the one the page's own usage implies, and it is read per "
               "page, not per token",
-        why="0009 §7 row 12 — a contrast clause at the usage site. The pinned values in "
-            "c1.s5 were derived with this rule, and the rule itself is applied to no other "
-            "usage site in the portfolio. What is uncarried is the *verdict*: `0008` S13 "
-            "shipped the census that measures every usage site, and S14 is the stage that "
-            "may fail one. *This row said until 2026-09-09 that `colour.resolve()` and "
-            "`colour.composite()` ship unused and only `contrast()` is called. S13 calls all "
-            "three — `paint.py` resolves a declared value against the palette, `contrast.py` "
-            "composites a mark over its ground — so a sentence about the checker's own "
-            "reach outlived the reach it described, in the one field this registry prints "
-            "on every run precisely so an open row cannot go stale unseen.*",
-        note="The largest single gap `0007` §7 names, and the one uncarried row here that "
-             "already has a design written for it.",
+        carriers=_index("contrast text", "contrast marks"),
+        note="`0009` §7 row 12, closed at S14b. The sentence says which bar applies and the "
+             "census applies it: a site painted as text is bucketed at 4.5:1 and one painted "
+             "as a mark at 3.0:1, per page and never per token. *This row said until "
+             "2026-09-10 that what is uncarried is the verdict — true from S13, when the "
+             "census shipped `UNDECIDED` by construction, until S14b gave two of its three "
+             "keys a verdict branch. It said until 2026-09-09 that `colour.resolve()` and "
+             "`colour.composite()` ship unused, which S13 had already made false. Twice now "
+             "this row has described a reach the checker had outgrown, in the one field the "
+             "registry prints on every run precisely so an open row cannot go stale unseen.*",
+    ),
+    Clause(
+        id="c1.s6b",
+        cite="0007 §5 clause 1, the obligation sentence",
+        quote="Where a site is owed its threshold it must meet it, measured against what the "
+              "page paints behind it",
+        carriers=_index("contrast text", "contrast marks"),
+        note="`ADR-0008` D4, and the reason its wording waited: `test_spec` pins a quote from "
+             "the moment the sentence exists, so writing it before the census had printed "
+             "would have pinned a rule nobody had measured. What the census then decided is "
+             "in the sentence — D5 gave *owed* its meaning, and D6 gave *behind it* its own. "
+             "The obligation is carried by both keys and gated by neither yet: `contrast "
+             "text` is gated — a fetching run reads it clean on all twelve, which is the "
+             "refutation that demands promotion — and `contrast marks` is report-only, "
+             "because 153 SVG sites still measure below 3.0:1 and a key that can never read "
+             "clean cannot hold a state refutable in both directions.",
     ),
     Clause(
         id="c1.s7",

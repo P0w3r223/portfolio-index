@@ -185,5 +185,135 @@ def test_a_site_whose_colour_is_not_a_hex_scores_nothing_rather_than_raising():
     """The same guard at the arithmetic rather than at the report, because a `Site` built any
     other way reaches `ratios` too. `is not None` was the check that let this through."""
     site = contrast.Site(0, "div", "color", "var(--x)", "var(--deep)", 1.0,
-                         contrast.TEXT_THRESHOLD, (contrast.Ground(1, "#ffffff", True),), 0, 1, "")
+                         contrast.TEXT_THRESHOLD, True,
+                         (contrast.Ground(1, "#ffffff", True),), 0, 1, "")
     assert site.ratios == ()
+
+
+# -- D6, a site's own ground and which way a boundary faces -----------------------------------
+
+
+def test_a_foreground_is_measured_against_the_background_its_own_element_paints():
+    """`ADR-0008` D6. The ancestor walk alone measured two published buttons at 1.00:1 and
+    1.06:1 against a ground they cover; their real values are 5.17:1, which one of the two
+    pages had already written in a comment.
+
+    The mutation: delete the self-ground branch in `_grounds`. The label then reaches the card
+    behind the chip and reads 1.00:1 - a number that is arithmetically right and answers the
+    wrong question."""
+    site = _one('<div class="card"><p class="chip">x</p></div>',
+                ".card { background: #ffffff } .chip { background: #111111; color: #ffffff }",
+                "p", "color")
+    assert [one.colour for one in site.grounds] == ["#111111"]
+    assert min(site.ratios) > 4.5
+
+
+def test_the_own_ground_stops_the_walk_rather_than_joining_it():
+    """D6 says *occludes*, and the word is the decision. Appending the own background as one
+    more candidate leaves the ancestor in `grounds` too, and `_measured` takes the `min()` -
+    so the covered ground still supplies the worst reading and the text half never goes clean.
+    Measured over the eleven: occluding leaves 0 text failures, appending leaves 2.
+
+    The mutation: `found.append(...)` instead of the early `return`."""
+    site = _one('<div class="card"><p class="chip">x</p></div>',
+                ".card { background: #ffffff } .chip { background: #111111; color: #ffffff }",
+                "p", "color")
+    assert len(site.grounds) == 1, (
+        "the element's own background is a stop, not a candidate: with the ancestor still in "
+        "the list the min() reading is against a ground the element covers")
+
+
+def test_a_site_is_never_its_own_ground_through_fill():
+    """D6's first bound, found by getting it wrong: reading self-as-ground through
+    `_GROUND_PROPERTIES` - which holds `fill` - makes every SVG `<text>` its own ground,
+    because there one property is a shape's paint *and* a text's foreground. That reading
+    reported 684 failures, all 1.00:1, every one the question *does this thing contrast with
+    itself*.
+
+    The mutation: add `fill` to `_OWN_GROUND_PROPERTIES`."""
+    site = _one('<div class="card"><span class="lbl">x</span></div>',
+                ".card { background: #111111 } .lbl { color: #ffffff; fill: #ffffff }",
+                "span", "color")
+    assert [one.colour for one in site.grounds] == ["#111111"]
+    assert min(site.ratios) > 4.5
+
+
+def test_a_border_keeps_the_ground_behind_it_because_a_boundary_faces_outward():
+    """D6's second bound. A border's visibility comes from the colour on the *other* side of
+    it, so it keeps the ancestor ground. Correcting `mini-traceroute`'s `<button>` border to
+    the button's own fill gives 1.00:1 - the wrong comparison, confidently computed.
+
+    The mutation: widen the self-ground branch past `paint.TEXT`."""
+    site = _one('<div class="card"><button class="btn">x</button></div>',
+                ".card { background: #ffffff } "
+                ".btn { background: #2563eb; border: 1px solid #2563eb }",
+                "button", "border")
+    assert [one.colour for one in site.grounds] == ["#ffffff"]
+
+
+# -- D5, what the marks key is owed by --------------------------------------------------------
+
+
+def test_a_structural_border_carries_no_obligation():
+    """`ADR-0008` D5. SC 1.4.11 asks 3:1 of user-interface components and of graphics required
+    to understand the content. A hairline between two rows of a table whose data is entirely
+    text is neither, and `--border` on white measures 1.17:1 - required to measure nothing.
+    Without D5 the marks key fails 1 195 of 1 785 sites and is not a strict clause but a
+    broken one.
+
+    The mutation: make `_obligated` true for any border."""
+    site = _one('<div class="card"><p class="row">x</p></div>',
+                ".card { background: #ffffff } .row { border-bottom: 1px solid #e3e7ee }",
+                "p", "border-bottom")
+    assert site.obligated is False
+    assert min(site.ratios) < 3.0, "the fixture is only meaningful while this border fails"
+
+
+def test_a_border_in_the_control_role_does_carry_one():
+    """The exception that is not a property name, and the whole reason D7 gave the control
+    role a token: a user-interface component boundary is inside D5 by any reading, and the
+    checker recognises it by the role its declaration names.
+
+    The mutation: drop the `_CONTROL_ROLE` clause from `_obligated`."""
+    site = _one('<div class="card"><input class="ctl"></div>',
+                ":root { --border-control: #808a9c } .card { background: #ffffff } "
+                ".ctl { border: 1px solid var(--border-control) }",
+                "input", "border")
+    assert site.obligated is True
+
+
+def test_svg_paint_carries_the_obligation_and_is_what_the_marks_key_is_over():
+    """The included half of D5's partition, and the population that keeps the marks key out of
+    `GATE`: 153 SVG sites still measure below 3.0:1."""
+    site = _one('<div class="card"><svg><circle class="mark" r="1"></circle></svg></div>',
+                ".card { background: #ffffff } .mark { fill: #f2f2f2 }",
+                "circle", "fill")
+    assert site.obligated is True
+    assert min(site.ratios) < 3.0
+
+
+# -- the verdicts themselves ------------------------------------------------------------------
+
+
+def test_a_population_with_nothing_measurable_is_undecided_and_not_a_pass():
+    """A page must not go clean on the strength of the checker's own blindness. `0008` §3.11's
+    collapse is 133 of 139 marks on one surface; scoring an unmeasured site as a pass would
+    have called that surface clean for exactly the reason it could not be read.
+
+    The mutation: `return PASS` when `measured` is empty."""
+    unmeasured = contrast.Site(0, "circle", "fill", "var(--x)", None, 1.0,
+                               contrast.MARK_THRESHOLD, True, (), 0, 1, "unreadable")
+    assert contrast._verdict([unmeasured]) == clauses.UNDECIDED
+
+
+def test_one_site_below_its_threshold_fails_the_whole_key():
+    """A key is a claim about the page, not about its best element.
+
+    The mutation: `all(...)` for `any(...)`, or a threshold comparison the wrong way round."""
+    ground = (contrast.Ground(1, "#ffffff", True),)
+    good = contrast.Site(0, "p", "color", "x", "#111111", 1.0, contrast.TEXT_THRESHOLD, True,
+                         ground, 0, 1, "")
+    bad = contrast.Site(2, "p", "color", "x", "#f2f2f2", 1.0, contrast.TEXT_THRESHOLD, True,
+                        ground, 0, 1, "")
+    assert contrast._verdict([good]) == clauses.PASS
+    assert contrast._verdict([good, bad]) == clauses.FAIL

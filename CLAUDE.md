@@ -42,10 +42,14 @@ tools/pagespec/       the checker — standard library only
                           rendered box; ADR-0008 §3 is the distinction and it is load-bearing
   paint.py              what colour an element is painted, and at what alpha — every
                           candidate, not the winner
-  contrast.py           the S13 census: every usage site, its implied threshold, and what it
-                          is painted on. Three keys, UNDECIDED **by construction** — the
-                          module has no PASS and no FAIL branch, and a guard reads it
-                          statically so S14 cannot add one silently
+  contrast.py           every usage site, its implied threshold, what it is painted on,
+                          and — since S14b — the verdict over two of its three keys. The
+                          third, `contrast ground`, cannot take one: it reports what the
+                          checker could not read, and no page is more conformant for
+                          being legible to it. *This line said the module has no PASS
+                          and no FAIL branch and that a guard read it statically to
+                          stop S14 adding one silently. It did, it was, and that is
+                          exactly what happened — loudly, which was the design*
   __main__.py           the report, two censuses, and the GATE ratchet with its three states
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
@@ -134,7 +138,9 @@ python -m pytest -m submodules --fetch   # what the scheduled `live` job runs: t
   `#83` and was found by the audit of 2026-09-07 — a reader who believed it would not trust the
   guard that would have stopped them.* Clause 8 and clause 4-`<title>` entered with S9 and S10
   on 2026-09-08, so the registry covers every clause the spec carries **today**, and
-  `0009` §7 row 12's contrast clause is the one on the table.
+  `0009` §7 row 12's contrast clause **entered with S14b on 2026-09-10**: `contrast text` is
+  gated, `contrast marks` is report-only, and `0007` §5 clause 1 carries the obligation
+  sentence as `c1.s6b`.
 - **The eleven/twelve trap is now the instrument's, not yours — and the price is that a new
   clause enters in two steps rather than one.** `wroclaw` commits no HTML and republishes from
   a Pages artifact rebuilt daily, so its page does not move when its pull request merges, while
@@ -179,7 +185,11 @@ The gate is **deliberately partial**. `UNDECIDED` never gates, which is what let
 honest about `color-mix()`, an unread media condition, and a headline it cannot judge.
 `python -m tools.pagespec` exiting 0 therefore means *no gated clause failed*, and not *every
 clause passes*. What else stays outside the gate is now printed by the run itself, under
-`gate policy`, with the reason beside it — `served` is the only row there today.
+`gate policy`, with the reason beside it — `served` and, since S14b, `contrast marks`.
+**That second row is the first one whose key actually fails**: five of the eleven surfaces
+report it, so a run now prints `FAIL` and exits 0, and the only place saying why is that
+block. *The sentence above said `served` was the only row there, and stayed true for two
+days.*
 
 *This paragraph said until 2026-09-08 that clause 8 and clause 4's `<title>` half print and do
 not gate, "the open work, not an oversight". S9 and S10 closed both the day before, and the

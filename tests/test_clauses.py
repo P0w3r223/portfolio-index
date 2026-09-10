@@ -1732,36 +1732,41 @@ def test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemptio
     assert "assets/styles.css" in detail_of(findings, "stylesheets")
 
 
-def test_the_census_keys_can_never_fail_because_the_module_cannot_construct_a_verdict():
-    """The proof `NOT_A_CLAUSE`'s pin demands for the three contrast keys, `ADR-0008` D2.
+def test_only_the_ground_key_still_cannot_reach_a_verdict_and_its_proof_is_its_subject():
+    """What is left of `NOT_A_CLAUSE`'s pin for the census keys, `ADR-0008` D2 and D3.
 
-    Stronger than `stylesheets`' and it has to be, because `stylesheets` is the checker
-    reporting on its own inputs while these three report on the page - the very thing a
-    clause does. What keeps them out of the ratchet floor is not their subject but their
-    construction: **`contrast.py` contains no `PASS` and no `FAIL`**, so `UNDECIDED` is not a
-    status it happens to report on this corpus but the only one it can build. An observation
-    alone would be vacuous: a key `UNDECIDED` everywhere is exactly the shape `test_report`'s
-    pin says the corpus check cannot see.
+    Until S14b all three were exempt on a proof about **construction**: `contrast.py` named
+    neither `PASS` nor `FAIL`, and a static read of the file said so. That proof was written to
+    expire loudly at the stage that adds the verdicts, and it did. Two keys left the exemption
+    set in the same commit as the branches that made them verdicts.
 
-    Read statically as well as run, because the corpus half goes on passing the day someone
-    adds a verdict branch - which is S14, and S14 must move these keys out of `NOT_A_CLAUSE`
-    in the same commit. This is what makes forgetting that loud.
+    `contrast ground` stays, on a weaker-looking proof that is actually the durable one: its
+    **subject** cannot be conformant or not. It reports the sites the checker could not resolve
+    a ground for, and a page that resolves every ground and a page that resolves none are both
+    conforming pages as far as `0007` §5 can say. There is no markup that should make it fail.
+
+    The mutation: give `contrast ground` a verdict branch of any shape. The page below is built
+    so the other two keys *do* reach one — text passes on a white card, the mark fails against
+    it — which is what makes the third key's `UNDECIDED` a statement about the key rather than
+    about a page nothing can be said of.
     """
-    source = pathlib.Path(contrast.__file__).read_text(encoding="utf-8")
-    verdicts = re.findall(r"(PASS|FAIL)", source)
-    assert not verdicts, (
-        f"contrast.py names {sorted(set(verdicts))}, so its keys can reach a verdict and their "
-        f"exemption from the ratchet floor is no longer a proof - move them into GATE")
-
     findings = clauses.check(loaded(
         '<html><head><title>A claim about the data</title></head><body>'
         '<p class="eyebrow">Data</p><h1>A claim</h1>'
+        '<div class="card"><p class="says">readable</p>'
         '<svg class="chart"><rect class="lane" x="0" y="0" width="10" height="10"></rect>'
-        '<circle class="mark" cx="5" cy="5" r="1"></circle></svg></body></html>',
-        css=":root { --bg: #ffffff; --accent: #2563eb }"
-            ".chart .lane { fill: var(--bg) } .chart .mark { fill: var(--accent) }"))
-    for key in ("contrast text", "contrast marks", "contrast ground"):
-        assert status_of(findings, key) == clauses.UNDECIDED
+        '<circle class="mark" cx="5" cy="5" r="1"></circle></svg></div></body></html>',
+        css=":root { --bg: #ffffff; --ink: #111111; --faint: #f2f2f2 }"
+            ".card { background: var(--bg) } .says { color: var(--ink) }"
+            ".chart .lane { fill: var(--bg) } .chart .mark { fill: var(--faint) }"))
+
+    assert status_of(findings, "contrast text") == clauses.PASS
+    assert status_of(findings, "contrast marks") == clauses.FAIL
+    assert status_of(findings, "contrast ground") == clauses.UNDECIDED, (
+        "contrast ground reached a verdict. Its exemption from the ratchet floor is a claim "
+        "about what it reports - sites the checker could not read - and no page is more or "
+        "less conformant for that. If it can now gate, it belongs in GATE and not in "
+        "NOT_A_CLAUSE")
 
 
 def test_clause_3_goes_undecided_and_not_failing_on_a_stylesheet_the_wire_dropped():

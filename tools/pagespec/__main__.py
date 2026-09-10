@@ -95,11 +95,18 @@ class Ratchet:
 #: commit body says four — a hand-typed figure the instrument had already refuted, in the
 #: comment block `CLAUDE.md` sends a stage editor to.*
 #:
-#: **Both of those are now in, and the ratchet is complete over the clauses.** `0008` S9 and
-#: S10 closed them together, and with `4 title` and `8 ` here every finding key a clause can
-#: report `FAIL` on is gated: `_gated` and `status == FAIL` now coincide for everything except
-#: `served`. Re-measured over twelve with `--fetch`, 2026-09-08: **zero `FAIL` portfolio-wide.**
-#: That is what licenses these rows, and it starts refusing the moment one of them regresses.
+#: **Both of those are now in, and the ratchet is complete over clauses 1 to 8.** `0008` S9
+#: and S10 closed them together. Re-measured over twelve with `--fetch`, 2026-09-08: zero
+#: `FAIL` across those clauses portfolio-wide, which is what licenses their rows, and it
+#: starts refusing the moment one of them regresses.
+#:
+#: *This block said until 2026-09-10 that **every** finding key a clause can report `FAIL` on
+#: is gated, and that `_gated` and `status == FAIL` coincide for everything except `served`.
+#: S14b made both false in one commit: `contrast marks` fails on five of the eleven and is
+#: `report-only`, so the exceptions are two and the second one fails. The sentence was
+#: written when the contrast keys could construct no verdict at all — which is the stage it
+#: outlived, in the comment block `CLAUDE.md` sends a stage editor to, and `0008` §4.11 has
+#: already recorded a hand-typed figure going stale in these same lines.*
 #:
 #: *`test_a_page_failing_only_an_ungated_clause_still_passes` in `tests/test_report.py` is the
 #: test that keeps the distinction alive past this point, and it survives on purpose: it
@@ -117,6 +124,21 @@ GATE: tuple[Ratchet, ...] = (
     Ratchet("6 ", GATED_STATE),
     Ratchet("7 ", GATED_STATE),
     Ratchet("8 ", GATED_STATE),
+    Ratchet("contrast text", GATED_STATE),
+    Ratchet(
+        "contrast marks", REPORT_ONLY_STATE,
+        "153 SVG sites measure below 3.0:1, so this key cannot hold pending — ADR-0006 §3's "
+        "pending state is refutable in both directions and a key that can never read clean "
+        "cannot hold one. It is here rather than nowhere because the alternative was a run "
+        "printing a failing row and exiting 0 with nothing said about it, which is the "
+        "exact shape "
+        "this block exists to refuse. Two things have to happen before it can gate. The "
+        "pages: 153 marks need repairing or exempting, and ADR-0008 D5 leaves the escape "
+        "for a graphic whose value is also in text available and unimplemented. The "
+        "checker: 79 of those 153 fail only against a ground geometry places under them "
+        "rather than one containment guarantees, and Ground.guaranteed — which S13 added "
+        "for exactly this — is read by no verdict path yet",
+    ),
     Ratchet(
         "served", REPORT_ONLY_STATE,
         "a mismatch is routinely not a defect: this repository re-points submodules "
@@ -435,8 +457,13 @@ def _policy() -> list[str]:
     if not outside:
         return []
     lines = ["gate policy — the keys the gate does not refuse on, and why\n"]
+    # Width from the data rather than a constant. A fixed `<12` welded `contrast marks` to its
+    # state as `contrast marksreport-only` the moment a key longer than eleven characters
+    # entered — and the guard below passed, because it asked whether the prefix and the state
+    # were both *present* in the output rather than whether a reader could tell them apart.
+    width = max(len(one.prefix) for one in outside) + 2
     for one in outside:
-        lines.append(f"  {one.prefix:<12}{one.state}")
+        lines.append(f"  {one.prefix:<{width}}{one.state}")
         lines.append(textwrap.fill(one.reason, width=92,
                                    initial_indent=" " * 6, subsequent_indent=" " * 6))
     return lines + [""]

@@ -367,6 +367,14 @@ it is an instruction.
    `--positive` is painted as body text on one page and as a `fill:`/`stroke:` mark on three (§4.1), so a
    page painting it as text is held to AA's 4.5:1 and a page painting it as a mark to the non-text 3:1.
    `--accent-soft` is only ever a mark, on every page that paints it.
+   **Where a site is owed its threshold it must meet it, measured against what the page paints
+   behind it.** A site painted as text is always owed it. A site painted as a mark is owed it where
+   the mark identifies a control or carries information the reader needs, and not where it is
+   structure — a table rule, a card edge, the line under a heading. What a site is measured against
+   is what covers it: an element painting its own opaque background is read on that background and
+   not on what the background hides, while a boundary faces outward and is read against the other
+   side. `ADR-0008` D4, D5 and D6; the wording was held back until the census had printed, because
+   this sentence is pinned by a guard from the moment it exists.
    *The tokens and dark columns of §3 — where the tokens column counts **declared** properties, so
    `wroclaw`'s `9` and the `8` house tokens below are two different quantities.* Two rows need a word the
    table cannot hold. `wroclaw` reaches it
