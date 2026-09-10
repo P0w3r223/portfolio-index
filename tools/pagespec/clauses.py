@@ -34,10 +34,30 @@ HOUSE_TOKENS = ("bg", "surface", "border", "text", "muted", "accent", "warn", "r
 #: The roles that must resolve to a colour. `--radius` is a length and extensions like
 #: `mini-traceroute`'s `--mono` are font stacks, so neither is asked to be one.
 COLOUR_ROLES = ("bg", "surface", "border", "text", "muted", "accent", "warn",
-                "accent-soft", "positive", "danger")
+                "accent-soft", "positive", "danger", "border-control")
+#: `--border-control` is pinned in both schemes and for one reason the other pins do not
+#: carry: **this is the only per-scheme value check in the instrument.** `contrast.py:89`
+#: takes `palettes(css).get("light", {})`, so the census is structurally light-only, and
+#: without a dark pin a surface that declares the token in its light `:root` and forgets the
+#: dark override ships a one-scheme repair with every guard green. The dark palette inherits
+#: the light value, which does not equal the pin, so that case reads `FAIL 1 dark
+#: --border-control` rather than passing silently. `0008` §4.25 is why the repair is a
+#: two-scheme repair; `ADR-0008` D7 is the decision to pin rather than let each surface
+#: measure its own.
+#:
+#: The values, measured against `--surface` — the binding ground on both surfaces that carry
+#: a control, and the one `0008` §4.25's 1.17:1 and 1.29:1 were read on. `--bg` is the looser
+#: side in both schemes and clears by more. The margin is deliberately small, on
+#: `--accent-soft`'s precedent (3.12:1 light, 3.30:1 dark): a boundary is a boundary, not an
+#: emphasis, and a token far above the threshold would repaint the control heavier than the
+#: page's own hairlines.
 PINNED = {
-    "light": {"accent-soft": "#5b93e4", "positive": "#047857"},
-    "dark": {"accent-soft": "#4167a6", "positive": "#34d399"},
+    "light": {"accent-soft": "#5b93e4", "positive": "#047857",
+              # 3.27:1 on --surface #f6f8fa, 3.48:1 on --bg. `--border` #e3e7ee was 1.17:1.
+              "border-control": "#808a9c"},
+    "dark": {"accent-soft": "#4167a6", "positive": "#34d399",
+             # 3.14:1 on --surface #161c25, 3.41:1 on --bg. `--border` #263041 was 1.29:1.
+             "border-control": "#596a89"},
 }
 CARD_META = ("description", "og:type", "og:title", "og:description", "og:url", "twitter:card")
 PROFILE = "github.com/P0w3r223"
@@ -84,11 +104,18 @@ _GROUND_PROPERTIES = ("background", "background-color")
 _SIDE_BORDERS = ("border-top", "border-right", "border-bottom", "border-left")
 _BORDER_PROPERTIES = ("border", "border-color") + _SIDE_BORDERS
 _GROUND_ROLES = frozenset({"bg", "surface"})
-_BORDER_ROLES = frozenset({"border"})
-#: The three roles the fourth sentence assigns. A role in here is never what makes an
+#: `border-control` entered with S14a. **Widen this set and never `clause_1_usage`'s local
+#: `allowed`**: `_HOUSE_ROLES` below is derived from it, and it is the guard on all four
+#: exception shapes. Widened locally instead, `_HOUSE_ROLES` stays at three and
+#: `.card.caution { border-left: 3px solid var(--border-control) }` is exempted as a *rail* —
+#: a house role walking through an exception, which is verbatim the `n−1 shapes of n` defect
+#: `_role_exception`'s own docstring records three review passes finding.
+_BORDER_ROLES = frozenset({"border", "border-control"})
+#: The roles the fourth sentence assigns. A role in here is never what makes an
 #: exception an exception: every one of the four shapes is about a surface deliberately
 #: painted *outside* the house scheme, so a house role appearing there is the defect rather
-#: than the exemption.
+#: than the exemption. *No count is written here on purpose — it said "three" until S14a
+#: added a fourth, and nothing pinned it, so the comment would have gone on saying three.*
 _HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES
 #: **`_LENGTH` had the identical hole and was fixed one commit later**, which is the shape
 #: this branch is named for: the repair landed on one of two sibling patterns, three lines
@@ -214,10 +241,24 @@ def clause_1_tokens(page, css: str) -> list[Finding]:
             elif actual.lower() == expected:
                 findings.append(Finding(f"1 {scheme} --{token}", PASS, actual))
             else:
-                ground = palettes[scheme].get("bg", "#ffffff")
-                measurable = colour.is_opaque_hex(actual) and colour.is_opaque_hex(ground)
-                against = (f" ({colour.contrast(actual, ground):.2f}:1 on --bg)"
-                           if measurable else "")
+                # Both grounds where the palette declares both, because a pin's binding
+                # ground is not always `--bg` and printing the looser one alone states a
+                # true number that argues against the verdict beside it. `--border-control`
+                # binds on `--surface`: a value at 3.16:1 on `--bg` is 2.97:1 on `--surface`
+                # and is refused, and a detail naming only the first reads as a checker that
+                # cannot count. `_resolve_chain`'s docstring is the rule this follows.
+                #
+                # `actual` is checked *before* the ratios are computed, not beside them: the
+                # first version of this built the readings and tested opacity in the
+                # conditional after, so an alpha-hex token raised out of `contrast()`.
+                # `test_an_alpha_hex_token_is_reported_without_a_ratio_rather_than_crashing`
+                # caught it in one run, which is the guard doing exactly its job.
+                grounds = ([(name, palettes[scheme].get(name)) for name in ("bg", "surface")]
+                           if colour.is_opaque_hex(actual) else [])
+                readings = [f"{colour.contrast(actual, value):.2f}:1 on --{name}"
+                            for name, value in grounds
+                            if value is not None and colour.is_opaque_hex(value)]
+                against = f" ({', '.join(readings)})" if readings else ""
                 findings.append(Finding(
                     f"1 {scheme} --{token}", FAIL,
                     f"{actual}{against}; spec pins {expected}",

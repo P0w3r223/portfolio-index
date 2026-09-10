@@ -1201,7 +1201,12 @@ def test_a_length_role_is_not_asked_to_be_a_colour():
 
 USAGE_PALETTE = (":root { --bg: #ffffff; --surface: #f6f8fa; --border: #e3e7ee; "
                  "--text: #1c2430; --muted: #5b6472; --accent: #2563eb; --warn: #b45309; "
-                 "--radius: 10px; --accent-soft: #5b93e4; --positive: #047857; }")
+                 "--radius: 10px; --accent-soft: #5b93e4; --positive: #047857; "
+                 # S14a. Declared here rather than in the tests that need it because
+                 # `clause_1_usage` resolves a role through the palette first: an undeclared
+                 # `--border-control` reports as a broken reference, and a role guard would
+                 # then be asserting on the wrong finding entirely.
+                 "--border-control: #808a9c; }")
 
 
 def usage(rules: str) -> list:
@@ -1565,28 +1570,144 @@ def test_every_exception_shape_refuses_a_house_role_and_admits_its_own():
     # The wrong role differs by family: a ground painted `--border` is the defect, and a
     # border painted `--surface` is. Using one role for both would have made half of this
     # test assert that a conforming declaration fails — it did, on the first run.
+    #
+    # **S14a added a fourth house role and only one shape gained a case, which is not what
+    # the stage's design predicted.** The design said sweep all four with `--border-control`
+    # as a second wrong role. On the first run the rail case failed, and the guard was
+    # right: `border-control` on a `border-left` is admitted by `role in allowed` and never
+    # reaches `_role_exception` at all, so demanding a FAIL there asserts that a declaration
+    # this specification permits is a defect. The comment above records that exact mistake
+    # being made once already, one *shape* to the left; this is the same mistake one *role*
+    # to the left, and it was caught the same way — by running it.
+    #
+    # The wrong role is always the other family's: a border shape is walked through by a
+    # ground role, and the ground shape by a border role — of which there are now two.
     shapes = {
-        "rail": (".card.caution { border-left: 3px solid var(--%s); }", "warn", "surface"),
+        "rail": (".card.caution { border-left: 3px solid var(--%s); }", "warn",
+                 ("surface",)),
         "filled control": ("button { background: var(--%s); color: var(--text); }",
-                           "accent", "border"),
+                           "accent", ("border", "border-control")),
         # `color` is in this one because the corpus declaration has it: `mini-traceroute`'s
         # button paints its own text. Without it the accent *background* is itself a wrong
         # ground, and the case would fail for a reason that is not the shape under test.
+        # This one takes `--border-control` too, and for a reason worth stating: its template
+        # writes *two* properties and one of them is a `background`. The discriminating half
+        # is always the ground — a border admits the control role by the rule — so the shapes
+        # that gain a case are exactly the two whose template declares a background, which is
+        # this one and the filled control. The first version of this sweep said "only the
+        # ground shape" and left this case out; `0008` §4.26 carries the correction.
         "its own fill": (
             ("button { background: var(--%s); border: 1px solid var(--%s);"
              " color: var(--bg); }"),
-            "accent", "surface"),
+            "accent", ("surface", "border-control")),
         "interaction state": (
-            "input:focus-visible { border-color: var(--%s); }", "accent", "surface"),
+            "input:focus-visible { border-color: var(--%s); }", "accent",
+            ("surface",)),
     }
-    for name, (template, own_role, wrong_role) in shapes.items():
+    for name, (template, own_role, wrong_roles) in shapes.items():
         placeholders = template.count("%s")
         admitted = usage(template % ((own_role,) * placeholders))
         assert status_of(admitted, "1 usage roles") == clauses.PASS, (
             f"the {name} shape no longer admits the declaration it was measured from")
-        refused = usage(template % ((wrong_role,) * placeholders))
-        assert status_of(refused, "1 usage roles") == clauses.FAIL, (
-            f"the {name} shape exempts a house role, so a swapped token walks through it")
+        for wrong_role in wrong_roles:
+            refused = usage(template % ((wrong_role,) * placeholders))
+            assert status_of(refused, "1 usage roles") == clauses.FAIL, (
+                f"the {name} shape exempts the house role --{wrong_role}, so a swapped "
+                f"token walks through it")
+
+
+def test_a_control_boundary_takes_the_control_role_and_the_house_border_role_still_passes():
+    """S14a's admission, and the only thing on the corpus that can prove it.
+
+    No published surface declares `--border-control` on the day this lands, so the twelve
+    surfaces cannot distinguish the amendment from its absence — `python -m tools.pagespec`
+    prints a byte-identical table before and after. The mutation that reddens this is
+    reverting `_BORDER_ROLES` to `frozenset({"border"})`, and there is no other.
+
+    The second assertion is not padding: the amendment is an *extension*, and an extension
+    that quietly stopped admitting the role it extends would repaint every hairline on
+    eleven surfaces.
+    """
+    control = usage('.field select { border: 1px solid var(--border-control); }')
+    assert status_of(control, "1 usage roles") == clauses.PASS
+    house = usage("th, td { border-bottom: 1px solid var(--border); }")
+    assert status_of(house, "1 usage roles") == clauses.PASS
+
+
+def test_the_control_role_is_a_border_role_and_is_refused_on_a_ground():
+    """The families stay separate, which is what makes `--border-control` a role and not a
+    licence. `0007` §5 clause 1 names two families and assigns each its own set; a token
+    admitted on a border must not thereby become admissible as a background.
+
+    Mutation: adding `border-control` to `_GROUND_ROLES` instead of `_BORDER_ROLES`.
+    """
+    findings = usage("code { background: var(--border-control); }")
+    assert status_of(findings, "1 usage roles") == clauses.FAIL
+    assert "--bg/--surface" in detail_of(findings, "1 usage roles")
+
+
+def test_the_control_role_is_a_house_role_so_a_filled_control_cannot_take_it_as_a_ground():
+    """The guard on the edit itself, and the one place the derivation is observable.
+
+    `_HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES` is derived, and it is the condition on
+    all four exception shapes. The tempting wrong edit is to widen `clause_1_usage`'s local
+    `allowed` instead of `_BORDER_ROLES` — every border case behaves identically, because a
+    border reaches `role in allowed` and short-circuits, so the whole border family is blind
+    to the difference. **This is the case that is not:** a `background` with a sibling
+    `color` is the *filled control* shape, whose branch fires only where the role is not a
+    house role. Widen `allowed` locally and `_HOUSE_ROLES` stays at three, the branch fires,
+    and a control token walks through an exception as a ground — the `n−1 shapes of n`
+    defect `_role_exception`'s docstring records three review passes finding.
+    """
+    findings = usage("button { background: var(--border-control); color: var(--text); }")
+    assert status_of(findings, "1 usage roles") == clauses.FAIL, (
+        "the filled-control shape exempted a house role, which means `_HOUSE_ROLES` did not "
+        "follow `_BORDER_ROLES` — the local-`allowed` edit, not the derived one")
+
+
+def test_a_control_token_declared_in_light_alone_fails_the_dark_pin():
+    """The half of S14a that no census can reach, and the reason the token is pinned.
+
+    `contrast.py:89` takes `palettes(css).get("light", {})`, so the contrast census is
+    structurally light-only: a surface repairing its controls in the light `:root` and
+    forgetting the dark override measures clean everywhere the instrument looks. The dark
+    palette then inherits the light value, which is not the pinned one — so the pin is what
+    turns a silent one-scheme repair into a named failure. `0008` §4.25 established the
+    repair is a two-scheme repair; this is the only guard that holds it to that.
+
+    Mutation: dropping `"border-control"` from `PINNED["dark"]` — the finding falls back to
+    `n/a — not declared`, which is a pass.
+    """
+    light_only = (":root { --bg: #ffffff; --border-control: #808a9c; }"
+                  "@media (prefers-color-scheme: dark) { :root { --bg: #0f1319; } }")
+    findings = clauses.clause_1_tokens(page(""), light_only)
+    assert status_of(findings, "1 dark --border-control") == clauses.FAIL
+    assert "#596a89" in detail_of(findings, "1 dark --border-control")
+    # And the light pin in the same breath, because the reason the dark one needed a guard
+    # reaches it identically: no surface declares this token, so unlike `--accent-soft` the
+    # corpus cannot stand in. Drifting `PINNED["light"]["border-control"]` left the whole
+    # suite green until this line existed — and the light value is the one S14b's repairs
+    # are measured against first.
+    assert status_of(findings, "1 light --border-control") == clauses.PASS
+    both = (":root { --bg: #ffffff; --border-control: #808a9c; }"
+            "@media (prefers-color-scheme: dark) { :root { --bg: #0f1319; "
+            "--border-control: #596a89; } }")
+    assert status_of(clauses.clause_1_tokens(page(""), both),
+                     "1 dark --border-control") == clauses.PASS
+
+
+def test_the_control_role_is_asked_to_be_a_colour_like_every_other_colour_role():
+    """The last line of S14a's edit that no other mutation reaches.
+
+    `COLOUR_ROLES` is what sends a role through `_unusable_values`, so a `--border-control`
+    written in a notation this checker cannot measure reports `undecided` rather than being
+    silently believed. Dropping the role from that tuple left the whole suite green, which is
+    a small hole — `undecided` never gates — but the rule here is that a guard is not proven
+    until a mutation reddens it, and it applies to the whole edit or to none of it.
+    """
+    css = ":root { --bg: #ffffff; --border-control: color-mix(in srgb, #808a9c 50%, white); }"
+    findings = clauses.clause_1_tokens(page(""), css)
+    assert status_of(findings, "1 light --border-control value") == clauses.UNDECIDED
 
 
 def test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemption_safe():

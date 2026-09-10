@@ -124,7 +124,7 @@ repositories at entry; a stage that finds its scope has moved re-derives it and 
 | **S11** | **The gate registry, and the twelfth surface** — `0009` §7 row 13b. `GATED` becomes `GATE`, a registry of `(prefix, state, reason)` with a third state; the ratchet's two guards take their corpus from the mode the run is in; `live` gains the guards it never had | `tools/pagespec/__main__.py`, three test files, `pagespec.yml`, **`ADR-0006`**. **No page changes**, and the conformance table is byte-identical | 0.5 d | **closed** — §4.18 |
 | **S12** | **The contrast finding, and the clause that could not see it** — `0009` §7 row 12, opened by measurement. **S12a** `pl-review-sense`'s heatmap share label, a live SC 1.4.3 failure in both schemes · **S12b** `clause_1_composited` learns to read paint alpha in the markup | 1 sibling page + its palette guard · `render.py`, `clauses.py`, one fixture of record | 0.5 d | **closed** — §4.19. **S13 is the rest of row 12** and is scheduled below rather than folded in |
 | **S13** | **The contrast census** — an element stream, a selector matcher with specificity, grounds by static-attribute containment, and three keys `UNDECIDED` **by construction**. Row 12's instrument, without its verdicts | `render.py` (the element stream, **landed**), a new `tools/pagespec/contrast.py`, `clauses.check`, `NOT_A_CLAUSE` **and** `spec.NOT_A_SENTENCE` with both their pins, `tests/test_spec.py`'s static source read, a census | **M, 2–3 d** | **closed** — `current_projects` `6bba74f` on `main` (`#107`, nine commits) with CI green **on `main`**. `ADR-0008` is the decision, §4.23 what the first commit measured and **§4.24 what closing it measured** — including four readings the census refuted before a verdict could ship on any of them, which is D2's argument turning out to be worth more than the section that made it. *This cell read `in progress` for a day after the stage merged, and the row above it is the reason that matters: a reader deciding what to take next reads §3, and §3 said the largest open instrument was still being built.* §3.11 stands except its verdict table: D1 replaces *"every preceding painted sibling"* with containment, because **§3.11's worked example does not survive its own rule** on 133 of 139 sites. No `GATE` row and no `report_only()` edit — a census cannot gate |
-| **S14** | **The verdicts**, and since §4.25 it is two halves on S12's precedent. **S14a — the control boundaries**, **nine** form controls on two surfaces against SC 1.4.11's 3:1 — 1.17:1 light and 1.29:1 dark, so it is a two-scheme repair — given a token of their own. **Not a sibling stage**: clause 1's role rule admits only `--border` on a border and none of its four exceptions reaches a control, so the index is amended first — a fifth role, its registry pin and its guards — then the siblings, then the pointer bump. *The ninth, `mini-traceroute`'s `#base-port`, is styled by a refused selector and is invisible to the census that found the other eight, so the scope comes from the stylesheets and not from the instrument.* **S14b — the verdicts themselves**: `PASS`/`FAIL` over what the census already resolves, D6's own-background ground, and the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` — **plus, since §4.25, `ADR-0008` D5 and D6, and whatever the nine control boundaries need, in both schemes**. Re-derived 2026-09-09 from the census: text goes to **zero failures** on the self-as-ground correction alone, the cascade is **542 sites and 525 of them `fill`**, and verdicts over marks without D5 fail **1 195 of 1 785** | **M** for S14b; S14a is S. *The row carried M before §4.25 and the estimate did not move when the scope did — two sibling pull requests, a pointer bump, D5 and D6 to implement, and a 153-site population D5 leaves open* | open — `ADR-0008` D2, D3 and D4, and **§4.25 is the scope re-derivation, which found the row's central assumption false**: this is not a regression guard over a clean corpus, because nine form-control boundaries on two surfaces read 1.17:1 light and 1.29:1 dark against SC 1.4.11's 3:1. **One key enters as `Ratchet(prefix, PENDING_STATE, reason)`, not two** — the text key, which D6 takes to zero failures. The marks key does not enter `GATE` in any state at S14: 153 SVG sites still measure below 3.0:1 after S14a lands, and `ADR-0006` §3's pending state is refutable in both directions, so a key that can never read clean cannot hold it. `ADR-0008` §7. Not before the census prints: D4's sentence is pinned by a guard the moment it is written. **And the census printed two things the design could not have known, which block the stage rather than sizing it — §4.24 measures both.** *First*, **a site's own painted background is not among its candidate grounds.** `_grounds` walks ancestors from `element.parent` and the preceding siblings that contain it, so a `<button>` painting `background: var(--accent)` on itself has its white label measured against `<body>` — `<button> color` at **1.00:1** on `mini-traceroute` and **1.06:1** on `car-price-ml/app`, the two worst text readings in the portfolio, both against a ground the button covers. Neither is a page defect: the real value is 5.17:1, and `car-price-ml/docs/app/styles.css:225` says so in the page's own comment. **S14 cannot read its own census until a site can be its own ground**, and that is not the cascade. *Second*, the marks question is not the one a design would guess: the worst mark is `<rect class="cell"> fill` at **1.00:1** — `pl-review-sense`'s heatmap cells, whose `fill-opacity` *is* the datum — and the 1.17:1 band holds eight `<input>`/`<select>` borders, which are user-interface component boundaries and the first half of SC 1.4.11's own wording. So **S14 cannot fail anything until it has a rule for which marks a reader must perceive**, and the corpus makes that concrete rather than hypothetical. Both are taken at S14's **scope re-derivation from the census's own output** — §4.7's precedent for the fifth time, and `ADR-0008` §4's own reason 2, *"a census decides with an instrument rather than with this document"* — the marks rule entering as `ADR-0008` D5. *The first version of this cell blamed the absent cascade for the two `<button>` readings and told S14 to cascade first; §4.24's erratum is why that would have moved neither number* |
+| **S14** | **The verdicts**, and since §4.25 it is two halves on S12's precedent. **S14a — the control boundaries**, **nine** form controls on two surfaces against SC 1.4.11's 3:1 — 1.17:1 light and 1.29:1 dark, so it is a two-scheme repair — given a token of their own. **Not a sibling stage**: clause 1's role rule admits only `--border` on a border and none of its four exceptions reaches a control, so the index is amended first — a fourth role, its registry pin and its guards — then the siblings, then the pointer bump. *The ninth, `mini-traceroute`'s `#base-port`, is styled by a refused selector and is invisible to the census that found the other eight, so the scope comes from the stylesheets and not from the instrument.* **S14b — the verdicts themselves**: `PASS`/`FAIL` over what the census already resolves, D6's own-background ground, and the cascade an element's single painted colour needs and that no clause-1 check has ever needed, since every one of them is per declaration | `contrast.py`, `GATE`, `tools/spec.py` `c1.s6` and the new `c1.s6b`, `0007` §5 clause 1, `_EVERY_KEY_HTML` — **plus, since §4.25, `ADR-0008` D5 and D6, and whatever the nine control boundaries need, in both schemes**. Re-derived 2026-09-09 from the census: text goes to **zero failures** on the self-as-ground correction alone, the cascade is **542 sites and 525 of them `fill`**, and verdicts over marks without D5 fail **1 195 of 1 785** | **M** for S14b; S14a is S. *The row carried M before §4.25 and the estimate did not move when the scope did — two sibling pull requests, a pointer bump, D5 and D6 to implement, and a 153-site population D5 leaves open* | open — **S14a's index half is done, §4.26**: `0007` §5 clause 1 carries a fourth house role, `c1.s4b` is requoted because a fourth role falsified its count, `c1.s4c` records the half `1 usage roles` does not enforce, and `--border-control` is pinned in both schemes. `ADR-0008` D7. No page moved and the conformance table is byte-identical, so five mutations are what prove it. **What remains of S14a is the two sibling pull requests and the pointer bump**, in that order and not before the amendment merges. *What follows is the state before that half.* `ADR-0008` D2, D3 and D4, and **§4.25 is the scope re-derivation, which found the row's central assumption false**: this is not a regression guard over a clean corpus, because nine form-control boundaries on two surfaces read 1.17:1 light and 1.29:1 dark against SC 1.4.11's 3:1. **One key enters as `Ratchet(prefix, PENDING_STATE, reason)`, not two** — the text key, which D6 takes to zero failures. The marks key does not enter `GATE` in any state at S14: 153 SVG sites still measure below 3.0:1 after S14a lands, and `ADR-0006` §3's pending state is refutable in both directions, so a key that can never read clean cannot hold it. `ADR-0008` §7. Not before the census prints: D4's sentence is pinned by a guard the moment it is written. **And the census printed two things the design could not have known, which block the stage rather than sizing it — §4.24 measures both.** *First*, **a site's own painted background is not among its candidate grounds.** `_grounds` walks ancestors from `element.parent` and the preceding siblings that contain it, so a `<button>` painting `background: var(--accent)` on itself has its white label measured against `<body>` — `<button> color` at **1.00:1** on `mini-traceroute` and **1.06:1** on `car-price-ml/app`, the two worst text readings in the portfolio, both against a ground the button covers. Neither is a page defect: the real value is 5.17:1, and `car-price-ml/docs/app/styles.css:225` says so in the page's own comment. **S14 cannot read its own census until a site can be its own ground**, and that is not the cascade. *Second*, the marks question is not the one a design would guess: the worst mark is `<rect class="cell"> fill` at **1.00:1** — `pl-review-sense`'s heatmap cells, whose `fill-opacity` *is* the datum — and the 1.17:1 band holds eight `<input>`/`<select>` borders, which are user-interface component boundaries and the first half of SC 1.4.11's own wording. So **S14 cannot fail anything until it has a rule for which marks a reader must perceive**, and the corpus makes that concrete rather than hypothetical. Both are taken at S14's **scope re-derivation from the census's own output** — §4.7's precedent for the fifth time, and `ADR-0008` §4's own reason 2, *"a census decides with an instrument rather than with this document"* — the marks rule entering as `ADR-0008` D5. *The first version of this cell blamed the absent cascade for the two `<button>` readings and told S14 to cascade first; §4.24's erratum is why that would have moved neither number* |
 
 Roughly **13–14 days** as first written; **+3–3.5 days** for S-gate (0.5) + S9 (**2–2.5**) + S10 (0.5), plus
 S10's
@@ -2942,7 +2942,7 @@ and the only value clause 1 admits is `--border`, which measures 1.17:1.
 **So two clauses of one specification now disagree.** Clause 1 says a border paints `--border`;
 D5 says a control boundary must clear 3:1, and `--border` does not. The repair is not
 unrepresentable in CSS, it is unrepresentable *in this spec* — which means **S14a is not a
-sibling stage at all**. The order is: amend the index first (a fifth role, `_BORDER_ROLES`,
+sibling stage at all**. The order is: amend the index first (a fourth house role, `_BORDER_ROLES`,
 `0007` §5 clause 1's fourth sentence and its registry pin, with guards and a mutation), then
 the two sibling pull requests, then the pointer bump. Taken the other way round, a correct
 page change reddens a gated clause and the bump goes red — `CLAUDE.md`'s trap arriving from the
@@ -2962,6 +2962,137 @@ pre-D5 key, that it *"could never read clean"*, still reaches the post-D5 key. *
 does not enter `GATE` at S14 in any state**, and what would change that is a further rule about
 which of those 153 are required to understand the content — the escape D5 leaves available. The
 text key is the one S14b can gate, and after D6 it is clean.
+
+### 4.26 What S14a's index half amended — and the guard whose premise was wrong
+
+§4.25 established that two clauses of one specification disagree, and that the index must
+therefore be amended before either sibling moves. This is that amendment. **No page changed,
+and the conformance table is byte-identical** — no surface declares `--border-control` yet, so
+the eleven print `1 light --border-control n/a — not declared` twenty-two times and decide
+nothing. `ADR-0008` §8 is the decision; this is what doing it measured.
+
+**Three things the re-derivation carried that the row did not, all found before code was
+written and all reproducing.**
+
+1. **`c1.s4b`'s pinned quote is *falsified* by the amendment, and no guard could have caught
+   it.** It read *"All four hold only where the role in question is not one of the **three**
+   named above"*. A fourth house role makes that sentence false. Guard 1
+   (`test_every_quote_is_still_the_document_s_own_words`) compares the registry's quote against
+   `0007` and would catch the two files **disagreeing**; it cannot catch them **agreeing on a
+   wrong count**. The replacement carries no count — *"not a house role named above"* — which
+   is this repository's own lesson about typed figures applied prospectively for once, and it
+   survives a sixth role.
+2. **There is a third site saying "three", and it is the one nothing pins at all.**
+   `clauses.py`'s comment over `_HOUSE_ROLES` read *"The three roles the fourth sentence
+   assigns"*. The re-derivation named the registry quote and the document; the comment was
+   found by reading the code the edit lands in. It now carries no count either, and says why.
+3. **The census cannot see the dark half of the repair.** `contrast.py:89` takes
+   `palettes(css).get("light", {})`, and `clause_1_tokens`'s `PINNED` loop is the **only**
+   per-scheme value check in the instrument. A sibling declaring the token in its light
+   `:root` and forgetting the dark override would ship a one-scheme repair with every guard
+   green — on a stage whose own re-derivation closes by insisting *"the repair is a two-scheme
+   repair"*. The token is pinned in both schemes for that reason and no other.
+
+**The values, and the ground they are measured on.** `#808a9c` light and `#596a89` dark —
+3.27:1 and 3.14:1 against `--surface`, 3.48:1 and 3.41:1 against `--bg`. `--surface` is the
+binding side in both schemes and is the ground §4.25's 1.17:1 and 1.29:1 were read on. Both
+surfaces that carry a control declare `--bg`, `--surface` and `--border` identically to the
+byte, so one pinned pair serves both siblings. The margin is close to 3:1 on `--accent-soft`'s
+precedent (3.12:1 and 3.30:1): a boundary is a boundary and not an emphasis.
+
+**The finding of the doing, and it is about a guard rather than about the page.** The stage's
+design specified sweeping all four `_role_exception` shapes with `--border-control` as a second
+wrong role. **Three of the four then assert that a conforming declaration fails.**
+`--border-control` on a `border-left` is admitted by `role in allowed` and never reaches
+`_role_exception` at all, so the rail case demanded a `FAIL` the specification forbids. The
+sweep's own comment already records that mistake being made once, one *shape* to the left —
+*"using one role for both would have made half of this test assert that a conforming
+declaration fails — it did, on the first run"* — and this was the same mistake one *role* to
+the left. **Two of the four discriminate** — the shapes whose template declares a `background`:
+the *filled control*, and *its own fill*, whose template writes a ground and a border together.
+Both fire on `role not in _HOUSE_ROLES`, which is where widening `clause_1_usage`'s local
+`allowed` instead of `_BORDER_ROLES` becomes observable. A border-only shape cannot tell the
+difference at all. *This paragraph said "only the ground shape" and the sweep shipped one case
+short of the corpus; the review measured all four and found it.* *A guard
+whose premise is wrong fails on correct code, which is the cheap direction. The expensive
+direction is a guard that passes over the defect it names, and running the mutation is what
+tells them apart — reading the design did not.*
+
+**Five mutations, five red, over a baseline.** M1 revert `_BORDER_ROLES`; M2 put the role in
+`_GROUND_ROLES` instead; M3 widen the local `allowed` and leave `_BORDER_ROLES` at three; M4
+drop the dark pin; M5 drift the `c1.s4c` quote from the document. The baseline pass — every
+selector run unmutated, asserted green over a non-zero collection — is not ceremony: **M4's
+first form reported `2 errors`, not a red guard**, because deleting the pin entry without its
+comment line left `},` inside a comment. The battery called that UNCAUGHT rather than RED.
+Checking the exit code alone would have scored a syntax error as a caught mutation, which is
+the *"a guard that degrades to skip reads as caught"* trap arriving through a different door.
+
+**What the stage did not do.** It repaired no page: the two sibling pull requests and the
+pointer bump follow, and taken in the other order a correct page change reddens a gated key.
+It did not touch `GATE` — `"1 "` is already `GATED_STATE`, `1 usage roles` stays clean
+throughout, and both ratchet guards keep answering as they did. *That is worth stating because
+`CLAUDE.md`'s eleven/twelve trap trains the reflex to add a `pending` row at every clause
+change, and here there is nothing to add.*
+
+**And one bound recorded rather than re-derived later.** §4.25 names `#base-port` as invisible
+to the census because `.field input[type="number"]` is a refused selector. Reading the page for
+this stage found a **second mechanism** with the same effect: `#speed` (`mini-traceroute`
+`docs/index.html:120`, a `<select>` in `.transport`, not `.field`) and `#numeric` (`:107`, a
+checkbox) carry **no author boundary at all** — no rule reaches them, so there is nothing for a
+selector to refuse. After the repair, two controls on that page keep the user agent's boundary
+while the other two carry the house token. Not a defect and not this repository's to fix, but
+it belongs beside `ADR-0008` D5's bound instead of being found again by whoever reads the page
+next.
+
+**What the review found, and one of the six is why this stage existed at all.**
+
+*The gate was refusing on an authority the document did not carry.* `1 light --border-control`
+and `1 dark --border-control` are gated through `Ratchet("1 ", GATED_STATE)` and their detail
+line reads `spec pins #808a9c` — but the values appeared in `ADR-0008` and in this section and
+**nowhere in `0007`**, while `--accent-soft` and `--positive` have had their values, their
+ratios and their rejected alternatives stated normatively since the clause was written. The
+finest-matching carrier was therefore `c1.s5`, whose cite is *the two split values* and whose
+subject is two other tokens, so a reader auditing the refusal was sent to the wrong sentence.
+`0007` §5 clause 1 now states the pair, and `c1.s5b` carries it. **The gap was invisible from
+the code and from the guards** — `tools/spec`'s ownership test passes either way, because the
+prefix genuinely matched — and it becomes load-bearing at S14b rather than here: §5.0 lets a
+page that measures and records its own reason win, and the two siblings are the first pages
+this key can refuse.
+
+*Two edits in the diff that no mutation reddened.* Drifting `PINNED["light"]["border-control"]`
+left the whole suite green, and so did deleting the role from `COLOUR_ROLES`. The light pin is
+the sharper of the two: the argument that earned the dark pin its guard — that no surface
+declares this token, so unlike `--accent-soft` the corpus cannot stand in — reaches the light
+value identically, and the light value is the one S14b's repairs meet first. Both now have an
+assertion and both reddened on the drift.
+
+*A count contradicted by the instrument, in the decision table later stages cite.* D7 and §8
+said **fifth** house role. `_HOUSE_ROLES` has four members and `_BORDER_ROLES` gains its
+second. The number came from the parallel construction one paragraph above it — *"a fifth
+`_role_exception` shape"*, which is correct, there being four — and §4.25 had already carried
+it here before the stage started. Corrected in all four places rather than in the two written
+this session, because the origin is the one a reader reaches first. *In four of five: the S14
+row of the plan table said it twice more and was missed — and that row is the origin this
+sentence names. Found by the `code-reviewer` pass that closed the stage; corrected
+2026-09-10.*
+
+*And a repair that broke something, caught by a guard that was already there.* Printing the
+pin's failure detail against both grounds — §4.25's figures bind on `--surface`, and the detail
+named only `--bg`, so a value refused at 2.97:1 on the binding ground could print `3.16:1` in
+its own refusal — was written to compute the ratios before checking that the declared value is
+an opaque hex. `test_an_alpha_hex_token_is_reported_without_a_ratio_rather_than_crashing`
+turned it from a crash into a failed assertion in one run. *The stage's own argument is that
+only mutations can prove a guard here; this is the other half of it — the suite proving a
+change, which is what a suite is for and what this section had no example of.*
+
+*And the battery's `git checkout --` discarded uncommitted work for the second time in
+two stages.* S13 recorded it; this stage re-ran the battery with the review's repairs still
+uncommitted in the two files `restore()` reverts, and lost both — the `c1.s5b` row and the
+two-ground detail. They were rewritten from the documents, which still referenced them, and
+the tell was an anchor assertion failing in the battery rather than anything the suite said.
+**A recorded trap is not a guard.** The battery would cost nothing to make safe — it could
+refuse to run against a dirty tree in the paths it restores — and that is worth more than
+this paragraph, which is the second one written instead.
 
 ## 5. What is carried, not scheduled
 

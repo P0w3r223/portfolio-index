@@ -159,14 +159,36 @@ CLAUSES: tuple[Clause, ...] = (
     Clause(
         id="c1.s4b",
         cite="0007 §5 clause 1, the condition on the four exception shapes",
-        quote="All four hold only where the role in question is not one of the three named "
-              "above",
+        quote="All four hold only where the role in question is not a house role named above",
         carriers=_index("1 usage roles"),
         note="Entered on review, 2026-09-07. The first walk read it as part of the italic "
              "census block and left it out; it is bold, rule-bearing and load-bearing — "
              "`clauses.py` records the implementation being written twice before it was true "
              "and three review passes each finding one layer of it. Without the condition "
-             "the sweep takes the rule from 55 of 97 conforming sites caught to 97 of 97.",
+             "the sweep takes the rule from 55 of 97 conforming sites caught to 97 of 97. "
+             "*Requoted by S14a, 2026-09-09: it read \"not one of the three named above\" "
+             "until a fourth house role existed, at which point the sentence was false. "
+             "Guard 1 compares this quote against the document and would have caught the two "
+             "files disagreeing — it cannot catch them agreeing on a wrong count, and the "
+             "replacement therefore carries none. `0008` §4.26.*",
+    ),
+    Clause(
+        id="c1.s4c",
+        cite="0007 §5 clause 1, the control-boundary role",
+        quote="or `--border-control` where the border is a user-interface control's own "
+              "boundary",
+        carriers=_human("review — `1 usage roles` admits the name, not the placement"),
+        note="Entered by S14a, 2026-09-09. **The half the checker enforces and the half it "
+             "does not are different sizes, and this row exists so the gap prints rather "
+             "than being inferred from source.** `clause_1_usage` asks whether a border's "
+             "role is in `_BORDER_ROLES`; it has no notion of what element a selector "
+             "reaches, so it admits `--border-control` on a table hairline exactly as "
+             "readily as on a control. Making it strict was measured and refused: the "
+             "page-aware form would answer through `selector.parse`, which returns a "
+             "`Refusal` for `.field input[type=\"number\"]` — so on `mini-traceroute`'s own "
+             "repair rule the strictest available design reports `undecided`, which never "
+             "gates. `ADR-0008` D7 §2 records that trade; the placement is review's, and "
+             "`c1.s7`'s closing sentence is what decides a page that stretches it.",
     ),
     Clause(
         id="c1.s5",
@@ -176,6 +198,23 @@ CLAUSES: tuple[Clause, ...] = (
         note="The per-scheme keys pin the eight settled values and the two that split. Note "
              "the two prefixes one space apart: `1 dark` is the override's presence, `1 dark ` "
              "with a trailing space is a pinned value.",
+    ),
+    Clause(
+        id="c1.s5b",
+        cite="0007 §5 clause 1, the control-boundary values",
+        quote="`--border-control` is pinned in both schemes, and it is measured on "
+              "`--surface`, the ground a control's boundary faces",
+        carriers=_index("1 light --border-control", "1 dark --border-control"),
+        note="Entered by S14a, 2026-09-09, **and the row exists because the gate was "
+             "refusing on an authority the document did not carry.** The two pinned keys "
+             "are gated through `Ratchet(\"1 \", GATED_STATE)` and their detail line says "
+             "`spec pins #808a9c`; until this sentence was written the spec said no such "
+             "thing, and the finest-matching carrier was `c1.s5` — a row whose cite is *the "
+             "two split values* and whose subject is `--accent-soft` and `--positive`. A "
+             "reader auditing what licensed the refusal was sent to a sentence about two "
+             "other tokens. Found by the review of `0008` §4.26, and it becomes load-bearing "
+             "at S14b rather than here: `0007` §5.0 lets a page that measures and records "
+             "its own reason win, and these are the first pages this key can refuse.",
     ),
     Clause(
         id="c1.s6",
