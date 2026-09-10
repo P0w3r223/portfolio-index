@@ -55,8 +55,11 @@ _OWN_GROUND_PROPERTIES = ("background", "background-color")
 #: property name — **SVG paint in, structural `border`/`outline` out** — and a border painted
 #: in the control role is in, which is the whole reason D7 gave that role a token.
 #:
-#: **The approximation is known to be wrong in two places and §7 names both**: it admits 48
-#: gridline and axis strokes that carry the excluded role, and excludes 3 `accent-color` sites
+#: **The approximation is known to be wrong in four shapes and §7 names them**: it admits 48
+#: gridline and axis strokes that carry the excluded role, **17 more that `0008` §4.29
+#: measured — SVG backgrounds, quiet fills whose element carries its role on `stroke`, and
+#: translucent washes, putting the admitted population at 65 rather than 48** — and excludes 3
+#: `accent-color` sites
 #: that carry the included one. The second is why this is not `paint.MARK | paint.NON_TEXT`
 #: minus borders: `accent-color` is out because the partition is by name, and naming it in
 #: would be a different decision than the one D5 took.
