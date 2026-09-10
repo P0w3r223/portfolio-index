@@ -373,8 +373,10 @@ it is an instruction.
    structure — a table rule, a card edge, the line under a heading. What a site is measured against
    is what covers it: an element painting its own opaque background is read on that background and
    not on what the background hides, while a boundary faces outward and is read against the other
-   side. `ADR-0008` D4, D5 and D6; the wording was held back until the census had printed, because
-   this sentence is pinned by a guard from the moment it exists.
+   side. **A ground painted by the same declaration as the site is not one of them**: two
+   overlapping instances of one mark carry one meaning, and a reader is owed no way to tell them
+   apart. `ADR-0008` D4, D5, D6 and D8; the wording was held back until the census had printed,
+   because this sentence is pinned by a guard from the moment it exists.
    *The tokens and dark columns of §3 — where the tokens column counts **declared** properties, so
    `wroclaw`'s `9` and the `8` house tokens below are two different quantities.* Two rows need a word the
    table cannot hold. `wroclaw` reaches it
