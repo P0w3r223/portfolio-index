@@ -3236,6 +3236,99 @@ not. *And the second of `ADR-0008` §9's two stated bounds was met while it was 
 first fixture painted `.cell-share` the same token as its cell, the exclusion reached it, and
 the guard went red — correctly.*
 
+### 4.29 The 17 that were called page work, and are not
+
+Taken 2026-09-10 as the one item in the marks census that needed no design decision — the
+remainder after D5's recorded gridline error and D5's untaken escape. **The scope re-derivation
+found the item does not exist.** §4.7's precedent for the seventh time, and §4.25's shape: the
+row's central assumption was false.
+
+All 17 are `ADR-0008` D5's partition admitting a paint whose role is not the one D5 obliges, in
+**three shapes**, and none is a defect any page should repair.
+
+| n | site | declared | worst | shape |
+|---|---|---|---|---|
+| 8 | `auth-log-scan` `rect.lane` | `var(--surface)` | 1.06:1 | a background drawn in SVG |
+| 6 | `pl-review-sense` `rect.track` | `var(--border)` | 1.24:1 | the quiet half of a two-property element |
+| 2 | `auth-log-scan` `rect.window-band` | `var(--accent-soft)` | 1.27:1 | a wash |
+| 1 | `pl-review-sense` `polygon.band` | `var(--accent)` | 1.25:1 | a wash |
+
+**Shape one — a background drawn in SVG.** `--surface` is the panel token, `#f6f8fa` on
+`#ffffff`, and `.chart .lane` is the row background of a swimlane chart (`build.py:115`,
+`charts.Lane`). `contrast.sites` already refuses this exact role: *"A background is a **ground
+and not a site**"*, and it excludes `paint.GROUND` for that reason. It cannot reach this one,
+because **in SVG a background is a `fill`** — the same property a data mark uses. The census comment
+that states the rule and the partition that misses it are **adjacent lines** in one module —
+`contrast.py:141-145` and `:146`. *An earlier version of this sentence said eleven lines apart,
+which is a hand count and is wrong in the direction that weakens its own point.*
+
+**And that comment adjudicated this exact ratio already.** It continues: *"Counting them as
+marks put `<code> background **1.06:1**` at the head of six surfaces — true, and about a code
+chip sitting on a card, which is a **design choice rather than a finding**."* `--surface` on
+`--bg` is 1.0647:1 whichever way it is spelled. The checker decided this ratio was not a
+finding for the HTML spelling and reports it as one for the SVG spelling, which makes shape one
+a citation rather than an argument.
+
+**Shape two — the quiet half of a two-property element, and the page measured it first.**
+`pl-review-sense/src/pl_review_sense/site/assets/styles.css:155` carries the author's own
+reasoning: *"the ceiling has to be drawn, because '17' means nothing without the 20 behind it —
+and a fill of `--border` alone is **1.24:1 against the page**, which draws it without making it
+visible. **The outline carries the extent; the fill stays quiet** so the bar inside it keeps the
+emphasis."* The figure is the checker's, arrived at independently. And the outline is
+measurable: **`.track`'s `stroke: var(--muted)` reads 5.98:1 and passes**, on the same element,
+in the same run. So the information a reader needs clears the bar by double, and the checker
+fails the property beside it that was designed not to carry.
+
+**This is the shape §7 does not have.** Its two recorded errors are both *which elements* D5
+admits. This one is *which property of one element*: role can sit on a sibling declaration, and
+a partition by property name cannot see that a `stroke` next door is doing the work.
+
+**Shape three — a wash, and it splits in two.** Both are `fill` at low alpha, and only one of
+them is exempt on its author's own reasoning.
+
+*The two `rect.window-band` sites are adversarial to repair, measured.* This is the span
+`auth-log-scan`'s marks are drawn on, and `styles.css:142` records its author sweeping that
+band's opacity **downward** — 0.45 to 0.25, 0.28 to 0.15 — *so the marks composited on it would
+clear 3:1*, with the swept table printed in the stylesheet. **Raising the band to 3:1 would
+undo the repair S7 shipped.** *Four further `.window-band` sites, the `--danger` flagged
+variant, are unmeasured — two rules declare the alpha and the census has no cascade — so they
+sit under `contrast ground` and are neither in the 17 nor exempt.*
+
+*The one `polygon.band` site is **obliged by role and its author says so**, and it is the
+place this row's first version overreached.* `pl-review-sense/…/styles.css:141` reads: *"Series:
+one line, its seed-to-seed spread as a band behind it. **The band is the honest half of the
+figure — without it a bumpy curve reads as structure.**"* That is SC 1.4.11's own wording —
+*required to understand the content* — written by the page. Calling it decorative was wrong.
+
+**What is refuted is the repair by opacity, and it is refuted by arithmetic rather than by
+analogy.** The band and the series line are one token: `fill: var(--accent); opacity: 0.16`
+behind a 2px `var(--accent)` line. Today the band reads 1.25:1 against the page and the line
+reads **4.13:1 on the band**. The band reaches 3.0:1 only at **alpha 0.70**, and at that alpha
+the line it exists to support reads **1.71:1** on it — below the line's own 3:1. Darkening the
+wash walks it toward the colour of the thing it sits behind, so the two obligations move in
+opposite directions by construction.
+
+**The outline route is open and is not taken here.** Shape two's own pattern — carry the
+extent on `stroke` and let the fill stay quiet — ships eleven lines above `.band` in the same
+stylesheet at 5.98:1. Whether an outlined confidence band reads as a hard boundary where the
+data has none is a design question for that repository, not a measurement for this one. **So
+one of the 17 is an open question rather than an exemption**, and it is recorded as such.
+
+**What this leaves.** Of the 88 obligated mark failures surviving D8: **65** are D5's partition
+error — 48 gridline and axis strokes §7 already records, plus these 17 — **9** are the
+`rect.cell` heatmap fills §7 records as D5's untaken escape, and **14** are
+mark-against-a-different-mark, which `ADR-0008` §9 leaves as its own decision. **Zero of these
+17 is a page defect that this repository could name**, and one — the `polygon.band` above — is an
+open question for its own repository rather than an exemption. *An earlier version of this
+sentence said zero of the **88** are a page defect, which resolves in one clause, and in the
+convenient direction, the role question §9 expressly declines to settle: "Deciding it here would
+fold a role judgement into a ground rule." The 14 remain open.* The `contrast marks` key cannot
+gate, and the share of that reason belonging to the pages is now much smaller than the census
+first suggested.
+
+*No page was edited and no pointer moved. The stage this row was going to be does not exist;
+what exists instead is a D5 amendment, which is a design decision and is not taken here.*
+
 
 ## 5. What is carried, not scheduled
 

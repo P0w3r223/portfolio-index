@@ -25,7 +25,7 @@ re-derived, which is where D5 and D6 were measured),
 | **D2** | S13 ships as a **census**: three keys, `UNDECIDED` by construction, printing every usage site with its ratio and its resolved grounds. The verdicts become **S14** |
 | **D3** | At S14 a verdict key enters `GATE` as **`Ratchet(prefix, PENDING_STATE, reason)`**, not `REPORT_ONLY_STATE`. `contrast ground` stays in `NOT_A_CLAUSE` and `NOT_A_SENTENCE` permanently. *Neither half of this row survived contact with the corpus.* It said **the two** verdict keys until 2026-09-10, and `0008` §4.25 had already re-derived that to one — which this row did not follow, the second time a count in this table outlived what it counted. Then S14b entered neither key as `pending`: `contrast text` is **gated**, because a fetching run reads it clean on all twelve and `ADR-0006` §3 makes that the refutation demanding promotion; and `contrast marks` is **report-only**, because the argument against `pending` — a state refutable in both directions, held by a key that can never read clean — says nothing about a state that is an explanation.* |
 | **D4** | `0007` §5 clause 1 gains the sentence that makes a usage site's threshold an **obligation**, entering the registry as **`c1.s6b`**. Its wording is taken **after** the census prints, because `test_spec`'s guard pins the quote for as long as the sentence exists |
-| **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the two places the approximation is known to be wrong. Taken 2026-09-09 against the census |
+| **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the places the approximation is known to be wrong — **two when D5 was taken and four since `0008` §4.29**. Taken 2026-09-09 against the census |
 | **D6** | A site's own opaque **background occludes** what is behind it, so the ground walk starts at the element and stops there. Its own `fill` does not, and a **border faces outward** — measured against the other side of the boundary, never against what the element itself paints. §7 |
 | **D7** | `0007` §5 clause 1 gains a **fourth house role, `--border-control`**, because D5 requires of a control boundary a ratio clause 1's one border role cannot reach. The checker admits the **name and not the placement** — the strict form was measured and refused — so the gap is recorded as `c1.s4c` and printed on every run. The token is **pinned in both schemes**, which is the only per-scheme value check the instrument has. §8 |
 
@@ -180,7 +180,7 @@ parts of a graphic required to understand the content. The checker cannot read r
 approximates by property name — controls and SVG paint in, structural `border`/`outline` out.
 *The first version of this section called that approximation "a reading of the criterion rather
 than a policy". It is not; it is an approximation of a reading, and it is known to be wrong in
-two places:*
+two places — **four since `0008` §4.29, which measured 17 more sites in two further shapes**:*
 
 - **48 sites it admits that have the excluded role.** `line.grid` (22), `line.lane-line` (15),
   `line.axis-line` (8) and `line.axis` (3) are gridlines and axis rules, painted the same
@@ -188,6 +188,14 @@ two places:*
   only because they are `<line stroke>` rather than `border-bottom`, and
   `car-price-ml/docs/index.html` carries the author's own comment on that rule — *"Gridlines
   are a reading aid, not data"*.
+  *This bullet read **48** until 2026-09-10 and the true figure is **65**: `0008` §4.29
+  measures 17 more in three shapes — 8 SVG backgrounds (`rect.lane`), 6 quiet fills whose
+  element carries its role on `stroke` instead (`rect.track`, whose outline reads 5.98:1 in
+  the same run), and 3 translucent washes that measure — four more are unjudged for want of a
+  cascade. **The second of those is a shape this section did
+  not have**: both bullets here are about *which elements* D5 admits, and that one is about
+  *which property of one element*. The third is adversarial to repair — `auth-log-scan`'s
+  author swept a band's opacity downward so the marks on it would clear 3:1.*
 - **3 sites it excludes that have the included role.** `accent-color` on `car-price-ml/app`'s
   `#year-slider` and `#mileage-slider` and `mini-traceroute`'s `#numeric` is the visible part
   of a range slider and a checkbox — user-interface components by any reading. They pass at
@@ -477,7 +485,9 @@ It does not make `contrast marks` gateable. The pages' half of the `GATE` row st
 composition is now printed by the run rather than described in the reason: of the surviving 88,
 **48 are the gridline and axis strokes §7 already records D5 as admitting wrongly**, 9 are the
 `rect.cell` heatmap fills §7 records as the escape D5 left available and unimplemented, 14 are
-the table above, and 17 are the remainder. Four separable questions, of which D8 is one.
+the table above, and 17 were called a remainder. **`0008` §4.29 measured that remainder and it
+is not a separate question**: all 17 are this same partition error in three shapes, which puts
+it at 65 rather than 48. **Three separable questions, of which D8 is one.**
 
 It does not touch `contrast text`, for the structural reason above. And it does not correct the
 anchor-point approximation in `geometry.contains`, which tests the site's *anchor* against the

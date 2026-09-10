@@ -137,10 +137,11 @@ GATE: tuple[Ratchet, ...] = (
         "the sites that decision moved the "
         "guaranteed ground was never the binding one, and both failures with a history are "
         "read on a geometric ground. What is excluded instead is a ground that is another "
-        "instance of the same mark. THE PAGES' HALF STANDS: marks still need repairing or "
-        "exempting, ADR-0008 D5's own partition is recorded as wrong for the gridline "
-        "population it admits, and D5 leaves the escape for a graphic whose value is also "
-        "in text available and unimplemented. The surviving count is printed above rather "
+        "instance of the same mark. THE PAGES' HALF STANDS, but 0008 4.29 measured how "
+        "little of it is theirs: of the failures left, 65 are D5's own partition admitting "
+        "a paint whose role it does not oblige, 9 are the escape D5 leaves for a graphic "
+        "whose value is also in text, available and unimplemented, and 14 are a mark "
+        "against a different mark, which ADR-0008 9 leaves open. The surviving count is printed above rather "
         "than typed here — 0008 §4.11 records what a hand-typed figure costs in these lines",
     ),
     Ratchet(
