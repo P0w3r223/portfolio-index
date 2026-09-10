@@ -210,7 +210,7 @@ honest about `color-mix()`, an unread media condition, and a headline it cannot 
 `python -m tools.pagespec` exiting 0 therefore means *no gated clause failed*, and not *every
 clause passes*. What else stays outside the gate is now printed by the run itself, under
 `gate policy`, with the reason beside it — `served` and, since S14b, `contrast marks`.
-**That second row is the first one whose key actually fails**: five of the eleven surfaces
+**That second row is the first one whose key actually fails**: four of the eleven surfaces
 report it, so a run now prints `FAIL` and exits 0, and the only place saying why is that
 block. *The sentence above said `served` was the only row there, and stayed true for two
 days.*

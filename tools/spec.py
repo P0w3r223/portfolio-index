@@ -250,12 +250,16 @@ CLAUSES: tuple[Clause, ...] = (
              "text` is gated — a fetching run reads it clean on all twelve, which is the "
              "refutation that demands promotion — and `contrast marks` is report-only, "
              "because SVG sites still measure below 3.0:1 and a key that can never read "
-             "clean cannot hold a state refutable in both directions. *This note carried "
+             "clean cannot hold a state refutable in both directions. *This note glossed "
+             "the owed-by sentence as well until 2026-09-10 — it is c1.s6d now, entered by "
+             "the pass that amended the decision resting on it. And this note carried "
              "the figure 153 until 2026-09-10, and D8 refuted it the same day. No number "
              "is typed here now: the run prints the count per surface. The GATE row's "
              "twin of this sentence was corrected in the same commit and this one was "
-             "not, which is the two-spellings drift 0008 4.11 records.* Superseded: "
-             "clean cannot hold a state refutable in both directions.",
+             "not, which is the two-spellings drift 0008 4.11 records. A third correction to "
+             "this one field went unrecorded and is recorded now: it ended with a stray "
+             "duplicated fragment, `Superseded: clean cannot hold...`, left by the D8 pass "
+             "and deleted by the D5 one.*",
     ),
     Clause(
         id="c1.s6c",
@@ -269,6 +273,21 @@ CLAUSES: tuple[Clause, ...] = (
              "property. A `color` site cannot acquire the kind of ground this sentence "
              "excludes. SVG text is painted with `fill` and is therefore a mark, which is "
              "where the one live failure this checker has caught actually lived.",
+    ),
+    Clause(
+        id="c1.s6d",
+        cite="0007 §5 clause 1, the owed-by sentence",
+        quote="A site painted as a mark is owed it where the mark identifies a control or "
+              "carries information the reader needs, and not where it is structure",
+        carriers=_index("contrast marks"),
+        note="Normative since the contrast sentences entered, and carried by no row until "
+             "2026-09-10 — `c1.s6b`'s note glossed it, which is a defensible reading and is "
+             "also how each of `0009` §3.2's three occurrences looked from inside. This "
+             "module's own docstring names the only mechanism that finds one: *nothing "
+             "detects a sentence that was never entered*, so its carriers are `ADR-0005` and "
+             "the review pass. `ADR-0008` §10 was that pass — it amended D5, which is this "
+             "sentence's approximation, and the amendment could not be written without "
+             "quoting a sentence the registry did not hold.",
     ),
     Clause(
         id="c1.s7",

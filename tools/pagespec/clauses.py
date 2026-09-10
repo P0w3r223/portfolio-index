@@ -110,7 +110,19 @@ _GROUND_ROLES = frozenset({"bg", "surface"})
 #: `.card.caution { border-left: 3px solid var(--border-control) }` is exempted as a *rail* —
 #: a house role walking through an exception, which is verbatim the `n−1 shapes of n` defect
 #: `_role_exception`'s own docstring records three review passes finding.
-_BORDER_ROLES = frozenset({"border", "border-control"})
+CONTROL_ROLE = "border-control"
+_BORDER_ROLES = frozenset({"border", CONTROL_ROLE})
+#: The roles clause 1 assigns to **structure** — *"a table rule, a card edge, the line under a
+#: heading"* — whatever property paints them. `ADR-0008` §10 reads a mark's obligation off this
+#: set, because the property name cannot separate a gridline from a data mark and the token can:
+#: across the twelve, `--border` and `--surface` measure below 3.0:1 sixty-two times and above
+#: it **zero** times, while every semantic token passes in the hundreds.
+#:
+#: **Written out rather than derived as `_GROUND_ROLES | _BORDER_ROLES - {CONTROL_ROLE}`.** A
+#: fifth house role must default to *obliged*, which is the loud direction; a subtraction
+#: defaults it the other way and would exempt a new role silently on the day it is minted.
+STRUCTURE_ROLES = frozenset({"bg", "surface", "border"})
+
 #: The roles the fourth sentence assigns. A role in here is never what makes an
 #: exception an exception: every one of the four shapes is about a surface deliberately
 #: painted *outside* the house scheme, so a house role appearing there is the defect rather
@@ -178,6 +190,28 @@ _HEX_LITERAL = re.compile(r"#[0-9a-fA-F]{3,8}\b")
 #: A regex could not be widened into the repair — a fallback may hold a nested `var()` and
 #: `[^)]*` stops at the inner close paren — so `_fallback_argument` balances instead.
 _VAR_NAME = re.compile(r"var\(\s*(--[\w-]+)")
+
+
+def roles_named(value: str) -> frozenset[str]:
+    """Every house role a declaration names, bare of the `--` prefix.
+
+    One spelling of *which roles does this value reference*, because there were two:
+    `contrast.py` carried its own `_CONTROL_ROLE = "--border-control"` literal, tied to
+    `_BORDER_ROLES` by nothing — `0009` N1's shape, which is why `GATED` is derived from
+    `GATE` rather than typed twice. `_role_exception` reads this too, where the same
+    comprehension stood written out.
+
+    *The first version of this docstring said the module stripped the prefix inline in
+    three further places and implied they were folded in. They were not, and they are a
+    different shape: each looks up **one** reference and carries per-reference data
+    beside it, where this returns a set. Only the one in `_role_exception` was this
+    function written longhand. Found by the review of `ADR-0008` §10.*
+
+    **`findall`, not `search`.** A value may name two — `color-mix(in srgb,
+    var(--surface) 70%, var(--accent) 30%)` — and §10's obligation test is a subset
+    check, so a scan that stopped at the first would silently narrow it.
+    """
+    return frozenset(name.lstrip("-") for name in _VAR_NAME.findall(value))
 
 #: An `@import` or a `@font-face` `src:` pointing off-origin. Quotes are stripped by the
 #: caller rather than matched here, which keeps the class free of quote characters.
@@ -543,8 +577,7 @@ def _role_exception(selector: str, body: str, prop: str, role: str) -> str | Non
     if prop in _BORDER_PROPERTIES:
         for ground in _GROUND_PROPERTIES:
             painted = _declaration(body, ground) or ""
-            if (role in [name.lstrip("-") for name in _VAR_NAME.findall(painted)]
-                    and role not in _HOUSE_ROLES):
+            if role in roles_named(painted) and role not in _HOUSE_ROLES:
                 return "its own fill"
         if (prop == "border-color" and role not in _HOUSE_ROLES
                 and _INTERACTION_STATE.search(_unquoted(selector))):

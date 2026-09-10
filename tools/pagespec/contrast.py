@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import NamedTuple
 
-from . import colour, css as cssmod, geometry, paint
+from . import clauses as clausemod, colour, css as cssmod, geometry, paint
 from .clauses import FAIL, Finding, PASS, UNDECIDED
 from .render import Element, Page
 
@@ -49,21 +49,22 @@ _GROUND_PROPERTIES = ("background", "background-color", "fill")
 #: question *does this thing contrast with itself*.
 _OWN_GROUND_PROPERTIES = ("background", "background-color")
 
-#: `ADR-0008` D5. The criterion asks 3:1 of user-interface components and of graphical objects
-#: required to understand the content; it asks nothing of a hairline between two rows of a
-#: table whose data is entirely text. The checker cannot read role, so it approximates by
-#: property name — **SVG paint in, structural `border`/`outline` out** — and a border painted
-#: in the control role is in, which is the whole reason D7 gave that role a token.
-#:
-#: **The approximation is known to be wrong in four shapes and §7 names them**: it admits 48
-#: gridline and axis strokes that carry the excluded role, **17 more that `0008` §4.29
-#: measured — SVG backgrounds, quiet fills whose element carries its role on `stroke`, and
-#: translucent washes, putting the admitted population at 65 rather than 48** — and excludes 3
-#: `accent-color` sites
-#: that carry the included one. The second is why this is not `paint.MARK | paint.NON_TEXT`
-#: minus borders: `accent-color` is out because the partition is by name, and naming it in
-#: would be a different decision than the one D5 took.
-_CONTROL_ROLE = "--border-control"
+#: A control's own paint, which no border declares and which the border family therefore
+#: cannot reach. `accent-color` is the visible part of a range slider and a checkbox — a
+#: user-interface component by any reading of SC 1.4.11 — and D5's property-name partition
+#: excluded it. `ADR-0008` §10.
+_CONTROL_PROPERTIES = frozenset({"accent-color"})
+
+#: Words are words wherever they are painted, and this is a **bound** rather than a detail.
+#: `ADR-0008` §10 exempts SVG paint declaring only structure roles; without this set that
+#: exemption would reach an SVG label. `mini-traceroute`'s stylesheet carries
+#: `.probe-ttl { fill: var(--bg); font-size: 9px; font-weight: 700 }` and `it-job-radar`'s
+#: `.series-dot.observed { fill: var(--bg) }` — and `--bg` shows **zero** measured sites in the
+#: census today, which is this checker's blindness rather than the corpus's: a cascade turns
+#: those on. A partition trusting that zero would go blind on SVG labels at exactly the stage
+#: that makes them visible, and SVG text is where the only live failure this system has caught
+#: actually lived.
+_TEXT_TAGS = frozenset({"text", "tspan"})
 
 
 class Painted(NamedTuple):
@@ -197,7 +198,7 @@ def _site(page: Page, element: Element, prop: str, chosen: paint.Candidate,
           candidates: list[paint.Candidate], multiplier: float | None,
           palette: dict[str, str], rules: list[paint.Rule]) -> Site:
     threshold = TEXT_THRESHOLD if prop in paint.TEXT else MARK_THRESHOLD
-    obligated = _obligated(prop, chosen.declared)
+    obligated = _obligated(element.tag, prop, chosen.declared)
     reasons = []
     if chosen.colour is None:
         reasons.append(f"unreadable value {chosen.declared!r}")
@@ -220,18 +221,41 @@ def _site(page: Page, element: Element, prop: str, chosen: paint.Candidate,
                 threshold, obligated, grounds, same, len(candidates), "; ".join(reasons))
 
 
-def _obligated(prop: str, declared: str) -> bool:
+def _obligated(tag: str, prop: str, declared: str) -> bool:
     """Whether `ADR-0008` D5 asks this site to meet its threshold at all.
 
-    Text always is: SC 1.4.3 is about reading words and every `color` site is words. For the
-    rest the partition is D5's, approximated by property name — SVG paint in, structural
-    `border`/`outline` out — with one exception that is not a name: a border painted in the
-    **control role** is a user-interface component boundary and is in. That exception is the
-    reason D7 gave the role a token of its own, so this is where the two decisions meet.
+    **The rule is D5's and unchanged; the axis is §10's.** Obligation attaches to *role*, and
+    D5 approximated role by property name — which cannot work, because `fill` paints a gridline
+    and a data mark with one word. §10 reads the role off the declaration instead, on `c1.s4`'s
+    ground that *a token is used in the role it names*: across the twelve, `--border` and
+    `--surface` measure below the bar 62 times and above it **zero** times, while every
+    semantic token passes in the hundreds.
+
+    The order of the tests is load-bearing:
+
+    - **Text first and unconditionally.** SC 1.4.3 is about reading words.
+    - **The control role and a control's own paint next**, so `border: 1px solid
+      var(--border-control)` never reaches the boundary exclusion below. D7 minted that role
+      because no existing token could carry a control boundary's ratio.
+    - **A boundary that bounds no control is owed nothing**, exactly as under D5.
+    - **An SVG label is never exempted by the token painting it** — `_TEXT_TAGS`, and the
+      constant's own comment is why that bound is not cosmetic.
+    - **`named <= STRUCTURE_ROLES` and not `named & STRUCTURE_ROLES`.**
+      `color-mix(in srgb, var(--accent) 30%, var(--surface))` names both and must stay obliged;
+      the corpus cannot redden that conjunct, so its guard is synthetic.
+    - **`named and …`** — a declaration naming no token at all stays obliged. The instrument
+      cannot read a role it was never given, and fail-loud is the direction that gets found.
     """
-    if prop in paint.TEXT or prop in paint.MARK:
+    if prop in paint.TEXT:
         return True
-    return prop.startswith("border") and _CONTROL_ROLE in declared
+    named = clausemod.roles_named(declared)
+    if clausemod.CONTROL_ROLE in named or prop in _CONTROL_PROPERTIES:
+        return True
+    if prop not in paint.MARK:
+        return False
+    if tag in _TEXT_TAGS:
+        return True
+    return not (named and named <= clausemod.STRUCTURE_ROLES)
 
 
 def _grounds(page: Page, element: Element, prop: str, rules: list[paint.Rule],
@@ -374,13 +398,25 @@ def _measured(found: list[Site], exempt: list[Site] | None = None) -> str:
     """The population, the worst reading in it, and — for marks — what D5 left out of it.
 
     The exempt count is printed rather than dropped because it is the largest single number
-    this module knows and the one a reader is likeliest to want back: 1 049 structural borders
-    and outlines, of which 1 034 measure below 3.0:1 and are required to measure nothing.
-    Leaving it unprinted would make `contrast marks` look like a reading of every non-text
-    site, which it deliberately is not.
+    this module knows and the one a reader is likeliest to want back: structural borders and
+    outlines, nearly all of them below 3.0:1 and required to measure nothing. Leaving it
+    unprinted would make `contrast marks` look like a reading of every non-text site, which it
+    deliberately is not. *This paragraph carried the figures 1 049 and 1 034 until 2026-09-10,
+    when `ADR-0008` §10 moved both; the run prints them and this does not.*
+
+    **The structure-paint share is broken out, and it is the whole mitigation for §10's one
+    unverifiable direction.** `clause_1_usage` applies the role rule to the ground and border
+    families and deliberately not to `fill`/`stroke`, so a genuine data mark painted
+    `var(--border)` is exempted with nothing objecting. Nothing can object — but the count is
+    on every run, so a new one appearing moves a number a reader sees. `c1.s4c`'s answer to
+    the same shape one property to the left.
     """
     measured = [(min(one.ratios), one) for one in found if one.ratios]
-    tail = f"; {len(exempt)} outside D5's obligation" if exempt else ""
+    structural = sum(1 for one in (exempt or ()) if one.prop in paint.MARK
+                     and (named := clausemod.roles_named(one.declared))
+                     and named <= clausemod.STRUCTURE_ROLES)
+    share = f", {structural} of them structure paint" if structural else ""
+    tail = f"; {len(exempt)} outside D5's obligation{share}" if exempt else ""
     if not found:
         return "no site" + tail
     if not measured:
