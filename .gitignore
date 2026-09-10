@@ -28,3 +28,8 @@ Thumbs.db
 # an uncommitted change at every startup — a standing false finding in the one instrument whose
 # value is that a finding means something.
 .claude/settings.local.json
+
+# The audit's identifier list for axis E2, named by `docs/audit/0010_the-portfolio-audit.md`
+# §3.2. It holds the owner's private identifiers, and §3.2's whole point is that they are
+# never committed: writing a PESEL into a document to hunt for leaked PESELs is the exposure.
+audit-identifiers.local
