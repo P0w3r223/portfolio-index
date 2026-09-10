@@ -25,7 +25,7 @@ re-derived, which is where D5 and D6 were measured),
 | **D2** | S13 ships as a **census**: three keys, `UNDECIDED` by construction, printing every usage site with its ratio and its resolved grounds. The verdicts become **S14** |
 | **D3** | At S14 a verdict key enters `GATE` as **`Ratchet(prefix, PENDING_STATE, reason)`**, not `REPORT_ONLY_STATE`. `contrast ground` stays in `NOT_A_CLAUSE` and `NOT_A_SENTENCE` permanently. *Neither half of this row survived contact with the corpus.* It said **the two** verdict keys until 2026-09-10, and `0008` §4.25 had already re-derived that to one — which this row did not follow, the second time a count in this table outlived what it counted. Then S14b entered neither key as `pending`: `contrast text` is **gated**, because a fetching run reads it clean on all twelve and `ADR-0006` §3 makes that the refutation demanding promotion; and `contrast marks` is **report-only**, because the argument against `pending` — a state refutable in both directions, held by a key that can never read clean — says nothing about a state that is an explanation.* |
 | **D4** | `0007` §5 clause 1 gains the sentence that makes a usage site's threshold an **obligation**, entering the registry as **`c1.s6b`**. Its wording is taken **after** the census prints, because `test_spec`'s guard pins the quote for as long as the sentence exists |
-| **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the places the approximation is known to be wrong — **two when D5 was taken and four since `0008` §4.29**. Taken 2026-09-09 against the census |
+| **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the places the approximation is known to be wrong — **two when D5 was taken and four since `0008` §4.29**. Taken 2026-09-09 against the census. ***Amended 2026-09-10, §10**: the partition is read from the **role the declaration names**, not from the property name. The decision — obligation attaches to role — is unchanged; the approximation is replaced, and with it 62 of the 65 admitted wrongly and all 3 excluded wrongly. **88 → 26 obligated mark failures**, and the 26 are the three questions §7, §9 and `0008` §4.29 already record as open.* |
 | **D6** | A site's own opaque **background occludes** what is behind it, so the ground walk starts at the element and stops there. Its own `fill` does not, and a **border faces outward** — measured against the other side of the boundary, never against what the element itself paints. §7 |
 | **D7** | `0007` §5 clause 1 gains a **fourth house role, `--border-control`**, because D5 requires of a control boundary a ratio clause 1's one border role cannot reach. The checker admits the **name and not the placement** — the strict form was measured and refused — so the gap is recorded as `c1.s4c` and printed on every run. The token is **pinned in both schemes**, which is the only per-scheme value check the instrument has. §8 |
 
@@ -516,3 +516,144 @@ shape, all on that surface, and **all of them err permissive** — the checker r
 better than the page's. It is stated here rather than repaired because the walk terminating is
 what makes it structural, and a sibling walk needs the occlusion order this census does not
 have. Found by the review of D8, on the very reading D8's second measurement rests on.
+
+## 10. D5 amended, 2026-09-10 — the role is in the token, and the property only disambiguates
+
+§7 recorded D5's approximation as known-wrong in two shapes and `0008` §4.29 measured it wrong
+in four, across **65 sites in one direction and 3 in the other**. This replaces the
+approximation. **The rule is untouched**: the obligation still attaches to role, `0007` §5
+clause 1 still says which roles are owed it, and **no sentence of §5 moves**. What moves is what
+the instrument reads in order to recognise a role.
+
+### Why the property name was the wrong axis
+
+`fill` and `stroke` paint a gridline and a data mark with one word, so a partition over the
+property name cannot separate them — and D5 said so when it was taken. What D5 did not have is
+that **the separation was already in the declaration**. Clause 1's fourth sentence makes a token
+a statement of role, and the census partitioned by token splits without a remainder:
+
+| declared | fails | passes |
+|---|---:|---:|
+| `--border`, `--surface` | **62** | **0** |
+| every semantic token | 26 | 651 |
+
+**Zero passes is the finding.** Across twelve independently-authored pages the two structure
+tokens are never a legible mark, because they are never a mark at all: they paint gridlines,
+axis rules, swimlane backgrounds and the quiet half of a track. A partition that exempts them is
+not a tolerance fitted to the failures; it is the role rule read off the declaration that states
+it.
+
+And the residue is exactly the recorded open set — **9** heatmap cells (§7's untaken escape),
+**14** mark-against-a-different-mark (§9), **3** washes (`0008` §4.29). The amendment resolves
+nothing by accident, which is the test a partition change has to pass.
+
+### The rule the instrument now applies
+
+A non-text site is obliged when it names the **control role**, or is a control's own paint
+property (`accent-color`), or is SVG paint whose declaration does **not** name only structure
+roles — `--bg`, `--surface`, `--border`. A boundary that bounds no control is owed nothing, as
+before. A declaration naming no token at all is obliged: the instrument cannot read a role it
+was never given, and fail-loud is the direction that gets found.
+
+The order is load-bearing at three points. The control test runs **before** the boundary
+exclusion, so `border: 1px solid var(--border-control)` never reaches it and D7's eight sites
+stay obliged. The test is `named <= STRUCTURE_ROLES` and not `named & STRUCTURE_ROLES`, because
+`color-mix(in srgb, var(--accent) 30%, var(--surface))` names both and must stay obliged — the
+corpus cannot redden that conjunct, so its guard is synthetic. And `accent-color` enters as a
+property rather than as a role: it is a control's paint and no border declares it, which is the
+half D5 had backwards. Three live sites, all at 4.85:1, so nothing was hidden — the
+classification was inverted.
+
+**SVG `<text>` is never exempt, whatever token paints it**, and this is a bound rather than a
+detail. `mini-traceroute`'s stylesheet carries `.probe-ttl { fill: var(--bg); font-size: 9px;
+font-weight: 700 }` and `it-job-radar`'s `.series-dot.observed { fill: var(--bg) }`. `--bg`
+shows **zero** measured sites in the census today, and that zero is the checker's blindness
+rather than the corpus's — a cascade turns those on. A partition trusting it would go blind on
+SVG labels at precisely the stage that makes them visible, and SVG text is where the only live
+failure this system has caught actually lived.
+
+### Instrumental, and the sentence that licenses it
+
+**No `0007` sentence changes.** §5 clause 1 already carries the rule — *"A site painted as a
+mark is owed it where the mark identifies a control or carries information the reader needs, and
+not where it is structure — a table rule, a card edge, the line under a heading"* — and `c1.s4`
+is what makes a token a reliable name for a role. A gridline is *"the line under a heading"* in
+an SVG coordinate system; a swimlane's `rect` is a card edge's ground. The instrument now
+composes two sentences it already holds instead of guessing from a property name. This is D5's
+own formula applied to D5 — *the rule is the criterion's and the partition is the instrument's* —
+and it is how D8 took the same-mark exclusion one section earlier.
+
+*That owed-by sentence carried no `tools/spec.py` row when this amendment was written;
+`c1.s6b`'s note glossed it, which is a defensible reading and is also how each of `0009` §3.2's
+three occurrences looked from inside. It enters as `c1.s6d`, carried by `contrast marks`. The
+module's own docstring names the only mechanism that finds such a sentence — nothing detects one
+that was never entered — and this was that pass: the amendment could not be written without
+quoting a sentence the registry did not hold.*
+
+### What it moved
+
+**88 → 26** obligated mark failures. `it-job-radar` goes clean — its three were axis strokes —
+so **four of the eleven surfaces report the key rather than five**. The obligated population
+falls by 59 and the exempt one rises by the same, of which **65 are structure paint**: 62 that
+the old partition reported as failures, and 3 the checker never resolved a ground for.
+
+### What it does not do, and three bounds
+
+**It does not make `contrast marks` gateable.** 26 obligated failures survive, and each belongs
+to a question with a document: the escape §7 leaves open, the mark-against-a-mark question §9
+declines to settle, and the three washes `0008` §4.29 measured. The row stays `report-only`;
+what changes is that its reason no longer names this checker's own partition as any share of it.
+**The share belonging to the instrument is now zero and the share belonging to open design
+questions is all of it.**
+
+**The exemption is unverifiable in the other direction.** `clause_1_usage` applies the role rule
+to the ground and border families and deliberately not to `fill`/`stroke` — *"`color`, `fill`
+and `stroke` carry the portfolio's semantic palette by design"* — so a genuine data mark painted
+`var(--border)` is exempted with nothing objecting. Nothing *can* object, so the population is
+**printed on every run** instead: 65 today, broken out of the exempt tail. A reader who sees it
+move is seeing the only signal there is. `c1.s4c`'s answer to the same shape one property to the
+left.
+
+**`0008` §4.29's shape two is closed by coincidence.** `pl-review-sense`'s `.track` is exempt
+because its quiet fill happens to name `--border`. The general problem — role sitting on a
+sibling declaration, where a partition over one declaration cannot see it — is untouched, and a
+quiet fill painted `--muted` beside a load-bearing stroke would still be obliged. Recorded so
+the next reader does not inherit a closure that was never argued.
+
+**`--bg` enters the structure set on a zero measurement of *text*, and the corpus holds three
+non-text `--bg` marks the `<text>` bound cannot reach.** `it-job-radar`'s
+`.chart .series-dot.observed { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5 }` is
+three `<circle>` sites: obliged under D5's partition, exempt under this one, and unmeasured
+today only because two rules reach them — a cascade turns them on. **Exempt is the reading, and
+the ring is why**: a knockout fill is the absence of the series colour, and what identifies an
+observed point against a projected one is the `--accent` ring, which names a semantic role,
+stays obliged and passes. The fill carries nothing the ring does not.
+
+*That argument is `0008` §4.29's shape two — role sitting on a sibling declaration — which this
+section says elsewhere is closed by coincidence rather than by rule. Here the coincidence is
+written down as the decision instead of inherited as one, and pinned:
+`test_a_knockout_marker_is_exempt_and_its_ring_is_what_stays_obliged` asserts both halves, so
+the next partition change has to answer this rather than inherit it. The first version of this
+section cited these same three sites as motivation for the `<text>` bound and then leaned on
+that bound to justify including `--bg` — but they are circles, and the bound cannot reach them.
+Found by the review that blocked this amendment.*
+
+**The role axis is applied to one property family.** `fill` and `stroke` read obligation off the
+role; the border and outline family still exits on the property name plus the control-role
+escape, exactly as under D5 — so `fill: var(--warn)` is obliged and `border-left: 3px solid
+var(--warn)` on a caution rail is not, even though this section's premise is that a property
+name cannot carry role. It is deliberate, and its cost is measured at **zero**: no border-family
+site naming a semantic token measures below 3.0:1 anywhere in the twelve, and all 1 034
+border-family failures name `--border`. Recorded as a decision rather than left as a residue.
+
+### Two things found beside the decision
+
+**SVG `<text>` is held to 3.0:1 and nothing records that as a decision.** `paint.TEXT` is
+`{"color"}`, so every SVG label is scored at the mark threshold; a label at 3.5:1 passes
+`contrast marks` and fails SC 1.4.3. `.cell-share` was caught only because it also missed the
+mark bar. That is `c1.s6`'s subject rather than D5's and is **not folded in here** — recorded as
+open.
+
+**`c1.s6d` is the second normative sentence this project has found carried by nothing**, after
+`0009` §3.2's three. Both were found by a pass that had to quote the sentence in order to do
+something else.

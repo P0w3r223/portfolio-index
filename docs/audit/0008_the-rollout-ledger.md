@@ -3330,6 +3330,62 @@ first suggested.
 what exists instead is a D5 amendment, which is a design decision and is not taken here.*
 
 
+### 4.30 D5's partition amended — the role is in the token, and 88 becomes 26
+
+`ADR-0008` §10, taken 2026-09-10 on the measurement §4.29 left. §7 had recorded D5's
+property-name approximation wrong in two shapes and §4.29 measured four, 65 sites in one
+direction and 3 in the other. **The rule did not move**: `0007` §5 clause 1 still says which
+roles are owed the ratio, and no sentence of §5 changed. The instrument stopped guessing role
+from the property name and started reading it from the token — `c1.s4`'s ground, *a token is
+used in the role it names*.
+
+**The scope re-derivation is the whole argument, and it is one table.** Partitioning the 739
+sites **D5's old partition obligated** by what each declares — under the rule this section
+installs the obligated population is 680, and labelling the table with the new figure would
+make its own arithmetic unreproducible:
+
+| declared | fails | passes |
+|---|---:|---:|
+| `--border`, `--surface` | **62** | **0** |
+| every semantic token | 26 | 651 |
+
+**Zero passes.** The two structure tokens are never a legible mark on any of the twelve, because
+they are never a mark: gridlines, axis rules, swimlane backgrounds, the quiet half of a track.
+Exempting them is not a tolerance fitted to failures — it is the role rule read off the
+declaration that states it. And the residue is *exactly* the recorded open set: **9** heatmap
+cells, **14** mark-against-a-different-mark, **3** washes. Nothing was resolved by accident,
+which is the test a partition change has to pass.
+
+**Measured before and after at `3193803`.** 88 → **26**. `it-job-radar` goes clean — its three
+were axis strokes — so **four of the eleven surfaces report the key rather than five**, and
+`CLAUDE.md` carried that figure and was corrected in the same commit. Three `accent-color` sites
+entered the obligation, all at 4.85:1: two range sliders and a checkbox, which D5 had excluded
+while admitting gridlines. The exempt tail now breaks out **65 structure-paint sites** — 62 the
+old partition reported as failures, 3 the checker never resolved a ground for.
+
+**The half that cannot be checked, and what stands in for checking it.** `clause_1_usage`
+applies the role rule to the ground and border families and deliberately not to `fill`/`stroke`,
+so a genuine data mark painted `var(--border)` is exempted with nothing objecting. Nothing can
+object. So the population is **printed on every run** and a reader who sees it move is seeing
+the only signal there is — `c1.s4c`'s answer to the same shape one property to the left.
+
+**Two things found beside the decision.** `0007` §5 clause 1's owed-by sentence — the one D5
+approximates — **was carried by no `tools/spec.py` row**; `c1.s6b`'s note glossed it. It enters
+as `c1.s6d`. That is the second normative sentence this project has found carried by nothing
+after `0009` §3.2's three, and both were found by a pass that had to quote the sentence to do
+something else. Separately, **SVG `<text>` is held to 3.0:1 and nothing records that as a
+decision**: `paint.TEXT` is `{"color"}`, so a label at 3.5:1 passes the marks key and fails
+SC 1.4.3. That is `c1.s6`'s subject, not D5's, and is recorded open rather than folded in.
+
+**Nine guards, ten mutations, each red on its own assertion** over a collected green baseline,
+green after revert. Two are synthetic by necessity — the `color-mix` subset test and the
+`<text>` bound — because no committed surface can redden either, and the `<text>` one is what
+makes putting `--bg` in the structure set safe. One existing fixture had to change and said so
+by going red: `test_the_marks_row_says_how_many_are_below_their_threshold` drew its second
+failure from a lane painted `--surface`, which this amendment exempts. **That is a guard over a
+printed count doing exactly what it was written for.**
+
+
 ## 5. What is carried, not scheduled
 
 | item | state |
