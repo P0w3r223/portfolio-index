@@ -36,6 +36,7 @@ no CI at all. `.gitignore` and the template are in both filters now; `_A_REPOSIT
 
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -50,6 +51,8 @@ WORKING_COPY = "audit-identifiers.local"
 #: The committed template, whose whole safety argument is that every value is still this.
 TEMPLATE = ROOT / "audit-identifiers.local.example"
 PLACEHOLDER = "<fill in or delete this line>"
+#: The trigger that decides whether any of this runs in CI at all.
+WORKFLOW = ROOT / ".github" / "workflows" / "pagespec.yml"
 
 
 def _check_ignore(path: str) -> int:
@@ -164,6 +167,37 @@ def test_the_ignore_reaches_the_working_copy_and_not_the_template():
         f"{TEMPLATE.name} is ignored, so it cannot be committed — the pattern has been "
         "widened past the exact filename"
     )
+
+
+def test_both_workflow_filters_name_the_two_files_these_guards_read():
+    """The trigger, which is the half a guard cannot supply for itself.
+
+    Every other guard here is about the files; this one is about whether anything runs them.
+    Two of the mutations that prove this module are single-file changes to `.gitignore` and to
+    the template, and until 2026-09-10 neither path was in either `paths:` list — so both
+    reddened locally and would have run **no job at all**. There is no pre-commit hook, so
+    nothing else stood between that edit and `main`.
+
+    **`test_sources.py`'s registry guard cannot cover this**, and the reason is structural
+    rather than an oversight: its `_A_REPOSITORY` is `^[^/.]+$`, so an entry carrying a dot is
+    not a repository and is dropped before its equality check ever sees it. Both of these
+    entries carry one. That is what keeps them from breaking the `SURFACES` comparison, and it
+    is exactly what leaves them unwatched — so this assertion is where they are watched.
+    """
+    lists = re.findall(r"paths:\s*\[(.*?)\]", WORKFLOW.read_text(encoding="utf-8"), re.S)
+
+    assert len(lists) == 2, (
+        f"expected a `paths:` filter on push and on pull_request, parsed {len(lists)}; "
+        "the workflow's shape moved under this guard"
+    )
+    for index, block in enumerate(lists):
+        named = {raw.strip().strip("'\"") for raw in block.split(",")}
+        for needed in (".gitignore", TEMPLATE.name):
+            assert needed in named, (
+                f"`paths:` filter {index + 1} of 2 does not name {needed}, so a change to it "
+                "runs no CI job and the guards in this file cannot see the edit that breaks "
+                "them"
+            )
 
 
 @pytest.mark.submodules

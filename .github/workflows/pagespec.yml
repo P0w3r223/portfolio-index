@@ -1,8 +1,12 @@
 # The index half of ADR-0004's K-c: one checker, one CI, no vendored copies to drift.
 #
-# Two jobs, and the split is the same one the test suite makes. `core` proves the checker
-# without a single submodule on disk — every fixture it reads is committed here — so it stays
-# green whatever the twelve repositories do next, and it is the job that must never be
+# Three jobs since S11, and the core/surfaces split is the same one the test suite makes.
+# *This comment said "Two jobs" from before `live` existed until 2026-09-10, in the first
+# line of the file `CLAUDE.md`'s map points at, where it enumerates all three.*
+#
+# `core` proves the checker without a single submodule on disk — every fixture it reads
+# is committed here — so it stays green whatever the twelve repositories do next, and it
+# is the job that must never be
 # allowed to go red. `surfaces` points the checker at the real working trees; its tests skip
 # themselves when a submodule is absent, so a fetch that fails degrades to a green skip
 # rather than to a false failure about a page nobody touched.

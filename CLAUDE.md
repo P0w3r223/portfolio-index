@@ -63,8 +63,20 @@ docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the 
                         ground against bare `0008` the rollout ledger. A bare number in this
                         repository means the audit document
 docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 0008 the plan,
-                        0009 the whole-system review and what the passes since got wrong
-.github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled)
+                        0009 the whole-system review and what the passes since got wrong,
+                        **0010 the portfolio audit — the plan work is taken from now**, with
+                        its two prompts beside it: `0010_scan-prompt.md` reads and may not
+                        act, `0010_repair-prompt.md` acts and may not read a repository's raw
+                        data. **`0008` has one open row and it is not work**: S8c is a refusal
+                        on measurement — available, unscheduled, costed as its own project —
+                        so a session asking *what next* reads `0010` §3.1 and §4, not
+                        `0008` §3
+audit-identifiers.local.example
+                      the template for `0010` §3.2's identifier file. See "What not to do"
+.github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled).
+                        Its two `paths:` filters are tied to `sources.SURFACES` by a `core`
+                        test, and also name `.gitignore` and the template above, because the
+                        guards that read those two files would otherwise run in no job
 <twelve directories>  the submodules; each is a standalone repository with its own CLAUDE.md
 ```
 
@@ -166,6 +178,18 @@ python -m pytest -m submodules --fetch   # what the scheduled `live` job runs: t
   What is settled: **`mini-traceroute` holds no Python at all** — no `pyproject.toml`, zero
   `.py` files — so it can carry no local page test, which makes it the one surface the index
   checker guards alone. This repository re-points submodules; it does not edit them.
+- **Do not invent a value for `audit-identifiers.local`, and do not fill the template in
+  place.** The file holds the owner's private identifiers and is theirs to write; a session
+  that finds it absent, **or present with every value still a placeholder**, records axis E2
+  `blocked` — `0010` §3.2, and §3.4 sends a repository with a blocked axis back to the queue.
+  Guessing turns a blocked axis into a false `clear`, because the sweep then runs for whatever
+  the session happened to know and finds nothing: an axis marked clean that was not checked is
+  worse than one left open. **The working copy belongs at this root and nowhere else** — git
+  does not descend into submodules, so the same name inside a sibling is ignored by nothing and
+  all twelve are public. `tests/test_audit_identifiers.py` holds all of it in five guards, and
+  a sixth thing it cannot hold is the judgement: *as of 2026-09-10 the copy exists and supplies
+  no value*, which is the honest state and not a defect to repair.
+
 ## The published surfaces, and what the gate does not say
 
 Twelve surfaces. Eleven commit a file; `wroclaw-air-insights` commits no HTML at all and exists
