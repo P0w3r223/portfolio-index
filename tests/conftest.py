@@ -32,11 +32,16 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 #: `UNDECIDED` by construction and can never be `FAIL`, and the gate refuses on it through
 #: `_unread_same_origin` — a separate reason with its own header — so requiring it in `GATED`
 #: would demand a prefix that gates nothing and says the wrong thing about why.
-NOT_A_CLAUSE = frozenset({"stylesheets", "contrast text", "contrast marks", "contrast ground"})
-#: The three census keys join it for the same reason and by a stronger proof: `contrast.py`
-#: has no `PASS` and no `FAIL` branch at all, so `UNDECIDED` is not a status it happens to
-#: report but the only one it can construct. `ADR-0008` D2 and D3. Two of the three leave
-#: this set at S14, when the verdicts arrive and the keys enter `GATE` as `pending`.
+NOT_A_CLAUSE = frozenset({"stylesheets", "contrast ground"})
+#: `contrast ground` is the one census key that stays, `ADR-0008` D3, and its proof is its
+#: subject rather than its construction: it reports the sites the checker could not resolve a
+#: ground for, and a page is not less conforming for being hard to read. There is no page it
+#: could pass and no page it could fail.
+#:
+#: *`contrast text` and `contrast marks` left this set at S14b, 2026-09-10. Until then all
+#: three were here on a stronger proof — `contrast.py` had no `PASS` and no `FAIL` branch at
+#: all, and a guard read the file statically to say so. That proof expired the moment the
+#: module could construct a verdict, which is the stage it was written to make loud.*
 
 
 def pytest_addoption(parser):

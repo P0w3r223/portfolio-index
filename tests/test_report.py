@@ -384,7 +384,7 @@ def test_the_exemption_set_is_pinned_because_it_is_policy_and_not_a_measurement(
     `test_the_stylesheets_finding_can_never_fail_which_is_what_makes_its_exemption_safe`, a
     proof that the key cannot reach `FAIL` rather than an observation that it has not yet.
     """
-    assert NOT_A_CLAUSE == frozenset({"stylesheets", "contrast text", "contrast marks", "contrast ground"}), (
+    assert NOT_A_CLAUSE == frozenset({"stylesheets", "contrast ground"}), (
         "NOT_A_CLAUSE changed. Every entry needs a test proving the key can never be FAIL — "
         "the corpus check in the floor guard is a weaker, corpus-scoped proxy and is vacuous "
         "for a key that is UNDECIDED everywhere, which is what the dangerous ones are.")
@@ -477,7 +477,7 @@ def test_the_report_only_set_is_pinned_because_it_is_policy_and_not_a_measuremen
     name". `ADR-0006` took the derivation anyway, on different grounds, and inherited the cause
     without the message. The ceiling guard now names it.*
     """
-    assert set(report.report_only()) == {"served"}, (
+    assert set(report.report_only()) == {"served", "contrast marks"}, (
         "report_only() changed. It is a policy list and not a measurement: every entry is a "
         "decision that a key which CAN fail will never gate, and nothing in the corpus can "
         "refute one. Adding a row here un-gates whatever it covers, silently, in every job.")
@@ -530,8 +530,14 @@ def test_the_run_prints_every_key_the_gate_does_not_refuse_on(tree, capsys):
                 f"{one.prefix!r} gates and is listed under `gate policy`, which is the list "
                 "of what does not")
             continue
-        assert one.prefix in printed and one.state in printed, (
+        assert f"{one.prefix} " in printed and one.state in printed, (
             f"{one.prefix!r} is outside the gate and the run does not say so")
+        # Separated, not merely both present. `contrast marks` welded itself to its state as
+        # `contrast marksreport-only` under a fixed `<12` column, and this assertion passed —
+        # it asked whether two substrings existed, which they did, inside one unreadable word.
+        assert f"{one.prefix}{one.state}" not in printed, (
+            f"{one.prefix!r} is printed against its state with no separator, so the one trace "
+            f"a reader of CI output has that a key stopped gating is a single run-on word")
         assert one.reason.split(":")[0][:40] in printed, (
             f"{one.prefix!r} is printed without its reason, which is the half that matters")
 

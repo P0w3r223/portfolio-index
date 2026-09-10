@@ -186,6 +186,15 @@ When unsure, leave the row open. A row costs a line; a half-finished repair cost
    (`0008`:2347).
 3. Green again after reverting. Commit before mutating — the `git checkout --` that reverts
    discards uncommitted work.
+4. Run the mutated code with `-B`, or delete `__pycache__` first. CPython validates a `.pyc`
+   on mtime-in-seconds **and size**, so a mutation that preserves file length — `any`→`all`,
+   `<`→`>`, `and`→`or`, the cleanest ones — can execute stale bytecode and report green over a
+   mutation that is really red. Found 2026-09-10 by the review closing S14b, on its own
+   battery, on exactly such a mutation.
+
+And do not pass `-q`: in this environment it suppresses the `N passed` summary line, so a
+parser reading it scores a passing run as an empty one. S14b's first battery reported all nine
+mutations `BASELINE BAD` for that reason and no other — which is observation 1 working.
 
 ## 4. The rows
 
