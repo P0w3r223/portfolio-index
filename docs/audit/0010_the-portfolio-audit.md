@@ -76,6 +76,32 @@ reads `clear, 5 undecided` on the wire under `--fetch`. Gate exits 0.
   `--danger` 3, `--border-control` 2 (3 %, `car-price-ml/app` and `mini-traceroute`),
   `--positive` 1. The `--border-control` row is S14a, landed the same day.
 
+**This baseline was taken about an hour before S14b, and a session reading it will not see
+what it says.** §2 is frozen by `ADR-0004` §5 and stays as measured — but S14b (`e3a7f31`,
+`#117`) gave `contrast marks` a verdict, and at that commit **five of the eleven read
+`1 fail`**: `ab-lab`, `auth-log-scan`, `car-price-ml`, `it-job-radar`, `pl-review-sense`. The
+run still exits 0 because the key is `report-only`, and the reason is printed under
+`gate policy` on every run. **The `undecided` counts moved with the verdict and the whole
+sentence above is stale, not half of it**: `ab-lab` reads 2, the other ten read 3, and
+`wroclaw` under `--fetch` reads 4 — not the 4-or-5 and 5 the line records. So a scan
+session's axis C compares its own `--only` output against the checker in front of it, never
+against this line; the number a row quotes comes from the run it made. Verified 2026-09-10 at
+`e3a7f31`: 619 tests green, gate 0, 153 marks below 3.0:1 of 739 measured, and `--fetch`
+reports no `served` mismatch on any of the twelve.
+
+**The two censuses below are not stale, and the reason is worth stating because checking it
+misleads.** Both reproduce byte-for-byte at `e3a7f31` — S14b moved neither. But this
+paragraph has just quoted a `--fetch` figure for `wroclaw` inside a block whose header names
+the *fetchless* run, and a reader who reaches for `--fetch` to check it sees `portfolio 98`
+and `--border 69` against the bullets' 95 and 60. That is the twelfth surface joining the
+census, not three more moved figures: `--fetch` judges all twelve, and §2.2's own header
+names `--detail` without it for exactly that reason. Found by the review of this erratum,
+which walked into it.
+
+*The gap is 54–70 minutes — `2cb5d45` merged 13:05, `69531b4` wrote this section 13:21,
+`e3a7f31` merged 14:15. The first version of this erratum said "hours", twice, in a
+correction whose entire argument is that figures come from instruments and not from a hand.*
+
 ### 2.3 Axis E1 across the whole portfolio — the shallow pass
 
 Run once here rather than thirteen times, because a credential pattern is a portfolio
@@ -108,10 +134,15 @@ recorded third-party content rather than an E1 one.
 |---|---------|------|
 | 0 | this document | done |
 | 1–12 | one submodule each | scan |
-| 13 | `current_projects` — `tools/`, `tests/`, `docs/` | scan |
+| 13 | `current_projects` — `tools/`, `tests/`, `docs/`, **and the tracked files at the root** | scan |
 | 13b | `P0w3r223/P0w3r223` — the profile README | scan |
 | 13c | `infra-docker`, `infra-docker-powiadomienia-teams`, `infra-docker-workmate`, `student-wellbeing-pwr` | secrets only |
 | R1…Rn | repair sessions, driven by §4 | repair |
+
+*Session 13's row gained its root clause 2026-09-10: `pyproject.toml`, `.gitignore`, the
+workflow and `audit-identifiers.local.example` are tracked, are this repository's, and fell
+outside all three named directories. The audit repairs that class of disagreement elsewhere,
+and had just created one of its own.*
 
 Order for 1–12: `auth-log-scan` (pilot — small, all five axes), `apply-scout`,
 `it-job-radar`, `pl-jobs-lora`, `doc-extract`, `ab-lab`, `mlops-car-price`, `car-price-ml`,
@@ -133,6 +164,47 @@ Writing a PESEL or a postal address here would create the exposure the audit exi
 
 A session that finds `audit-identifiers.local` absent records E2 as `blocked` and does not
 guess. Guessing is how E2 degrades to whatever the session happens to know.
+
+**The file's form, written down 2026-09-10 because it was not.** One `key = value` per line,
+UTF-8, `#` comments and blank lines ignored. Keys are free text — the sweep uses the values,
+so nothing has to agree on a vocabulary in advance. A value that is empty, or that still
+carries the placeholder `<fill in or delete this line>`, supplies nothing.
+
+**Present and empty is `blocked`, exactly as absent is** — and this is the shape the rule
+above does not name. A template sitting in the working tree with every value still a
+placeholder is a file a session can open, read, and sweep **zero** identifiers with; a sweep
+for nothing returns clean, and E2 closes green having checked nothing. So E2 is `blocked`
+unless the file supplies **at least one** value, and the row records how many it read.
+
+**As of 2026-09-10 no `audit-identifiers.local` sits at the repository root**, and the file
+is the owner's to write — §3.2's first sentence is why nobody else can. What exists is
+**`audit-identifiers.local.example`**, committed at the root: eight keys, every value still a
+placeholder. From the index root, `cp audit-identifiers.local.example audit-identifiers.local`,
+fill **at least one** value, and E2 opens.
+
+**The working copy belongs at this repository's root and nowhere else, and that is a safety
+rule rather than a filing convention.** `.gitignore:35` is *this* repository's file and git
+does not descend into submodules, so the same name inside `ab-lab/`, `car-price-ml/` or any
+other sibling is ignored by **nothing** — and all twelve are public. Sessions 1–12 each work
+with a submodule directory open, which is exactly where a bare relative copy lands wrong.
+Measured 2026-09-10: `git -C ab-lab check-ignore audit-identifiers.local` exits 1, and
+`gh repo view` reports `PUBLIC`. `tests/test_audit_identifiers.py` is what holds all of this
+after the next edit rather than at the moment of this one — five guards, including one that
+refuses a copy in any sibling working tree.
+
+*The template is committed on purpose. Placeholder-only content carries no identifier, and
+`.gitignore:35` names an exact filename, so the pattern does not reach the `.example` —
+`git check-ignore` answers the ignore half, `git ls-files` the tracking half, and they are
+different questions. The first version of this paragraph asserted instead that a search of
+the whole user profile found no copy; the session writing it had authored a template into a
+temp directory fifty seconds earlier, so the record's hardest claim to falsify — a negative
+about the filesystem — was false at the moment it was written, and the only written copy of
+the form sat where Windows may clear it. Found by the review that blocked the commit; the
+submodule half and the guard came from the second pass over the repair.*
+
+Session 1 cannot open E2 until the working copy exists, and §3.4's rule is that a repository
+with a blocked axis returns to the queue — so starting the twelve before it does costs twelve
+rescans, not one.
 
 ### 3.3 Per-repository commands
 
@@ -156,8 +228,14 @@ or `test_the_committed_form_assets_match_the_source` fails.
 `clear` · `finding` · `blocked` · `not checked`, for all five axes.
 
 `blocked` is an instrument that would not answer — tests that will not collect, `gh` rate
-limited, a page answering 4xx, `audit-identifiers.local` missing. A blocked axis is not a
-clean axis: the repository returns to the queue.
+limited, a page answering 4xx, `audit-identifiers.local` missing **or supplying no value,
+§3.2**. A blocked axis is not a clean axis: the repository returns to the queue.
+
+*That last clause read only `missing` until 2026-09-10, which is the wording §3.2's own
+correction calls too narrow — and this is the section both prompts send a session to by name
+for what `blocked` means, so a session consulting it would have got the pre-correction
+answer while §3.2 held the wider rule. Two sections of one document disagreeing is not
+something §6 can route around: §6 corrects the prompts, not this file.*
 
 Axis E carries a severity: `metadata` · `third-party data` · `credential` · `personal data`.
 
@@ -175,7 +253,7 @@ deletion of published data.
 
 When unsure, leave the row open. A row costs a line; a half-finished repair costs a stage.
 
-### 3.6 The mutation battery — three observations
+### 3.6 The mutation battery — six observations
 
 `0008` §4 records two traps a one-observation battery walks into.
 
@@ -191,6 +269,19 @@ When unsure, leave the row open. A row costs a line; a half-finished repair cost
    `<`→`>`, `and`→`or`, the cleanest ones — can execute stale bytecode and report green over a
    mutation that is really red. Found 2026-09-10 by the review closing S14b, on its own
    battery, on exactly such a mutation.
+5. **Revert by bytes, not by text.** `Path.read_text()` folds CRLF to `\n` and
+   `Path.write_text()` re-expands it, so a battery that round-trips a file through text leaves
+   it byte-different from what it restored — `core.autocrlf` is `true` here and there is no
+   `.gitattributes`, so `git status` then reports a file the battery believes it put back.
+   `read_bytes`/`write_bytes`. Found 2026-09-10 by this battery, on itself.
+6. **A guard can be vacuous because the tool it shells to excludes its subject by default**,
+   and only a mutation says so. `tests/test_audit_identifiers.py` asserted that `.gitignore`
+   does *not* reach the committed template — with `git check-ignore`, which skips paths already
+   in the index, because tracked files are not subject to exclude rules. The template is
+   tracked, so the assertion answered *not ignored* whatever the pattern said and **could not
+   fail**. It went green over the mutation written to redden it. `--no-index` asks the question
+   the assertion meant. Found 2026-09-10 by the battery for that file, which is the only reason
+   it was found: the guard read correctly, ran, passed, and proved nothing.
 
 And do not pass `-q`: in this environment it suppresses the `N passed` summary line, so a
 parser reading it scores a passing run as an empty one. S14b's first battery reported all nine
@@ -256,8 +347,18 @@ The scan and repair prompts carry a version stamp. A correction here **outranks 
 from the version named onward — otherwise the operator keeps pasting a prompt this document
 has already contradicted.
 
+**One row is a state erratum rather than a prompt correction, and its `binds` cell says so.**
+Nothing in either prompt contradicts §2.2's baseline: the scan prompt already tells axis C to
+run §3.3's command *before* judging any text. It is registered here because §6 is the only
+part of this document a session is routed to unconditionally — the prompts send a reader to
+§3, §3.3, §3.4 and its own row in §4, and never to §2.2, so a warning left there is a warning
+that does not arrive. Taken deliberately on the review of 2026-09-10, which raised it as a
+question rather than as a defect.
+
 | date | binds | what was wrong | what replaces it |
 |------|-------|----------------|------------------|
 | 2026-09-10 | v1.0 (never used) | `git grep` over blobs cannot see commit metadata; the E2 half of the sweep returned zero on the one exposure that certainly exists | §3.4's E0, and R-1 |
 | 2026-09-10 | v1.0 (never used) | `rev-list --all` misses 209 publicly fetchable PR-head commits | E1 fetches `refs/pull/*/head` first |
 | 2026-09-10 | v1.0 (never used) | `--only wroclaw-air-insights` exits 0 having read nothing, which is indistinguishable from a pass | §3.3 requires `--fetch` there |
+| 2026-09-10 | **v2.0** | the prompt blocks E2 when the file is *absent*, and a template present with every value still a placeholder is not absent: a session opens it, sweeps zero identifiers, and a sweep for nothing returns clean | §3.2 — `blocked` unless the file supplies **at least one** value, plus the file's form, which was named nowhere |
+| 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail` on five of the eleven, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0 |

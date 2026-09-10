@@ -1,0 +1,50 @@
+# audit-identifiers.local — axis E2 of the portfolio audit, `0010` §3.2.
+#
+# THIS FILE IS THE TEMPLATE AND IS COMMITTED. The file the audit reads is
+# `audit-identifiers.local`, which must never be.
+#
+#   cp audit-identifiers.local.example audit-identifiers.local      # from the index root
+#
+# then fill in at least one value.
+#
+# ONE LOCATION, AND THE REASON IS NOT TIDINESS. The working copy belongs at the root
+# of THIS repository — `current_projects` — and nowhere else. `.gitignore` is this
+# repository's file and git does not descend into submodules, so the same filename
+# inside `ab-lab/`, `car-price-ml/` or any other sibling is ignored by NOTHING, and
+# every one of those twelve is a PUBLIC repository. Sessions 1–12 each work with a
+# submodule directory open, which is exactly where a bare relative `cp` lands wrong.
+# Verified: `git -C ab-lab check-ignore audit-identifiers.local` exits 1.
+#
+# Committing the template is safe by construction: it holds placeholders and no
+# identifier, and the ignore pattern names an exact filename, so it does not match
+# this one. `git check-ignore` answers the ignore half; `git ls-files` answers the
+# tracking half, and `tests/test_audit_identifiers.py` is what keeps both true after
+# the next edit rather than at the moment of this one.
+#
+# FORM. One `key = value` per line, UTF-8; blank lines and `#` comments ignored.
+# Keys are free text — the sweep uses the VALUES, so add or drop lines freely.
+#
+# A line still carrying `<fill in or delete this line>` supplies nothing, and a file
+# where NO line supplies a value leaves axis E2 `blocked` — the same verdict as if it
+# were absent. That is deliberate: a sweep for nothing returns clean, and an axis
+# marked clean that was not checked is worse than one left open.
+#
+# DO NOT FILL THIS FILE IN PLACE. It is tracked, so an identifier typed here is one
+# `git add .` from a commit. Copy first, fill the copy.
+#
+# WHY IT IS NOT COMMITTED, FILLED. §3.2's own sentence: writing a PESEL or a postal
+# address into a document would create the exposure the audit exists to find. The
+# audit searches for the owner's identifiers without any of them entering the record.
+
+private_email  = <fill in or delete this line>
+phone          = <fill in or delete this line>
+address_street = <fill in or delete this line>
+address_city   = <fill in or delete this line>
+address_postal = <fill in or delete this line>
+employer_1     = <fill in or delete this line>
+employer_2     = <fill in or delete this line>
+university     = <fill in or delete this line>
+
+# Add anything else worth sweeping for — an old handle, a second e-mail, a client
+# name that appears in a project's data. One line each. National-ID and bank-shaped
+# numbers are NOT written here: §3.2 matches those by shape, never by value.
