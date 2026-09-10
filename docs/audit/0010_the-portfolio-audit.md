@@ -176,11 +176,21 @@ placeholder is a file a session can open, read, and sweep **zero** identifiers w
 for nothing returns clean, and E2 closes green having checked nothing. So E2 is `blocked`
 unless the file supplies **at least one** value, and the row records how many it read.
 
-**As of 2026-09-10 no `audit-identifiers.local` sits at the repository root**, and the file
-is the owner's to write — §3.2's first sentence is why nobody else can. What exists is
-**`audit-identifiers.local.example`**, committed at the root: eight keys, every value still a
-placeholder. From the index root, `cp audit-identifiers.local.example audit-identifiers.local`,
-fill **at least one** value, and E2 opens.
+**As of 2026-09-10 `audit-identifiers.local` exists at the repository root and supplies no
+value**, so **E2 is `blocked`** — eight keys, eight placeholders. The copy was made the same
+day; what is left is the owner's, and §3.2's first sentence is why nobody else can do it. Fill
+**at least one** value and E2 opens; a category that does not apply should have its line
+**deleted** rather than left as a placeholder, because a placeholder is not a value and an
+empty line is not a claim.
+
+*This is the rule above firing as designed, on its first contact with a real file, and it is
+recorded rather than repaired.* A session was asked on 2026-09-10 to invent the values and
+declined: an invented identifier sweeps for something no repository contains, returns nothing,
+and turns `blocked` into `clear` — the one outcome this axis exists to prevent, and the precise
+sense of *"guessing is how E2 degrades to whatever the session happens to know"*. **A blocked
+axis is a true statement about the audit; a clean one bought by guessing is a false statement
+about the portfolio.** The first version of this paragraph read *"no `audit-identifiers.local`
+sits at the repository root"* and is superseded by the `cp`, not by the fill.
 
 **The working copy belongs at this repository's root and nowhere else, and that is a safety
 rule rather than a filing convention.** `.gitignore:35` is *this* repository's file and git
