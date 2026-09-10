@@ -301,7 +301,8 @@ it is an instruction.
    redefining the same **colour** names** — `--radius` does not vary by scheme and no page redefines it. Additive extensions are allowed and must be named in the page's own
    `:root`. No literal hex outside the token block. **A token is used in the role it names**: `background`
    and `background-color` take `--bg` or `--surface`; `border`, `border-color` and the four one-sided
-   borders take `--border`.
+   borders take `--border`, or `--border-control` where the border is a user-interface control's own
+   boundary.
    *Measured **at S3 close, before S4 tokenised `mlops-car-price` and `pl-jobs-lora`** — so the figures below
    are a dated snapshot and not the current tree. S4 added conforming sites to both pages and two rails to
    `pl-jobs-lora` (`.status`, `.correction`), which is why re-deriving them today gives larger numbers. **Do
@@ -323,10 +324,13 @@ it is an instruction.
    until then its palette held no house border role, so the clause reported `undecided` and could
    decide nothing. A rename made a clause able to answer, and the first thing it answered was a real
    question — which is the argument for the `undecided` in the first place.*
-   **All four hold only where the role in question is not one of the three named above** — `--bg`,
-   `--surface`, `--border` — and that condition is the whole of what makes them exceptions rather than
-   holes: each describes a surface deliberately painted *outside* the house scheme, so a house role
-   appearing there is the defect and not the exemption. Without it,
+   **All four hold only where the role in question is not a house role named above** — and that
+   condition is the whole of what makes them exceptions rather than holes: each describes a surface
+   deliberately painted *outside* the house scheme, so a house role appearing there is the defect and
+   not the exemption. *The roles are named above and are not re-listed here: this gloss enumerated
+   them until S14a, which is a count outside the pinned span, so a later role would falsify it with
+   the quote's own guard still green — the defect that stage removed, three words to the right.*
+   Without it,
    `.card { background: var(--surface); border: 1px solid var(--surface) }` reads as a border matching its
    own fill; `body { background: var(--border); color: var(--text) }` as a control painting its own text;
    and `.result.pending { border-left: 3px solid var(--surface) }` as a rail, though that declaration is
@@ -353,6 +357,12 @@ it is an instruction.
    light, which clears AA as text on both grounds a page paints on (**5.48:1** on `--bg`, **5.15:1** on
    `--surface`) where `#059669` clears neither (**3.77:1** and **3.54:1**), and `#34d399` dark, which every
    page holds and which clears both thresholds on either ground (8.90:1 on `--surface`, 9.69:1 on `--bg`).
+   **`--border-control` is pinned in both schemes, and it is measured on `--surface`, the ground a
+   control's boundary faces** — `#808a9c` light at 3.27:1 and `#596a89` dark at 3.14:1, where `--border`
+   on that same ground reads 1.17:1 and 1.29:1 and so cannot carry a boundary at all. It is the one
+   pinned value no surface declared on the day it was written, which is why it is stated here rather
+   than left to the pages: two surfaces must reach the same value for a token neither of them yet has,
+   and nothing else in this document or in the checker would make them agree. `ADR-0008` D7.
    **The threshold is the one the page's own usage implies, and it is read per page, not per token**:
    `--positive` is painted as body text on one page and as a `fill:`/`stroke:` mark on three (§4.1), so a
    page painting it as text is held to AA's 4.5:1 and a page painting it as a mark to the non-text 3:1.

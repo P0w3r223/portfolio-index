@@ -27,6 +27,7 @@ re-derived, which is where D5 and D6 were measured),
 | **D4** | `0007` §5 clause 1 gains the sentence that makes a usage site's threshold an **obligation**, entering the registry as **`c1.s6b`**. Its wording is taken **after** the census prints, because `test_spec`'s guard pins the quote for as long as the sentence exists |
 | **D5** | The marks key takes its obligation **by role** — visual information required to identify a user-interface component, and parts of a graphic required to understand the content — and **not** from structural decoration: table rules, card edges, the rule over an `<h2>`. The checker approximates that partition **by property name**, which is the instrument and not the rule; §7 names the two places the approximation is known to be wrong. Taken 2026-09-09 against the census |
 | **D6** | A site's own opaque **background occludes** what is behind it, so the ground walk starts at the element and stops there. Its own `fill` does not, and a **border faces outward** — measured against the other side of the boundary, never against what the element itself paints. §7 |
+| **D7** | `0007` §5 clause 1 gains a **fourth house role, `--border-control`**, because D5 requires of a control boundary a ratio clause 1's one border role cannot reach. The checker admits the **name and not the placement** — the strict form was measured and refused — so the gap is recorded as `c1.s4c` and printed on every run. The token is **pinned in both schemes**, which is the only per-scheme value check the instrument has. §8 |
 
 ## 2. The problem, which is not the one `0008` §3.11 states
 
@@ -277,3 +278,104 @@ above, or a further rule about which of the 153 a reader needs.
 argued the census could be slow because the corpus was clean, and that was true of the harm it
 knew about. It was not true of the corpus, and only the instrument could say so — and, as the
 ninth control shows, not all of it even then.
+
+## 8. D7 — the fourth house role, taken 2026-09-09 because D5 could not be applied without it
+
+D5 says a user-interface component's boundary is owed 3:1. `0007` §5 clause 1's fourth
+sentence says a border takes `--border`. On the two surfaces that carry a control those two
+sentences cannot both be satisfied: `--border` measures **1.17:1** light and **1.29:1** dark
+against `--surface`, the ground on the other side of the boundary. **The repair is not
+unrepresentable in CSS; it is unrepresentable in this specification**, and that is what makes
+this an index decision rather than a sibling one.
+
+### The shape, and the two that were refused
+
+**Refused — a fifth `_role_exception` shape.** Every one of the existing four is a case where
+a border *stops being an edge*: a rail thicker than a hairline, a filled control's ground, a
+border naming the role its own background names, an interaction state. A control boundary is
+the box's edge — that is precisely what makes it the thing SC 1.4.11 asks about — so it takes
+none of them, and a fifth would be role-agnostic like its siblings and would therefore exempt
+`border: 1px solid var(--accent)` on a control just as readily. Wider than any sentence
+licensing it.
+
+**Refused — a page-aware rule.** The only design that could enforce *"on a control and nowhere
+else"* answers through `selector.parse`, which returns a `Refusal` for
+`.field input[type="number"]` — the selector on `mini-traceroute`'s own repair rule. The
+strictest available design reports `undecided` on the one page the stage exists for, and
+`undecided` never gates. It would also turn a pure CSS function into a page-dependent one.
+*The most rigorous-looking option produces the weakest verdict where it matters, and only
+tracing it against the corpus says so.*
+
+**Taken — a second role in `_BORDER_ROLES`, and a fourth house role.** `border`, `border-color` and the four one-sided
+borders now admit `--border` or `--border-control`. The edit is to `_BORDER_ROLES` and never
+to `clause_1_usage`'s local `allowed`, because `_HOUSE_ROLES = _GROUND_ROLES | _BORDER_ROLES`
+is derived and is the condition on all four exception shapes; widened locally, `_HOUSE_ROLES`
+stays at three and a control token walks through the *filled control* exception as a ground.
+A guard names that mutation and reddens on it.
+
+### What the checker enforces, and what it does not
+
+`1 usage roles` asks whether a border's role is in the set. It has no notion of which element
+a selector reaches, so it admits `--border-control` on a table hairline exactly as readily as
+on a control. **That gap is the decision, not an oversight**, and it is recorded as `c1.s4c`
+with a `review` carrier so `python -m tools.spec` prints it on every run rather than leaving
+it inferable from source. `c1.s7` — *"a page adding a fifth shape is stating something this
+sentence does not describe, and the governing rule above decides it"* — is what decides a page
+that stretches it.
+
+The alternative wording, a family rule admitting any `--border-*` token, would have closed the
+gap by making the sentence's claim exactly equal to the instrument's. It was refused because
+it pins a **naming convention** where this clause's whole argument is that a role is what a
+token means and not how it is spelled. `--border-control` is spelled so that the family rule
+stays available later if that trade ever looks better.
+
+### The pin, and the scheme nothing else can see
+
+`--border-control` enters `PINNED` in both schemes: **`#808a9c` light** (3.27:1 on
+`--surface`, 3.48:1 on `--bg`) and **`#596a89` dark** (3.14:1 on `--surface`, 3.41:1 on
+`--bg`). `--surface` is the binding ground in both — it is the closer of the two grounds to
+the token in either scheme, and it is the ground `0008` §4.25's 1.17:1 and 1.29:1 were
+read on. The margin is deliberately close to 3:1, on `--accent-soft`'s precedent
+(3.12:1 and 3.30:1): a boundary is a boundary and not an emphasis.
+
+**The pin is doing work no other instrument here can do.** `contrast.py:89` takes
+`palettes(css).get("light", {})`, so the census is structurally light-only, and
+`clause_1_tokens`'s `PINNED` loop is the only per-scheme *value* check in the checker. Without
+a dark pin, a surface that repairs its controls in the light `:root` and forgets the dark
+override measures clean everywhere the instrument looks; with it, the dark palette inherits
+the light value, which is not the pinned one, and the run says `FAIL 1 dark --border-control`.
+The counter-argument — that `0007` §5.0 would rather each surface measured its own reason — is
+real and loses to the fact that both surfaces share a palette to the byte, and that a
+one-scheme repair is silent in every other direction.
+
+### What this decision cannot prove, and what did prove it
+
+**No published surface declares the token on the day the amendment lands**, so all eleven
+committed surfaces print `1 light --border-control n/a — not declared` and the conformance
+table is byte-identical before and after. The corpus cannot distinguish this change from its
+absence. Five mutations can, and all five redden the guard that names them.
+
+*One of those guards was designed wrong and the run corrected it.* The stage's design said
+sweep all four exception shapes with `--border-control` as a second wrong role. Three of the
+four then assert that a **conforming** declaration fails: `--border-control` on a border is
+admitted by `role in allowed` and never reaches `_role_exception` at all. The sweep's own
+comment already records that mistake being made once, one *shape* to the left; this was the
+same mistake one *role* to the left. **Two of the four shapes discriminate, not one** — those
+whose template declares a `background`, which are the filled control and *its own fill*. A
+border-only shape cannot tell the difference, because a border admits the control role by the
+rule and never reaches the branch. *The first version of this section said "only the ground
+shape", which is one case narrower than the corpus, and the sweep shipped without that case
+until the review measured all four.* **A guard whose premise is wrong fails on correct code,
+which is the cheap direction; the expensive direction is a guard that passes over the defect
+it names, and the two are told apart by running the mutation and not by reading the design.**
+
+### What it does not do
+
+It does not repair a page — the two sibling pull requests and the pointer bump follow, in that
+order, and a page corrected before this amendment reddens a **gated** key. It does not make
+the marks key gateable; §7's closing argument stands unchanged. And it does not reach every
+control: `#speed` and `#numeric` on `mini-traceroute` carry **no author boundary at all**, so
+after the repair two controls on that page keep the user agent's. That is a second mechanism
+of census blindness beside the refused selector — *no rule reaches the element* rather than
+*the rule is unreadable* — and it belongs beside D5's bound rather than being re-derived by
+whoever notices the page next.
