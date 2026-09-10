@@ -3180,6 +3180,63 @@ and would pass against the ancestor that contains them. `test_contrast` has said
 is untouched by this — **zero text sites have a non-guaranteed ground** — so the key that gates
 is safe, and the key that does not is precisely the one whose reason now says why.
 
+### 4.28 What D8 measured — and the axis the row named turned out to be the wrong one
+
+`0009` §7 row 12's remainder, opened 2026-09-10 after S14b closed. §4.27 left `Ground.guaranteed`
+unread by any verdict path and the `contrast marks` `GATE` row named that as one of two things
+standing between the key and a gate. **The decision was not the one the row anticipated**, and
+`ADR-0008` §9 is the argument; what follows is what the pass measured.
+
+**The scope was re-derived from the census first — §4.7's precedent for the sixth time — and it
+partitioned the problem into four rather than one.** Of 153 obligated mark failures: **79** fail
+only against a ground geometry places, **48** are the gridline and axis strokes `ADR-0008` §7
+already records D5 as admitting wrongly, **9** are the `rect.cell` heatmap fills §7 records as
+D5's untaken escape, and **17** are the remainder. The row had been costed as one decision.
+
+**The axis the row named does not track defect.** All 79 clear their *guaranteed* ground between
+3.98:1 and 8.16:1, while the near-bar reading an author had to sweep for — `auth-log-scan`'s
+marks, 3.09:1 by the page's own arithmetic and 3.24:1 by the checker's, `ADR-0008` §9's third
+bound — and the only live failure
+this checker has ever caught — `.cell-share` at 2.69:1, `0009` §7 row 12, repaired by S12 — are
+both read on a geometric ground. **A verdict resting on guaranteed grounds alone would have
+scored the pre-S7 page clean and would never have seen `.cell-share` at all.**
+
+**What was excluded instead, and the defect it turned out to be.** 65 of the 79 are
+`auth-log-scan`'s `circle.ev-failed` measured against another `circle.ev-failed`: one rule, one
+declared `var(--accent)`, differing only by the `fill-opacity` the data writes per element.
+`_grounds` has excluded a ground of the site's own colour since S13 and its docstring names this
+exact population — but it compared the site's **un-composited** colour with the ground's
+**composited** one, so one token at two alphas escaped. **The rule was aimed at these sites and
+missed on a unit mismatch, for two stages.** 966 failing (site, ground) pairs, about fifteen
+overlapping neighbours per site.
+
+**Measured before and after at `1760f60`:** 153 → **88**; `auth-log-scan` 101 → 36 and the other
+four surfaces unchanged; the 966 excluded pairs counted under `same_colour` and printed by
+`contrast ground`, so nothing disappeared; `contrast text` **byte-identical** on the eleven and
+`ok` on all twelve under `--fetch`. That last was predicted structurally rather than hoped for —
+`geometry.bounds` answers only for `rect` and `circle`, so no HTML element can be a geometric
+ground and `paint.TEXT` is `{color}` — and a run that disagreed would have been a finding about
+the argument rather than about the corpus.
+
+**The 14 D8 leaves failing are a second decision and are recorded rather than folded in.** Each
+is a mark against a *different* mark — `rect.ev-invalid` on `circle.ev-failed` at 1.30:1 ten
+times, `ab-lab`'s `rect.marker-corrected` on `circle.marker-naive` at 1.27:1 twice, and two
+singletons. `auth-log-scan/styles.css:133` answers them — *"shape carries the meaning and colour
+repeats it"* — but that is a claim about **role**, which is D5's subject, and D5 already carries
+two recorded errors of that kind. `ADR-0008` §9 states why folding it in here would put a role
+judgement inside a ground rule.
+
+**Seven new guards and one corrected, six distinct mutations, each red on its own assertion** over a collected green baseline,
+green again after revert. Two of the five exist specifically to redden if a later reader finds
+filtering by `guaranteed` attractive: one pins `auth-log-scan`'s band at its pre-S7 opacities,
+the other pins `.cell-share`'s shape. **A sixth guard's docstring was corrected rather than
+deleted** — `test_an_ancestor_is_a_guaranteed_ground_and_a_sibling_is_not` said S14 needs the
+field *"to tell a `FAIL` it can stand behind from one it cannot"*, and D8 answered that it does
+not. *And the second of `ADR-0008` §9's two stated bounds was met while it was being written: a
+first fixture painted `.cell-share` the same token as its cell, the exclusion reached it, and
+the guard went red — correctly.*
+
+
 ## 5. What is carried, not scheduled
 
 | item | state |

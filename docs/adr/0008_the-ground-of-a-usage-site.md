@@ -29,6 +29,8 @@ re-derived, which is where D5 and D6 were measured),
 | **D6** | A site's own opaque **background occludes** what is behind it, so the ground walk starts at the element and stops there. Its own `fill` does not, and a **border faces outward** — measured against the other side of the boundary, never against what the element itself paints. §7 |
 | **D7** | `0007` §5 clause 1 gains a **fourth house role, `--border-control`**, because D5 requires of a control boundary a ratio clause 1's one border role cannot reach. The checker admits the **name and not the placement** — the strict form was measured and refused — so the gap is recorded as `c1.s4c` and printed on every run. The token is **pinned in both schemes**, which is the only per-scheme value check the instrument has. §8 |
 
+| **D8** | A verdict rests on **every ground the page paints behind a site**, whether containment is structural or read from the coordinates the markup writes. `Ground.guaranteed` is **not** a verdict input, and §9 is why: the guaranteed ground is never the binding one — 3.98:1 to 8.16:1 across all 79 sites whose only failing ground was geometric — while both failures with a history are read on a geometric one. What is excluded instead is a ground that is **another instance of the same mark**: two overlapping members of one series carry one meaning. The instrument approximates that by declaration identity, which is the `same`-colour rule corrected to compare like with like. **153 → 88**, `contrast text` byte-identical. §9 |
+
 ## 2. The problem, which is not the one `0008` §3.11 states
 
 §3.11 bought its asymmetric verdicts to avoid a geometry engine, and called that *"the part
@@ -379,3 +381,128 @@ after the repair two controls on that page keep the user agent's. That is a seco
 of census blindness beside the refused selector — *no rule reaches the element* rather than
 *the rule is unreadable* — and it belongs beside D5's bound rather than being re-derived by
 whoever notices the page next.
+
+## 9. D8 — what a verdict may rest on, taken 2026-09-10 because §4.27 left it open
+
+`0008` §4.27 recorded it as left open deliberately: `Ground.guaranteed` distinguishes a ground
+an ancestor structurally contains from one geometry merely places under the element, and no
+verdict path read it. The `contrast marks` `GATE` row named that as one of two things standing
+between the key and a gate. This is the decision, and **it is not the one that row anticipated**.
+
+**The question is not evidence quality.** A sibling ground is arithmetic on coordinates written
+in one shared system — siblings share a parent, and `geometry.bounds` returns `None` for
+anything carrying a `transform`. Its failure modes are over-inclusion at a shape's edge and the
+absence of occlusion between two containing siblings; both make the checker *stricter* than the
+page rather than wrong about it. What it is not is a weaker claim about what colour sits behind
+the mark.
+
+**Three measurements decided it, and two of them are in the pages rather than in the checker.**
+
+1. `pl-review-sense`'s `.cell-share` at 2.69:1 — `0009` §7 row 12, **the only live failure this
+   system has ever caught** — is an SVG `<text fill>` measured against the sibling `rect.cell`
+   beneath it. `paint.TEXT` is `frozenset({"color"})`, so SVG text is a *mark*, and its ground
+   is geometry-placed. Against the card it clears by an order of magnitude.
+2. `auth-log-scan/src/auth_log_scan/site/assets/styles.css:142` records the author's own sweep:
+   *"The event marks are emitted after the band at the same y and height, **so the band is
+   their ground**"*, with five mark/band pairs under 3:1 as published before S7 and a repair
+   made by moving the *band's* opacity from 0.45 to 0.25 and 0.28 to 0.15. **The page's own
+   figure is 3.09:1 and the checker reads that pair at 3.24:1**, and the gap is a third bound
+   rather than a discrepancy — see below. Either way it is the reading an author had to sweep
+   opacities in 0.01 steps to reach, and its ground is geometry-placed.
+
+   *The first version of this section said 3.09:1 reproduces from the markup and that it is
+   the only reading in the corpus near the bar. Neither survived the review. `car-price-ml`'s
+   `.chart .bar` sits at 3.12:1 nine times on a **guaranteed** ground, which is nearer the bar
+   than the checker's figure for this pair. The claim that survives is narrower and is the one
+   the argument needs: the near-bar reading an author deliberately swept to is geometric.*
+3. Every one of the 79 sites whose only failing ground was geometric **clears its guaranteed
+   ground between 3.98:1 and 8.16:1**. That range is not headroom, it is a signature: a mark's
+   guaranteed ground is the page behind the chart, which any legible chart clears by
+   construction. A rule resting verdicts on guaranteed grounds alone would refuse approximately
+   nothing on an SVG chart, forever.
+
+**So `guaranteed` was the wrong axis, and the right one was already in the module.** 65 of the
+79 are `auth-log-scan`'s `circle.ev-failed` measured against **another `circle.ev-failed`** —
+same rule, same declared `var(--accent)`, differing only by the `fill-opacity` the data writes
+per element, giving 1.26:1 between two instances of one dot. **966 failing (site, ground) pairs
+across 65 sites, about fifteen overlapping neighbours each.** `_grounds`' docstring has
+described that population since S13 and calls it `0008` §3.11's collapse; the rule meant to
+exclude it compared the site's *resolved, un-composited* colour with the ground's *composited*
+one, so a shared token at two alphas escaped it. **The exclusion was aimed at these sites and
+missed them on a unit mismatch rather than on a judgement.**
+
+D8 states the rule where the criterion states it — a graphic is owed distinction from what it
+is drawn on, not from other instances of itself — and has the instrument approximate it by
+declaration identity, on D5's precedent: *the rule is the criterion's and the partition is the
+instrument's.* `0007` §5 clause 1 carries it as `c1.s6c`.
+
+### What it moved, measured at `1760f60` before and after
+
+**153 → 88 obligated mark failures**, of 739 measured. Per surface: `auth-log-scan` 101 → 36,
+and `ab-lab` 23, `pl-review-sense` 19, `car-price-ml` 7, `it-job-radar` 3 unchanged. The 65
+excluded grounds are **counted under `same_colour` and printed by `contrast ground`** — 966
+pairs — so nothing was dropped, and every one of the 65 sites keeps its ancestor ground and
+stays measured.
+
+**`contrast text` is byte-identical**, on the eleven committed surfaces and on all twelve under
+`--fetch`. That was predicted structurally rather than hoped for: `geometry.bounds` answers only
+for `rect` and `circle`, so no HTML element can ever be a geometry-placed ground, and `color` is
+an HTML property in this corpus. A run that disagreed would have been a finding about the
+structural argument.
+
+### The 14 D8 leaves failing, and why they are a second decision
+
+The 79 were not one population. Fourteen are a mark against a **different** mark, so declaration
+identity does not reach them:
+
+| surface | site | ground | ratio |
+|---|---|---|---|
+| `auth-log-scan` | `rect.ev-invalid` fill ×10 | `circle.ev-failed` | 1.30:1 |
+| `ab-lab` | `rect.marker-corrected` fill ×2 | `circle.marker-naive` | 1.27:1 |
+| `auth-log-scan` | `circle.ev-accepted` stroke ×1 | `circle.ev-failed` | 1.38:1 |
+| `car-price-ml` | `line.spread-cap` stroke ×1 | `rect.bar served` | 2.50:1 |
+
+**They are left failing on purpose, and the argument against them is not D8's to make.**
+`auth-log-scan/styles.css:133` answers them directly — *"**Shape carries the meaning and colour
+repeats it**, so the chart survives greyscale and colour blindness: a failure is a filled dot,
+an accepted login a ring, a probe of a non-existent account a diamond"* — and the same holds for
+`rect` against `circle` on `ab-lab`. If shape carries the distinction, colour contrast between
+two mark classes is not what SC 1.4.11 asks for. But that is a claim about **role**, which is
+D5's subject and not this one, and D5 already carries two recorded errors of exactly that kind.
+Deciding it here would fold a role judgement into a ground rule.
+
+### What this does not do
+
+It does not make `contrast marks` gateable. The pages' half of the `GATE` row stands, and its
+composition is now printed by the run rather than described in the reason: of the surviving 88,
+**48 are the gridline and axis strokes §7 already records D5 as admitting wrongly**, 9 are the
+`rect.cell` heatmap fills §7 records as the escape D5 left available and unimplemented, 14 are
+the table above, and 17 are the remainder. Four separable questions, of which D8 is one.
+
+It does not touch `contrast text`, for the structural reason above. And it does not correct the
+anchor-point approximation in `geometry.contains`, which tests the site's *anchor* against the
+ground's bounds while its docstring says *covers*. Requiring full-shape containment would drop
+the 65 as a side effect — two equal-radius circles cannot contain each other — and it is
+**refused here**: `<text>` has an anchor and no bounds by design (`ADR-0004` §4's deferred
+geometry), so it would blind the checker at exactly the site in measurement 1. It is worth
+taking later, asymmetrically and for its own reason — a mark straddling a band edge is measured
+today against a ground covering only part of it — and its corpus effect is unmeasured.
+
+### Three bounds, stated because they are judgements
+
+A page that genuinely needs two instances of one mark told apart — overlapping points that must
+be counted — states that with a separator painted by a **different** declaration, which stays
+measured; the exclusion cannot reach it. And a translucent overlay reusing the declaration of
+the thing beneath it would be excluded wrongly; the site keeps its ancestor ground and stays
+measured, so the cost is a missed reading and not a wrong one. *The second bound was met while
+this was being written: a first fixture painted `.cell-share` the same token as its cell and the
+guard went red, correctly.*
+
+**Third: `_opaque_behind` walks ancestors only, so a translucent ground with an opaque
+*sibling* under it composites over the ancestor instead.** `auth-log-scan`'s `.window-band` at
+alpha 0.25 is read over `body` rather than over the `.lane` beneath it, giving 3.24:1 where the
+page's own sweep computed 3.09:1. Five verdict-bearing readings in the corpus sit on that
+shape, all on that surface, and **all of them err permissive** — the checker reports a ratio
+better than the page's. It is stated here rather than repaired because the walk terminating is
+what makes it structural, and a sibling walk needs the occlusion order this census does not
+have. Found by the review of D8, on the very reading D8's second measurement rests on.

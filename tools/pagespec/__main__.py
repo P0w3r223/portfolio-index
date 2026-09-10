@@ -127,17 +127,21 @@ GATE: tuple[Ratchet, ...] = (
     Ratchet("contrast text", GATED_STATE),
     Ratchet(
         "contrast marks", REPORT_ONLY_STATE,
-        "153 SVG sites measure below 3.0:1, so this key cannot hold pending — ADR-0006 §3's "
+        "SVG sites still measure below 3.0:1, so this key cannot hold pending — ADR-0006 §3's "
         "pending state is refutable in both directions and a key that can never read clean "
         "cannot hold one. It is here rather than nowhere because the alternative was a run "
         "printing a failing row and exiting 0 with nothing said about it, which is the "
-        "exact shape "
-        "this block exists to refuse. Two things have to happen before it can gate. The "
-        "pages: 153 marks need repairing or exempting, and ADR-0008 D5 leaves the escape "
-        "for a graphic whose value is also in text available and unimplemented. The "
-        "checker: 79 of those 153 fail only against a ground geometry places under them "
-        "rather than one containment guarantees, and Ground.guaranteed — which S13 added "
-        "for exactly this — is read by no verdict path yet",
+        "exact shape this block exists to refuse. Two things had to happen before it could "
+        "gate. THE CHECKER'S HALF IS CLOSED AT ADR-0008 D8: a verdict rests on every ground "
+        "the page paints behind a site, and Ground.guaranteed is not a verdict input. For "
+        "the sites that decision moved the "
+        "guaranteed ground was never the binding one, and both failures with a history are "
+        "read on a geometric ground. What is excluded instead is a ground that is another "
+        "instance of the same mark. THE PAGES' HALF STANDS: marks still need repairing or "
+        "exempting, ADR-0008 D5's own partition is recorded as wrong for the gridline "
+        "population it admits, and D5 leaves the escape for a graphic whose value is also "
+        "in text available and unimplemented. The surviving count is printed above rather "
+        "than typed here — 0008 §4.11 records what a hand-typed figure costs in these lines",
     ),
     Ratchet(
         "served", REPORT_ONLY_STATE,

@@ -249,8 +249,26 @@ CLAUSES: tuple[Clause, ...] = (
              "The obligation is carried by both keys and gated by neither yet: `contrast "
              "text` is gated — a fetching run reads it clean on all twelve, which is the "
              "refutation that demands promotion — and `contrast marks` is report-only, "
-             "because 153 SVG sites still measure below 3.0:1 and a key that can never read "
+             "because SVG sites still measure below 3.0:1 and a key that can never read "
+             "clean cannot hold a state refutable in both directions. *This note carried "
+             "the figure 153 until 2026-09-10, and D8 refuted it the same day. No number "
+             "is typed here now: the run prints the count per surface. The GATE row's "
+             "twin of this sentence was corrected in the same commit and this one was "
+             "not, which is the two-spellings drift 0008 4.11 records.* Superseded: "
              "clean cannot hold a state refutable in both directions.",
+    ),
+    Clause(
+        id="c1.s6c",
+        cite="0007 §5 clause 1, the same-mark sentence",
+        quote="A ground painted by the same declaration as the site is not one of them",
+        carriers=_index("contrast marks"),
+        note="`ADR-0008` D8, taken 2026-09-10. Carried by the marks key alone and not by "
+             "`contrast text`, and the reason is structural rather than a count: "
+             "`geometry.bounds` answers only for `rect` and `circle`, so no HTML element can "
+             "ever be a ground the geometry places, and `paint.TEXT` is `{color}` — an HTML "
+             "property. A `color` site cannot acquire the kind of ground this sentence "
+             "excludes. SVG text is painted with `fill` and is therefore a mark, which is "
+             "where the one live failure this checker has caught actually lived.",
     ),
     Clause(
         id="c1.s7",

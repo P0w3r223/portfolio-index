@@ -63,8 +63,30 @@ _OWN_GROUND_PROPERTIES = ("background", "background-color")
 _CONTROL_ROLE = "--border-control"
 
 
+class Painted(NamedTuple):
+    """What an element paints as a ground, and the declaration that painted it.
+
+    The declaration rides with the colour because `ADR-0008` D8 excludes a ground that is
+    another instance of the same mark, and *same* is a fact about declarations rather than
+    about resolved colours: one token at two alphas composites to two colours and is one mark.
+    """
+
+    colour: str
+    prop: str
+    declared: str
+
+
 class Ground(NamedTuple):
-    """One thing a site may be painted on, and how sure the document is that it is."""
+    """One thing a site may be painted on, and how sure the document is that it is.
+
+    **`guaranteed` is not a verdict input**, `ADR-0008` D8. It separates a ground an ancestor
+    structurally contains from one the markup's own coordinates place under the site, and D8
+    measured that the distinction does not track defect **for the population it moved**: all 79
+    sites whose only failing ground was geometric clear their guaranteed ground between 3.98:1
+    and 8.16:1, while both failures with a history are read on a geometric ground. Read more
+    generally it is false and the instrument says so — of the 88 failures that survive D8, 64
+    fail on their guaranteed ground alone. The field is reporting, not gating.
+    """
 
     element: int
     colour: str
@@ -150,7 +172,7 @@ def census(page: Page, css: str) -> list[Finding]:
     blind = [one for one in found if one.unresolved or not one.grounds]
     return [Finding("contrast text", _verdict(text), _measured(text)),
             Finding("contrast marks", _verdict(marks), _measured(marks, exempt)),
-            Finding("contrast ground", UNDECIDED, _unresolved(blind, refused))]
+            Finding("contrast ground", UNDECIDED, _unresolved(blind, refused, found))]
 
 
 def _verdict(found: list[Site]) -> str:
@@ -185,7 +207,8 @@ def _site(page: Page, element: Element, prop: str, chosen: paint.Candidate,
         reasons.append("two rules declare its alpha and the census has no cascade")
     if len(candidates) > 1:
         reasons.append(f"{len(candidates)} rules reach it and the census has no cascade")
-    grounds, same = (_grounds(page, element, prop, rules, palette, chosen.colour)
+    grounds, same = (_grounds(page, element, prop, rules, palette, chosen.colour,
+                              chosen.declared)
                      if not reasons else ((), 0))
     if not grounds and not reasons:
         reasons.append(f"{same} ground(s) of its own colour" if same
@@ -209,7 +232,8 @@ def _obligated(prop: str, declared: str) -> bool:
 
 
 def _grounds(page: Page, element: Element, prop: str, rules: list[paint.Rule],
-             palette: dict[str, str], own: str | None) -> tuple[tuple[Ground, ...], int]:
+             palette: dict[str, str], own: str | None,
+             declared: str) -> tuple[tuple[Ground, ...], int]:
     """The element's own background first, then ancestors, then the siblings the file places.
 
     **`ADR-0008` D6, and the word in it is *occludes*.** An element painting its own opaque
@@ -237,11 +261,11 @@ def _grounds(page: Page, element: Element, prop: str, rules: list[paint.Rule],
     if prop in paint.TEXT:
         own_ground = _painted_ground(page, element, rules, palette, _OWN_GROUND_PROPERTIES)
         if own_ground:
-            return (Ground(element.index, own_ground, True),), 0
+            return (Ground(element.index, own_ground.colour, True),), 0
     for ancestor in page.ancestors(element):
         painted = _painted_ground(page, ancestor, rules, palette)
         if painted:
-            found.append(Ground(ancestor.index, painted, True))
+            found.append(Ground(ancestor.index, painted.colour, True))
             break
     for sibling in page.preceding_siblings(element):
         if geometry.contains(sibling, element) is not True:
@@ -249,17 +273,53 @@ def _grounds(page: Page, element: Element, prop: str, rules: list[paint.Rule],
         painted = _painted_ground(page, sibling, rules, palette)
         if not painted:
             continue
-        if own is not None and painted.lower() == own.lower():
+        if _the_same_mark(prop, declared, own, painted):
             same += 1
         else:
-            found.append(Ground(sibling.index, painted, False))
+            found.append(Ground(sibling.index, painted.colour, False))
     return tuple(found), same
+
+
+def _the_same_mark(prop: str, declared: str, own: str | None, painted: Painted) -> bool:
+    """Whether this ground is another instance of the site itself — `ADR-0008` D8.
+
+    Two overlapping members of one series carry one meaning, and a reader is owed no way to
+    tell them apart. `0007` §5 clause 1's `c1.s6c` is the rule; this is the approximation, on
+    D5's precedent that *the rule is the criterion's and the partition is the instrument's*.
+
+    **Two tests, and the second is the one D8 added.** Identical resolved colour was always
+    excluded, because that ratio is 1.00:1 by definition and reporting it buries every real
+    figure under it. What that test could not see is the same declaration at two alphas: a
+    site's colour arrives here **un-composited** — `_site` passes `chosen.colour` — while
+    `painted` is composited, so `auth-log-scan`'s `.ev-failed` circles, all `fill:
+    var(--accent)` with a `fill-opacity` the data writes per element, read 1.26:1 against each
+    other and escaped. **65 sites and 966 (site, ground) pairs, and the rule meant to exclude
+    them missed on a unit mismatch rather than on a judgement.** `_grounds`' docstring has
+    described that population since S13.
+
+    **Property as well as value**, because `fill: var(--accent)` and a background declaring the
+    same token are not the same mark; the property is what makes one a graphic and the other
+    the furniture it sits on.
+
+    What this deliberately does *not* exclude is a ground painted by a **different**
+    declaration — the band under `auth-log-scan`'s marks, at the 3.09:1 its author swept for,
+    and the `rect.cell` under `pl-review-sense`'s `.cell-share` at the 2.69:1 that is the one
+    live failure this checker has ever caught. `ADR-0008` §9 measures both.
+    """
+    if own is not None and painted.colour.lower() == own.lower():
+        return True
+    return prop == painted.prop and declared.strip().lower() == painted.declared.strip().lower()
 
 
 def _painted_ground(page: Page, element: Element, rules: list[paint.Rule],
                     palette: dict[str, str],
-                    properties: tuple[str, ...] = _GROUND_PROPERTIES) -> str | None:
-    """What this element actually paints, **its own alpha composited in**.
+                    properties: tuple[str, ...] = _GROUND_PROPERTIES) -> Painted | None:
+    """What this element actually paints, **its own alpha composited in**, and by what.
+
+    **The declaration rides back with the colour since D8**, and one function returns both on
+    purpose: `_the_same_mark` needs to compare like with like, and a second function that
+    re-derived which declaration won would be a second spelling of this selection — the shape
+    `0009` N1 names, where two registries of one vocabulary drift and nothing notices.
 
     Returning the declared colour was a defect and the corpus found it within a run:
     `pl-review-sense` fills every confusion-matrix cell `var(--accent)` and writes
@@ -283,9 +343,12 @@ def _painted_ground(page: Page, element: Element, rules: list[paint.Rule],
             return None
         alpha = multiplier * chosen.alpha
         if alpha >= 1.0:
-            return chosen.colour if colour.is_opaque_hex(chosen.colour) else None
+            return (Painted(chosen.colour, prop, chosen.declared)
+                    if colour.is_opaque_hex(chosen.colour) else None)
         behind = _opaque_behind(page, element, rules, palette)
-        return colour.composite(chosen.colour, behind, alpha) if behind else None
+        if not behind:
+            return None
+        return Painted(colour.composite(chosen.colour, behind, alpha), prop, chosen.declared)
     return None
 
 
@@ -320,15 +383,27 @@ def _measured(found: list[Site], exempt: list[Site] | None = None) -> str:
     if not measured:
         return f"{len(found)} site(s), none with a ground the document resolves" + tail
     worst, site = min(measured, key=lambda pair: pair[0])
-    return (f"{len(found)} site(s), {len(measured)} measured, worst {worst:.2f}:1 "
+    below = sum(1 for ratio, one in measured if ratio < one.threshold)
+    failing = f", {below} below" if below else ""
+    return (f"{len(found)} site(s), {len(measured)} measured{failing}, worst {worst:.2f}:1 "
             f"against {site.threshold:.1f}:1 at <{site.tag}> {site.prop}" + tail)
 
 
-def _unresolved(blind: list[Site], refused: list[str]) -> str:
+def _unresolved(blind: list[Site], refused: list[str], every: list[Site] | None = None) -> str:
+    """What the checker could not read, and what it deliberately did not measure.
+
+    **The same-mark count is summed over every site and not over `blind`**, `ADR-0008` D8, and
+    the first version of this summed `blind` alone. That was vacuous by D8's own structural
+    argument: a site whose sibling ground is excluded keeps its ancestor, so it is never blind,
+    so its count was never reached. 966 excluded pairs left the verdict with no line anywhere
+    in the run while three documents said they were printed here — the *checker quietly
+    narrowing its own subject* shape, in the commit that added a guard citing it. Found by the
+    review that blocked that commit.
+    """
     parts = [f"{len(blind)} site(s) without a resolved ground"]
-    own = sum(one.same_colour for one in blind)
+    own = sum(one.same_colour for one in (every if every is not None else blind))
     if own:
-        parts.append(f"{own} ground(s) of the site's own colour, which measure 1.00:1")
+        parts.append(f"{own} ground(s) excluded as the same mark, ADR-0008 D8")
     if refused:
         parts.append(f"{len(refused)} selector(s) this does not read")
     return "; ".join(parts)
