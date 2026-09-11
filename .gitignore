@@ -29,7 +29,10 @@ Thumbs.db
 # value is that a finding means something.
 .claude/settings.local.json
 
-# The audit's identifier list for axis E2, named by `docs/audit/0010_the-portfolio-audit.md`
-# §3.2. It holds the owner's private identifiers, and §3.2's whole point is that they are
-# never committed: writing a PESEL into a document to hunt for leaked PESELs is the exposure.
+# Kept after the identifier sweep was retired on 2026-09-11 (`0010` §3.2), and kept
+# deliberately rather than by oversight: a working copy of this name may still sit at this
+# root, and without the pattern `git status` would report it forever and `tools/entry_state`
+# would call the tree dirty at every session start — a standing false finding in the one
+# instrument whose value is that a finding means something. The pattern costs nothing and
+# nothing may ever commit a file of this name.
 audit-identifiers.local
