@@ -102,11 +102,18 @@ class Ratchet:
 #:
 #: *This block said until 2026-09-10 that **every** finding key a clause can report `FAIL` on
 #: is gated, and that `_gated` and `status == FAIL` coincide for everything except `served`.
-#: S14b made both false in one commit: `contrast marks` fails on five of the eleven and is
-#: `report-only`, so the exceptions are two and the second one fails. The sentence was
-#: written when the contrast keys could construct no verdict at all — which is the stage it
-#: outlived, in the comment block `CLAUDE.md` sends a stage editor to, and `0008` §4.11 has
-#: already recorded a hand-typed figure going stale in these same lines.*
+#: S14b made both false in one commit: `contrast marks` fails and is `report-only`, so the
+#: exceptions are two and the second one fails. The sentence was written when the contrast
+#: keys could construct no verdict at all — which is the stage it outlived, in the comment
+#: block `CLAUDE.md` sends a stage editor to, and `0008` §4.11 has already recorded a
+#: hand-typed figure going stale in these same lines.*
+#:
+#: *And it went stale again here, which is the argument for not writing one down at all. This
+#: line read "fails on **five** of the eleven" — true at S14b, four hours out of date by the
+#: end of the same day, when `ADR-0008` §10 read the role off the token and `it-job-radar`
+#: went clean. `#122` corrected the identical sentence in `CLAUDE.md` and missed this copy.
+#: The count is now absent rather than corrected: the run prints it, and a reader wanting
+#: today's figure has `python -m tools.pagespec` one command away.*
 #:
 #: *`test_a_page_failing_only_an_ungated_clause_still_passes` in `tests/test_report.py` is the
 #: test that keeps the distinction alive past this point, and it survives on purpose: it
