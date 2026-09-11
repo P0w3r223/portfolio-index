@@ -268,10 +268,16 @@ Written **after each axis**, not at the end. `Index SHA` is `git rev-parse HEAD`
 repository at the time of the scan — not "the main SHA": the checker that produced the axis
 C verdict is the one at that HEAD.
 
+**The `Open` column lists the rows a repository raised, closed ones included, and the axis
+cells stay as measured.** Both are the frozen-at-HEAD rule above, and neither is a live status:
+a `B` cell reading `finding` beside an `Open` cell reading `A-1 closed` is a scan's verdict
+beside a repair's, not a contradiction. The row body says which. *Written on review, 2026-09-11,
+when the first closure landed and the header read literally as a list of what is still open.*
+
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
-| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 | §5's cross-repo half |
+| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -306,6 +312,29 @@ rewrite in the second column regardless, so nothing happens here without an expl
 instruction. What this row buys is that it is a decision rather than an oversight.
 
 ### A-1 — `auth-log-scan`, session 1, the pilot
+
+**Closed 2026-09-11 by `auth-log-scan` `1d02f6f` (#14), index pointer bumped in the commit
+carrying this line.** Both B findings repaired in one pass under §3.5: one repository plus a
+pointer bump, no new module or signature, and the §3.3 page command reads identically before
+and after — the page was never in scope. **Three guards where nothing read the README at all**,
+plus a positive control the review asked for; six mutations, each red on its own assertion over
+a collected-green baseline, green after reverting. *The unit matters and changes below*: that is
+four test functions, which `pytest` collects as six because one is parametrised over three
+years. **42 collected → 48.**
+
+**The repair falsified a figure while repairing one, and the `code-reviewer` pass is the only
+reason that is a sentence here rather than a finding for session 13.** `README.md`:122 **at the
+scanned gitlink `50e8b6e`** claimed *"42 in the suite as a whole"*, which the first commit's five
+collected cases made 47 — a change whose stated
+purpose was that the README stops being wrong on its own, shipping a README wrong on arrival,
+one paragraph below the defect it was closing. Removed rather than corrected, on `#125`'s
+precedent: a hand-typed figure with no instrument beside it is the defect, and correcting it
+only sets the next staleness date. `docs/reference/failure-classes.md` FG and ST-3.
+
+**The A-axis observation was not taken and stays open as an observation.** `tests/test_site.py`:263
+still puts every assertion inside a loop that an empty match satisfies — `SG-1` at one remove.
+It is not vacuous today and repairing it is not a B finding; it belongs to whichever pass runs
+the mutation battery this row names as the cheapest falsifier of `A: clear`.
 
 Scanned 2026-09-11 at index `dc04541`, gitlink `50e8b6e`, entry state clean. Four axes, because
 §3.2's identifier half was retired the same day; E here is E0 and E2's third-party question.

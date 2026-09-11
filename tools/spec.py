@@ -487,10 +487,18 @@ CLAUSES: tuple[Clause, ...] = (
         carriers=(*_human("review; `0008` §4.8 and §4.10 are the rounds that applied it, to "
                           "`docs/index.html` and then to `README.md`"),
                   *_repo("ab-lab:tests/test_site_committed.py::"
-                         "test_the_committed_artefact_is_what_the_generator_produces")),
-        note="`0008` §5 carries the residual: only `ab-lab` generates and byte-guards README "
-             "regions, so twelve of thirteen surfaces are hand-typed prose with no carrier. "
-             "A README figure-provenance reader is the named follow-on to S9.",
+                         "test_the_committed_artefact_is_what_the_generator_produces",
+                         "auth-log-scan:tests/test_readme.py::"
+                         "test_the_sample_block_is_what_the_readmes_own_quoted_command_prints")),
+        note="`0008` §5 carries the residual, and it shrank by one on 2026-09-11. **Two "
+             "repositories carry this on a README now, and of different shapes**: `ab-lab` "
+             "byte-guards generated regions against their generator, and `auth-log-scan` runs "
+             "the command its README names and compares. The rest are hand-typed prose with "
+             "no carrier. *No count is given: this note said `only ab-lab` and `twelve of "
+             "thirteen` for four days, and correcting a hand-typed figure only sets its next "
+             "staleness date — `docs/reference/failure-classes.md` ST-3.* A README "
+             "figure-provenance reader is still the named follow-on to S9; what landed is one "
+             "README, not the reader.",
     ),
     Clause(
         id="q.s1b",
