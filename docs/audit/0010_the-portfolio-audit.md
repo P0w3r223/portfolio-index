@@ -648,7 +648,7 @@ $0.2950) was counted and characterised but its recorded model replies were not r
 retrieval judgment set (`eval/retrieval/judgments.json`, 695 lines) was replayed rather than
 inspected — a wrong judgment reproduces exactly as well as a right one.
 
-### A-2 errata, 2026-09-11 — fourteen figures, in three rounds
+### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
 *Placed after the row and not inside it.* The first edition put this heading between A-2's
 D axis and its closing two paragraphs, so **Not checked** — which the scan prompt's closing
@@ -704,13 +704,16 @@ before it was written down here:
 | two errata lines opened with `* ` at column 0 | GFM reads that as a list item interrupting a paragraph, so the struck wording rendered as a stray bullet with runaway emphasis — the mechanism by which a reader sees the old claim, broken. **Nothing in `tests/` parses markdown, so it would never have reddened** | — |
 | the errata heading sat inside the row | it displaced **Not checked**, which the scan prompt makes mandatory, out from under `### A-2`. Moved below the row | — |
 
-**Fourteen corrections over three rounds, and the count of universal quantifiers is now four.**
+**Twenty corrections over three rounds, and the count of universal quantifiers is now four.**
+*The heading said* **fourteen** *for one commit, which was round two's total carried into a
+third round — the count of the errata going stale inside the errata. It is computed from the
+table rather than typed: twenty rows.*
 Every one of them — *no file anywhere*, *without exception*, *alone among*, *no company is
 named anywhere* — was written from a partial read in a row that names `SG-2` twice. The pattern
 is not arithmetic and no instrument catches it: **this row should not have carried an absolute** 
 **claim at all**, having declared in its own *Not checked* that it read four ADRs of twelve.
 
-**The `PKG-INFO` one is the worst of the fourteen** and not because of the line: the sweep
+**The `PKG-INFO` one is the worst of the twenty** and not because of the line: the sweep
 behind it was `grep -r`, which reads the working filesystem including everything `.gitignore`
 hides. This portfolio's own standing rule says to count with `git grep` and `git ls-files` for
 exactly that reason. The verdict happened to survive; the method did not.
