@@ -494,11 +494,18 @@ CLAUSES: tuple[Clause, ...] = (
              "repositories carry this on a README now, and of different shapes**: `ab-lab` "
              "byte-guards generated regions against their generator, and `auth-log-scan` runs "
              "the command its README names and compares. The rest are hand-typed prose with "
-             "no carrier. *No count is given: this note said `only ab-lab` and `twelve of "
+             "no carrier. **`auth-log-scan` gained the second half at `bfe4bf2`**: a guard "
+             "that re-derives the two figures its README states about this repository — the "
+             "demo log’s length from the file, and the count of tests that need no log from "
+             "the two modules holding them. That is the figure-provenance reader in one "
+             "repository, so the residual below is smaller than it reads. *No count is given: "
+             "this note said `only ab-lab` and `twelve of "
              "thirteen` for four days, and correcting a hand-typed figure only sets its next "
              "staleness date — `docs/reference/failure-classes.md` ST-3.* A README "
-             "figure-provenance reader is still the named follow-on to S9; what landed is one "
-             "README, not the reader.",
+             "figure-provenance reader across the portfolio is still the named follow-on to "
+             "S9; what landed is one README’s, not the sweep. *This said `what landed is one "
+             "README, not the reader` until 2026-09-11, which stopped being true at `bfe4bf2` "
+             "— in the same pull request that bumped the pointer to it.*",
     ),
     Clause(
         id="q.s1b",
