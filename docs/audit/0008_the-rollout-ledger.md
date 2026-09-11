@@ -2621,7 +2621,7 @@ rect*. That gap is the whole reason a rule-keyed contrast clause is wrong twice 
 
 | figure | where it stood | measured |
 |---|---|---|
-| `0009` §4.19's scoping claim — 35 `<svg>`, **none inside an element carrying `card`** | a hand count no committed instrument could take; §4.19 says as much | **35 `<svg>`, 0 inside a `card`**, across six surfaces. Reproduces exactly |
+| `0009` §7 row 12's scoping claim — 35 `<svg>`, **none inside an element carrying `card`** | a hand count no committed instrument could take; §4.19 says as much | **35 `<svg>`, 0 inside a `card`**, across six surfaces. Reproduces exactly |
 | the population of `.ev-failed` sites on `auth-log-scan` | §3.11 works three of them and asserts a verdict for all | **139 marks, 133 of them with a preceding sibling of their own class**, in runs of 40, 16 and 12 |
 
 **Finding 1 — `0009` §7 row 12's promotion argument has expired, and the row does not say so.**

@@ -28,6 +28,13 @@ Thumbs.db
 # an uncommitted change at every startup — a standing false finding in the one instrument whose
 # value is that a finding means something.
 .claude/settings.local.json
+# And the worktrees a subagent runs in. Two harms, both tripped on 2026-09-11 rather than
+# predicted: `python -m tools.entry_state` called the tree dirty for the whole life of a
+# review agent — the same standing false finding the line above exists to prevent, one
+# directory over — and a `git add -A` during that window staged the worktree as an **embedded
+# git repository**, which git warns about and commits anyway. `0008` §5 records this class
+# arriving in the submodules; this is it at the root.
+.claude/worktrees/
 
 # Kept after the identifier sweep was retired on 2026-09-11 (`0010` §3.2), and kept
 # deliberately rather than by oversight: a working copy of this name may still sit at this
