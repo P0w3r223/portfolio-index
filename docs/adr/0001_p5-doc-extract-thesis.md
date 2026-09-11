@@ -11,7 +11,10 @@ Related to: [0002_p5-corpus-strategy.md](0002_p5-corpus-strategy.md), [0003_p5-m
 
 The portfolio index carries `P5 · doc-extract` as a placeholder row: *"structured extraction
 from Polish invoices — LLM structured outputs, Pydantic domain validation, per-field accuracy"*.
-Audit 0001 §160 already flagged it as an announcement typeset like a shipped project.
+Audit 0001 §4.5 already flagged it as an announcement typeset like a shipped project.
+*That citation named section 160 until 2026-09-11 — a line number written in the section
+position, found by `tools/citations.py` on its first run. Line 160 of `0001` sits inside
+§4.5, and the sentence it carries is the one quoted above.*
 
 Before committing to build it, two `code-reviewer` passes were run at full HEAD over the two
 nearest siblings, read against the `agent-engineering-guide` skill. The findings decide the
