@@ -271,6 +271,7 @@ C verdict is the one at that HEAD.
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
+| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 | §5's cross-repo half |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -303,6 +304,89 @@ every figure this record cites by SHA has to be re-derived. It is also arguable 
 on a public CV portfolio is not an exposure in the sense a token is. §3.5 puts a history
 rewrite in the second column regardless, so nothing happens here without an explicit
 instruction. What this row buys is that it is a decision rather than an oversight.
+
+### A-1 — `auth-log-scan`, session 1, the pilot
+
+Scanned 2026-09-11 at index `dc04541`, gitlink `50e8b6e`, entry state clean. Four axes, because
+§3.2's identifier half was retired the same day; E here is E0 and E2's third-party question.
+
+**E — `finding` · metadata, and it is R-1's, not this repository's own.** Ten of twenty-eight
+commits carry `Piotr Cząstkiewicz` in the author or committer field, which reproduces R-1's
+table cell exactly. Nothing else: **every address in both bundled logs and on the published
+page is in a documentation range** — RFC 5737 for IPv4, and `2001:db8:2::19` for IPv6 — with
+the one exception of `0.0.0.0`, which appears as `Server listening on 0.0.0.0 port 22` and is a
+bind address rather than a host. Account names are invented service names. `README.md`:133
+claims exactly this, and the claim was checked against the artifacts rather than taken: it
+holds in both halves. *The IPv6 half nearly became a false finding — a first sweep used a
+pattern that cannot match compressed notation and reported zero `2001:db8::/32` addresses,
+which would have recorded the README as overstating. `FG-1`, caught by asking why a claim so
+specific would be wrong.*
+
+**A — `clear`.** 42 tests pass. No bare `except` and nothing swallowed, no `Any`, `print` only
+in the CLI entry point, thresholds in `config.py` rather than inline. Five functions exceed
+`good-practices.md`'s fifty lines — `render` 107, `analyze` 71, `window_chart` 59, `main` 55,
+`render_terminal` 53 — and only `render` reads as more than one job, because it orchestrates
+read → parse → analyze → chart → payload in one body. `analyze` mutates a local accumulator,
+which is a fold and not shared state.
+
+*One observation, deliberately not a finding.* `tests/test_site.py:263`
+(`test_the_bands_are_still_visible_against_the_lane_they_sit_on`) puts **every** assertion
+inside a loop over `_painted(css, _BAND_SELECTOR)`, so an empty match passes it silently. It is
+not vacuous today, because the sibling test at `:237` pins `len(bands) == 2` and would redden
+first — but the protection lives in a different test, so a mutation battery would report the
+property caught while the guard that names it proved nothing. `SG-1`'s shape at one remove.
+
+**B — `finding`.** Two, and the first has a date on it.
+
+**The README's quoted sample output reproduces today only because today is 2026.** The bundled
+log is traditional syslog and carries no year, `cli.py`:74 defaults `--year` to
+`datetime.now().year`, and the block README quotes prints `2026-03-10` in seven places. Run on
+1 January 2027 it prints `2027-03-10` and the README is wrong in all seven, with nobody having
+touched the repository. **The page does not have this problem**: `site/build.py`:36 pins
+`DEMO_YEAR = 2026`, so the repository already holds the fix one file over and did not apply it
+to the README. Verified by running the same command with `--year 2027`.
+
+*Measured before leaving it in §4 rather than promoting it: the shape does not recur.* Five
+repositories call `datetime.now()` in Python — `ab-lab`, `apply-scout`, `auth-log-scan`,
+`car-price-ml`, `it-job-radar` — and of their twenty-five fenced README blocks exactly two
+carry a 2026 date. One is this finding; the other is `it-job-radar`'s `--seed 20260814`, a
+literal a reader types rather than a value the code derives, which is a different shape. So
+**one occurrence, and §5 gets nothing** — §5 holds what recurred, and a single incident
+belongs in this row. Run once here rather than eleven times, on `0010` §2.3's precedent.
+
+**`--min-success-failures` is documented nowhere.** The CLI accepts it; `README.md` returns
+zero occurrences. Every other flag the README names exists, every command it gives runs, and
+its quoted output otherwise matches byte for byte.
+
+**C — `clear`, with one measured `FAIL` that belongs to a decision and not to this page.**
+`python -m tools.pagespec --only auth-log-scan` reads `1 fail, 3 undecided`; the fail is
+`contrast marks`, 13 of 311 measured below 3.0:1, a `report-only` key whose remaining
+population `0008` §4.29 and `ADR-0008` §10 have already partitioned into open design questions.
+Nothing here is new and nothing here is this session's to repair.
+
+The text is strong on a recruiter's reading. The `h1` — *"108 failed logins in 7.1 hours — and
+only some of them are an attack"* — carries a figure, its unit and the claim, and the first
+screen says what the page is and what it proves. **Its quoted terminal block reproduces to the
+character**, which is `0007` §5.0 satisfied where nothing carries it: 146 events, the range
+`00:12:03 .. 07:16:40`, `108 / 5 / 33`, four brute-force sources, and 7h04m is the 7.1 hours
+the headline names. No figure on the page lacks a unit or a baseline, and no sentence needed a
+second reading.
+
+**D — `clear`.** MIT licence tracked, homepage set to the Pages URL, six relevant topics, a
+description carrying the same claim as the `h1`, no open issues, `main` the only branch, CI
+green on its last three runs. This repository was among the nine clean of `0010` §2.4's
+sweep and still is.
+
+**The cheapest observation that would falsify each `clear`.** For A: run the mutation battery
+over `tests/test_site.py` and see whether `:263` reddens on its own assertion rather than
+`:237`'s. For C: a `--fetch` run, which judges the served bytes rather than the committed file
+— this scan read the committed one. For D: `gh api` for branch protection and for the Pages
+build source, neither of which `gh repo view` reports.
+
+**Not checked.** The cross-repository half of §5 — whether this repository's shapes recur
+elsewhere — which is not a session-1 question by construction. The `contrast marks` population
+was read from the checker's summary rather than site by site. And no artifact under
+`docs/` other than `index.html` was read, because there is none.
 
 ## 5. Cross-cutting
 
