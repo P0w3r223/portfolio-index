@@ -338,7 +338,9 @@ It is not vacuous today and repairing it is not a B finding; it belongs to which
 the mutation battery this row names as the cheapest falsifier of `A: clear`.
 
 Scanned 2026-09-11 at index `dc04541`, gitlink `50e8b6e`, entry state clean. Four axes, because
-§3.2's identifier half was retired the same day; E here is E0 and E2's third-party question.
+§3.2's identifier half was retired the same day, so E is E0 and E2's third-party question.
+*This opened* **“Four axes”** *until 2026-09-11.* §3.1 and §3.4 both say five, this row carries
+five lettered subsections, and §4's table has five columns: §3.2 retired half of E2, not an axis.
 
 **E — `finding` · metadata, and it is R-1's, not this repository's own.** Ten of twenty-eight
 commits carry `Piotr Cząstkiewicz` in the author or committer field, which reproduces R-1's
@@ -362,7 +364,7 @@ which is a fold and not shared state.
 *One observation, deliberately not a finding.* `tests/test_site.py:263`
 (`test_the_bands_are_still_visible_against_the_lane_they_sit_on`) puts **every** assertion
 inside a loop over `_painted(css, _BAND_SELECTOR)`, so an empty match passes it silently. It is
-not vacuous today, because the sibling test at `:237` pins `len(bands) == 2` and would redden
+not vacuous today, because the sibling test pins `len(bands) == 2` at `:240` and would redden
 first — but the protection lives in a different test, so a mutation battery would report the
 property caught while the guard that names it proved nothing. `SG-1`'s shape at one remove.
 
@@ -409,7 +411,7 @@ sweep and still is.
 
 **The cheapest observation that would falsify each `clear`.** For A: run the mutation battery
 over `tests/test_site.py` and see whether `:263` reddens on its own assertion rather than
-`:237`'s. For C: a `--fetch` run, which judges the served bytes rather than the committed file
+`:240`'s. For C: a `--fetch` run, which judges the served bytes rather than the committed file
 — this scan read the committed one. For D: `gh api` for branch protection and for the Pages
 build source, neither of which `gh repo view` reports.
 
@@ -421,27 +423,48 @@ was read from the checker's summary rather than site by site. And no artifact un
 ### A-2 — `apply-scout`, session 2
 
 Scanned 2026-09-11 at index `5278b1b`, gitlink `c7958eb`, entry state clean and `HEAD`
-identical to `origin/main`. Four axes, E being E0 and E2's third-party half.
+identical to `origin/main`. **Five axes**, E being E0 and E2's third-party half — §3.2 retired
+half of E2, not an axis, and this line said *four* until 2026-09-11.
 
 **E0 — `finding` · metadata, and it is R-1's.** Three identities in the history and no
 fourth: `P0w3r223 <p0w3r2243@gmail.com>`, `Piotr Cząstkiewicz <p0w3r2243@gmail.com>` and
 GitHub's noreply. **13 of 116** commits carry the real name, which reproduces R-1's table cell
 exactly. The address is the portfolio's published contact and is not a finding.
 
-**E2 — `finding` · third-party data. The repository redistributes six companies' pages
+**E2 — `finding` · third-party data. The repository redistributes five companies' pages
 verbatim under a blanket MIT notice.** `eval/cassettes/` commits **1 818 808 characters of
-raw job-board HTML** across eight `http` records — six live pages and two `{"error": "HTTP
-404"}` — from **Allegro** (two postings, SmartRecruiters), **tryjeeves** and **The Athletic**
-and **HHAeXchange** (Lever), **Zapier** (Ashby), **KONUX** and **Reddit** (Greenhouse). `LICENSE`
-reads *MIT / Copyright (c) 2026 Piotr Cząstkiewicz* over the whole tree, and **no file anywhere
-records the provenance of that content or excludes it from the grant** — swept `README.md`,
-`CLAUDE.md`, `docs/` and `eval/` for a licence, copyright or provenance note and found none
-touching the recorded pages.
+raw job-board HTML** across **nine** `http` records over eight distinct URLs — six live
+pages, one of them recorded twice, and two `{"error": "HTTP
+404"}` — from **Allegro** (two postings, SmartRecruiters), **tryjeeves** (Lever), **Zapier**
+(Ashby), **KONUX** and **Reddit** (Greenhouse). **The Athletic** and **HHAeXchange** are named
+by the two 404 records and contribute no page content at all, so a provenance note must not
+attribute anything to them. `LICENSE`
+reads *MIT / Copyright (c) 2026 Piotr Cząstkiewicz* over the whole tree, and **nothing
+reconciles the two**: no file carves the recorded pages out of the grant. *This sentence also
+said* **“and no company is named anywhere in the repository”** *until 2026-09-11, and that was
+the fourth universal quantifier in this row and the most easily refuted:* `README.md`:167
+names both 404 companies in prose, five `docs/decisions/*.md` and both `eval/` data files carry
+`reddit-`, `konux-`, `allegro-` and `zapier-` task ids, and **this row's own positive control
+counts `reddit` 108 times and `Allegro` 76 two paragraphs below it**. The companies are named;
+what is missing is the carve-out.
+
+*This sentence read* **“no file anywhere records the provenance of that content”** *until the
+review of 2026-09-11, and it was false.* `docs/decisions/0004_record_replay_cassettes.md`
+§Consequences says it plainly: *“The repository carries a ~1.5 MB data artifact of third-party
+responses, including raw posting HTML. That is the price of reproducibility.”* The repository
+discloses the data and accepts the cost as a decision; what it does not do is the licence half.
+**The sweep that reported none matched on `licen|copyright|provenance|verbatim|redistribut` and
+ADR-0004 says `third-party`** — a zero from a reader that could not see its subject, which is
+`SG-2`, in the same row that invokes `SG-2` twice against other people's guards. The finding
+survives and is narrower: disclosed, unlicensed.
 
 *What this is not, stated so a repair does not over-correct.* **No personal data.** A sweep of
 all 1 845 050 characters of `http` and `extract` payloads for emails, LinkedIn profiles,
 phone shapes and recruiter-contact wording returns **zero of each**, and the 326 `@` characters
-are CSS at-rules without exception. The sweep carries its own positive control — it counts
+are CSS at-rules in **302** cases; the other **24** are Twitter handles, npm scope names,
+JSON-LD `@context`/`@type` keys and URI-parsing regexes, and not one is an address. *This read
+as* **“CSS at-rules without exception”** *until 2026-09-11, written from a sample of twelve
+contexts.* The sweep carries its own positive control — it counts
 `reddit` 108 times and `Allegro` 76 — because a zero from a reader that never reached the
 bytes is the shape `SG-2` is named for. Job ads are public marketing, the mechanism is
 disclosed (`CLAUDE.md`:71 says the cassettes are committed; `README.md`:249 counts the eight
@@ -465,7 +488,10 @@ its docstring rather than leaving it to a reader.
 `README.md`:249 says the recording *"produced 68 entries"* and `eval/cassettes/eval.jsonl` holds
 **106**. The figure is right and the file is right: the non-`llm` kinds sum to exactly 68 and
 cost **$0.8802**, which is the README's `$0.88` to the cent, and the 38 `llm` entries arrived
-later with `5a3facc`, *scoring the agent loop*. A count taken off `wc -l` would have recorded a
+later. *This named* **`5a3facc`** *until 2026-09-11, and that commit took the `llm` count from
+0 to* **48** *over 116 entries; the 38 was set by* **`8dc7961`**, *which re-recorded the file to
+106. The figure and the commit belonged to two different states of it.* A count taken off
+`wc -l` would have recorded a
 true sentence as false.
 
 **A — `clear`.** **300 tests pass** in 6.05 s and `ruff check .` reports *All checks
@@ -517,10 +543,12 @@ time and goes to §5.
 `docs/adr/0004_what-carries-the-page-spec.md` is the index's; this repository has
 `docs/decisions/` and **no `docs/adr/` at all**. Two sentences earlier the same paragraph
 cites `docs/audit/0007_divergence-and-the-page-spec.md` *“in the private portfolio index”* — so
-the correct form is demonstrated in the same breath as the incorrect one. Of twenty distinct
-path citations across `README.md`, `CLAUDE.md` and `docs/`, this is the only one that fails;
-the other three that do not resolve literally are `0007` (correctly qualified) and two
-`src/apply_scout/`-relative shorthands that are ordinary prose.
+the correct form is demonstrated in the same breath as the incorrect one. Of **twenty path
+citations over fourteen distinct paths** across `README.md`, `CLAUDE.md` and `docs/`, this is
+the only one that fails; the other three that do not resolve literally are `0007` (correctly
+qualified) and two `src/apply_scout/`-relative shorthands that are ordinary prose. *This read
+as* **twenty distinct** *until 2026-09-11; twenty is the occurrence count and the reader that
+produced it incremented per file, so a path cited twice counted twice.*
 
 **The README's tables have no carrier, and here that is one `diff` away from being fixed.**
 CI regenerates each table and diffs it against `eval/expected/*.md`; the README holds a
@@ -530,19 +558,37 @@ at that moment the README goes stale silently. They agree today — verified by 
 reading. This is the portfolio-wide gap `0008` §5 records, but sharper: the artifact exists,
 the guard exists, and only the copy sits outside it.
 
-*Checked and holding, recorded because a later reader should not re-derive them*: all eight
-CLI invocations the README prints parse against the real parser (four carry flags; zero
-refused, after the extractor was widened — its first version found three of eight, and a
-zero from a reader that cannot see its subject is `SG-2`). The section on the runner
+*Checked, and one of these was wrong*: of the eight CLI invocations the README prints, **the
+four that carry flags parse against the real parser (:96, :99, :132, :235) and the other four
+are refused** — `apply-scout run` in prose at :68 and :512, `apply-scout eval` in prose at
+:129, and `apply-scout run` inside an `<img alt=…>` at :515 — because `run` declares `--url`,
+`--cv` and `--github-user` `required=True` and `eval` declares `--tasks`. **None of the four is
+a command the README offers a reader**, and the fourth is not prose at all, so the denominator
+of eight was never eight runnable commands. *This read*
+**all eight … zero refused** *until the review of 2026-09-11: the validator filtered to the
+four containing `--` and the sentence quantified over all eight, which is the extractor's own
+widening being credited to a check that never ran on the strings it added.* Those four are
+prose references rather than runnable commands, so nothing on the page is wrong — but a
+portfolio-wide argparse sweep built on *“a bare subcommand parses”* would pass everywhere for
+the wrong reason. The section on the runner
 comparison carries **its own erratum** for figures that outlived their recording, which is
 this portfolio's own practice appearing in a submodule without being asked for.
 
 **C — `clear`, and the checker is unusually quiet here.**
 `python -m tools.pagespec --only apply-scout` reads **`clear, 3 undecided`**: every clause
 `ok` or `n/a`, `contrast text` 22 of 22 measured with the worst at **5.17:1 against 4.5:1**,
-**`contrast marks` no site**, and — alone among the eight surfaces that report it — **`contrast
-ground` 0 site(s) without a resolved ground**. The two `-` rows are `--border-control` not
-declared and clause 8 having no grouped figure, both of which the clause admits.
+**`contrast marks` no site**, and **`contrast
+ground` 0 site(s) without a resolved ground**. The **three** `-` rows are `--border-control`
+not declared *in each scheme* and clause 8 having no grouped figure — two causes, three rows,
+all three admitted by their clause. *This said* **two** *until 2026-09-11, a hand count of an
+instrument's output two lines above a paragraph corrected for the same thing.*
+
+*The zero is shared, not unique, and this paragraph claimed otherwise.* It read
+**“alone among the eight surfaces that report it”** until 2026-09-11. **Three surfaces read
+`contrast ground` 0** — `apply-scout`, `mlops-car-price` and `pl-jobs-lora` — and all three
+share the same profile exactly: `clear, 3 undecided`, `contrast marks` no site, ground 0.
+Eight surfaces report a non-zero count, which is the set the struck phrase named and the set
+`apply-scout` is not in. The verdict does not move; the superlative was never measured.
 
 Read at a recruiter's pace, the first screen does its job: the eyebrow says what this is in
 one line, and the `h1` — *“This agent's retriever finds the evidence for 8 of the 27
@@ -564,7 +610,7 @@ this one.*
    Proposed: **`4 of 5`** / *attack payload classes the harness stops across 40 attempts —
    exfiltration is not one*. Same space, carries the result and keeps the failure.
 2. **`62%` has no denominator on the tile.** *of the task set produces a deliverable* →
-   *of the 8-task set produces a deliverable*. Four characters.
+   *of the 8-task set produces a deliverable*. Two characters.
 3. **The sub-headline opens on an unresolved pronoun.** *“Nothing in the harness could see
    that.”* → *“Nothing in the harness could see those misses.”* One word, and the reader
    stops going back to the `h1` to find the referent.
@@ -578,8 +624,8 @@ Five issues open, all from 2026-07-27, each read against the code:
 
 | # | title | verdict | evidence |
 |---|---|---|---|
-| 3 | headless fetch for JS boards | **still real** | no `playwright`/`selenium`/`headless` in `src/` or `pyproject.toml`; the only match is `PKG-INFO` restating the limitation |
-| 4 | search source, not just the README | **still real, and now quantified** | `tools/github_evidence.py`:41 is still `needle in readme.text.lower()`, no code-search call anywhere. The gap the issue argued in prose is the page's `h1` today: 8 of 27 |
+| 3 | headless fetch for JS boards | **still real** | `git grep -ni 'playwright\|selenium\|headless'` over the tracked tree returns **one** hit, `README.md`:388, restating the limitation. *This cell cited `src/apply_scout.egg-info/PKG-INFO`, which `.gitignore`:4 excludes and no clone has: the sweep behind it was `grep -r`, the filesystem walk this portfolio's own rules forbid for exactly this reason* |
+| 4 | search source, not just the README | **still real, and now quantified** | `tools/github_evidence.py`:46 is still `needle in readme.text.lower()` (*:41 until 2026-09-11 — that is `needle = requirement.strip().lower()`, five lines up; a citation that does not resolve, in the evidence column of a finding about citations that do not resolve*), no code-search call anywhere. The gap the issue argued in prose is the page's `h1` today: 8 of 27 |
 | 5 | semantic requirement matching | **premise obsolete, proposal open** | the issue's subject `requirement_f1` **was deleted in `2090fcb`** and replaced by `requirement_coverage` (`evaluation.py`:93) under `ADR-0005`. Its *“~0.3 F1”* is a number the harness stopped producing; `README.md`:187 records the old 0.33 / 0.23. The embedding proposal is untouched |
 | 6 | claim-level entailment guardrail | **still real** | `guardrail.py` carries `_is_grounded`, `requirement_grounding` and `evidence_grounding` — all provenance. Nothing checks entailment, and the README says so |
 | 7 | grow the eval set to 20-30 | **still real** | `eval/tasks.json` holds **8** |
@@ -595,11 +641,90 @@ battery over `tests/test_retrieval.py` and see whether `:188` reddens on its own
 on `:68`'s pin. For **C**: a `--fetch` run, which judges the served bytes — this scan read the
 committed file, and `apply-scout` publishes through Pages from `docs/`.
 
-**Not checked.** `docs/decisions/` holds twelve ADRs and this scan read four of them, for the
+**Not checked.** `docs/decisions/` holds twelve ADRs and this scan read four of them — **five
+after the review, and the fifth is the one that falsified this row's E2 sentence.** For the
 claims axis B needed; the rest are unread prose. The `llm` half of the cassette (38 entries,
 $0.2950) was counted and characterised but its recorded model replies were not read. And the
 retrieval judgment set (`eval/retrieval/judgments.json`, 695 lines) was replayed rather than
 inspected — a wrong judgment reproduces exactly as well as a right one.
+
+### A-2 errata, 2026-09-11 — fourteen figures, in three rounds
+
+*Placed after the row and not inside it.* The first edition put this heading between A-2's
+D axis and its closing two paragraphs, so **Not checked** — which the scan prompt's closing
+item 1 makes mandatory — fell under the errata heading instead of under the row. A-1 is the
+template and keeps both closers inside.
+
+Found by re-deriving every figure in this row against the instruments after it merged — the
+practice `CLAUDE.md` states and this row had claimed to follow. Each correction is made where
+its sentence lives, with the struck wording kept beside it.
+
+| what it said | what is true | axis |
+|---|---|---|
+| *no file anywhere records the provenance* | `ADR-0004` §Consequences names the third-party data and accepts its cost; only the licence half is open | E |
+| *eight `http` records* | **nine**, over eight distinct URLs, one page recorded twice | E |
+| *1 818 808 characters* | right for all nine records; **1 088 196** is the distinct page content, the tryjeeves page being 730 612 of it | E |
+| *the 326 `@` are CSS at-rules without exception* | **302** are; 24 are handles, npm scopes, JSON-LD keys and URI regexes, and none is an address | E |
+| *alone among the eight surfaces that report it* | **three** surfaces read `contrast ground` 0, with identical profiles | C |
+| *twenty distinct path citations* | twenty **occurrences** over **fourteen** distinct paths | B |
+
+**Three of the six are one defect in the reader rather than six in the arithmetic**, and it is
+already named. *No file anywhere*, *without exception* and *alone among* are universal
+quantifiers written from partial reads: a five-term sweep pattern that omitted the term the
+answer used, twelve sampled contexts out of 326, and one surface's row read without the other
+eleven beside it. **`SG-2` is a zero from a reader that cannot see its subject** — and this row
+invokes `SG-2` twice against other people's guards while committing it three times.
+
+*No verdict moves.* E stays `finding` · third-party data on a narrower claim, C stays `clear`,
+B stays `finding` with its three. What moved is that E2 is **disclosed and unlicensed** rather
+than undisclosed, which is a different conversation to have with the owner.
+
+**Round two, from a `code-review` pass over the merged commit.** Eight more, each reproduced
+before it was written down here:
+
+| what it said | what is true | axis |
+|---|---|---|
+| *six companies' pages* | six live pages from **five** companies; The Athletic and HHAeXchange appear only as 404 stubs and a provenance note must attribute nothing to them | E |
+| *all eight CLI invocations parse, zero refused* | the four carrying flags parse; the four bare ones are **refused** for missing required arguments. The validator filtered to the four and the sentence quantified over eight | B |
+| issue #3's evidence cites `PKG-INFO` | `.gitignore`:4 excludes it and no clone has it. `git grep` returns one hit, `README.md`:388. **The sweep was `grep -r`** | D |
+| `tools/github_evidence.py`**:41** | **:46**; :41 is `needle = requirement.strip().lower()` | D |
+| *the 38 `llm` entries arrived with `5a3facc`* | `5a3facc` took it 0 — **48** over 116 entries; **`8dc7961`** re-recorded to 106 and 38 | E |
+| *the two `-` rows* | **three** — `--border-control` is reported once per scheme | C |
+| *Four characters* | **two**; the insert is `8-` | C |
+| `test_site.py` pinned at **`:237`** | **:240**; :237 is `palettes = _palettes(css)`. Wrong in **all three** places it appeared — A-1's body, A-1's falsifier, §5 — so cross-checking them could not catch it | A, §5 |
+
+**Round three, from the same pass's gap sweep.** Six more, plus two structural:
+
+| what it said | what is true | axis |
+|---|---|---|
+| *no company is named anywhere in the repository* | `README.md`:167 names both 404 companies, five ADRs and both `eval/` data files carry their task ids, and **this row's own control counts `reddit` 108 and `Allegro` 76**. The fourth universal quantifier, refuted two paragraphs from where it stood | E |
+| *four are refused* naming three sites | four, and the fourth is an `<img alt=…>` at :515. None of the four is a command offered to a reader, so the denominator was never eight runnable commands | B |
+| *Four axes* | **five**; §3.1 and §3.4 both say five and the row carries five. §3.2 retired half of **E2**, not an axis. Wrong in `A-1` too, and corrected there | all |
+| §5's guard is *ten lines* | **28 plus two helpers** at `bfe4bf2`, 18 at `1d02f6f`. A hand-typed figure inside the bullet arguing that class of figure is the defect | §5 |
+| two errata lines opened with `* ` at column 0 | GFM reads that as a list item interrupting a paragraph, so the struck wording rendered as a stray bullet with runaway emphasis — the mechanism by which a reader sees the old claim, broken. **Nothing in `tests/` parses markdown, so it would never have reddened** | — |
+| the errata heading sat inside the row | it displaced **Not checked**, which the scan prompt makes mandatory, out from under `### A-2`. Moved below the row | — |
+
+**Fourteen corrections over three rounds, and the count of universal quantifiers is now four.**
+Every one of them — *no file anywhere*, *without exception*, *alone among*, *no company is
+named anywhere* — was written from a partial read in a row that names `SG-2` twice. The pattern
+is not arithmetic and no instrument catches it: **this row should not have carried an absolute** 
+**claim at all**, having declared in its own *Not checked* that it read four ADRs of twelve.
+
+**The `PKG-INFO` one is the worst of the fourteen** and not because of the line: the sweep
+behind it was `grep -r`, which reads the working filesystem including everything `.gitignore`
+hides. This portfolio's own standing rule says to count with `git grep` and `git ls-files` for
+exactly that reason. The verdict happened to survive; the method did not.
+
+**And `:237` is a figure taken from the record rather than from the instrument.** It is `A-1`'s,
+repeated here twice without being re-derived, in a row whose own standing rule forbids that —
+`FG-2`. §5 names that pair as the cheapest falsifier of `A: clear`, so a session running the
+battery would have mutated an assignment, seen nothing redden and inverted the finding. **All
+three sites are corrected by this round**, `A-1`'s two included, because the figure was never
+A-2's to repeat.
+
+*And the row declared the gap that falsified it.* **Not checked** said four of twelve ADRs were
+read, and an absolute claim was then written across the eight unread ones. Declaring a gap and
+quantifying over it in the same row is worth recording as more than either half alone.
 
 ## 5. Cross-cutting
 
@@ -612,12 +737,16 @@ construction; this section and §2's baselines are where patterns accumulate.
   `auth-log-scan`'s `--min-success-failures` (A-1) and `apply-scout`'s `run --model`,
   `--max-steps`, `--max-cost` (B-2). Both were found the same way — read the parser, sweep
   the docs — and neither repository had any guard that could. `auth-log-scan` now has one
-  (`tests/test_readme.py`, `1d02f6f`) and it is ten lines. **Two occurrences make this the
+  (`tests/test_readme.py`, `bfe4bf2`), and it is **28 lines plus two helpers** — 18 when it
+  landed at `1d02f6f`, grown because the first edition filtered on `startswith("--")` while its
+  name promised every flag, so a short-only `-m` passed it silently. *This said* **ten lines**
+  *until 2026-09-11, a hand-typed figure inside the bullet arguing that class of figure is the
+  defect.* **Two occurrences make this the
   first shape worth a portfolio-wide sweep rather than a per-repository finding**, and the
   sweep is cheap: every repository with an `argparse` parser can be asked the same question
   without being scanned.
 - **A guard whose every assertion sits inside a loop, protected by a pin in a different
-  test.** `auth-log-scan`'s `tests/test_site.py`:263 against `:237`'s `len(bands) == 2`, and
+  test.** `auth-log-scan`'s `tests/test_site.py`:263 against `:240`'s `len(bands) == 2`, and
   `apply-scout`'s `tests/test_retrieval.py`:188 against `:68`'s
   `(misses, len(queries)) == (63, 72)`. Neither is vacuous today and both would read as
   *caught* in a mutation battery while the guard that names the property proved nothing —
@@ -656,4 +785,5 @@ question rather than as a defect.
 | 2026-09-10 | v1.0 (never used) | `rev-list --all` misses 209 publicly fetchable PR-head commits | E1 fetches `refs/pull/*/head` first |
 | 2026-09-10 | v1.0 (never used) | `--only wroclaw-air-insights` exits 0 having read nothing, which is indistinguishable from a pass | §3.3 requires `--fetch` there |
 | 2026-09-11 | **v3.0** | the prompt's E2 sweeps the owner's personal identifiers, which the owner has declined to supply — so the axis could never be anything but `blocked`, and §3.4 would have returned every repository in the queue | **The identifier half is retired**, with its template, its six guards and §3.2's sources table deleted. E2 is third-party data only; E0 and E1 are unchanged. §3.2 holds the reason. *This row replaces the v2.0 one it supersedes, which corrected the placeholder rule for a file that no longer exists* |
+| 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
