@@ -1212,29 +1212,19 @@ this section is why: clauses 1, 2, 3, 5, 6 and 7 report **zero `FAIL` across all
 can be gated now with no page changing at all.
 
 So: a **ratchet**. Gate the clauses that are already clean, and extend the set by one as each stage closes.
-Three decisions the implementation must state rather than imply:
+Three decisions the implementation must state rather than imply — **and their normative home is
+[`ADR-0006`](../adr/0006_the-gate-registry-and-the-twelfth-surface.md) §7 since 2026-09-11, not this
+section.** They were written here because S-gate needed them and this is where S-gate was recorded; they are
+decisions, and `ADR-0004` §5 puts a decision in a decision document rather than in a plan-and-status one.
+`ADR-0009` §3 step 2 is the move, and it moved the statements rather than copying them, because two normative
+copies of one rule is the shape that produced five corrections to `0007` §3.
 
-1. **Fail on `FAIL` only** — with one exception, found by review and recorded at the end of §4.12. Clause 4's
-   `h1` is undecided on every surface today because *"states a claim"* is a judgement no checker can make
-   (`0007` §7) — **not undecided *by design*, which is what a first draft of this line said**: it still
-   `FAIL`s on a missing `h1` or one equal to the repository's name, and that sentence became load-bearing the
-   moment `4 h1` entered `GATED`. Clause 3 answers `undecided` where a media condition is not read, clause 2
-   is `n/a` on a page with no tiles, and **clause 1's `composited` is undecided on seven of twelve surfaces**
-   — the largest such population, and the one §3.2 and §3.5 argue hardest to keep, because resolving a
-   `color-mix` or an `opacity` needs the ground the mark is *drawn over*. A gate that reddens on those would
-   be a gate on the checker's honesty.
-2. **An unread surface that should have been readable is a failure.** Otherwise a renamed path degrades to a
-   green skip — which is the shape of every silent-green defect in §3.7, §3.9 and §4.9.
-3. **`--fetch` moves to a scheduled job, not the push job.** The push job gates eleven committed surfaces; a
-   daily job gates twelve. That keeps a network failure from reading as a page regression — the reason
-   `--fetch` was excluded in the first place, and the comment states it — while ending the state where
-   `wroclaw` is gated by nothing at all.
-
-   *S-gate shipped this against the cron already in the file, which is **Monday**, so for one commit the
-   policy said daily and the workflow ran weekly — a regression on the one surface that exists nowhere but
-   the wire could have stood for six days. Caught by review; the cron is `0 7 * * *` now. The schedule was
-   inherited from when this workflow only printed, and inheriting it unread is how a policy and its
-   implementation came to disagree inside one change.*
+In one line each, so a reader of this stage knows what it settled without leaving: **P1** the gate fails on
+`FAIL` only, and never on `UNDECIDED`, because a gate that reddened on the checker's honesty would be a gate
+on the checker's honesty. **P2** an unread surface that should have been readable is a failure, or a renamed
+path degrades to a green skip. **P3** `--fetch` belongs to the scheduled job rather than the push path, so a
+network failure cannot read as a page regression. The arguments, the exceptions, and the cron erratum that
+`ADR-0006` §7 has since grown are there and not here.
 
 **The mutation that proves it, and the second one is the interesting half.** Revert `charts.py:76` to a comma,
 rebuild, run the checker: today it prints `FAIL` and exits 0. Then make the same source edit **without**
