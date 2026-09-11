@@ -57,6 +57,11 @@ tools/citations.py    every §N reference in the index, and whether the section 
                         §3 step 1 — the answer to nothing in `tools/` reading 0008 at all
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
+docs/reference/       failure-classes.md — the defect shapes this project keeps finding in
+                        itself, with an id each and the test that catches the next one.
+                        **No document number**, and ADR-0009 §0 is why: three are taken
+                        twice already. Cite a class by its id; the file cites *into* 0008
+                        rather than moving it
 docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the clause
                         registry, 0006 the gate registry and the twelfth surface, 0007 S8a's
                         design, 0008 the ground of a usage site and why S13 is a census
