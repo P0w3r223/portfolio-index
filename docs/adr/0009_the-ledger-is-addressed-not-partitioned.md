@@ -1,7 +1,11 @@
 # The ledger is addressed, not partitioned
 
 Date: 2026-09-11
-Status: proposed
+Status: accepted — the owner chose this option over the three alternatives on 2026-09-11,
+and steps 1 and 2 landed the same day (`#126`, `#127`, and the move of `0008` §4.11's
+policies into `ADR-0006` §7). Steps 3 and 4 remain. *This read `proposed` while its own
+step 1 was merging, which is `0008` §3's status column doing the thing that section
+records against itself twice.*
 Author: Piotr Cząstkiewicz
 Related to: [`../audit/0009_the-review-of-the-whole-system.md`](../audit/0009_the-review-of-the-whole-system.md)
 §7 row 9 (the row this answers),

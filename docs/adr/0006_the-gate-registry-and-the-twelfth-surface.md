@@ -138,3 +138,52 @@ left the test green with the row's whole subject unmeasured.
   caught up to a day later, and only if the wire cooperated. Its central invariant — *the floor
   runs in this job and not that one* — could only ever be guarded by reading YAML, which is the
   guard shape this repository has had too narrow three times.
+
+## 7. The three gate policies, promoted from `0008` §4.11 on 2026-09-11
+
+`ADR-0009` §3 step 2. These three are cited ten times by `tools/pagespec/__main__.py` as the
+reason `GATE` behaves as it does, and they lived in a `####` subsection of the rollout ledger —
+a plan-and-status document, under `ADR-0004` §5's three-lifetime rule. They were taken at
+S-gate and they are decisions, so this is their normative home. `0008` §4.11 keeps its number
+and its narrative, and now points here.
+
+### P1 — the gate fails on `FAIL` only
+
+`UNDECIDED` never gates. Clause 4's `h1` is undecided on every surface because *"states a
+claim"* is a judgement no checker can make (`0007` §7) — **not undecided by design**: it still
+`FAIL`s on a missing `h1`, or one equal to the repository's name, and that distinction became
+load-bearing the moment `4 h1` entered the gated set. Clause 3 answers `undecided` where a
+media condition is not read, clause 2 is `n/a` on a page with no tiles, and clause 1's
+`composited` is undecided on seven of twelve surfaces, because resolving a `color-mix` or an
+`opacity` needs the ground the mark is drawn over.
+
+**A gate that reddened on those would be a gate on the checker's honesty**, and that sentence
+is the whole policy. It is why `python -m tools.pagespec` exiting 0 means *no gated clause
+failed* and not *every clause passes* — which the run now prints for itself under
+`gate policy`, with the reason beside each key outside the gate.
+
+### P2 — an unread surface that should have been readable is a failure
+
+Otherwise a renamed path degrades to a green skip, which is the shape of every silent-green
+defect `0008` §3.7, §3.9 and §4.9 record. Fail-closed on an unread surface is also one of the
+four things `0009` §7's closing note marks as not to be changed.
+
+### P3 — `--fetch` belongs to a scheduled job, not to the push path
+
+The push job gates the eleven committed surfaces; a daily job gates twelve. That keeps a
+network failure from reading as a page regression — the reason `--fetch` was excluded before
+there was a gate at all — while ending the state where `wroclaw` was gated by nothing.
+
+*This one shipped against the cron already in the file, which was **Monday**, so for one commit
+the policy said daily and the workflow ran weekly: a regression on the one surface that exists
+nowhere but the wire could have stood for six days. Caught by review; the cron is `0 7 * * *`.
+The schedule was inherited from when this workflow only printed, and inheriting it unread is
+how a policy and its implementation came to disagree inside a single change.*
+
+**And the cron is not the hour it names.** Measured 2026-09-11 over the three preceding
+scheduled runs — 11:51, 12:01 and 11:56 UTC against `0 7 * * *`. GitHub queues scheduled
+workflows, and here it queues them by about five hours, consistently. Nothing is repaired for
+it, because the delay is stable and moving the cron would be a guess; it is written down
+because P3's whole value is *the twelfth surface is judged daily*, and a reader who lands a
+change needing the next `live` run waits until midday rather than until morning. `0008` §4.15
+and `CLAUDE.md` both describe it as the morning's run.
