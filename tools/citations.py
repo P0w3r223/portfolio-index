@@ -322,6 +322,27 @@ def unknown_document(found: tuple[Citation, ...] | None = None) -> tuple[Citatio
                  if c.owner is not None and c.owner not in index)
 
 
+#: Where a citation of the ledger is a pointer from working code into narrative, rather than
+#: one document referring to another. `ADR-0009` §3 step 4 migrates these onto the ids in
+#: `docs/reference/failure-classes.md` as each file is touched for another reason.
+_CODE_SIDE = ("tools/", "tests/", ".github/")
+
+
+def code_side(found: tuple[Citation, ...] | None = None) -> tuple[Citation, ...]:
+    """Citations of `0008` written in code, tests or CI. The population step 4 drives down.
+
+    **Printed, never gated, and deliberately not a ratchet.** A pinned ceiling was considered
+    and refused: not every citation of the ledger from code is wrong — `tools/spec.py` cites a
+    frozen measurement, `__main__.py` cites the stage a `GATE` row closed — so a rule refusing
+    new ones would be a rule this corpus refutes. What step 4 needs is a number that moves, and
+    a reader who can see it move; that is this, and `0009` §7 row 9 reads it rather than
+    promising a signal nothing emits.
+    """
+    return tuple(c for c in (found if found is not None else citations())
+                 if c.owner == "0008"
+                 and (c.path.startswith(_CODE_SIDE) or c.path == "CLAUDE.md"))
+
+
 def candidates(citation: Citation) -> tuple[str, ...]:
     """Which documents could hold an unattributed reference. The triage, not the answer."""
     return tuple(sorted(key for key, refs in _index().items() if citation.ref in refs))
@@ -376,6 +397,16 @@ def report() -> list[str]:
         lines.append("      the last group is a finding: the section exists in no document")
         for citation in orphans:
             lines.append(f"          {citation.path}:{citation.line}  §{citation.ref}")
+    code = code_side(found)
+    files = sorted({c.path for c in code})
+    lines.append("")
+    lines.append(f"  code-side    {len(code)} citation(s) of `0008` in {len(files)} file(s) of "
+                 f"code, tests or CI")
+    lines.append("      the population `ADR-0009` §3 step 4 migrates onto the ids in")
+    lines.append("      docs/reference/failure-classes.md, as each file is touched for another")
+    lines.append("      reason. Printed and never gated: citing the ledger from code is not")
+    lines.append("      always wrong, so a rule refusing it would be one the corpus refutes")
+
     if UNREADABLE:
         lines.append("")
         lines.append(f"  unreadable   {len(UNREADABLE)} file(s) the sweep could not open")

@@ -299,3 +299,22 @@ def test_both_workflow_filters_name_the_paths_this_guard_reads():
             assert needed in filter_body, (
                 f"filter {index} does not name {needed}; `python -m tools.citations` and its "
                 f"guards would not run on a change to the files they read")
+
+
+def test_the_code_side_population_is_reported_and_is_not_the_whole_sweep():
+    """Step 4's only signal. Vacuity first, then that it is actually a subset.
+
+    Collapsed to an empty tuple this reddens nothing else — the report prints a migration
+    already finished, and `0009` §7 row 9 reads that number. The second assertion is what
+    stops the opposite mistake: a `code_side()` returning everything would also print a
+    number that moves, and it would be the wrong one.
+    """
+    found = citations.citations()
+    code = citations.code_side(found)
+    assert len(code) >= 20, "the code-side population collapsed; step 4 has no signal left"
+    assert all(c.owner == "0008" for c in code)
+    assert all(c.path.startswith(("tools/", "tests/", ".github/")) or c.path == "CLAUDE.md"
+               for c in code)
+    assert len(code) < len(found) / 2, (
+        "code_side() is returning most of the sweep; it is meant to be the pointers from "
+        "working code into narrative, not every citation there is")
