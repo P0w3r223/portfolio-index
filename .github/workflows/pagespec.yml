@@ -36,13 +36,13 @@ on:
     # a filter naming only `tools/**` would refresh the table when the instrument changes
     # and never when a page does.
     paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
-            '.gitignore', 'audit-identifiers.local.example',
+            '.gitignore',
             'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
             'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
             'pl-review-sense', 'wroclaw-air-insights']
   pull_request:
     paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
-            '.gitignore', 'audit-identifiers.local.example',
+            '.gitignore',
             'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
             'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
             'pl-review-sense', 'wroclaw-air-insights']

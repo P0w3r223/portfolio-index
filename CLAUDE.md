@@ -77,12 +77,13 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         on measurement — available, unscheduled, costed as its own project —
                         so a session asking *what next* reads `0010` §3.1 and §4, not
                         `0008` §3
-audit-identifiers.local.example
-                      the template for `0010` §3.2's identifier file. See "What not to do"
 .github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled).
                         Its two `paths:` filters are tied to `sources.SURFACES` by a `core`
-                        test, and also name `.gitignore` and the template above, because the
-                        guards that read those two files would otherwise run in no job
+                        test, and also name `.gitignore`. **That last entry now guards
+                        nothing**: it was there for `tests/test_audit_identifiers.py`, retired
+                        2026-09-11 with the identifier sweep, and it is kept because a
+                        `.gitignore` change can move what the checker reads. No test reads
+                        the file today — `test_report.py` and `test_sources.py` only cite it
 <twelve directories>  the submodules; each is a standalone repository with its own CLAUDE.md
 ```
 
@@ -184,17 +185,14 @@ python -m pytest -m submodules --fetch   # what the scheduled `live` job runs: t
   What is settled: **`mini-traceroute` holds no Python at all** — no `pyproject.toml`, zero
   `.py` files — so it can carry no local page test, which makes it the one surface the index
   checker guards alone. This repository re-points submodules; it does not edit them.
-- **Do not invent a value for `audit-identifiers.local`, and do not fill the template in
-  place.** The file holds the owner's private identifiers and is theirs to write; a session
-  that finds it absent, **or present with every value still a placeholder**, records axis E2
-  `blocked` — `0010` §3.2, and §3.4 sends a repository with a blocked axis back to the queue.
-  Guessing turns a blocked axis into a false `clear`, because the sweep then runs for whatever
-  the session happened to know and finds nothing: an axis marked clean that was not checked is
-  worse than one left open. **The working copy belongs at this root and nowhere else** — git
-  does not descend into submodules, so the same name inside a sibling is ignored by nothing and
-  all twelve are public. `tests/test_audit_identifiers.py` holds all of it in five guards, and
-  a sixth thing it cannot hold is the judgement: *as of 2026-09-10 the copy exists and supplies
-  no value*, which is the honest state and not a defect to repair.
+- **Do not ask the owner for personal identifiers, and do not reintroduce a sweep that needs
+  them.** The audit's identifier half was **retired on 2026-09-11 on the owner's decision** —
+  the template, its six guards and `0010` §3.2's sources table are gone, and `0010` §6 records
+  it. The axis it belonged to survives as third-party data only, which costs the owner nothing.
+  A session that finds this inconvenient should read `0010` §3.2 before proposing to rebuild
+  it: the sweep needed the owner's private values as search literals, and running it meant
+  those values entering a session transcript — which the design's *never committed, only
+  counted* protection does not reach.
 
 ## The published surfaces, and what the gate does not say
 

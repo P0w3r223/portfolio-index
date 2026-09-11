@@ -161,8 +161,10 @@ Effort S + S + M, risk low, **zero citations broken**.
    `0008`'s own headings, on `tools/spec.py`'s heading-boundary pattern — the slice fails by
    naming the heading it could not find, which `tests/test_spec.py` already proves. **`docs/**`
    is added to both `paths:` filters in `.github/workflows/pagespec.yml`**, on the precedent set
-   in that same file for `.gitignore` and `audit-identifiers.local.example`: a guard reading a
-   file whose path is not in the filter runs in **no job**. The guard resolves the 89 sites
+   in that same file for `.gitignore`: a guard reading a file whose path is not in the filter
+   runs in **no job**. *That precedent was set by two entries; the second, the audit's
+   identifier template, was deleted with its guards on 2026-09-11 and the precedent stands on
+   the one that remains.* The guard resolves the 89 sites
    whose content names the ledger; **the 59 carrying no document number are not an edge case
    but a read-and-annotate backlog** — 36 % of the graph, 19 of them in `tools/`, `tests/` and
    a fixture where a self-citation is impossible, so those are resolvable first and cheaply.
@@ -207,9 +209,9 @@ careless. There is simply nothing to check a count against.
   job-level `if:` on `surfaces` is the lever if that trade is refused, and it is left to the
   plan rather than decided here. *Verified in the filter's favour: adding `docs/**` reddens
   neither `test_the_workflow_triggers_on_every_repository_the_registry_publishes` — its
-  `_A_REPOSITORY` pattern at `tests/test_sources.py:214` drops any entry with a separator — nor
-  `tests/test_audit_identifiers.py`, which asserts named paths are present rather than
-  enumerating the list.*
+  `_A_REPOSITORY` pattern at `tests/test_sources.py:214` drops any entry with a separator. The
+  second guard checked here, `tests/test_audit_identifiers.py`, was deleted on 2026-09-11 with
+  the identifier sweep, so no test reads either filter's literal contents today.*
 - **Neither the conformance table nor the gate can move.** Nothing reads `0008` and no `GATE`
   row is touched. Proof is byte-identical checker output plus a mutation on the new guard,
   under `0010` §3.6's six observations.

@@ -1,4 +1,4 @@
-# Portfolio audit — SCAN session                                        (prompt v2.0)
+# Portfolio audit — SCAN session                                        (prompt v3.0)
 
 Paste this at the start of a scan session, with `<REPO>` replaced. It is the method;
 [`0010_the-portfolio-audit.md`](0010_the-portfolio-audit.md) is the state.
@@ -9,7 +9,7 @@ Audit `<REPO>` and write down what you found. You do not repair it. The repair r
 from your row, in a session that never sees this repository's raw content.
 
 Read `0010` §3 (method), §3.3 (your commands — four repositories cannot run the obvious
-one), §3.4 (verdicts), and the `<REPO>` row in §4. If §6 records a correction binding v2.0
+one), §3.4 (verdicts), and the `<REPO>` row in §4. If §6 records a correction binding v3.0
 or later, §6 wins over this prompt.
 
 ## What this session may touch
@@ -47,7 +47,8 @@ context is a finding that did not survive the session.
 ### E — secrets and confidential data
 
 `0010` §2.3 already swept E1 across all thirteen repositories and found it clean, so unless
-you have reason to re-run it, E here is **E0 and E2**.
+you have reason to re-run it, E here is **E0 and E2** — E2 being third-party data only,
+since 2026-09-11.
 
 **E0 — commit metadata.** `git log --all --format='%an <%ae>%n%cn <%ce>' | sort -u`. Blobs
 are what `git grep` reads; authorship is not a blob. See `0010` R-1.
@@ -58,10 +59,12 @@ are what `git grep` reads; authorship is not a blob. See `0010` R-1.
 squash-merges; 209 such commits across the twelve are invisible to `rev-list --all` alone.
 Count hits before reading them, and do not pipe the sweep through `head`.
 
-**E2 — personal and third-party data.** Take identifiers from `0010` §3.2's sources; if
-`audit-identifiers.local` is absent, record `blocked` rather than sweeping for whatever you
-happen to know. Then read the committed data artifacts and ask of each: whose data, under
+**E2 — third-party data.** Read the committed data artifacts and ask of each: whose data, under
 what licence, does it name identifiable people or companies, and is it served publicly.
+**Do not sweep for the owner's personal identifiers and do not ask for them** — that half was
+retired 2026-09-11 on the owner's decision, and `0010` §3.2 is why. Proposing to rebuild it is
+not a finding.
+
 Check §3.3 before assuming `docs/` is published — it is for ten of twelve;
 `wroclaw-air-insights` serves a workflow artifact and `token-budget` has no Pages site.
 
@@ -104,7 +107,7 @@ repositories were clean. Also topics, homepage, stale branches, CI, `LICENSE`.
 
 1. Row complete in `0010` §4, including **what you did not check**.
 2. Pattern rather than incident → §5.
-3. Anything contradicting this prompt → §6, version `v2.0`.
+3. Anything contradicting this prompt → §6, version `v3.0`.
 4. Session brief to `.claude/sessions/<YYYY-MM-DD>.md`.
 5. A repository with any `blocked` axis does not close — it returns to the queue.
 

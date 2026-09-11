@@ -139,10 +139,10 @@ recorded third-party content rather than an E1 one.
 | 13c | `infra-docker`, `infra-docker-powiadomienia-teams`, `infra-docker-workmate`, `student-wellbeing-pwr` | secrets only |
 | R1…Rn | repair sessions, driven by §4 | repair |
 
-*Session 13's row gained its root clause 2026-09-10: `pyproject.toml`, `.gitignore`, the
-workflow and `audit-identifiers.local.example` are tracked, are this repository's, and fell
-outside all three named directories. The audit repairs that class of disagreement elsewhere,
-and had just created one of its own.*
+*Session 13's row gained its root clause 2026-09-10: `pyproject.toml`, `.gitignore` and the
+workflow are tracked, are this repository's, and fell outside all three named directories. The
+audit repairs that class of disagreement elsewhere, and had just created one of its own. The
+clause named a fourth file, the identifier template, which was deleted 2026-09-11 with §3.2.*
 
 Order for 1–12: `auth-log-scan` (pilot — small, all five axes), `apply-scout`,
 `it-job-radar`, `pl-jobs-lora`, `doc-extract`, `ab-lab`, `mlops-car-price`, `car-price-ml`,
@@ -152,69 +152,29 @@ A scan session never repairs; a repair session never reads a repository's raw da
 artifacts. The split is why a scan session may read a GitHub issue body, a scraped dataset
 or an extraction corpus without that content reaching anything that can act.
 
-### 3.2 Identifiers for axis E2 — sources, never values
+### 3.2 Identifiers — retired 2026-09-11
 
-Writing a PESEL or a postal address here would create the exposure the audit exists to find.
+**The identifier sweep is gone, on the owner's decision, and this heading is kept only so
+§3.3 to §3.6 keep their numbers** — every one of them is cited by number from the prompts and
+from `CLAUDE.md`.
 
-| identifier | source |
-|---|---|
-| git author name and e-mail | `git config user.name`, `git config user.email`, §2.4 |
-| private e-mail, phone, address, employer names | `audit-identifiers.local` — untracked, gitignored, written by the owner before session 1 |
-| national-ID / bank-shaped numbers | shape only, matched by pattern |
+What stood here was a table of sources for the owner's private identifiers, a working copy
+named `audit-identifiers.local`, a committed template, and six guards in
+`tests/test_audit_identifiers.py` keeping the two honest. All of it is deleted. Axis E keeps
+E0 and E1; **E2 survives as third-party data only** — whose data a committed artifact holds,
+under what licence, whether it names identifiable people, and whether it is served publicly —
+and that half needs nothing from the owner.
 
-A session that finds `audit-identifiers.local` absent records E2 as `blocked` and does not
-guess. Guessing is how E2 degrades to whatever the session happens to know.
-
-**The file's form, written down 2026-09-10 because it was not.** One `key = value` per line,
-UTF-8, `#` comments and blank lines ignored. Keys are free text — the sweep uses the values,
-so nothing has to agree on a vocabulary in advance. A value that is empty, or that still
-carries the placeholder `<fill in or delete this line>`, supplies nothing.
-
-**Present and empty is `blocked`, exactly as absent is** — and this is the shape the rule
-above does not name. A template sitting in the working tree with every value still a
-placeholder is a file a session can open, read, and sweep **zero** identifiers with; a sweep
-for nothing returns clean, and E2 closes green having checked nothing. So E2 is `blocked`
-unless the file supplies **at least one** value, and the row records how many it read.
-
-**As of 2026-09-10 `audit-identifiers.local` exists at the repository root and supplies no
-value**, so **E2 is `blocked`** — eight keys, eight placeholders. The copy was made the same
-day; what is left is the owner's, and §3.2's first sentence is why nobody else can do it. Fill
-**at least one** value and E2 opens; a category that does not apply should have its line
-**deleted** rather than left as a placeholder, because a placeholder is not a value and an
-empty line is not a claim.
-
-*This is the rule above firing as designed, on its first contact with a real file, and it is
-recorded rather than repaired.* A session was asked on 2026-09-10 to invent the values and
-declined: an invented identifier sweeps for something no repository contains, returns nothing,
-and turns `blocked` into `clear` — the one outcome this axis exists to prevent, and the precise
-sense of *"guessing is how E2 degrades to whatever the session happens to know"*. **A blocked
-axis is a true statement about the audit; a clean one bought by guessing is a false statement
-about the portfolio.** The first version of this paragraph read *"no `audit-identifiers.local`
-sits at the repository root"* and is superseded by the `cp`, not by the fill.
-
-**The working copy belongs at this repository's root and nowhere else, and that is a safety
-rule rather than a filing convention.** `.gitignore:35` is *this* repository's file and git
-does not descend into submodules, so the same name inside `ab-lab/`, `car-price-ml/` or any
-other sibling is ignored by **nothing** — and all twelve are public. Sessions 1–12 each work
-with a submodule directory open, which is exactly where a bare relative copy lands wrong.
-Measured 2026-09-10: `git -C ab-lab check-ignore audit-identifiers.local` exits 1, and
-`gh repo view` reports `PUBLIC`. `tests/test_audit_identifiers.py` is what holds all of this
-after the next edit rather than at the moment of this one — five guards, including one that
-refuses a copy in any sibling working tree.
-
-*The template is committed on purpose. Placeholder-only content carries no identifier, and
-`.gitignore:35` names an exact filename, so the pattern does not reach the `.example` —
-`git check-ignore` answers the ignore half, `git ls-files` the tracking half, and they are
-different questions. The first version of this paragraph asserted instead that a search of
-the whole user profile found no copy; the session writing it had authored a template into a
-temp directory fifty seconds earlier, so the record's hardest claim to falsify — a negative
-about the filesystem — was false at the moment it was written, and the only written copy of
-the form sat where Windows may clear it. Found by the review that blocked the commit; the
-submodule half and the guard came from the second pass over the repair.*
-
-Session 1 cannot open E2 until the working copy exists, and §3.4's rule is that a repository
-with a blocked axis returns to the queue — so starting the twelve before it does costs twelve
-rescans, not one.
+**The reason, recorded because a later session will otherwise rebuild it.** The sweep used the
+owner's private values as search literals across thirteen trees and their history. The design
+protected them by never committing the file and by recording only a count in a §4 row — but it
+could not protect them from the one thing the sweep requires, which is that a session **read**
+them, putting a phone number or a postal address into a conversation transcript. Offered the
+alternatives — supply nothing, supply only low-sensitivity values, or run the sweep himself and
+report counts — the owner chose to supply nothing and to retire the axis. **A permanently
+blocked axis was also the worse engineering outcome**: §3.4 sends a repository with a blocked
+axis back to the queue, so carrying E2 unfillable made the whole twelve-session queue
+unstartable.
 
 ### 3.3 Per-repository commands
 
@@ -238,11 +198,16 @@ or `test_the_committed_form_assets_match_the_source` fails.
 `clear` · `finding` · `blocked` · `not checked`, for all five axes.
 
 `blocked` is an instrument that would not answer — tests that will not collect, `gh` rate
-limited, a page answering 4xx, `audit-identifiers.local` missing **or supplying no value,
-§3.2**. A blocked axis is not a clean axis: the repository returns to the queue.
+limited, a page answering 4xx. A blocked axis is not a clean axis: the repository returns to
+the queue.
 
-*That last clause read only `missing` until 2026-09-10, which is the wording §3.2's own
-correction calls too narrow — and this is the section both prompts send a session to by name
+*This definition carried a fourth instrument until 2026-09-11 — the identifier file, absent or
+supplying no value — and it is gone with §3.2. It was also the only one of the four that could
+never be unblocked by anything a session does, which is why retiring the axis was the better
+outcome than carrying it: every repository in the queue would have returned to the queue.*
+
+*The retired clause read only `missing` until 2026-09-10, which is the wording §3.2's own
+correction called too narrow — and this is the section both prompts send a session to by name
 for what `blocked` means, so a session consulting it would have got the pre-correction
 answer while §3.2 held the wider rule. Two sections of one document disagreeing is not
 something §6 can route around: §6 corrects the prompts, not this file.*
@@ -370,5 +335,5 @@ question rather than as a defect.
 | 2026-09-10 | v1.0 (never used) | `git grep` over blobs cannot see commit metadata; the E2 half of the sweep returned zero on the one exposure that certainly exists | §3.4's E0, and R-1 |
 | 2026-09-10 | v1.0 (never used) | `rev-list --all` misses 209 publicly fetchable PR-head commits | E1 fetches `refs/pull/*/head` first |
 | 2026-09-10 | v1.0 (never used) | `--only wroclaw-air-insights` exits 0 having read nothing, which is indistinguishable from a pass | §3.3 requires `--fetch` there |
-| 2026-09-10 | **v2.0** | the prompt blocks E2 when the file is *absent*, and a template present with every value still a placeholder is not absent: a session opens it, sweeps zero identifiers, and a sweep for nothing returns clean | §3.2 — `blocked` unless the file supplies **at least one** value, plus the file's form, which was named nowhere |
+| 2026-09-11 | **v3.0** | the prompt's E2 sweeps the owner's personal identifiers, which the owner has declined to supply — so the axis could never be anything but `blocked`, and §3.4 would have returned every repository in the queue | **The identifier half is retired**, with its template, its six guards and §3.2's sources table deleted. E2 is third-party data only; E0 and E1 are unchanged. §3.2 holds the reason. *This row replaces the v2.0 one it supersedes, which corrected the placeholder rule for a file that no longer exists* |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail` on five of the eleven, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0 |
