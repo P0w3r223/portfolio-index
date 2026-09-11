@@ -278,6 +278,7 @@ when the first closure landed and the header read literally as a list of what is
 |---|------|-----------|---|---|---|---|---|------|-------------|
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
+| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2, B-2, D-2 | four ADRs, the `llm` cassette half, the judgment set |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -417,6 +418,189 @@ elsewhere — which is not a session-1 question by construction. The `contrast m
 was read from the checker's summary rather than site by site. And no artifact under
 `docs/` other than `index.html` was read, because there is none.
 
+### A-2 — `apply-scout`, session 2
+
+Scanned 2026-09-11 at index `5278b1b`, gitlink `c7958eb`, entry state clean and `HEAD`
+identical to `origin/main`. Four axes, E being E0 and E2's third-party half.
+
+**E0 — `finding` · metadata, and it is R-1's.** Three identities in the history and no
+fourth: `P0w3r223 <p0w3r2243@gmail.com>`, `Piotr Cząstkiewicz <p0w3r2243@gmail.com>` and
+GitHub's noreply. **13 of 116** commits carry the real name, which reproduces R-1's table cell
+exactly. The address is the portfolio's published contact and is not a finding.
+
+**E2 — `finding` · third-party data. The repository redistributes six companies' pages
+verbatim under a blanket MIT notice.** `eval/cassettes/` commits **1 818 808 characters of
+raw job-board HTML** across eight `http` records — six live pages and two `{"error": "HTTP
+404"}` — from **Allegro** (two postings, SmartRecruiters), **tryjeeves** and **The Athletic**
+and **HHAeXchange** (Lever), **Zapier** (Ashby), **KONUX** and **Reddit** (Greenhouse). `LICENSE`
+reads *MIT / Copyright (c) 2026 Piotr Cząstkiewicz* over the whole tree, and **no file anywhere
+records the provenance of that content or excludes it from the grant** — swept `README.md`,
+`CLAUDE.md`, `docs/` and `eval/` for a licence, copyright or provenance note and found none
+touching the recorded pages.
+
+*What this is not, stated so a repair does not over-correct.* **No personal data.** A sweep of
+all 1 845 050 characters of `http` and `extract` payloads for emails, LinkedIn profiles,
+phone shapes and recruiter-contact wording returns **zero of each**, and the 326 `@` characters
+are CSS at-rules without exception. The sweep carries its own positive control — it counts
+`reddit` 108 times and `Allegro` 76 — because a zero from a reader that never reached the
+bytes is the shape `SG-2` is named for. Job ads are public marketing, the mechanism is
+disclosed (`CLAUDE.md`:71 says the cassettes are committed; `README.md`:249 counts the eight
+pages among the entries), and **deleting them is the wrong repair**: CI replays this cassette on
+every push and the published table is a regression test over it. The cheap repair is a
+provenance note that carves the recorded pages out of the MIT grant.
+
+*`cv/candidate.md` claims to be synthetic and the claim was checked rather than taken*: zero
+emails, phones, street tokens, Polish postcodes or eleven-digit runs in 4 208 characters, with
+`P0w3r223` found 3 times as the control. `.env` is untracked and `.gitignore`:13 covers it;
+`.env.example` carries two empty keys.
+
+*`0010` §5's characterisation of the attack corpus reproduces.* `src/apply_scout/attack/` is 790
+lines, its payloads a static tuple aimed at `.example` hosts and the link-local metadata
+address, and `suite.py` substitutes `httpx.MockTransport` for the network and a function for
+the model — *"no network and no key, by construction rather than by cassette"*. Nothing in it
+adapts and nothing an outsider controls reaches it. The suite also names its own blind spot in
+its docstring rather than leaving it to a reader.
+
+*A near-miss worth recording, because it is `FG-1` and it nearly became a B finding.*
+`README.md`:249 says the recording *"produced 68 entries"* and `eval/cassettes/eval.jsonl` holds
+**106**. The figure is right and the file is right: the non-`llm` kinds sum to exactly 68 and
+cost **$0.8802**, which is the README's `$0.88` to the cent, and the 38 `llm` entries arrived
+later with `5a3facc`, *scoring the agent loop*. A count taken off `wc -l` would have recorded a
+true sentence as false.
+
+**A — `clear`.** **300 tests pass** in 6.05 s and `ruff check .` reports *All checks
+passed!*; CI's last three runs are green, the newest 2026-09-09. Error handling is the strong
+half: **zero bare `except`, zero `except Exception`, zero `pass`-only handlers** across `src/`.
+One `Any` in the whole tree — `github.py`:123, `_get_json() -> Any | None`, which is parsed
+JSON and is the place the annotation is honest rather than lazy. No `print` outside `cli.py`,
+`__main__` and the report renderers. HTTP status literals are protocol constants, not the
+hardcoded-threshold shape; the tunables live in `config.py`.
+
+Measured with an AST walk rather than by reading: **ten functions exceed
+`good-practices.md`'s fifty lines** — `agent.py:run` 138, `retrieval/report.py:markdown` 115,
+`attack/report.py:markdown` 104, `evaluation.py:agent_assess_fn` 99, `pipeline.py:assess` 70,
+and five between 52 and 57. `run` is the agent loop and reads as one job, but it inlines the
+budget check, the continuation accumulator and trajectory recording in one body. Two files
+pass the *typical* band without approaching the 800 ceiling: `cassette.py` 596,
+`evaluation.py` 428.
+
+*One observation, and it is the second occurrence of A-1's* — so it goes to §5 rather than
+staying here. `tests/test_retrieval.py`:188
+(`test_the_fast_path_agrees_with_matching_mentions`) puts its only assertion inside
+`for query in queries`, so an empty fixture passes it silently. It is not vacuous today
+because `:68` pins `(misses, len(queries)) == (63, 72)` and would redden first — but again
+the protection lives in a different test from the one that names the property.
+
+*Ten more tests share the shape and are not observations*, because each iterates a
+module-level constant (`ARMS`, `PAYLOADS`, `pages.PLACEMENTS`, `UNSOURCEABLE`, `RETRIEVERS`)
+or a helper that cannot return empty. Two defend themselves outright and are worth copying:
+`test_docs_page.py`:917 iterates `zip(..., _root_blocks(), strict=True)`, where a missing
+block raises instead of shortening the loop, and `_root_blocks()` asserts its own two
+preconditions and is destructured as a pair at two call sites.
+
+**B — `finding`. Three, and the strongest thing about this repository is the reason the
+third one matters.** Every published figure reproduces: `eval/expected/pipeline.md`,
+`agent.md`, `attack.md` and `retrieval.md` were each regenerated here — offline, no key, no
+cost — and **all four diff byte-identical**. The replay reports *106 entries (1786 replayed,
+0 recorded)*. The README's three table rows carry those values unchanged, and its
+*63 of 72 probes* is a sentence `eval/expected/retrieval.md` prints itself.
+
+**Three flags the CLI accepts and no document names**: `run --model`, `--max-steps`,
+`--max-cost`. Read off `_build_parser()` and swept against `README.md`, `CLAUDE.md` and all
+of `docs/`. Two are half-mitigated — `max_steps` and `max_cost` are documented as *concepts*
+(`README.md`:37, `CLAUDE.md`:88), so a reader knows the budgets exist but not how to set
+them; **`--model` has no mention in any spelling**, and a reader who has found `--models` on
+`eval` will not guess the singular on `run`. This is A-1's `--min-success-failures` a second
+time and goes to §5.
+
+**`CLAUDE.md`:371 cites a path that resolves in a different repository and does not say so.**
+`docs/adr/0004_what-carries-the-page-spec.md` is the index's; this repository has
+`docs/decisions/` and **no `docs/adr/` at all**. Two sentences earlier the same paragraph
+cites `docs/audit/0007_divergence-and-the-page-spec.md` *“in the private portfolio index”* — so
+the correct form is demonstrated in the same breath as the incorrect one. Of twenty distinct
+path citations across `README.md`, `CLAUDE.md` and `docs/`, this is the only one that fails;
+the other three that do not resolve literally are `0007` (correctly qualified) and two
+`src/apply_scout/`-relative shorthands that are ordinary prose.
+
+**The README's tables have no carrier, and here that is one `diff` away from being fixed.**
+CI regenerates each table and diffs it against `eval/expected/*.md`; the README holds a
+**hand-copied** second edition of the same numbers, and **nothing compares the two**. The
+failure mode is not hypothetical: a metric change reddens CI until `expected` is updated, and
+at that moment the README goes stale silently. They agree today — verified by replay, not by
+reading. This is the portfolio-wide gap `0008` §5 records, but sharper: the artifact exists,
+the guard exists, and only the copy sits outside it.
+
+*Checked and holding, recorded because a later reader should not re-derive them*: all eight
+CLI invocations the README prints parse against the real parser (four carry flags; zero
+refused, after the extractor was widened — its first version found three of eight, and a
+zero from a reader that cannot see its subject is `SG-2`). The section on the runner
+comparison carries **its own erratum** for figures that outlived their recording, which is
+this portfolio's own practice appearing in a submodule without being asked for.
+
+**C — `clear`, and the checker is unusually quiet here.**
+`python -m tools.pagespec --only apply-scout` reads **`clear, 3 undecided`**: every clause
+`ok` or `n/a`, `contrast text` 22 of 22 measured with the worst at **5.17:1 against 4.5:1**,
+**`contrast marks` no site**, and — alone among the eight surfaces that report it — **`contrast
+ground` 0 site(s) without a resolved ground**. The two `-` rows are `--border-control` not
+declared and clause 8 having no grouped figure, both of which the clause admits.
+
+Read at a recruiter's pace, the first screen does its job: the eyebrow says what this is in
+one line, and the `h1` — *“This agent's retriever finds the evidence for 8 of the 27
+requirements a repository can prove”* — carries a figure, a denominator and a claim. It is
+also the only headline in the portfolio that leads with the project's **own weakest number**,
+which is a deliberate and defensible choice: the page's argument is that the one link nothing
+scored was the one every other metric depended on. The attack section is the strongest writing
+on any of the twelve — it publishes **`exfiltrate` → succeeded every time** in both arms,
+explains why (*“an allowlist bounds where a request may go, not what it carries”*), and states
+that every run first removes the guard and **requires** the attack to land before the table is
+written. A positive control inside the artifact, which is what §3.6 asks of a guard.
+
+*Three wordings proposed, all shorter or level, none generic — for a repair session, not for
+this one.*
+
+1. **The `40` tile is the weak one.** `40` / *attack attempts against the production toolset*
+   is a bare count whose outcome sits four screens below, on a page whose own table says one
+   payload class lands every time. A reader who stops at the tiles may take it either way.
+   Proposed: **`4 of 5`** / *attack payload classes the harness stops across 40 attempts —
+   exfiltration is not one*. Same space, carries the result and keeps the failure.
+2. **`62%` has no denominator on the tile.** *of the task set produces a deliverable* →
+   *of the 8-task set produces a deliverable*. Four characters.
+3. **The sub-headline opens on an unresolved pronoun.** *“Nothing in the harness could see
+   that.”* → *“Nothing in the harness could see those misses.”* One word, and the reader
+   stops going back to the `h1` to find the referent.
+
+**D — `finding`, and it is the issue tracker describing code that moved.** Hygiene is
+otherwise the best in the portfolio: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
+homepage set to the Pages URL, a description carrying the same claim as the page, `main` the
+only branch, CI green on its last three runs.
+
+Five issues open, all from 2026-07-27, each read against the code:
+
+| # | title | verdict | evidence |
+|---|---|---|---|
+| 3 | headless fetch for JS boards | **still real** | no `playwright`/`selenium`/`headless` in `src/` or `pyproject.toml`; the only match is `PKG-INFO` restating the limitation |
+| 4 | search source, not just the README | **still real, and now quantified** | `tools/github_evidence.py`:41 is still `needle in readme.text.lower()`, no code-search call anywhere. The gap the issue argued in prose is the page's `h1` today: 8 of 27 |
+| 5 | semantic requirement matching | **premise obsolete, proposal open** | the issue's subject `requirement_f1` **was deleted in `2090fcb`** and replaced by `requirement_coverage` (`evaluation.py`:93) under `ADR-0005`. Its *“~0.3 F1”* is a number the harness stopped producing; `README.md`:187 records the old 0.33 / 0.23. The embedding proposal is untouched |
+| 6 | claim-level entailment guardrail | **still real** | `guardrail.py` carries `_is_grounded`, `requirement_grounding` and `evidence_grounding` — all provenance. Nothing checks entailment, and the README says so |
+| 7 | grow the eval set to 20-30 | **still real** | `eval/tasks.json` holds **8** |
+
+**The finding is #5, with #4 beside it.** A public tracker entry whose Context paragraph names
+a function the repository deleted is a claim about the code that is false, and #4 cites
+`src/apply_scout/github.py` for a function that now lives in
+`src/apply_scout/tools/github_evidence.py`. Neither is expensive — an edited body each — and a
+scan may not touch them, which is why they are written here.
+
+**The cheapest observation that would falsify each `clear`.** For **A**: run the mutation
+battery over `tests/test_retrieval.py` and see whether `:188` reddens on its own assertion or
+on `:68`'s pin. For **C**: a `--fetch` run, which judges the served bytes — this scan read the
+committed file, and `apply-scout` publishes through Pages from `docs/`.
+
+**Not checked.** `docs/decisions/` holds twelve ADRs and this scan read four of them, for the
+claims axis B needed; the rest are unread prose. The `llm` half of the cassette (38 entries,
+$0.2950) was counted and characterised but its recorded model replies were not read. And the
+retrieval judgment set (`eval/retrieval/judgments.json`, 695 lines) was replayed rather than
+inspected — a wrong judgment reproduces exactly as well as a right one.
+
 ## 5. Cross-cutting
 
 What recurred rather than happened once. A per-repository split cannot see a pattern by
@@ -424,6 +608,29 @@ construction; this section and §2's baselines are where patterns accumulate.
 
 - **§2.3, E1 across all thirteen: clean.** Sweeping once rather than thirteen times is what
   made the three matches cheap to read together and dismiss together.
+- **A flag the CLI accepts and no document names, twice in two sessions.**
+  `auth-log-scan`'s `--min-success-failures` (A-1) and `apply-scout`'s `run --model`,
+  `--max-steps`, `--max-cost` (B-2). Both were found the same way — read the parser, sweep
+  the docs — and neither repository had any guard that could. `auth-log-scan` now has one
+  (`tests/test_readme.py`, `1d02f6f`) and it is ten lines. **Two occurrences make this the
+  first shape worth a portfolio-wide sweep rather than a per-repository finding**, and the
+  sweep is cheap: every repository with an `argparse` parser can be asked the same question
+  without being scanned.
+- **A guard whose every assertion sits inside a loop, protected by a pin in a different
+  test.** `auth-log-scan`'s `tests/test_site.py`:263 against `:237`'s `len(bands) == 2`, and
+  `apply-scout`'s `tests/test_retrieval.py`:188 against `:68`'s
+  `(misses, len(queries)) == (63, 72)`. Neither is vacuous today and both would read as
+  *caught* in a mutation battery while the guard that names the property proved nothing —
+  `SG-1` at one remove, now twice. `apply-scout` also shows the answer: `test_docs_page.py`:917
+  iterates `zip(..., _root_blocks(), strict=True)`, where a short iterable raises instead of
+  shortening the loop.
+- **The published figure and the artifact that proves it are one `diff` apart, and nobody
+  takes the step.** `apply-scout` regenerates four tables in CI and diffs each against
+  `eval/expected/*.md`, then hand-copies the numbers into `README.md` where nothing compares
+  them; `auth-log-scan` quoted a terminal block no test read until this week. This is
+  `0008` §5's carried README row meeting the audit from the other side: the row says no
+  carrier exists, and what session 2 adds is that in at least one repository **the carrier
+  already exists and the README simply sits outside it**.
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
