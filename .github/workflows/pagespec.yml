@@ -31,18 +31,28 @@ name: pagespec
 on:
   push:
     branches: [main]
+    # `docs/**` and `CLAUDE.md` entered 2026-09-11 with `tools/citations.py`, and they
+    # arm `surfaces` as well as `core` — `paths:` is per trigger, not per job, and only
+    # `live` carries an `if:`. That is accepted rather than worked around. A job-level
+    # `if:` has no changed-paths context without a marketplace action, which this
+    # repository does not take, and any `if:` on `surfaces` whose condition omits
+    # 'push' and 'pull_request' silently moves that job into the `guarded` set of
+    # `test_the_wire_never_reaches_the_push_path`, exempting it from the --fetch
+    # check — a predicate that docstring already records getting too narrow three
+    # times. The cost bought is small: a docs-only commit moves no gitlink, so
+    # `surfaces` reads the same pages it read last run. `ADR-0009` §4.
     # The submodule gitlinks are in this list because the table is a statement about the
     # pages, not about the checker: this repository re-points submodules constantly, and
     # a filter naming only `tools/**` would refresh the table when the instrument changes
     # and never when a page does.
-    paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
-            '.gitignore',
+    paths: ['tools/**', 'tests/**', 'docs/**', 'CLAUDE.md', 'pyproject.toml',
+            '.github/workflows/pagespec.yml', '.gitignore',
             'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
             'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
             'pl-review-sense', 'wroclaw-air-insights']
   pull_request:
-    paths: ['tools/**', 'tests/**', 'pyproject.toml', '.github/workflows/pagespec.yml',
-            '.gitignore',
+    paths: ['tools/**', 'tests/**', 'docs/**', 'CLAUDE.md', 'pyproject.toml',
+            '.github/workflows/pagespec.yml', '.gitignore',
             'ab-lab', 'apply-scout', 'auth-log-scan', 'car-price-ml', 'doc-extract',
             'it-job-radar', 'mini-traceroute', 'mlops-car-price', 'pl-jobs-lora',
             'pl-review-sense', 'wroclaw-air-insights']
@@ -80,6 +90,12 @@ jobs:
         # the registry being malformed, which is a different question. Needs no submodule and
         # no network, so it belongs here rather than in `surfaces`.
         run: python -m tools.spec
+      - name: Every citation of a numbered document, and the heading it resolves to
+        # `ADR-0009` §3 step 1. Printed, never gated, on the same argument as the step
+        # above: `unattributed` is a backlog no instrument can close, and `foreign` is a
+        # legitimate citation of a sibling repository's decision document. The gating half is
+        # `tests/test_citations.py`, which ran in the suite step and refuses an `unresolved`.
+        run: python -m tools.citations
 
   surfaces:
     name: checker over the published surfaces

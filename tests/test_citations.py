@@ -275,3 +275,27 @@ def test_a_file_the_sweep_cannot_open_is_recorded_rather_than_skipped(monkeypatc
     citations.citations()
     assert any(name.startswith("CLAUDE.md") for name in citations.UNREADABLE), (
         "a file that could not be read left no trace in the sweep")
+
+
+def test_both_workflow_filters_name_the_paths_this_guard_reads():
+    """A guard reading files whose paths are not in the `paths:` filter runs in **no job**.
+
+    `ADR-0009` §3 step 1 is built on that sentence, and `0008` §3's Sx cell is the measurement
+    behind it: a commit touching only `docs/**` had no CI run at all. The resolver's whole
+    subject lives in `docs/` and in `CLAUDE.md`, so if either drops out of a filter this guard
+    stops running on exactly the class of change it watches — silently, which is the failure
+    shape this repository keeps finding in itself.
+
+    Nothing else asserts the filters' literal contents: the guard that used to,
+    `tests/test_audit_identifiers.py`, was deleted with the identifier sweep on 2026-09-11.
+    """
+    workflow = (Path(citations.ROOT) / ".github" / "workflows" / "pagespec.yml")
+    lists = re.findall(r"paths:\s*\[(.*?)\]", workflow.read_text(encoding="utf-8"), re.S)
+    assert len(lists) == 2, (
+        f"expected a `paths:` filter on push and on pull_request, parsed {len(lists)}; the "
+        f"workflow's shape has moved under this guard")
+    for index, filter_body in enumerate(lists):
+        for needed in ("'docs/**'", "'CLAUDE.md'", "'tools/**'", "'tests/**'"):
+            assert needed in filter_body, (
+                f"filter {index} does not name {needed}; `python -m tools.citations` and its "
+                f"guards would not run on a change to the files they read")

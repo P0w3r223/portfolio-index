@@ -52,6 +52,9 @@ tools/pagespec/       the checker — standard library only
                           exactly what happened — loudly, which was the design*
   __main__.py           the report, two censuses, and the GATE ratchet with its three states
 tools/spec.py         every normative sentence of 0007 §5-§6, and what carries it
+tools/citations.py    every §N reference in the index, and whether the section it names
+                        exists. Four states; only `unresolved` gates, via tests/. ADR-0009
+                        §3 step 1 — the answer to nothing in `tools/` reading 0008 at all
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
 docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the clause
@@ -102,6 +105,10 @@ python tools/entry_state.py --hook       # verbatim what the session-start hook 
                                          #   `--hook` is what keeps a real finding from reading
                                          #   as a broken hook
 python -m tools.entry_state --full       # every pointer against its own remote, before a stage
+
+python -m tools.citations                # every §N reference, and the heading it resolves to.
+                                         #   Prints and exits 0; the guards refuse a citation
+                                         #   naming a section its document does not hold
 
 python -m tools.spec                     # every normative sentence, and what carries it.
                                          #   Prints and exits 0 — the uncarried rows are the
