@@ -279,7 +279,7 @@ when the first closure landed and the header read literally as a list of what is
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
 | 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3, B-3, C-3, D-3 | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3 and B-3 closed** · D-3's tree sites closed, its GitHub half open · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -1058,6 +1058,83 @@ distinct-URL count (eight) and the publisher list all reproduce exactly, and no 
 or in `NOTICE` rests on the character figure — which is why it is corrected here rather than
 repaired. It is the twenty-first correction to a row whose errata round closed at twenty.
 
+### A-3 repair, 2026-09-14 — E-3, B-3 and D-3's tree half closed, C-3 left open
+
+**Closed by `it-job-radar` `8ae0d51` (#37), index pointer bumped in the commit carrying this
+line.** One repository plus a pointer bump, no new module or signature, and
+`python -m tools.pagespec --only it-job-radar` reads `clear, 3 undecided` identically before
+and after, down to the three undecided lines — no page was touched. §3.5's first column.
+Suite **229 → 242**, `ruff check .` clean, and **eighteen mutations, all red on the guard
+that names them**.
+
+**E-3.** `NOTICE` states one exception to the MIT grant — `docs/data/` — naming the
+directory and not the files under it, because that list is `manifest.json`'s and is rewritten
+on every export. `LICENSE` is untouched on A-2's precedent: GitHub detects the licence from
+it and that detection is an axis-D asset.
+
+The repair is smaller than A-2's, and the reason is the more useful half of it: **the
+sentence was already one constant.** `config.ATTRIBUTION` is what `export` writes into the
+manifest and what the template renders, so two of the three statements the scan found were
+derived before this pass ever started. What was carried by nothing were the *committed*
+copies — a manifest published before the constant moves goes on serving the old sentence
+under a page rendering the new one — and the README's, which said the same thing with an em
+dash where the constant has a comma. `tests/test_notice.py` holds all four to
+`config.ATTRIBUTION` and the carve-out to `config.DATASET_DIR`.
+
+**B-3.** All three. The README's `~250 kB` becomes the figure `pipeline export` prints,
+**derived** from `manifest['bytes']` rather than pinned, so a re-export moves the README with
+the data. `verify --dataset` and `export --out` are documented where their subcommand is, by
+the per-(subcommand, flag) sweep `apply-scout` `78d9899` built — **with its unit made
+smaller, which is what this repository adds to the instrument.** That guard scopes a flag to
+the *block* naming its subcommand, which works where blocks name one subcommand each. This
+README teaches all six in a single fenced block, so a block-scoped reader calls `export
+--out` documented on the strength of the `site --out` line two rows below it. In a shell
+transcript the line is the unit.
+
+Repaired in the same sentence and not a separate finding: `docs/data/` was described as
+*"the artifact the page downloads"*, which the row's own B evidence refutes — the page
+fetches `manifest.json` and no Parquet.
+
+**D-3, and the row's figure did not survive the sweep.** `tests/test_decisions.py` permits
+the retired claim only where the retirement appears within two lines of it *and* names the
+decision — the shape `ADR 0001` itself uses. Both vocabularies are the ADR's own and are
+asserted against it, along with the premise above them: re-adopt the browser half and the
+guard stops demanding loudly rather than silently enforcing a twice-reversed decision.
+`docs/adr/`, `docs/plan/` and `docs/ideas/` are outside the sweep deliberately — they are
+dated records, and a plan step later abandoned is supposed to still read as it was written.
+
+The two sites that are not in the tree — the GitHub **description** and the topic
+**`duckdb-wasm`** — are **not done**: they are outward-facing repository metadata rather than
+a commit, and this session did not have the owner's instruction for them. The row stays open
+for that half, on D-2's precedent.
+
+**C-3 stays open, and §3.5 is why.** The repair is known and the scan wrote it down:
+`6 570 of 6 571` / *Live market covered* in place of `100.0%` / *Of the live market*. It is a
+published figure an artifact must be re-run to produce — `site/build.py` renders the tile and
+CI's `drift` job diffs the committed page against a rebuild — which is §3.5's second column.
+The repair prompt reaches the same answer from the other side: a rebuild reads `docs/data/`,
+and a repair session does not read a repository's raw data.
+
+**Erratum to A-3's D row, and it is the row's own figure.** The row reads *"Three places
+downstream still state the dropped half as current fact"* and names the GitHub description,
+the topic, and `analytics/__init__.py`:8. **The tree held four, and the row found one of
+them.** Measured by running the guard this repair added against the pre-repair tree at
+`1e65bfc` in a detached worktree, with `NOTICE` — which did not exist there — dropped from
+its roots: five sites are reported, `pyproject.toml`:19, `analytics/__init__.py`:8,
+`analytics/engine.py`:8, `analytics/engine.py`:27 and `export.py`:10. Four state the retired
+claim; the fifth, `engine.py`:27, is a true sentence about a reader inspecting the page's SQL
+that matches the vocabulary, and it was reworded rather than counted. **Two of the four cite
+`ADR 0001` while contradicting it**, and `export.py` justifies the choice of Parquet by a
+capability nobody ships. Nothing in the row rests on the figure being three, which is why it
+is corrected here rather than repaired.
+
+*Why a scan would have had to be lucky to find all four.* `git grep` is line-based, and
+`analytics/__init__.py`'s claim wraps: *"and in the"* ends line 8 and *"browser over the same
+file"* opens line 9, so the string `the browser` is in neither. The same sweep at the same
+commit returns six lines and **the one the row actually names is not among them** — it was
+found by reading. The guard folds each line with the next for exactly this, and that is not a
+hypothetical: it is how the row's own site behaves.
+
 ## 5. Cross-cutting
 
 What recurred rather than happened once. A per-repository split cannot see a pattern by
@@ -1076,7 +1153,19 @@ construction; this section and §2's baselines are where patterns accumulate.
   instrument the first one's repair built** — the per-(subcommand, flag) sweep in `apply-scout`
   `78d9899`, on its first outing against another tree. That is the argument for the
   portfolio-wide sweep this bullet already asks for, now with a specification: ask per
-  (subcommand, flag), against documentation blocks, never against the concatenated corpus. Both were found the same way — read the parser, sweep
+  (subcommand, flag), against documentation blocks, never against the concatenated corpus.
+  **The specification took two corrections on its first port, and both are about scope rather
+  than about flags.** *The block is not always the unit*: `it-job-radar`'s README teaches all
+  six subcommands inside one fenced block, so a block-scoped reader calls `export --out`
+  documented on the strength of the `site --out` line two rows below it. In a shell
+  transcript the line is the unit, and the sibling's blocks only worked because they name one
+  subcommand each. *And the corpus is not every markdown file*: the first edition swept
+  `docs/**/*.md` and went green over a deleted README line, carried by
+  `docs/plan/0001`:319 — **the very line this bullet cites as the original false positive.**
+  A 2026-08 implementation walkthrough documents nothing for a reader running `--help` today.
+  So the specification is now: per (subcommand, flag), scoped to the line inside a fence and
+  the paragraph outside it, over the documents that *teach* the CLI and not the ones that
+  record what was once planned for it. Both were found the same way — read the parser, sweep
   the docs — and neither repository had any guard that could. `auth-log-scan` now has one
   (`tests/test_readme.py`, `bfe4bf2`), and it is **28 lines plus two helpers** — 18 when it
   landed at `1d02f6f`, grown because the first edition filtered on `startswith("--")` while its
@@ -1111,6 +1200,17 @@ construction; this section and §2's baselines are where patterns accumulate.
   superseded decision in a repository and grep the tree and the GitHub metadata for the claim it
   retired. `0010` §4 A-3's D axis is the worked instance, and the same session found `apply-scout`
   D-2's issue bodies by the same question asked of a tracker instead of an ADR.
+  **The repair measured the fan-out and the scan's figure did not survive it: three named,
+  four in the tree, and the one the row named was the one a `git grep` cannot see** — the
+  claim wraps, so `the browser` is in neither of its lines. So the sweep this bullet asks for
+  is not a grep. `it-job-radar` `tests/test_decisions.py` is the first instrument for it:
+  fold each line with the next, permit the claim only where the retirement sits within two
+  lines *and* names the decision, and take both vocabularies from the ADR and assert them
+  against it. It also states the premise, which is the half worth copying — re-adopt the
+  retired design and the guard stops demanding rather than enforcing a twice-reversed
+  decision. The exclusions are the other half: a dated record is supposed to still read as it
+  was written, so `docs/adr|plan|ideas|research` are outside the sweep and the *manuals* are
+  inside it.
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
@@ -1152,6 +1252,28 @@ construction; this section and §2's baselines are where patterns accumulate.
   lying around** — the file's line count, the corpus's flag count. Worth a habit rather than a
   guard: when a sweep returns a round or familiar number, mutate its input and check the number
   moves before quoting it.
+- **A guard that sweeps a scope wider than the claim it makes, which is the registry shape
+  one level up again — and the battery cannot see this one either.** Repair 2 found a guard
+  keeping a hand-maintained list of its own; repair 3 found four guards whose *unit* was
+  bigger than the property they asserted, and every one of them passed over the defect it was
+  written for. The carve-out guard asked whether `NOTICE` names `docs/data/` **anywhere in
+  the file**, and a mutation pointing the exception at `docs/dataset/` stayed green because a
+  later paragraph mentions the right directory in passing; narrowed to the paragraph it
+  stayed green again, because the next sentence says the file list is
+  `docs/data/manifest.json`'s job. A carve-out is a sentence. The flag sweep read every
+  markdown file rather than the manuals, and the retirement exemption read a whole TOML table
+  rather than the claim's neighbours, so one `dropped` in a dependency comment excused the
+  package `description` twelve lines above it — **a site the audit row had named.**
+  **What separates this from the registry shape is who can find it.** A mutation battery aims
+  at the property a guard names, and mutating a site *inside* the swept scope reddens whether
+  the scope is right or not; only a mutation at the scope's edge says anything, and nothing
+  tells you where that edge is except reading the guard. Two of the four were found by the
+  `code-reviewer` pass, which is the second time that pass has caught a class the battery
+  structurally cannot — `0010` §4 A-2's repair is the first. The other two the battery did
+  find, by luck: the mutation happened to land outside. So the rule is not *write a smaller
+  unit*; it is that **a guard's scope is a claim too, and it is the one no battery asserts** —
+  state it in the docstring, and check it against the sentence the guard's name makes.
+
 - **A repository's own prose cites paths, and nothing in any submodule resolves them.**
   `apply-scout`'s `CLAUDE.md`:371 cited `docs/adr/0004_…`, which exists in this index and not
   there — found by a scan, fixed by hand in repair 2, **which then added two more unguarded
@@ -1161,6 +1283,15 @@ construction; this section and §2's baselines are where patterns accumulate.
   repository alone, and the first was in the evidence column of a finding about citations that
   do not resolve. **Cheap to sweep and not cheap to carry**: a per-repository link checker is
   twelve new guards, so the decision of whether it belongs here or there is `architect`'s.
+  **Third occurrence, in a third repository, and the same ADR number.** `it-job-radar`'s
+  `CLAUDE.md`:123 cited `docs/adr/0004_what-carries-the-page-spec.md`; `docs/adr/0004` there
+  is `0004_analysis-population.md`, and the file it meant lives in this index. Qualified by
+  hand in repair 3 and still carried by nothing. What the third occurrence adds is that it
+  was **not found by the scan of that repository** — A-3's B axis measured every markdown
+  link target in all nine `docs/` files and reported zero unresolved, which was true and
+  scoped: `CLAUDE.md` is not in `docs/`. It surfaced in the `code-reviewer` pass over the
+  repair, from a reader who happened to open the paragraph. Three repositories, three
+  sessions, and not one of the three found by an instrument.
 
 ## 6. Corrections, and which prompt version they bind
 
