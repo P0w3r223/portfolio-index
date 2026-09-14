@@ -748,9 +748,21 @@ measurement and `tests/test_notice.py` derives both directions from `eval/casset
 both directions, binds each attack row to the payload `attack.md` names, and re-derives
 `63 of 72` from the computed retrievers table — *not* from `retrieval.md`'s own sentence, which
 is a string literal in `retrieval/report.py`, so two hand-typed copies agreeing would have
-proved only that someone typed it twice. The three undocumented flags are documented, the two
+proved only that someone typed it twice. The undocumented flags are documented, the two
 budgets gained the `help=` they never had, and `CLAUDE.md`:371's unqualified `docs/adr/`
 citation is qualified.
+
+**Erratum, 2026-09-14 — the flag count was wrong in A-2 and wrong again in the repair that
+closed it.** A-2 said **three** undocumented flags and the first repair repeated it, into a
+README sentence, a commit message, a pull request body and the paragraph above. It is
+**four**. `--out` belongs to both subcommands and appeared in the pre-repair tree only as
+`python -m apply_scout.retrieval --out` and `python -m apply_scout.attack --out` in
+`CLAUDE.md` — two entirely different commands — so a sweep asking *is this flag string named
+anywhere* called it documented while a reader of `apply-scout run --help` had nowhere to read
+about it. **The instrument could not tell a subcommand from any other**, which is the same
+class as the hand-count the standing rules forbid: a figure from a reader that cannot see its
+subject. Closed by `apply-scout` `78d9899` (#39), where the guard is rescoped to a block that
+names the subcommand, and `apply-scout eval --out` is documented.
 
 **D-2 is part-closed and stays open, and the reason is a contradiction rather than a
 judgement.** The two issues carry a correcting comment each, stating what the tree says:
@@ -769,9 +781,15 @@ each green again after reverting. **Nine were written with the guards and eight 
 search scope and pre-approved the flag this project is likeliest to add next.
 
 *One finding from that pass is deliberately not folded in.* This repair fixed one dead
-documentation link by hand and added two more that nothing resolves. **No submodule resolves
-markdown links**, while this index has `tools/citations.py` doing exactly that for its own
-prose. That is §5's, not this row's.
+documentation link by hand and added two more that nothing resolves. That is §5's, not this
+row's — and §5 states it correctly where this sentence did not: it read *"while this index has
+`tools/citations.py` doing exactly that for its own prose"*, and `citations.py` resolves
+**section** references. It parses a link target only to attribute a `§N` to a document and
+never asks whether the path exists. **Nothing anywhere in this portfolio, this index included,
+resolves a markdown path citation in prose.** The index's `tests/test_spec.py` does resolve
+paths, but only the clause registry's `repo:path::test` triples, which is a different
+population. Two sentences of one document disagreeing about one instrument is the shape §3.4's
+own erratum records, and this one was caught by re-reading the module rather than the sentence.
 
 **Erratum, and it is this row's own figure.** A-2 states the cassettes hold **1 818 808
 characters of raw job-board HTML**. It does not reproduce at the same gitlink `c7958eb`, under
@@ -833,6 +851,30 @@ construction; this section and §2's baselines are where patterns accumulate.
   every guard this audit has added or will add, not a per-repository finding. It also
   generalises the observation above it: a registry inside a guard is the loop-with-one-assertion
   problem moved up a level, where the vacuity is structural rather than accidental.
+  **The shape recurred inside its own repair, which is what promotes it from an observation to
+  a rule.** The commit fixing those four opened with the sentence *"every registry below is
+  asserted against the directory or the artifact it stands for"* and shipped three that were
+  not: `DOCUMENTED_AS_ABSENT` pinned in one direction only, `BOARD_BY_HOST` with no used-entry
+  check, and — the one worth the entry — a test **named**
+  `test_every_approved_artifact_is_claimed_by_a_guard_in_this_file` whose body compared a
+  directory to a constant and passed with every guard in the file deleted. A second review
+  found all three. So the rule is not *derive your registries*; it is that **a registry must be
+  answerable in both directions to something outside the file**, and the test asserting that
+  is itself the one most likely to be written as a restatement. Closed at `apply-scout`
+  `78d9899` (#39), where the artifact test runs the guards and records what they open —
+  a source-text heuristic was tried first and convicted the two artifacts read *through* a
+  registry rather than by literal, punishing the better pattern.
+- **A figure from a reader that cannot see its subject, twice in one repair.** Distinct from the
+  hand-count the standing rules already forbid: here an instrument ran, printed a number, and
+  the number was wrong because the reader's granularity was not the claim's. A-2's *three
+  undocumented flags* was per **flag string** where the claim is per **(subcommand, flag)** —
+  `--out` read as documented on the strength of two `python -m apply_scout.retrieval --out`
+  lines. And a `grep` measuring committed line endings matched every line of every file it was
+  pointed at, so two docstrings shipped saying the blobs are CRLF when every blob in that
+  repository is LF; **the tell in both cases was that the figure equalled a total that was
+  lying around** — the file's line count, the corpus's flag count. Worth a habit rather than a
+  guard: when a sweep returns a round or familiar number, mutate its input and check the number
+  moves before quoting it.
 - **A repository's own prose cites paths, and nothing in any submodule resolves them.**
   `apply-scout`'s `CLAUDE.md`:371 cited `docs/adr/0004_…`, which exists in this index and not
   there — found by a scan, fixed by hand in repair 2, **which then added two more unguarded
