@@ -279,6 +279,7 @@ when the first closure landed and the header read literally as a list of what is
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
 | 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3, B-3, C-3, D-3 | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -648,6 +649,263 @@ $0.2950) was counted and characterised but its recorded model replies were not r
 retrieval judgment set (`eval/retrieval/judgments.json`, 695 lines) was replayed rather than
 inspected — a wrong judgment reproduces exactly as well as a right one.
 
+### A-3 — `it-job-radar`, session 3
+
+Scanned 2026-09-14 at index `5664e43`, gitlink `1e65bfc`, entry state clean: index `HEAD`
+identical to `origin/main`, twelve pointers matching, nothing uncommitted, no open portfolio
+pull request. **Five axes**, E being E0 and E2's third-party half.
+
+*Two things the record already said about this repository, and one of them is stale.* §2.2's
+baseline lists it among the five reading `1 fail`; **§6's own warning row applies here** —
+`ADR-0008` §10 took the marks census 88 → 26 and this surface went clean, so axis C quotes the
+run this session made. And A-1 already measured `--seed 20260814` in this README and dismissed
+it as a different shape, a literal a reader types rather than a value the code derives; it is
+not re-raised.
+
+**E0 — `finding` · metadata, and it is R-1's.** Three identities and no fourth:
+`P0w3r223 <p0w3r2243@gmail.com>` 193 fields, GitHub's noreply 36, and
+`Piotr Cząstkiewicz <p0w3r2243@gmail.com>` 9. **9 of 119** commits carry the real name,
+reproducing R-1's table cell exactly by R-1's own method — counting commits, not fields. The
+address is the portfolio's published contact and is not a finding.
+
+**E2 — `finding` · third-party data, and it is a much narrower one than A-2's. Read that
+sentence before the paragraph: this repository has done the work A-2's repair had to invent.**
+
+The artifact is **published**, not merely committed: `docs/data/` holds ten Parquet files
+served from GitHub Pages, 1.24 MB by the manifest's own count, and `docs/adr/0002` is a
+policy deciding exactly what may be in them. It has already survived one audit correction —
+the 2026-08-13 amendment replacing *"not resolvable back to a listing"* with pseudonymisation,
+because the salt is committed and the source enumerates its own GUIDs.
+
+*Verified rather than taken from the ADR.* Every one of the ten committed Parquets was read
+and **not one carries a redacted or internal column** — `config.REDACTED_COLUMNS` is
+`company`, `offer_url`, `title` and `INTERNAL_COLUMNS` is `raw_name`, `vacancy_key`; the
+schemas hold none of them. The committed set equals `config.DATASET_TABLES` exactly, in both
+directions. `sitemap_offers`, which `ADR-0002`'s own amendment names as the re-identification
+vector, publishes hashed ids and dates and no URL or slug. `job_offers.db` is untracked and
+`.gitignore`:15 covers it. `manifest.json` travels with the data and names the source, the
+redacted columns, and the pseudonymisation caveat in the ADR's corrected wording.
+
+**The finding is that the terms exist in three places and are carried by none, and that the
+one file a redistributor opens says nothing.** `LICENSE` grants MIT over the tree with no
+mention of `docs/data/`. The carve-out lives in `README.md`:168 — *"MIT — see LICENSE. Job
+data © theprotocol.it (Grupa Pracuj) — collected respectfully for educational,
+non-commercial use"* — in the page footer at `docs/index.html`:900, and in
+`manifest.json`'s `source.attribution`. **MIT permits commercial use and that sentence
+withholds it, and no file says which governs the Parquets.** A `git grep` over `tests/` for
+the attribution returns only the collector's parser tests: **no guard holds any of the three
+statements**, so all three can go silently — which is the shape the sibling one repository
+over now has `tests/test_notice.py` for.
+
+*What this is not, stated so a repair does not over-correct.* **No personal data**: the
+`applying` block is dropped at parse time, company and title never reach a published file,
+and the published rows answer market questions rather than listing questions — which the
+manifest states in its own words. The repair is not a redaction change and not a deletion; it
+is a pointer from `LICENSE` and a guard over the attribution, and `apply-scout` `78d9899` is
+the worked example.
+
+*One claim `ADR-0002` makes about the future was checked rather than assumed.* Its
+Consequences say `docs/research/data-sources.md` *"should gain a short section pointing at
+this ADR"*. It has one, at `:18`. Not a finding.
+
+**A — `clear`.** **229 tests pass** in 28.9 s and `ruff check .` reports *All checks passed!*
+Error handling is the strong half and it is not a near-miss: **zero bare `except`, zero
+`except Exception`, zero `except BaseException`, zero `Any` annotations** across twenty
+modules in `src/`.
+
+*The two shapes a sweep flags here both resolve for the code, and both were read before being
+written down.* `collect/theprotocol.py`:193 is a `pass` under `except requests.RequestException`
+— not a swallowed error: `state` is initialised to `config.FETCH_FAILED` *before* the `try`
+and the `finally` records the outcome into the frame, so a failure is written down and stays
+eligible for retry, which is what the docstring four lines up says it does. And all **25**
+`print` sites in `src/` are in one file, `pipeline.py`, which is the CLI
+(`python -m it_job_radar.pipeline observe`). Neither is a finding.
+
+Measured with an AST walk rather than by reading: **nine functions exceed
+`good-practices.md`'s fifty lines** — `site/build.py:gather` 95, `quality.py:snapshot_metrics`
+91, `site/charts.py:accumulation_chart` 88, `pipeline.py:collect_and_store` 71,
+`site/build.py:_headline` 60, and four between 56 and 58. Two files pass the *typical* band
+without approaching the 800 ceiling: `db.py` 482, `site/build.py` 438.
+
+**Two observations, and they converge on the same guard — the most consequential one in the
+repository.** `tests/test_export.py`:53 `test_identifying_columns_never_reach_the_artifact` is
+what `ADR-0002` points at when it says redaction is *"covered by a test asserting the excluded
+columns are absent from every published file — not left to reviewer vigilance."*
+
+*First, it does not read a published file.* Its `dataset` fixture builds a two-offer synthetic
+database and exports it to `tmp_path`, so it proves the **exporter** redacts. **Nothing asserts
+the redaction of the bytes a reader downloads.** `tests/test_committed_dataset.py` is the only
+test in the suite that opens `docs/data/` — and its own docstring is the sharpest statement of
+the gap: *"Every other test in this suite builds a synthetic database and checks what `export`
+writes from it. That leaves the files a reader actually downloads guarded by nothing."* That
+file was written for a defect applied to the artifact after export, and its five tests cover
+commit hashes, manifest agreement and the pyarrow that wrote each file. **Redaction is the one
+property `ADR-0002` says is the reason the artifact may be published at all, and it is the
+property that file does not check.** The sibling bytes-level test, `:78`, checks
+`offers.parquet` alone rather than every published file, so the ADR's *"every published file"*
+is true of the column check and not of the byte check. *This scan read all ten committed
+Parquets and found no leak* — the observation is about the carrier, not a breach.
+
+*Second, and it is `0010` §5's shape for the third time — with the weakest protection of the
+three.* Every assertion in that test sits inside `for table in config.DATASET_TABLES`, so an
+emptied tuple makes it pass over nothing. In `auth-log-scan` the property was held by a `len`
+pin in a different test and in `apply-scout` by a `(misses, len(queries))` pin; here
+**`DATASET_TABLES` is pinned by nothing at all** — `git grep` finds it in `config.py`:141 where
+it is defined and in `test_export.py` twice, both times as the thing being iterated. What
+stands between an emptied tuple and a green redaction test is `:62` reading
+`offers.parquet` by literal name and failing on a missing file. That is incidental protection,
+not a guard.
+
+*Three more tests share the loop shape and are not observations*: `test_analytics.py`:81 and
+`test_quality.py`:267 iterate a module constant whose docstring explains that reading config
+rather than repeating it is the point, and `test_site.py`:162 calls
+`build._assert_figures_carry_n(page)` outside its loop, which is the answer the other two
+repositories had to be shown.
+
+*A method note this scan owes the next one, because it nearly became a false finding.* §3.3
+gives `pytest` for this repository, and a bare `pytest` in an environment without the package
+installed produces **18 collection errors**, every one `ModuleNotFoundError: No module named
+'it_job_radar'` — which reads exactly like §3.4's `blocked`. It is not: `pyproject.toml`
+declares no `pythonpath`, `requirements.txt` is `-e .[dev]`, and CI installs with
+`pip install -e .[dev] -c constraints.txt`. **The README's command is correct and the
+environment was wrong.** Reading `requirements.txt` rather than assuming is what caught it;
+the figures above come from `PYTHONPATH=src python -m pytest`, which changes no file.
+
+**B — `finding`. Three, and two of them are shapes this audit already owns an instrument for.**
+
+**The README states the published dataset as `~250 kB` and the artifact states itself as
+1 244 431 bytes.** `README.md`:82 — *"`docs/data/` holds the artifact the page downloads
+(~250 kB)"* — against `manifest.json`'s own `"bytes": 1244431`, which reproduces **to the byte**
+as the sum of the ten committed Parquets. That is **1 217 kB, near five times the figure**, and
+no reading rescues it: the largest single file is `offers.parquet` at 222 kB, and **the page
+downloads no Parquet at all** — `docs/index.html` references `manifest.json` and nothing else,
+because `ADR-0001` dropped DuckDB-WASM and the page is rendered server-side. The artifact
+prints its own size, the README carries a hand-copied older one, and **nothing compares them**:
+`git grep README -- tests/` returns no test that opens the file. *`README.md`:55's `241 kB` is
+not this defect* — it quotes `ADR-0001`'s historical bundle comparison and reads as history.
+
+**`verify --dataset` is accepted by the CLI and named in no document.** Third occurrence of
+§5's flag shape, after `auth-log-scan`'s `--min-success-failures` and `apply-scout`'s three.
+
+**`export --out` reads as documented only because a different subcommand's example contains
+the string.** `--out` appears exactly once in nine markdown files —
+`docs/plan/0001_implementation-walkthrough.md`:319, `pipeline site --out docs/` — so `site --out`
+is documented and `export --out` is not. **This is `apply-scout`'s `--out` exactly, in a second
+repository**, and it is worth saying how it was found: by the per-(subcommand, flag) sweep built
+for `apply-scout` `78d9899` after a whole-corpus sweep had called that flag documented. The
+instrument the last repair produced found its first new occurrence on its first outing. §5.
+
+*Checked, and this repository passes where the sibling did not.* **Every markdown link target in
+all nine documentation files resolves** — zero unresolved, measured by walking each `](…)` against
+the file's own directory. The path-citation shape `0010` §5 records is not present here; nothing
+*guards* it, which is the §5 entry's point, but there is nothing to repair.
+
+*Also checked and reproducing.* `manifest.json`'s `coverage` gives `offers_listed` 6571,
+`attributes_known` 6570, `share` 0.9998, and `README.md`:142 states *"6570 of 6571 listed
+adverts (99.98%)"*. `duplicate_posting_share` 0.388 against `README.md`:39's *"38.8% of
+adverts"*. Both exact.
+
+**C — `finding`, and the checker cannot see it by construction.**
+
+`python -m tools.pagespec --only it-job-radar` reads **`clear, 3 undecided`**, exit 0: `1
+composited` 2 usages, `4 h1` unjudgeable, `contrast ground` 227 sites without a resolved
+ground and 4 selectors it does not read. **No `contrast marks` row at all**, which means the
+key is `ok` rather than undecided — `ADR-0008` §10's census change landed here. *§2.2's
+baseline lists this surface among the five reading `1 fail` and §6's warning row is exactly
+right: it is stale, and this paragraph quotes the run this session made.*
+
+**`docs/index.html` prints `100.0%` for a figure the artifact states as `0.9998`.**
+`site/build.py`:388 is `Kpi("Of the live market", f"{coverage['share']:.1%}", …)` and
+`manifest.json`'s `coverage.share` is `0.9998` — so the tile is a **rounding**, which `0007`
+§5.0 forbids in the same sentence that made clause 8 satisfiable. A reader of that tile is told
+the snapshot covers the entire live market; it covers 6 570 of 6 571. **The index checker
+cannot catch this** — it reads HTML and CSS and has no way to know the artifact's value, which
+is `ADR-0004` §5's split working exactly as designed — and **this repository's own suite does
+not pin the tile**: `git grep` over `tests/test_site.py` for the value or the coverage key
+returns nothing. *It knows the class*: `tests/test_pairs.py`:137 is
+`test_the_bar_states_a_lift_rather_than_rounding_it_into_a_count`. The sub-line directly beneath
+prints *"6570 of 6571 listed today"*, so the honest figure is adjacent and the defect is a
+headline that overstates what the line under it corrects — a finding, not a howler.
+
+Read at a recruiter's pace the first screen does its job. The eyebrow dates the snapshot, the
+`h1` is a claim with a result in it — *"Most junior IT offers in Poland are not development
+jobs"* — and the sentence under it carries the denominator: *"97 of 368 vacancies open to
+juniors are IT support and service-desk work … Development accounts for 72."* The eleven
+section headings are questions rather than nouns, which is the strongest structural thing about
+the page.
+
+*One tile needs two readings, and the cause is one numeral meaning two things.* The salary tile
+reads **`28%`** / *Disclose a salary* / *"of the rest, 28 published one we withheld as a unit
+error"*. The headline `28` is a percentage and the `28` two lines below is a count of adverts,
+with nothing between them saying so.
+
+*Three wordings proposed, all shorter or level, none generic — for a repair session, not for
+this one.*
+
+1. **The coverage tile, which is also the clause repair.** `100.0%` / *Of the live market* →
+   **`6 570 of 6 571`** / *Live market covered*. It prints the two integers the artifact
+   already holds, so the rounding disappears rather than being made more precise, and the label
+   finally says what the number is instead of what it is a share of.
+2. **Disambiguate the salary sub-line.** *"of the rest, 28 published one we withheld as a unit
+   error"* → *"of the rest, **28 adverts** published one we withheld as a unit error"*. Two
+   words, and the tile stops using `28` for two quantities.
+3. **`Of the live market` is a fragment that needs the tile above it to parse.** Every other
+   label on the page is a noun phrase that stands alone — *Vacancies analysed*, *Thin strata*.
+   Proposal 1 fixes this as a side effect; it is listed separately because the label is wrong
+   even if the figure is left alone.
+
+**The cheapest observation that would falsify the `clear` on axis A.** Empty
+`config.DATASET_TABLES` and run `test_identifying_columns_never_reach_the_artifact`. If it
+passes, the redaction guard is vacuous over the property `ADR-0002` calls the reason the
+artifact may be published; if it fails, it fails on `:62`'s literal `offers.parquet` rather
+than on its own assertion, which is the observation above stated as a measurement.
+
+**D — `finding`: a decision this repository reversed, still advertised on its front door.**
+
+Hygiene is otherwise clean and there is nothing else to report: MIT detected by GitHub from
+`LICENSE`, homepage set to the Pages URL, **`main` the only branch**, **zero open issues**, and
+the last three CI runs green.
+
+**`ADR-0001` is not the defect — it is the model.** Its `Status` line reads *amended
+2026-08-12*, and an Amendment section measures the WASM bundle at 21.1–37.5 MB raw against the
+*"~3 MB"* the Decision had assumed, concluding in its own words: ***"The interactive layer is
+dropped."*** The Decision paragraph stands as written under that Status line, which is this
+portfolio's *record a correction rather than quietly fix it* practice working exactly as
+intended.
+
+**Three places downstream still state the dropped half as current fact.**
+
+| where | what it says | why it is false |
+|---|---|---|
+| the GitHub **description** | *"…and browser-side DuckDB analytics over a published Parquet artifact"* | `docs/index.html` contains **zero** occurrences of `duckdb` or `wasm`; the page fetches `manifest.json` and no Parquet |
+| the topic **`duckdb-wasm`** | one of fourteen | the same. `duckdb` alone is correct and stays — it is a real dependency (`duckdb>=1.1,<2`) and the build-time analytical engine |
+| `src/it_job_radar/analytics/__init__.py`:8 | *"DuckDB is the analytical engine on both sides: here over Parquet on disk, **and in the browser over the same file**"* | in the source, where a reader trusts it most |
+
+The description is the sharpest of the three because it is what a recruiter reads before opening
+anything, and because `README.md`:53 already states the correction — *"dropped once the bundle
+measured 21–37 MB"* — so the repository contradicts itself between its front door and its first
+page. **Neither is expensive**: an edited description, one topic removed, two lines of docstring.
+
+*One portfolio-level inconsistency, recorded as an observation and not as a finding against this
+repository.* `pyproject.toml` declares **zero `keywords`** against fourteen topics. `apply-scout`'s
+`CLAUDE.md` states the rule — *"`pyproject.toml`'s `keywords` lead; the GitHub topics copy them …
+Every entry is backed by code"* — and **this repository's `CLAUDE.md` does not carry it**, so
+nothing here is being violated. Which of the twelve state the rule is a §5 question a single
+sweep answers, not a per-repository finding.
+
+**The cheapest observation that would falsify each remaining verdict.** For **D**'s clean half:
+`gh issue list --state all` rather than `--state open`, in case a closed issue describes code
+that moved — the `apply-scout` D-2 shape, which an open-only listing cannot see. For **E2**'s
+*no leak*: read the Parquet **row values** rather than the schemas, since a redacted column name
+does not prove a company name is absent from a free-text field that survived under another name.
+
+**Not checked.** `notebooks/01_analysis.ipynb` was counted and not executed. `docs/plan/0001`
+(319+ lines) and `docs/ideas/0001` were opened only where a citation pointed into them, so their
+claims are unread prose. The ten Parquets were read **by schema and by row count, never by
+value** — which is the E2 observation above and is the one gap in this row that could hide a
+finding rather than merely defer one. And `constraints.txt` was read for `duckdb` alone; the
+other pins are unverified against anything.
+
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
 *Placed after the row and not inside it.* The first edition put this heading between A-2's
@@ -807,9 +1065,18 @@ construction; this section and §2's baselines are where patterns accumulate.
 
 - **§2.3, E1 across all thirteen: clean.** Sweeping once rather than thirteen times is what
   made the three matches cheap to read together and dismiss together.
-- **A flag the CLI accepts and no document names, twice in two sessions.**
-  `auth-log-scan`'s `--min-success-failures` (A-1) and `apply-scout`'s `run --model`,
-  `--max-steps`, `--max-cost` (B-2). Both were found the same way — read the parser, sweep
+- **A flag the CLI accepts and no document names — three repositories, three sessions, and
+  the shape has a second half nobody had measured.** `auth-log-scan`'s
+  `--min-success-failures` (A-1), `apply-scout`'s `run --model`, `--max-steps`, `--max-cost`
+  (B-2), and `it-job-radar`'s `verify --dataset` (B-3). **The second half is a flag documented
+  under the wrong subcommand**, which a whole-corpus sweep reports as documented: `apply-scout`'s
+  `--out` read as named on the strength of two `python -m apply_scout.retrieval --out` lines, and
+  `it-job-radar`'s `export --out` reads as named because `pipeline site --out docs/` appears once
+  in a plan document. **Two occurrences in two repositories, and the second was found by the
+  instrument the first one's repair built** — the per-(subcommand, flag) sweep in `apply-scout`
+  `78d9899`, on its first outing against another tree. That is the argument for the
+  portfolio-wide sweep this bullet already asks for, now with a specification: ask per
+  (subcommand, flag), against documentation blocks, never against the concatenated corpus. Both were found the same way — read the parser, sweep
   the docs — and neither repository had any guard that could. `auth-log-scan` now has one
   (`tests/test_readme.py`, `bfe4bf2`), and it is **28 lines plus two helpers** — 18 when it
   landed at `1d02f6f`, grown because the first edition filtered on `startswith("--")` while its
@@ -834,6 +1101,16 @@ construction; this section and §2's baselines are where patterns accumulate.
   `0008` §5's carried README row meeting the audit from the other side: the row says no
   carrier exists, and what session 2 adds is that in at least one repository **the carrier
   already exists and the README simply sits outside it**.
+- **A decision the repository reversed, still stated as fact by everything downstream of the
+  document that reversed it.** `it-job-radar`'s `ADR-0001` dropped DuckDB-WASM, recorded the
+  measurement that killed it, and says *"The interactive layer is dropped"* — and the GitHub
+  description, one of fourteen topics, and a package docstring in `src/` all still advertise
+  browser-side DuckDB. First occurrence, so it is here as a shape to watch rather than a rule:
+  **an amended ADR is a fan-out, and this audit has so far only ever checked the ADR.** The
+  cheap sweep is the inverse of the one the audit already runs — take each `Status: amended` or
+  superseded decision in a repository and grep the tree and the GitHub metadata for the claim it
+  retired. `0010` §4 A-3's D axis is the worked instance, and the same session found `apply-scout`
+  D-2's issue bodies by the same question asked of a tracker instead of an ADR.
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
@@ -906,5 +1183,6 @@ question rather than as a defect.
 | 2026-09-10 | v1.0 (never used) | `--only wroclaw-air-insights` exits 0 having read nothing, which is indistinguishable from a pass | §3.3 requires `--fetch` there |
 | 2026-09-11 | **v3.0** | the prompt's E2 sweeps the owner's personal identifiers, which the owner has declined to supply — so the axis could never be anything but `blocked`, and §3.4 would have returned every repository in the queue | **The identifier half is retired**, with its template, its six guards and §3.2's sources table deleted. E2 is third-party data only; E0 and E1 are unchanged. §3.2 holds the reason. *This row replaces the v2.0 one it supersedes, which corrected the placeholder rule for a file that no longer exists* |
 | 2026-09-14 | **v2.0**, repair | the prompt forbids a repair session to read issue bodies and sends a row it cannot act on any other way: `0010` D-2's repair *is* an edit to the bodies of issues #4 and #5. Its own remedy — *"send it back to a scan session rather than reading around it"* — cannot apply either, because a scan session may read them and may not act | **A correcting comment closes what a comment can close, and the row stays open for the body edit.** Repair 2 took that route with the owner's go-ahead: both issues now carry a comment stating what the tree says, written from the row and from `git`, with no body read. The body edit needs an explicit exemption or a scan/repair pair whose split this case does not fit. *Recorded rather than resolved: the rule is a guard, and reasoning about its intent to get past it is the practice `CLAUDE.md` forbids by name* |
+| 2026-09-14 | **v3.0**, scan | §3.3 gives `pytest` for the nine repositories in its *the rest* row, and for `it-job-radar` a bare `pytest` in an environment without the package installed produces **18 collection errors**, every one `ModuleNotFoundError` — which reads exactly like §3.4's `blocked` and would have sent a clean repository back to the queue | **An import error is an environment verdict, not a repository one, until the repository's own install path is read.** `pyproject.toml` declares no `pythonpath`, `requirements.txt` is `-e .[dev]`, and CI installs before running — so the README's command is correct. Run `PYTHONPATH=src python -m pytest`, which changes no file, or install as CI does; and say in the row which was used. *Nearly written up as a finding in session 3; what caught it was reading `requirements.txt` rather than assuming* |
 | 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
