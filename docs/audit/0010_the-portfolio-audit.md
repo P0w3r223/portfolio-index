@@ -278,7 +278,7 @@ when the first closure landed and the header read literally as a list of what is
 |---|------|-----------|---|---|---|---|---|------|-------------|
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
-| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2, B-2, D-2 | four ADRs, the `llm` cassette half, the judgment set |
+| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -729,6 +729,59 @@ A-2's to repeat.
 read, and an absolute claim was then written across the eight unread ones. Declaring a gap and
 quantifying over it in the same row is worth recording as more than either half alone.
 
+### A-2 repair, 2026-09-14 — E-2 and B-2 closed, D-2 part-closed
+
+**Closed by `apply-scout` `84d14ae` (#38), index pointer bumped in the commit carrying this
+line.** One repository plus a pointer bump, no new module or signature, and
+`python -m tools.pagespec --only apply-scout` reads `clear, 3 undecided` identically before and
+after — the page was never in scope. §3.5's first column, twice over.
+
+**E-2.** `NOTICE` carves the recorded pages out of the MIT grant, names each URL with its
+publisher and board, and marks the two 404 records as contributing no page content — the
+attribution the row warned a repair must not get wrong. `LICENSE` is untouched: GitHub detects
+the licence from it, and that detection is an axis-D asset worth more than an appended
+paragraph. The cassettes are not deleted; CI replays them and the published table is a
+regression test over them. **The note states no count at all**, because the lists are the
+measurement and `tests/test_notice.py` derives both directions from `eval/cassettes/`.
+
+**B-2.** All three halves. `tests/test_readme.py` compares the results table cell by cell in
+both directions, binds each attack row to the payload `attack.md` names, and re-derives
+`63 of 72` from the computed retrievers table — *not* from `retrieval.md`'s own sentence, which
+is a string literal in `retrieval/report.py`, so two hand-typed copies agreeing would have
+proved only that someone typed it twice. The three undocumented flags are documented, the two
+budgets gained the `help=` they never had, and `CLAUDE.md`:371's unqualified `docs/adr/`
+citation is qualified.
+
+**D-2 is part-closed and stays open, and the reason is a contradiction rather than a
+judgement.** The two issues carry a correcting comment each, stating what the tree says:
+`requirement_f1` deleted in `2090fcb` and replaced by `requirement_coverage` at
+`evaluation.py:93`, and the needle living at `tools/github_evidence.py:46` rather than in
+`github.py`. **The false sentences remain in the bodies**, because editing a body means reading
+it and the repair prompt forbids a repair session from reading issue bodies at all. §6 carries
+the row; what is left is an edited body each, and it needs either a scan session or an explicit
+exemption.
+
+**Seventeen mutations, all red on the guard that names them**, over a collected-green baseline,
+each green again after reverting. **Nine were written with the guards and eight came from the
+`code-reviewer` pass — and all eight were green when first aimed.** They share one shape, which
+§5 now carries. The sharpest is that the README paragraph documenting the three flags names
+`--max-tokens` in order to say it does not exist, which put the string into the guard's own
+search scope and pre-approved the flag this project is likeliest to add next.
+
+*One finding from that pass is deliberately not folded in.* This repair fixed one dead
+documentation link by hand and added two more that nothing resolves. **No submodule resolves
+markdown links**, while this index has `tools/citations.py` doing exactly that for its own
+prose. That is §5's, not this row's.
+
+**Erratum, and it is this row's own figure.** A-2 states the cassettes hold **1 818 808
+characters of raw job-board HTML**. It does not reproduce at the same gitlink `c7958eb`, under
+any of four readings: the `html` and `error` payload strings sum to **1 801 326**,
+`str(payload)` to **1 804 498**, the whole JSONL lines of the nine `http` records to
+**1 821 238**, and `json.dumps(payload)` to **1 857 545**. The record count (nine), the
+distinct-URL count (eight) and the publisher list all reproduce exactly, and no claim in the row
+or in `NOTICE` rests on the character figure — which is why it is corrected here rather than
+repaired. It is the twenty-first correction to a row whose errata round closed at twenty.
+
 ## 5. Cross-cutting
 
 What recurred rather than happened once. A per-repository split cannot see a pattern by
@@ -767,6 +820,28 @@ construction; this section and §2's baselines are where patterns accumulate.
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
   those sessions are scans and cannot act.
+- **A guard written against hand-maintained lists, keeping a hand-maintained list of its own.**
+  Repair 1's guards did not show it; repair 2's did, **four times in one commit**, and every
+  one was found by the `code-reviewer` pass rather than by the mutation battery — because a
+  battery aims at the property a guard names and this defect lives in what the guard cannot
+  see. `tests/test_notice.py` pinned its two cassettes by name three lines under a comment
+  saying a guard reading one cassette would miss a page; `tests/test_readme.py` pinned two
+  artifact files by name, keyed five attack rows on a column two of them share, and let
+  `--max-tokens` through because the README sentence *denying that flag exists* put the string
+  in its search scope. **The test for it is one line of derivation each** — a `glob` against
+  the directory, a set comparison against the artifact — and the shape is worth a sweep of
+  every guard this audit has added or will add, not a per-repository finding. It also
+  generalises the observation above it: a registry inside a guard is the loop-with-one-assertion
+  problem moved up a level, where the vacuity is structural rather than accidental.
+- **A repository's own prose cites paths, and nothing in any submodule resolves them.**
+  `apply-scout`'s `CLAUDE.md`:371 cited `docs/adr/0004_…`, which exists in this index and not
+  there — found by a scan, fixed by hand in repair 2, **which then added two more unguarded
+  references in the same commit**. This index has carried `tools/citations.py` since
+  `ADR-0009` §3 step 1 and gates on an unresolved `§N`; the twelve have nothing equivalent for
+  either sections or paths. Second occurrence of a citation that does not resolve in this
+  repository alone, and the first was in the evidence column of a finding about citations that
+  do not resolve. **Cheap to sweep and not cheap to carry**: a per-repository link checker is
+  twelve new guards, so the decision of whether it belongs here or there is `architect`'s.
 
 ## 6. Corrections, and which prompt version they bind
 
@@ -788,5 +863,6 @@ question rather than as a defect.
 | 2026-09-10 | v1.0 (never used) | `rev-list --all` misses 209 publicly fetchable PR-head commits | E1 fetches `refs/pull/*/head` first |
 | 2026-09-10 | v1.0 (never used) | `--only wroclaw-air-insights` exits 0 having read nothing, which is indistinguishable from a pass | §3.3 requires `--fetch` there |
 | 2026-09-11 | **v3.0** | the prompt's E2 sweeps the owner's personal identifiers, which the owner has declined to supply — so the axis could never be anything but `blocked`, and §3.4 would have returned every repository in the queue | **The identifier half is retired**, with its template, its six guards and §3.2's sources table deleted. E2 is third-party data only; E0 and E1 are unchanged. §3.2 holds the reason. *This row replaces the v2.0 one it supersedes, which corrected the placeholder rule for a file that no longer exists* |
+| 2026-09-14 | **v2.0**, repair | the prompt forbids a repair session to read issue bodies and sends a row it cannot act on any other way: `0010` D-2's repair *is* an edit to the bodies of issues #4 and #5. Its own remedy — *"send it back to a scan session rather than reading around it"* — cannot apply either, because a scan session may read them and may not act | **A correcting comment closes what a comment can close, and the row stays open for the body edit.** Repair 2 took that route with the owner's go-ahead: both issues now carry a comment stating what the tree says, written from the row and from `git`, with no body read. The body edit needs an explicit exemption or a scan/repair pair whose split this case does not fit. *Recorded rather than resolved: the rule is a guard, and reasoning about its intent to get past it is the practice `CLAUDE.md` forbids by name* |
 | 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
