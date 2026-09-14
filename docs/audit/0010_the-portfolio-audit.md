@@ -279,7 +279,7 @@ when the first closure landed and the header read literally as a list of what is
 | — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
 | 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3 and B-3 closed** · D-3's tree sites closed, its GitHub half open · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -1058,7 +1058,7 @@ distinct-URL count (eight) and the publisher list all reproduce exactly, and no 
 or in `NOTICE` rests on the character figure — which is why it is corrected here rather than
 repaired. It is the twenty-first correction to a row whose errata round closed at twenty.
 
-### A-3 repair, 2026-09-14 — E-3, B-3 and D-3's tree half closed, C-3 left open
+### A-3 repair, 2026-09-14 — E-3, B-3 and D-3 closed, C-3 left open
 
 **Closed by `it-job-radar` `8ae0d51` (#37), index pointer bumped in the commit carrying this
 line.** One repository plus a pointer bump, no new module or signature, and
@@ -1103,10 +1103,16 @@ guard stops demanding loudly rather than silently enforcing a twice-reversed dec
 `docs/adr/`, `docs/plan/` and `docs/ideas/` are outside the sweep deliberately — they are
 dated records, and a plan step later abandoned is supposed to still read as it was written.
 
-The two sites that are not in the tree — the GitHub **description** and the topic
-**`duckdb-wasm`** — are **not done**: they are outward-facing repository metadata rather than
-a commit, and this session did not have the owner's instruction for them. The row stays open
-for that half, on D-2's precedent.
+**The two sites that are not in the tree are done too, and separately.** The GitHub
+**description** lost its closing *"and browser-side DuckDB analytics over a published Parquet
+artifact"* for *"and a published Parquet artifact the page is built from"*, and the topic
+**`duckdb-wasm`** is gone — fourteen topics to thirteen, with `duckdb` kept, because it is a
+real dependency and the build-time engine. Taken on the owner's explicit instruction and not
+as part of the pull request: repository metadata is outward-facing, reversible by one command
+and by no commit, so it is not something a merge can carry and not something a repair session
+decides. Nothing in this index or in the sibling holds either of them — **the axis-D half of
+this repository is guarded by the audit and by nothing else**, which is the same gap A-2's D
+row has and is a `§5` question rather than a finding here.
 
 **C-3 stays open, and §3.5 is why.** The repair is known and the scan wrote it down:
 `6 570 of 6 571` / *Live market covered* in place of `100.0%` / *Of the live market*. It is a
