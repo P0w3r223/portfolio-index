@@ -2,8 +2,10 @@
 
 Date: 2026-09-17
 Status: accepted — the owner chose this over the alternatives on 2026-09-17, together with the
-route for `0009` §7 row 11. No step has landed yet; the first is `0007` §6's clause 9 paragraph
-with its pin.
+route for `0009` §7 row 11. **§6 carries the steps and their state**; the commit that introduces
+this document also lands the first of them, so no sentence here says the work is pending.
+*An earlier draft of this field read "No step has landed yet" in the commit that landed one —
+`0011` §5's rule that a sentence preceding its state is the same defect as one outliving it.*
 Author: Piotr Cząstkiewicz + Claude
 Related to: [`0007`](../audit/0007_divergence-and-the-page-spec.md) §2 and §6 clause 9 (the rule
 this refines and the sentence it repairs), [`0009`](../audit/0009_the-review-of-the-whole-system.md)
@@ -16,8 +18,15 @@ answers), [`ADR-0004`](0004_what-carries-the-page-spec.md) §5 and K-c (what car
 
 ## 0. The number, taken deliberately for the fourth time
 
-`ADR-0010` collides with `docs/audit/0010`, the portfolio audit. That is the **fourth** number
-taken twice, after `ADR-0007`/`0007`, `ADR-0008`/`0008` and `ADR-0009`/`0009`.
+`ADR-0010` collides with `docs/audit/0010`, the portfolio audit — after `ADR-0007`/`0007`,
+`ADR-0008`/`0008` and `ADR-0009`/`0009`, each of which `CLAUDE.md` names.
+
+*No ordinal is given, and this paragraph gave one until review.* It said *the fourth*, two
+sentences before arguing that the count should be removed rather than corrected — and the ordinal
+is not even well defined: `docs/adr/` runs 0001–0010 and `docs/audit/` 0001–0012, so **every**
+number up to 0010 is taken on both sides, and the four `CLAUDE.md` lists are the ones whose bare
+form is actually ambiguous in live prose. That narrower criterion is the useful one and it was
+never written down, which is how a list can go stale the way a figure does.
 
 `ADR-0009` §0 already refused the obvious escape — skipping to a free number moves the collision
 rather than removing it, and a reader who learns *a bare number means the audit document* has a
@@ -149,8 +158,14 @@ Refused on two mechanisms in the code, not on taste.
    safe, but a relative stylesheet href in the host's chrome resolves to `github.com` and a 429
    there would refuse the build. That breaks *a wire failure is `undecided`, never `fail`* in a way
    no decision here can guarantee, because the markup is the host's to change.
-3. A clause mask is also **the quiet clause drop-out** that
-   `test_every_clause_reaches_a_verdict_on_every_published_surface` exists to refuse.
+3. A clause mask is **the quiet clause drop-out** that
+   `test_every_clause_reaches_a_verdict_on_every_published_surface` was written to refuse — but
+   *that guard would not fire here*, and the distinction matters. It is parametrised over
+   `COMMITTED`, which is `[s for s in SURFACES if not s.must_fetch]`, and the refused surface is
+   fetch-only; a masked key simply reports no status, so no half of the ratchet sees it either.
+   **So this third reason is an argument from the shape of the guard rather than a guard that
+   fires**, and it is stated that way because mechanisms 1 and 2 are checkable in the code and
+   this one is not. *An earlier draft cited it as though it would catch the mask.*
 
 And the route would arm a latent defect it depends on: `clause_6_back_link` ignores the query
 string, so `?tab=followers` and `?tab=following` count as links back to the profile. No committed
@@ -179,21 +194,32 @@ another one would only set its date.
 
 ## 6. Consequences
 
-1. `0007` §6's closing paragraph is rewritten, with `tools/spec.py`'s `c9.s2` quote and carrier in
-   the same commit — the guard compares normalised text and fails on either half alone.
+Each row carries its state, so this list cannot be read as a plan after it stops being one.
+
+1. **Landed with this document.** `0007` §6's closing paragraph is rewritten, with
+   `tools/spec.py`'s `c9.s2` quote and carrier in the same commit — the guard compares normalised
+   text and reddens on either half alone, proven by a battery that mutates each half in turn.
    `0007`'s `Status` field enumerates its amendments and gains this one.
-2. The paragraph's trailing phrase goes with it. *"carried in §8's list"* names `0007` §8, which is
-   **`## 8. Corrections to the record`** and holds no such list; the carrier is §7's bullet, and the
-   list the phrase meant is §9 row 3, moved to `0008` by `ADR-0004` §5. `tools/citations.py` reports
-   this resolved because the section exists — the blind spot `0012` §2 names, in a phrase being
-   rewritten anyway.
-3. Clause 6's query-string reading is repaired in its own pass, before any instrument is pointed at
-   a rendered surface. It is a **false `FAIL`** on a gated clause, and `sources.py` states the
-   policy: *a false gate is worse than a missing one*. `0009` §7 row 2 is the precedent for fixing
-   a latent defect before the stage that would reach it.
-4. `0009` §14.1's *"four gated clauses at once"* is an erratum: it is **three**. `clause_4_opening`
-   returns `4 h1 undecided` for the profile, then and now, because `_fold` folds the headline to
-   `p0w3r223 p0w3r223` and the repo name to `p0w3r223`, and the clause only fails on equality. The
-   figure was reasoned rather than run, inside the section that warns against exactly that.
-5. `failure-classes.md` `ST-4` keeps `0007` §6 `c9.s2` in its *Defined* list, with that site
-   marked closed by this decision. The class is not retired: five of its six sites remain.
+2. **Landed.** The paragraph's trailing phrase goes with it. *"carried in §8's list"* names `0007`
+   §8, which is **`## 8. Corrections to the record`** and holds no such list; the carrier is §7's
+   bullet, and the list the phrase meant is §9 row 3, moved to `0008` by `ADR-0004` §5.
+   `tools/citations.py` reports this resolved because the section exists — the blind spot `0012`
+   §2 names, in a phrase being rewritten anyway.
+3. **Open, and next.** Clause 6's query-string reading is repaired in its own pass, before any
+   instrument is pointed at a rendered surface. It is a **false `FAIL`** on a gated clause, and
+   `sources.py` states the policy: *a false gate is worse than a missing one*. `0009` §7 row 2 is
+   the precedent for fixing a latent defect before the stage that would reach it.
+4. **Landed.** `0009` §14.1's *"four gated clauses at once"* is an erratum: measured with
+   `sources.load` and `clauses.check` against that surface, it is **six** — `1 tokens`, `1 dark`,
+   `3 tables`, `4 eyebrow`, `4 title`, `6 back-link`. Clause 1's and clause 3's failures do not
+   degrade to `UNDECIDED` because all seventeen profile stylesheets are absolute and therefore
+   `THIRD_PARTY`, which `_undecided_where_the_stylesheet_is_incomplete` excludes. *An earlier draft
+   of this row said three, having asked `clause_4_opening` alone* — which could only answer about
+   clause 4, and is the same *reasoned rather than run* defect the erratum was written to fix. The
+   six strengthen §3 rather than disturbing it: `1`, `3` and `4` are assigned to the host there.
+5. **Landed.** `failure-classes.md` `ST-4` keeps `0007` §6 `c9.s2` in its *Defined* list with that
+   site marked closed, and the class is not retired. **No tally is written into either file, and
+   an earlier draft of this row wrote one** — it said *five of its six sites remain*, where `0012`
+   §4 already marks F-2, F-3 and F-10 *corrected here*, so closing F-1 leaves **F-7 and F-8**. A
+   count beside a table that answers it is what `ST-3` is about, and this row argued for removing
+   one while adding another.

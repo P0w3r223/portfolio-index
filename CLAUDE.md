@@ -82,9 +82,13 @@ docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the 
                         before it is a verdict, 0009 why the ledger is addressed rather than
                         partitioned, **0010 the authorship test** — a clause may be asked of
                         a surface only where the portfolio writes the bytes that decide the
-                        verdict, and the criterion has an instrument: a verdict that moved
-                        with no commit in the portfolio belongs to the host. It answers
-                        `0012` F-1, `0009` §7 row 11 and `0012` F-8 at once.
+                        verdict, and the criterion is answerable rather than argued: a
+                        verdict that moved with no commit in the portfolio belongs to the
+                        host. It closes `0012` F-1, refuses `0009` §7 row 11's prescription
+                        while keeping its value, and settles the gating half of `0012` F-8 —
+                        **where that claim's carrier lives is still open and still
+                        `architect`'s**. The comparison is made by hand from two fetches;
+                        nothing in `tools/` runs it.
                         **An ADR number is not an audit number**, and
                         **numbers are taken twice, and no count stands here**: `ADR-0007`
                         is the text layers against bare `0007` the page spec, `ADR-0008`
@@ -117,10 +121,12 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         **0012 what publication invalidated** — the sentences route A stopped
                         being true without touching a byte, which is why no test caught them.
                         `0012` §2 is why this repository has no instrument for that class;
-                        `0012` §4 is the findings, of which **F-1 is open and normative**:
-                        `0007` §6 `c9.s2` argues from the private index, `tools/spec.py` pins
-                        it by literal, so the sentence and its pin move in one commit — and it
-                        is the same question as `0009` §7 row 11. `0012` §5 is the applied
+                        `0012` §4 is the findings. **F-1 was the normative one and `ADR-0010`
+                        closed it**: `0007` §6 `c9.s2` argued from the private index, and its
+                        limit now rests on the clause's own scope, with `tools/spec.py`'s pin
+                        moved in the same commit because the guard reddens on either half
+                        alone. *This line said F-1 was open while the commit beside it closed
+                        it.* F-7 and F-8 are the open ones. `0012` §5 is the applied
                         state of `0011` §7 read from the API, `0012` §6 is what to do with
                         work stranded in the archive, and `0012` §7 names the premise the
                         sweep did not cover — **this line ranks nothing on purpose**, because

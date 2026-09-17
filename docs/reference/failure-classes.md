@@ -182,10 +182,11 @@ not, and 21 lines across the twelve submodule `CLAUDE.md`.
 
 *The normative site is closed.* [`ADR-0010`](../adr/0010_the-authorship-test.md) rewrote `0007`
 §6's limit to rest on the clause's own scope rather than on anyone's access, and moved the pin in
-the same commit — proven by a battery that reddens on each half alone. **The class is not retired
-and no tally stands in this line**: the other sites are open, one of them is `0012` F-7 and is now
-unblocked, and a count in prose beside a list that keeps changing is what `ST-3` two entries above
-is about.
+the same commit — proven by a battery that reddens on each half alone. **The class is not retired,
+and which sites are still open is `0012` §4's table to say, not this line's.** That table is the
+instrument; a status repeated here is a second copy to keep true, which is what `ST-3` two entries
+above is about. *An earlier draft of this paragraph said "the other sites are open", which was
+false for three of them.*
 
 *Recurs:* **on a second premise of the same event, and that is what makes it a class rather than
 an incident.** Route A changed the index's *identity* as well as its visibility, and two artefacts

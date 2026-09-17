@@ -709,30 +709,50 @@ Row 11 says *"at minimum a `Surface` read by `--fetch` in `live`"*. Fetched
 | anchors ending at the profile | **10** |
 | grouped figures | 0 |
 
-**Adding that surface to `SURFACES` today reddens the `live` job on its first run**, on three
-gated clauses at once: `4 title` (leads with the identity), `4 eyebrow` (absent) and
-`6 back-link` (the clause asks for exactly one; there were ten).
+**Adding that surface to `SURFACES` today reddens the `live` job on its first run**, on **six**
+gated clauses at once: `1 tokens`, `1 dark`, `3 tables`, `4 eyebrow`, `4 title` and `6 back-link`.
 
-> **Corrected 2026-09-17: this said *four* and named `4 h1` as the fourth.** `clause_4_opening`
-> fails `4 h1` only where the folded headline **equals** the folded repository name, and
-> `_fold("Piotr Cząstkiewicz P0w3r223")` is `piotr czastkiewicz p0w3r223`, which is not
-> `p0w3r223`. The clause returned `undecided` on 2026-09-08 and returns `undecided` today, where
-> the headline folds to `p0w3r223 p0w3r223`. The figure was **reasoned rather than run**, in the
-> section whose own §14.3 is about figures going stale unnoticed — asked directly, the instrument
-> answers `[4 eyebrow fail, 4 h1 undecided, 4 title fail]`.
+> **Corrected twice on 2026-09-17, and the second correction is the instructive one.**
 >
-> **And two of the three readings have themselves moved, which is the stronger half of this
-> erratum.** The profile's `<title>` and headline no longer carry the real name, and the anchor
-> count read **10** then and **2** on 2026-09-17 — with no commit in this portfolio touching it,
-> which is why `back-link`'s parenthetical above is now in the past tense. That movement is the
-> evidence [`ADR-0010`](../adr/0010_the-authorship-test.md) §2 rests on: a gated clause cannot
-> hang on a surface a third party renders, so this row's prescription is **refused rather than
-> deferred**, and the value §14.2 and §14.3 measure moves to an instrument of its own.
+> *First:* this said **four** and named `4 h1` as one of them. `clause_4_opening` fails `4 h1`
+> only where the folded headline **equals** the folded repository name, and
+> `_fold("Piotr Cząstkiewicz P0w3r223")` is `piotr czastkiewicz p0w3r223`, which is not
+> `p0w3r223`. It returned `undecided` on 2026-09-08 and returns `undecided` today, where the
+> headline folds to `p0w3r223 p0w3r223`.
+>
+> *Second:* the correction then said **three**, and that was wrong too — **the figure is six**.
+> The first draft of this erratum asked `clause_4_opening` and nothing else, so it could only
+> ever return a figure about clause 4. Asked the way the row's own prescription would ask,
+> `sources.load(Surface("profile", "P0w3r223", url=…), allow_fetch=True)` followed by
+> `clauses.check`, the gated failures are the six above. **`1 tokens`, `1 dark` and `3 tables`
+> fail and do not degrade to `UNDECIDED`**, because all seventeen stylesheet hrefs on the profile
+> are absolute to `github.githubassets.com` and therefore `THIRD_PARTY` —
+> `_undecided_where_the_stylesheet_is_incomplete` excludes exactly those, so `loaded.css` is the
+> 120 bytes of inline `<style>` and the clauses answer from it.
+>
+> *So this cell has now carried a figure nobody ran three times*: four reasoned, three asked of
+> one clause, six measured. The erratum that named *reasoned rather than run* committed the same
+> defect one paragraph later, which is `FG` at its most literal and was caught by the review of
+> the correction rather than by the correction. **The argument is untouched and strengthened** —
+> `1`, `3` and `4` are precisely the clauses [`ADR-0010`](../adr/0010_the-authorship-test.md) §3
+> assigns to the host.
+>
+> **And two of the readings have themselves moved, which is the other half of this erratum.** The
+> profile's `<title>` and headline no longer carry the real name, and the anchor count read **10**
+> then and **2** on 2026-09-17 — with no commit in this portfolio touching it. That movement is
+> the evidence `ADR-0010` §2 rests on: a gated clause cannot hang on a surface a third party
+> renders, so this row's prescription is **refused rather than deferred**, and the value §14.2 and
+> §14.3 measure moves to an instrument of its own.
 
-And every one of those four is a property of **GitHub's chrome, not of the README**. The title,
-the header, the navigation and nine of the ten profile links are markup this portfolio does not
-author and cannot change. The clauses were written for a self-hosted `docs/index.html` where the
-repository owns every byte; pointed at a rendered profile they measure the host.
+And every one of those six is a property of **GitHub's chrome, not of the README** — the
+stylesheets as much as the title, the header and the navigation. Of the ten profile links this
+paragraph once counted, `clause_6_back_link` now reaches two, and both are the host's:
+`?tab=followers` and `?tab=following`, which the clause counts only because it compares paths and
+ignores the query string. None of it is markup this portfolio authors or can change. The clauses
+were written for a self-hosted `docs/index.html` where the repository owns every byte; pointed at
+a rendered profile they measure the host. *This paragraph said "those four" and "nine of the ten"
+until 2026-09-17, one line below an erratum correcting both — `ST-3`, in the paragraph that
+erratum exists to serve.*
 
 *So the row is not "small" and it is not "add a Surface". It is a scoping decision the record
 has never taken: **which clauses can even be asked of a surface somebody else renders.*** Two
