@@ -610,10 +610,10 @@ Eight surfaces report a non-zero count, which is the set the struck phrase named
 Read at a recruiter's pace, the first screen does its job: the eyebrow says what this is in
 one line, and the `h1` — *“This agent's retriever finds the evidence for 8 of the 27
 requirements a repository can prove”* — carries a figure, a denominator and a claim. It is
-also the only headline in the portfolio that leads with the project's **own weakest number**,
+also the only headline the audit has read that leads with the project's **own weakest number**,
 which is a deliberate and defensible choice: the page's argument is that the one link nothing
 scored was the one every other metric depended on. The attack section is the strongest writing
-on any of the twelve — it publishes **`exfiltrate` → succeeded every time** in both arms,
+the audit has read — it publishes **`exfiltrate` → succeeded every time** in both arms,
 explains why (*“an allowlist bounds where a request may go, not what it carries”*), and states
 that every run first removes the guard and **requires** the attack to land before the table is
 written. A positive control inside the artifact, which is what §3.6 asks of a guard.
@@ -633,7 +633,7 @@ this one.*
    stops going back to the `h1` to find the referent.
 
 **D — `finding`, and it is the issue tracker describing code that moved.** Hygiene is
-otherwise the best in the portfolio: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
+otherwise the best the audit has measured: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
 homepage set to the Pages URL, a description carrying the same claim as the page, `main` the
 only branch, CI green on its last three runs.
 
@@ -1378,7 +1378,7 @@ where the `description` meta already has it, and give `og:title` the same `— p
 suffix `<title>` carries.
 
 **What is right here, said because a row of findings misrepresents this page.** The status card
-is the best in the portfolio at its job — *"in progress — baselines measured, fine-tune
+is the best the audit has seen at its job — *"in progress — baselines measured, fine-tune
 pending… its two rows are shown empty rather than estimated"*. The two `note` paragraphs refuse
 two easy overclaims by name: the local rows are priced `–` and **not** `$0` because no marginal
 cost was recorded, and their latency is CPU time and *"not comparable to the API's"*. And there
@@ -2081,11 +2081,19 @@ altogether** after it read six, then seven, and a reviewer counting path express
 the negative it establishes is stable and the count is not.
 
 *The same pass corrected A-4, and those corrections are not in this file.* They were made on the
-archive's branch, and the copy of A-4 published here is a **third party's transplant with its own
-review round**, which independently found several of the same defects and wrote them up in its own
-words. Two it did not find are applied by the commit carrying this line — the axis-B identifier
-collision and the keywords tally — and the rest are deliberately left, because reconciling two
-errata narratives over one row is an editorial decision and not a correction.
+archive's branch, and the copy of A-4 published here is a **third party's transplant of the
+corrected archive row, with a third review round on top**. *The first edition of this paragraph
+said that round had independently found several of the same defects. It had not: rounds one and
+two were inherited whole, and the claim was made without the measurement that would have settled
+it — seventeen corrections checked one by one against the published copy, sixteen already
+present.* What round three did is two different things, and the distinction is the argument for
+reviewing a transplanted row at all. It **propagated** corrections to sites the round that made
+them could not see — §5 still carried a census history §4's table had already fixed, which is
+`ST-3` rather than a re-finding — and it **found nine that were new**, two of them inside the
+transplant paragraph its own author had written. **Not to re-check the measurements, which
+reproduce**, but to sweep the sections that argue from a corrected figure. One correction of mine
+reached neither and is applied by the commit carrying this line, together with the axis-B
+identifier collision and the keywords tally.
 
 *And one class survived both per-row passes and was caught only by sweeping the file.* A finding
 lives in three places — the §4 row, the §5 bullet derived from it, and the session brief — and
