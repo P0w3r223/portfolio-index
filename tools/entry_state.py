@@ -77,7 +77,7 @@ OWNER = "P0w3r223"
 
 #: The index's own repository name. The twelve others are derived from `.gitmodules` rather than
 #: typed — `0008` §5's registry shape: a list that exists in four places drifts in three of them.
-INDEX = "current_projects"
+INDEX = "portfolio-index"
 
 #: How many open pull requests one search call will return. Reaching it is not an answer, it is
 #: a truncation, and the report says so rather than reading the 51st as absent.

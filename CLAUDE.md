@@ -1,4 +1,4 @@
-# CLAUDE.md — current_projects
+# CLAUDE.md — portfolio-index
 
 Guidance for Claude Code (and any contributor) working in the portfolio index.
 
@@ -8,14 +8,13 @@ The **private** index of a twelve-repository portfolio. It is not a package: not
 installed, imported by a sibling, or published — `pyproject.toml` exists so `pytest` finds the
 checker, and says so in its first line.
 
-**That first word is now conditional, and this file is where a reader meets it first.**
-`0011` §6 step 0 is an open decision between publishing *this* repository and publishing a clean
-clone of its `main`. Under the recommended route this repository stays private and the public
-artefact is a different repository; under the other it becomes public and the word above, plus the
-argument at "The public landing surface" below, both stop being true. Neither has happened. This
-paragraph is dated rather than rewritten because `0011` §5 records that a sentence *preceding* its
-state is the same defect as one outliving it — and the audit caught one of each in its own first
-draft.
+**That first word is wrong here, and deliberately left standing one line above.** `0011` §6 step 0
+took route A on 2026-09-17: this repository is the *published clone*, and the private index it was
+cloned from is the one the sentence above describes. The line is kept because every `docs/audit/`
+document reasons from it, and rewriting one sentence while eleven documents still assume it is how
+a record starts lying in two directions at once. **Read `private` as naming the origin, not this
+copy** — and the same applies to "The public landing surface" argument below, which is about the
+profile README being the recruiter's entry point and survives the move unchanged.
 
 Two things live here and nowhere else, and they are the reason a session starts here at all:
 
