@@ -343,7 +343,7 @@ def test_an_unpinned_repository_is_reported_apart_from_the_portfolio():
         {"repository": {"name": "infra-docker-workmate"}, "number": 73, "title": "stan"},
     ])
 
-    mine, foreign = entry_state.portfolio_prs(payload, frozenset({"ab-lab", "current_projects"}))
+    mine, foreign = entry_state.portfolio_prs(payload, frozenset({"ab-lab", "portfolio-index"}))
 
     assert mine == (("ab-lab", 12, "the separator"),)
     assert foreign == (("infra-docker-workmate", 73, "stan"),)
@@ -618,7 +618,7 @@ def test_the_account_the_two_depths_query_is_the_portfolio_owner(monkeypatch):
         "the index is not among the repositories queried, so an open pull request here "
         "files as `outside the portfolio` — the 2026-09-07 misreading, mechanised"
     )
-    assert entry_state.OWNER == "P0w3r223" and entry_state.INDEX == "current_projects"
+    assert entry_state.OWNER == "P0w3r223" and entry_state.INDEX == "portfolio-index"
 
 
 def test_a_conflicted_submodule_does_not_read_as_matching_the_index():

@@ -10,10 +10,11 @@ README at [github.com/P0w3r223](https://github.com/P0w3r223), a separate reposit
 here because everything below reads as though it were addressed to a recruiter, and this page is
 not where a recruiter arrives.
 
-<sub>Several documents under `docs/audit/` describe this repository as private. They record the state
-on their own date and are not retrofitted;
-[`docs/audit/0011`](docs/audit/0011_the-pre-publication-security-audit.md) is the security audit
-that precedes the visibility change, and §6 there is what that change is waiting on.</sub>
+<sub>**This repository is a published copy of a private working record**, created by
+[`docs/audit/0011`](docs/audit/0011_the-pre-publication-security-audit.md) §6 route A: a clone of
+`main` alone, which is why there are no pull requests here and the history starts mid-stream. The
+original keeps its 142 pull requests and stays private. Documents under `docs/audit/` that call
+this repository private record the state on their own date and are not retrofitted.</sub>
 
 Each project below lives in its own repository with a dedicated README, tests, and (where
 relevant) CI. The projects are ordered as a deliberate progression: each one adds a new layer
@@ -75,6 +76,6 @@ write them, so this list is a copy and the profile is the original. `A3 car-pric
 
 ---
 
-<sub>Early Python practice scripts are preserved on the
-[`archive/legacy-games`](https://github.com/P0w3r223/current_projects/tree/archive/legacy-games)
-branch — kept for history, not part of the active portfolio.</sub>
+<sub>Early Python practice scripts are kept on an `archive/legacy-games` branch in the private
+working repository this one was published from — history, not portfolio, and deliberately not
+carried across. No link, because it would resolve for nobody.</sub>
