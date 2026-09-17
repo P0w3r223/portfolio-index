@@ -296,6 +296,7 @@ when the first closure landed and the header read literally as a list of what is
 | 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
 | 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 · R-1 stands | the notebook end to end, two ADRs as arguments, the report's rows |
 | 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 · R-1 stands | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 · R-1 stands | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -610,10 +611,10 @@ Eight surfaces report a non-zero count, which is the set the struck phrase named
 Read at a recruiter's pace, the first screen does its job: the eyebrow says what this is in
 one line, and the `h1` — *“This agent's retriever finds the evidence for 8 of the 27
 requirements a repository can prove”* — carries a figure, a denominator and a claim. It is
-also the only headline in the portfolio that leads with the project's **own weakest number**,
+also the only headline the audit has read that leads with the project's **own weakest number**,
 which is a deliberate and defensible choice: the page's argument is that the one link nothing
 scored was the one every other metric depended on. The attack section is the strongest writing
-on any of the twelve — it publishes **`exfiltrate` → succeeded every time** in both arms,
+the audit has read — it publishes **`exfiltrate` → succeeded every time** in both arms,
 explains why (*“an allowlist bounds where a request may go, not what it carries”*), and states
 that every run first removes the guard and **requires** the attack to land before the table is
 written. A positive control inside the artifact, which is what §3.6 asks of a guard.
@@ -633,7 +634,7 @@ this one.*
    stops going back to the `h1` to find the referent.
 
 **D — `finding`, and it is the issue tracker describing code that moved.** Hygiene is
-otherwise the best in the portfolio: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
+otherwise the best the audit has measured: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
 homepage set to the Pages URL, a description carrying the same claim as the page, `main` the
 only branch, CI green on its last three runs.
 
@@ -1378,7 +1379,7 @@ where the `description` meta already has it, and give `og:title` the same `— p
 suffix `<title>` carries.
 
 **What is right here, said because a row of findings misrepresents this page.** The status card
-is the best in the portfolio at its job — *"in progress — baselines measured, fine-tune
+is the best the audit has seen at its job — *"in progress — baselines measured, fine-tune
 pending… its two rows are shown empty rather than estimated"*. The two `note` paragraphs refuse
 two easy overclaims by name: the local rows are priced `–` and **not** `$0` because no marginal
 cost was recorded, and their latency is CPU time and *"not comparable to the API's"*. And there
@@ -2081,11 +2082,19 @@ altogether** after it read six, then seven, and a reviewer counting path express
 the negative it establishes is stable and the count is not.
 
 *The same pass corrected A-4, and those corrections are not in this file.* They were made on the
-archive's branch, and the copy of A-4 published here is a **third party's transplant with its own
-review round**, which independently found several of the same defects and wrote them up in its own
-words. Two it did not find are applied by the commit carrying this line — the axis-B identifier
-collision and the keywords tally — and the rest are deliberately left, because reconciling two
-errata narratives over one row is an editorial decision and not a correction.
+archive's branch, and the copy of A-4 published here is a **third party's transplant of the
+corrected archive row, with a third review round on top**. *The first edition of this paragraph
+said that round had independently found several of the same defects. It had not: rounds one and
+two were inherited whole, and the claim was made without the measurement that would have settled
+it — seventeen corrections checked one by one against the published copy, sixteen already
+present.* What round three did is two different things, and the distinction is the argument for
+reviewing a transplanted row at all. It **propagated** corrections to sites the round that made
+them could not see — §5 still carried a census history §4's table had already fixed, which is
+`ST-3` rather than a re-finding — and it **found nine that were new**, two of them inside the
+transplant paragraph its own author had written. **Not to re-check the measurements, which
+reproduce**, but to sweep the sections that argue from a corrected figure. One correction of mine
+reached neither and is applied by the commit carrying this line, together with the axis-B
+identifier collision and the keywords tally.
 
 *And one class survived both per-row passes and was caught only by sweeping the file.* A finding
 lives in three places — the §4 row, the §5 bullet derived from it, and the session brief — and
@@ -2119,6 +2128,143 @@ of M7 are taken from their committed reports.
 local branch `fix/the-tile-counts-the-result` is four squash-merged commits that never had their
 branch deleted. Deleting it is housekeeping on a developer's machine, not repository work, and it
 is invisible to every clone.
+
+### A-6 — `ab-lab`, session 6
+
+Scanned 2026-09-17 against `portfolio-index` `d79d821`, gitlink `9864e73`, entry state clean:
+`ab-lab` `HEAD` identical to its `origin/main`, working tree clean. **Five axes**, E being E0 and
+E2's third-party half. *The first session scanned in the published index rather than the archive*,
+and one thing had to be established before axis C could mean anything: `tools/pagespec` is
+**byte-identical** between the two repositories — `tools/` differs in exactly one file,
+`entry_state.py`, repointed at the published home by the move — so the checker that answers below
+is the one both repositories hold.
+
+**E0 — `finding` · metadata, and it is R-1's.** Three identities and no fourth:
+`P0w3r223 <p0w3r2243@gmail.com>` 102 fields, GitHub's noreply 23, and
+`Piotr Cząstkiewicz <p0w3r2243@gmail.com>` 9. **9 of 67** commits, reproducing R-1's cell exactly.
+The name also stands in twelve tracked files — `LICENSE` and all eleven ADR `Author:` lines —
+which is the deliberate authorship A-4 recorded for the portfolio and not R-1's subject.
+
+*This repository is the first scanned that **merges** rather than squashes*, and that changes what
+a citation can do here: `main` carries `Merge pull request #10/#11/#12`, so a branch commit **is**
+reachable and the unresolvable-SHA class A-5 raised has no purchase. It also produced the session's
+one withdrawn finding. `git rev-list --all --not main` reads **23**, and all three release tags
+resolve to commits that `git merge-base --is-ancestor` says are **not** on `main` — which reads as
+three published releases orphaned from the published branch. **It is not.** Every tagged *tree* is
+reproduced exactly by a commit that is on `main`: `v0.2.0`'s by `0d301bf`, `v0.3.0`'s by `f7684ef`,
+`v0.4.0`'s by `bac953b`. The released code is right; only the commit objects are parallel, and
+`git describe` is the only thing that suffers. *Recorded because the first reading was wrong twice:
+`git merge-base --is-ancestor v0.4.0 main` compares the **annotated tag object** and always fails —
+`v0.4.0^{}` is the question — and a stale `origin/` ref survived `git fetch --all`, which does not
+prune, showing a remote branch `git ls-remote` says does not exist.*
+
+**E2 — `clear`, and the corpus is arithmetic.** This is a statistics package whose data is
+**simulated**: `git grep` for `read_csv`, `load_dataset`, `requests.`, `urlopen` or an `http` URL
+across `src/` and `examples/` returns **nothing**, so no third party's data enters the repository at
+any point. Exactly **one** committed data artifact, `docs/data/findings.json` — three keys,
+`findings`, `schema_version`, `validation` — which is the record the page and the README are
+generated from. No personal data, no scraped content, no licence question. *The cheapest
+observation that would falsify it:* read `examples/*.py` for an embedded literal table rather than
+grepping for loaders, since a pasted dataset needs no reader.
+
+**A — `finding`, and it is the first breach of a hard ceiling the audit has measured.** **294 tests pass
+and 5 deselect in 159.6 s**, `ruff check .` reports *All checks passed!* Error handling is
+vacuously perfect and worth stating as such: across 12 modules there are **zero `except` clauses of
+any kind**, zero `print`, and two `Any` — a closed-form numerical library that raises rather than
+recovers.
+
+**`src/ab_lab/simulate.py` is 893 lines against `good-practices.md`'s 800 maximum.** It is the only
+file over 800 in the six repositories scanned so far, and it is not a near miss. *That sentence
+said "in the portfolio" in this row's first edition — written into the same commit that rescopes
+four such claims elsewhere in this document, and caught by the string sweep that commit's message
+recommends. Six of twelve is not the portfolio, and the seventh repository is where a running
+maximum stops being one.* Inside it: 31 top-level
+functions and one class, the longest `clustered_ratio_draw` at 97 lines. The module's density is
+the axis's second half — **14 functions exceed fifty lines across 12 modules and 3 704 lines**,
+against `doc-extract`'s nine across 77 modules and 14 523. `cluster.py`:235
+`cluster_robust_t_test` at 98 is the longest in the repository.
+
+*Against that, the execution census is the best measured yet*: the stdlib call-tracer reports
+**7 of 133 functions never called — 5.3 %**, and six of the seven are `results.py` properties and a
+`__str__`.
+
+**The five deselected tests were chased and they run.** `pyproject.toml`:64 sets
+`addopts = "-q -m 'not slow'"`, so the documented `pytest` never runs them, and `ci.yml` runs bare
+`pytest` on every push and pull request. They are not orphaned: `.github/workflows/refresh.yml`
+runs `pytest -m slow -q` **weekly**, and its header explains the split — *"The cheap guards on
+every pull request cannot catch that: they replay two cells at a tenth of their size… This job
+re-measures everything at full size once a week."* A designed division, documented where it is
+made. *Not a finding, and recorded because `0010` §3.6's second observation is that a skip is a
+pass and five silent deselections on every pull request look exactly like one.*
+
+**B — `clear`, and it is the answer two earlier rows were looking for.** `pl-jobs-lora` (B-4a) and
+`doc-extract` (B-5d) both found a guarded page beside an unguarded README, and §5's bullet about
+the published figure and its artifact being one `diff` apart has been asking since session 2 why
+nobody takes the step. **`ab-lab` takes it.** `sitegen/build.py`:64 generates `README.md` *and*
+`docs/index.html` from one record, and `tests/test_site_committed.py`'s G1 is parametrised over
+`sorted(build.build())` — **every artefact the generator produces** — asserting byte-equality with
+the committed file: *"a hand-edited page, README table or chart turns the pull request red."*
+
+*And its second guard is a shape this audit has not seen.* G3 enforces an **import budget**:
+`sitegen` may use the closed-form parts of `ab_lab` and may not simulate. Its docstring records why
+the obvious implementation fails twice over — `from … import` binds the name before any fixture
+runs, and patching `numpy.random.Generator` is a no-op because `default_rng` constructs the C-level
+type directly — so the build runs in a subprocess with `default_rng` replaced, and the proof is
+that `ab_lab.simulate` never entered `sys.modules`.
+
+*What is left unguarded is small and named.* By the distinct-figure-bearing-line measure used in
+A-5: `docs/index.html` 186 and `README.md` 70 are generated and byte-checked; `CLAUDE.md` (8) and
+five ADRs — `0002` (16), `0004` (4), `0005` (10), `0010` (33), `0011` (25) — total **96 lines**
+that no test opens. Against `doc-extract`'s 785 that is a different order of problem, and the six
+other ADRs are cited by the generated documents and so travel with them.
+
+**C — `finding`, and it is the first surface I have scanned that the checker fails.**
+`python -m tools.pagespec --only ab-lab` reads
+
+> `ab-lab   1 fail, 2 undecided`
+
+and **exits 0**, because `contrast marks` is `report-only`. The failure is real:
+**99 mark sites, 93 measured, 2 below threshold, worst 1.27:1 against 3.0:1 at a `<rect>` fill**,
+with 150 outside D5's obligation of which 21 are structure paint. Everything else passes — eleven
+tokens with both schemes, five tables all in `.table-wrap`, `contrast text` 44 of 44 measured at
+worst 4.85:1, clause 8 satisfied with three `U+202F`. The two undecided are `4 h1` and
+`contrast ground` (6 sites without a resolved ground, 1 selector unread).
+
+*This is `CLAUDE.md`'s own sentence arriving in a row rather than in a policy block*: **a run that
+prints `FAIL` and exits 0**, where the only thing saying why is the `gate policy` text. A reader of
+the exit code learns nothing. The repair is a design question about two SVG marks and belongs to
+`0009` §7 row 12's family, not to a repair pass on this repository.
+
+**D — `finding`, and it is `apply-scout`'s D-2 shape four times over.** **Four issues are open and
+all four are done**, each verified against the tree rather than against a claim:
+
+| issue | asks for | in the tree |
+|---|---|---|
+| #1 | cluster-robust variance | `src/ab_lab/cluster.py`, exported from `__init__.py`, `ADR-0008` |
+| #2 | CUPED variance reduction | `src/ab_lab/cuped.py`, exported, merged as PR #10 (v0.4.0), `ADR-0011` |
+| #3 | worked e-commerce case study | `examples/ecommerce_case_study.py` |
+| #4 | multiple-comparison control | `src/ab_lab/multiplicity.py`, exported, `ADR-0009` |
+
+The README and the page both describe all four as built — *Cluster-robust*, *CUPED*,
+*Benjamini-Hochberg* — so the repository contradicts its own tracker on its own front page. All
+four were opened 2026-07-21 as a scoping exercise and none was closed when the work landed.
+**`gh issue list --state all` returns the same four**, so there is no closed-issue half and no
+tracker history to reconcile: the whole tracker is four completed items presented as open work.
+
+*The rest of D is clean.* Description accurate and **pure ASCII**, read as bytes per §6's
+2026-09-17 row; homepage set to the Pages URL; `mit` matching `LICENSE`; one branch; both
+workflows `active`. **Seven topics against six `keywords`** in `pyproject.toml`, differing by
+`python` alone — and this is the **first of six scanned that declares keywords at all**, which
+sharpens A-5's cross-repo question: the rule `apply-scout` states is followed here without being
+written down.
+
+**Not checked.** The **eleven ADRs** were read where a figure or a citation pointed into them and
+nowhere else; `0006` alone carries 94 figure-bearing lines and is unread as an argument. The
+**`examples/` scripts** were read for data loaders and not executed — three of them produce the
+tables the page quotes, and re-running them is the `refresh.yml` job's work rather than a scan's.
+The **`slow` suite** was not run: `pytest -m slow` is the weekly job and the session ran the
+default. The **failing marks** were taken from the checker's own report and never inspected in a
+rendered page. And `docs/data/findings.json` was read by structure, not by value.
 
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
@@ -2435,8 +2581,24 @@ construction; this section and §2's baselines are where patterns accumulate.
   `0008` §5's carried README row meeting the audit from the other side: the row says no
   carrier exists, and what session 2 adds is that in at least one repository **the carrier
   already exists and the README simply sits outside it**.
+  **Session 6 answers it.** `ab-lab` (B in A-6) **generates the README**: `sitegen/build.py`:64
+  writes `README.md` and `docs/index.html` from one record, and `tests/test_site_committed.py`'s
+  G1 is parametrised over *every artefact the generator produces*, asserting byte-equality — *"a
+  hand-edited page, README table or chart turns the pull request red."* The step this bullet has
+  asked about since session 2 costs one `parametrize` over the build's own output, and the
+  repository that took it stopped treating the README as prose beside a generated page and started
+  treating it as a second output of one build. **That reframes the bullet for the repositories
+  still in the queue**: the question is not *is the README checked* but *is it generated*, because
+  a README nobody hand-edits needs no provenance guard at all.
+  *And its second guard is a shape this audit has no other instance of.* G3 enforces an **import
+  budget** — `sitegen` may use the closed-form parts of `ab_lab` and may not simulate — in a
+  subprocess with `numpy.random.default_rng` replaced, proving the constraint by
+  `ab_lab.simulate` never entering `sys.modules`. Its docstring records the two in-process versions
+  that silently do not work: a top-level `from … import` binds the name before any fixture runs,
+  and patching `numpy.random.Generator` is a no-op because `default_rng` constructs the C-level
+  type directly.
   **Third repository, and the sharpest form yet: the repository said the README was a surface,
-  in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-1) holds
+  in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-4a) holds
   `tests/test_docs_page.py`, 327 lines enforcing `0007` §5.0 over `docs/index.html` — and the
   README reproduces the same evaluation table with **three cells rounded away** from what
   `results/eval/report.md` prints. The commit that corrected four *other* cells of that table,
