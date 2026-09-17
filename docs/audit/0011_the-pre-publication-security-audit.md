@@ -256,6 +256,57 @@ caught by review rather than by writing it. The claim that needs proving is serv
 what `ls-remote` asks. (`grep -c` also exits 1 on zero matches, so it must not sit in a `&&` chain —
 the same trap, one layer down.)*
 
+### Step 0 was taken on 2026-09-17, and this repository is its output
+
+**Route A, executed.** `portfolio-index` is a clone of `current_projects`'s `main`, and the
+original stays private with its 142 pull requests intact. What the remedy actually delivered,
+measured against the new remote rather than against a local clone — §10.1's rule applied to the
+repair itself:
+
+| Check | Result |
+|-------|--------|
+| `git ls-remote <new> 'refs/pull/*'` | **empty** — the layer §1 is about does not exist here |
+| Refs on the server | `HEAD` and `refs/heads/main`, nothing else |
+| Author *and* committer over all 182 commits | the public identity and GitHub's noreply, nothing else |
+| R-1's three literals across 441 blobs | **zero** — and this row named them in its first draft, which §9 rule 1 forbids and §3.3 predicts: a line reporting *no match* became one |
+| R-2, R-3 | present, on the owner's decision of the same day |
+
+**R-1 and R-4 are gone, and not because anything was deleted** — a clone never fetched them.
+That is the whole argument for route A over a rewrite, and it is the one claim in this document
+that was verified twice: once in the clone before pushing, once against the server afterwards.
+
+**Four files needed the move, and two were code.** `tools/entry_state.py`'s `INDEX` is what the
+pull-request query asks GitHub about; left at the old name, every open pull request here would
+file as *outside the portfolio* — the 2026-09-07 misreading, which `tests/test_entry_state.py`
+exists to mechanise against. **The audit did not find this.** It swept for secrets and for
+non-public data, and a dependency on the repository's own name is neither. A move is not a
+publication, and this document had only planned the publication.
+
+### What step 1 caught, which is the finding of the repair
+
+The identity in the fresh clone was **empty**. `user.email` was set *locally* in the original
+repository and never globally, so every new clone starts unconfigured and git falls back to the
+machine's default — `<user>@<hostname>.<internal-domain>`. **That is the exact mechanism behind
+`38cb4b2`**, and it would have re-created R-1 in the first commit of the clean repository if the
+identity had not been checked before committing.
+
+So step 1 is not cleanup after an incident. It is switching off a live cause, and the audit had
+it ranked below the move. Corrected here: **check `git var GIT_AUTHOR_IDENT` in any fresh clone
+before the first commit** — it prints what git would actually write, which `git config user.email`
+does not when the value is absent. `user.useConfigOnly true` makes the failure loud instead.
+
+### Two notes on the settings pass
+
+- **Required status checks were missing from the hand-off instructions**, though §7 lists them.
+  A ruleset with `pull_request` but no `required_status_checks` merges a red pull request without
+  complaint. Added after the fact, pinned to `checker (no submodules)` and
+  `checker over the published surfaces` — deliberately not `the live surface`, which reports
+  `skipped` outside its schedule, and not the dynamic `update-pip-graph`.
+- **Enabling Dependabot adds a workflow.** GitHub starts a managed `Dependency Graph`
+  (`dynamic/dependabot/update-graph`) run, which appears as a check named `update-pip-graph`
+  and is in no file in this repository. Harmless, and worth knowing before someone greps the
+  tree for it.
+
 ### Step 1 — stop the source, then treat the disclosure as permanent
 
 Nothing here is a credential, so nothing rotates in the cryptographic sense. The rule that anything
