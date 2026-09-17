@@ -69,13 +69,25 @@ on:
 permissions:
   contents: read
 
+# Every `uses:` below is pinned to a commit SHA with its tag in a trailing comment, and the comment
+# is the only thing that says which version it is. A tag is a moving pointer the action's owner can
+# repoint; a SHA is the bytes that ran. Both actions here are GitHub's own, so this buys less than
+# it would against a third-party action — it is done anyway because this workflow is about to be
+# read publicly, and a public workflow is read as an example of how to write one. `0011` §5 is the
+# finding. *"is about to be", not "is": `0011` §6 step 0 is still an open decision, and under its
+# recommended route this repository stays private while a clean clone becomes the public one.*
+#
+# To bump: read the new SHA with `gh api repos/actions/<name>/git/ref/tags/<tag>` and change both
+# the SHA and its comment together. A SHA whose comment has gone stale is worse than a bare tag,
+# because it reads as verified and is not.
+
 jobs:
   core:
     name: checker (no submodules)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Install pytest
@@ -101,10 +113,10 @@ jobs:
     name: checker over the published surfaces
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: true
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Install pytest
@@ -138,10 +150,10 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: true
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Install pytest
