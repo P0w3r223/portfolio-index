@@ -130,6 +130,15 @@ a document in a private repository. A reader of that page cannot resolve it, and
 `0007` would falsify it silently. It is out of this decision's scope and recorded so the next
 reader does not have to find it twice.*
 
+*Amended 2026-09-17: the conclusion survived publication and its stated reason did not.* `0011`
+§6 route A published this index, so `0007` no longer sits in a private repository. The page still
+cites `§4.1` bare — naming neither the document nor a repository — so **a reader still cannot
+resolve it, for a different reason**: it was *the document is unreachable*, and it is now *the
+citation does not say what it cites*. The renumbering hazard is unchanged, and the remedy the line
+implies has changed from *make the document reachable* to *make the citation name its document*.
+Recorded rather than rewritten, because a line whose conclusion outlives its premise is the shape
+[`0012`](../audit/0012_what-publication-invalidated.md) catalogues; it is F-10 there.
+
 ## 2. Options considered
 
 ### A — freeze, reorder, renumber nothing

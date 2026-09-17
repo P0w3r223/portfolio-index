@@ -55,9 +55,17 @@ That makes it invisible to everything this repository owns:
   describing the archive correctly, and §4's F-7 is a guard where the distinction is the whole
   finding.
 
-**So the instrument is reading, and the unit is the premise.** `0010` §5 records three shapes found
-by a `code-reviewer` pass that a mutation battery structurally cannot see; this is a fourth, and
-unlike those three it has no instrument at all rather than the wrong one.
+**So the instrument is reading, and the unit is the premise.** `0010` §5 records **two** shapes
+found by a `code-reviewer` pass that a mutation battery structurally cannot see, and `0010` §4's
+A-4 row records the third; this is a fourth, and unlike those three it has no instrument at all
+rather than the wrong one. *This sentence credited all three to §5 in the first draft — a claim
+about what another section holds, which is the second bullet above, committed in the paragraph
+that states it. `0011` §10 runs a third count that agrees with neither.*
+
+**The class is [`ST-4`](../reference/failure-classes.md)**, entered with this document: `docs/`
+is where a shape goes once it has occurred twice and the second occurrence was not predicted by
+the first, and §4 below lists six. Its test is the one sentence of this section worth carrying —
+**sweep for the premise, not for the fact.**
 
 ## 3. What was read, and what was deliberately not
 
@@ -80,12 +88,13 @@ and the twelve trees have gitignored build output no clone has.
 | F-1 | `0007` §6 `c9.s2` — a **normative** sentence arguing from the private index, pinned by literal in `tools/spec.py` | **highest** | open — design decision, `0009` §7 row 11 is the same question |
 | F-2 | `.github/workflows/pagespec.yml` said the decision was open and this repository stays private | high | **corrected here** |
 | F-3 | `ADR-0004` §6 still carried a cost publication amortised | high | **corrected here** |
-| F-4 | `0010` §3.1, §3.3 and both prompts named the archive as the working repository | high | **corrected here** |
+| F-4 | `0010` §3.1 and §3.3 named the archive as the working repository, and §6 had no row binding the prompts to the new one | high | **corrected here** |
 | F-5 | `README.md`'s non-retrofit notice read as covering the whole tree | medium | **corrected here** |
 | F-6 | `0009` §14's profile measurement predates the profile edit of 2026-09-17 | medium | open — it is F-1's input |
 | F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — the repository is mid-scan |
 | F-8 | 21 lines across the twelve submodule `CLAUDE.md` say *the private portfolio index* | medium | open — needs a decision on where the carrier lives |
 | F-9 | `0011` §7's applied state lived only in a gitignored session brief | medium | **recorded here**, §5 |
+| F-10 | `ADR-0009` §1's note on an unresolvable citation argued from the index being private | medium | **corrected here** — the conclusion survived, the ground moved |
 
 ### F-1 — the normative sentence, and why it is the whole of §6
 
@@ -112,12 +121,18 @@ rewritten so the limit is about *who renders the surface* rather than about who 
 into the system and is blocked on which clauses can be asked of a surface someone else renders
 (§14.1). Clause 9 is blocked on what the index may claim about two surfaces it does not own.
 Publication dissolved one of the two blockers and left the other standing. Taking them separately
-means two changes to `0007` in two windows, and `0009` §13.6 is the rule about what that costs.
+means amending `0007` §5–§6 twice, and each amendment must move `tools/spec.py`'s pin in the same
+commit — two windows in which the one stable normative text is in flux, for one question.
 **They are one stage, and it needs `architect` before `@Plan`.**
 
 ### F-2, F-3, F-4, F-5 — corrected in this pass
 
-All four are one repository, no new module, no signature, no clause; §3.5's first column.
+All are one repository, no new module, no signature, no clause: §3.5's first column — **except for
+the one condition this class of defect cannot meet.** That column is conjunctive, and its last
+clause asks for an existing test or a guard added in the same pull request and proven red by
+§3.6. A premise inside a comment has no guard and cannot be given one, which is §2's whole
+argument. Named rather than glossed: a stage claiming a threshold without saying which clause it
+fails leaves a later reader to re-derive the exemption.
 
 **F-2**, `.github/workflows/pagespec.yml`: the pinning rationale said the workflow *"is about to
 be read publicly"* and then argued in italics that route A was undecided and would leave this
@@ -132,9 +147,18 @@ locality, not visibility**: `mini-traceroute` still carries no assertion of its 
 Python at all, so a reader who clones that repository alone still learns nothing about the spec.
 That was always the smaller half of the two the bullet conflated.
 
-**F-4**, `0010`: §3.1's session 13 named the archive, §3.3's command row keyed on it, and **both
-prompts** sent a session to branch and commit there — where a commit reaches no reader. Session 4
-is the worked instance and this document's §6 is what it needed. The queue's denominator stays
+**F-4**, `0010`: §3.1's session 13 named the archive and §3.3's command row keyed on it, so a
+session following the queue branched and committed where a commit reaches no reader. Session 4 is
+the worked instance and this document's §6 is what it needed.
+
+*The prompts themselves are clean, and the first draft of this finding said otherwise.*
+`git grep -c current_projects` over both returns **zero**: they name the **role** — *"the index
+audit branch"*, *"in the index"* — and the role moved with route A, so those sentences stayed
+true. The new §6 row still binds them, because §6 outranks a prompt from its named version onward
+and is the one section a session reaches unconditionally; what it corrects is the two rows and the
+background assumption, not the prompt text. **A reading that indicts a file has to survive being
+taken by a second route**, which is a bullet this document cites `0010` §5 for elsewhere. The
+queue's denominator stays
 **fifteen**: the archive is outside the corpus and outside the queue, because `0011` is its audit
 of record on the axes a scan session could have asked about, and it will not change again.
 §2.1's corpus row still names the archive and keeps its figures — §2 is the state the audit was
@@ -145,18 +169,30 @@ one day as covering everything. It now says the exemption is theirs alone and na
 of file that are corrected instead. *This is the finding that explains the other three*: the
 exemption is the reason nobody swept `.github/`, `tools/` or `docs/adr/` after the move.
 
-### F-6 — the measurement that a same-day edit invalidated
+### F-6 — a dated measurement under an open row, with a same-day edit to its subject
 
 `0009` §14.1 gives *anchors ending at the profile* as **10**, measured 2026-09-08, and §14.2 splits
-them six and six. The profile README was edited by hand on 2026-09-17 to link the published index,
-so the figure is at least one low and the split has moved.
+the twelve into six carrying a profile link and six not. The profile README was edited by hand on
+2026-09-17 to link the published index. **The measurement is therefore dated across an edit to its
+own subject, and a stage closing `0009` §7 row 11 has to re-take it for that reason alone.**
 
-**It matters because it is F-1's input.** §14 asks for a scope decision before row 11 is taken, and
-taking that decision on the 2026-09-08 figure would be `FG-2` — a figure taken from a document
-rather than from the instrument — committed inside the document that names the class. §14.3 says so
-about itself already. The re-measurement is one `--fetch` and belongs to the stage, not here:
-measuring it now would produce a second frozen figure, and the stage would have to re-take it
-anyway.
+*The first draft of this row claimed more than that, and the extra was false — recorded rather
+than removed, because §2 is about exactly this.* It said the anchor figure was "at least one low"
+and the split had "moved". Neither survives measurement. **The split is unchanged element for
+element**: `ab-lab`, `apply-scout`, `car-price-ml`, `doc-extract`, `mlops-car-price` and
+`token-budget` carry a link, the other six do not. The 2026-09-17 edit added two anchors to
+`portfolio-index` — a thirteenth repository, which that split does not divide. And the anchor
+figure is clause 6's: `tools/pagespec/clauses.py` counts only anchors whose **path equals** the
+profile, which excludes every repository URL by construction, and the profile README's source
+carries no bare profile link at all. The edit could not have moved either number.
+
+**What survives is the reason, and it is sufficient.** §14 asks for a scope decision before row 11
+is taken, and taking it on a figure measured before an edit to its subject would be `FG-2` — a
+figure read from a document rather than from an instrument — inside the document that names the
+class; §14.3 already says so about itself. Re-measuring here produces a second frozen figure the
+stage must re-take anyway. **The correction is the sharper half of this row**: an inference written
+as a fact, inside a finding whose subject is a figure that stopped being current, caught by a
+reader and by nothing else.
 
 ### F-7 — a guard whose assertion is right and whose reason is false
 
@@ -171,10 +207,16 @@ fan-out shape reached from a new direction: there the retired claim survived in 
 not reach; here it survives inside the guard's own explanation of itself.
 
 **Not repaired, for two reasons that agree.** `doc-extract` is session 5's subject and a scan
-session may not act (`0010` §3.1); and `0009` §13.6 forbids repairing a guard in the window that
-guard is carrying a stage. It also raises a question this document cannot settle: with the index
-public, the page *could* link it, so the guard may be asserting the wrong thing rather than
-explaining itself wrongly.
+session may not act (`0010` §3.1); and a guard should not be repaired in the window it is carrying
+a stage — a rule `0009` §7 row 13b states and acts on, while attributing it to §13.6, **which
+does not say it**: §13.6 is *"the remediation displaced three times"*, about a repair inheriting
+the blast radius of what it repairs. This document's first draft carried that attribution twice,
+inherited rather than checked, which is the resolver's named blind spot arriving through a
+citation of a citation. The rule is right and its home is row 13b.
+
+F-7 also raises a question this document cannot settle: with the index public, the page *could*
+link it, so the guard may be asserting the wrong thing rather than merely explaining itself
+wrongly.
 
 ### F-8 — twenty-one lines in twelve manuals
 
@@ -184,9 +226,15 @@ Every one of the twelve submodules calls this repository the private portfolio i
 for r in <the twelve>; do git -C "$r" grep -cin 'private \(portfolio \)\?index' -- CLAUDE.md; done
 ```
 
-Twenty-one lines at the pinned gitlinks: seven repositories carry two apiece, four carry one, and
-`pl-review-sense` carries three. Restricting the same sweep to every tracked `*.md` returns the
-same twenty-one, so all of them are in `CLAUDE.md` and none is in a README or a dated record.
+Twenty-one lines: seven repositories carry two apiece, four carry one, and `pl-review-sense`
+carries three. Restricting the same sweep to every tracked `*.md` returns the same twenty-one, so
+all of them are in `CLAUDE.md` and none is in a README or a dated record.
+
+*That command reads each working tree and not each gitlink, and the two agree here only because
+`git submodule status` shows no `+` on any of the twelve.* `CLAUDE.md`'s rule about checking the
+tree before quoting the checker applies to a sweep as much as to a run — a submodule on a fix
+branch would answer for a page nobody has published. To ask the pinned state directly, name it:
+`git -C "$r" grep -cin '…' <gitlink> -- CLAUDE.md`.
 
 These are **manuals in the present tense**, so `0010` §5's exclusion list does not reach them — it
 covers `docs/adr|plan|ideas|research`. And the repair is an improvement rather than tidying: with
@@ -198,12 +246,38 @@ F-3's residual cost paid on the side a reader can see.
 claim about the index without twelve new guards, and the index cannot assert a sentence in a file
 it does not edit. This repository re-points submodules; it does not edit them.
 
+### F-10 — a conclusion that outlived its ground, in a file this document said it had read
+
+`ADR-0009` §1 records a published page citing `0007` `§4.1`, with the note that *"a published
+public page carries a section number of a document in a private repository. A reader of that page
+cannot resolve it."* Publication removed the privacy and left the conclusion standing: the page
+cites `§4.1` bare, naming neither the document nor a repository, so **a reader still cannot
+resolve it — for a different reason, with a different remedy.** It was *make the document
+reachable*; it is now *make the citation name what it cites*. Amended there rather than rewritten.
+
+**What makes this the most instructive row in §4 is who found it.** §3 declares this sweep as
+*every tracked file outside `docs/audit/` for the premise private index*. This file is tracked, is
+outside `docs/audit/`, and contains the word — so it was inside the declared scope and the sweep
+did not return it. Re-run afterwards, `git grep -in private -- . ':!docs/audit'` finds exactly two
+sites under `docs/adr/`: `0004` §6, which is F-3, and this one. **A sweep's scope is a claim like
+any other, and so is its execution.** `0010` §5 states the first half about guards; the second is
+this row's contribution — the scope was right, the run was one file short, and nothing an
+instrument prints distinguishes that from a clean sweep.
+
 ## 5. The repository state, read from the API
 
 `0011` §7 is a requirement list written before the switch and against a repository it does not
 name. This is what is applied to `P0w3r223/portfolio-index`, read back with `gh api` rather than
-from anyone's recollection. **Three of these are settings §7 does not name, and two are items §7
+from anyone's recollection. **Three of these are settings §7 does not name, and one is an item §7
 names that nothing in the record had answered.**
+
+*One row of this table was not measured, and the review of this document caught it.* It read
+*require branches up to date — not enabled*, which is false: the ruleset's `required_status_checks`
+rule carries `strict_required_status_checks_policy: true`, and that **is** GitHub's *Require
+branches to be up to date before merging*. It is easy to miss because it is a field inside another
+rule rather than a rule of its own, so a reader enumerating rule types never sees it. The point is
+not the row: **it is that a section whose whole claim is *read back from the API* had exactly one
+row nobody read back**, and it was indistinguishable from the thirteen that were.
 
 | setting | state | note |
 |---|---|---|
@@ -217,7 +291,7 @@ names that nothing in the record had answered.**
 | required checks | `checker (no submodules)`, `checker over the published surfaces` | the two jobs a pull request arms; `the live surface` carries an `if:` and skips |
 | `required_approving_review_count` | **0**, not §7's 1 | GitHub forbids approving your own pull request, so 1 made every pull request unmergeable for a solo owner. Pull request, both checks, linear history, no force-push and no deletion all still enforced |
 | `require_extra_approval_for_unattributed_changes` | **true** | **not in §7**, and see below |
-| require branches up to date | not enabled | §7 asks; no answer was on the record |
+| require branches up to date | **enabled** | §7 asks for it, and it is `strict_required_status_checks_policy: true` **inside** the `required_status_checks` rule rather than a rule of its own — which is why enumerating rule types misses it |
 | require signed commits | not enabled | §7 asks; needs a signing key first, so it is `0011` §6 step 4's shape — the owner's to close |
 | deploy keys / webhooks / Actions secrets / environments | 0 / 0 / 0 / 0 | |
 | default workflow permissions | `read`, and workflows cannot approve pull requests | |
@@ -266,14 +340,31 @@ including the two the round produced while being written.
 ## 7. What this document does to itself
 
 `0011` §9's rules apply unchanged and are not restated. R-2's four private repository names are
-cited by section and not repeated; they are in `main` already, and a fifth site is a fifth site to
-redact. R-1's literals appear nowhere — the shape §6 above describes is stated as *the machine
-name*, which is what it is.
+cited by section and not repeated. **The ordinal rule 2 used for that argument is not reusable,
+and the first draft here reused it.** Rule 2 said a repetition would be *"a fifth site"*; `0011`
+§10 then corrected the population to six files; and `git grep -lE '<R-2's two name stems>' -- . |
+wc -l` reads **seven** in this tree — five under `docs/audit/`, plus `tools/entry_state.py` and
+`tests/test_entry_state.py`. The next site would be the eighth. The figure keeps moving because
+two of the seven are code, so the rule is what gets cited and the count is what gets measured,
+every time. R-1's literals appear nowhere: the shape §6 describes is stated as *the machine name*,
+which is what it is.
 
-**Two things this document cannot verify**, stated because a later reader will otherwise assume
-they were checked. Whether the profile README's anchor count has moved by exactly one or by more
-is F-6 and is deliberately unmeasured. And whether `doc-extract`'s guard should now assert the
-opposite is a question for session 5's repair, not a finding this document is entitled to close.
+**What this document cannot verify**, stated so a later reader does not assume it was checked.
+Whether `doc-extract`'s guard should now assert the *opposite* is session 5's repair to settle and
+not a finding this document may close. And §5's `update-pip-graph` line is the one item in that
+section not read from the API: the managed `Dependency Graph` workflow is confirmed present and in
+no file of this tree, but the check's **name** is not independently confirmed, because the API
+returns 404 for that workflow's runs.
+
+**What the sweep deliberately did not cover, and where its next instance already sits.** §3 scopes
+this document to the premise *the index is private*. The move changed a second premise that nobody
+has swept for — **the archive's pull requests**. `CLAUDE.md` says *"This repository squash-merges.
+A branch commit is never reachable from `main` and never will be."* That was a sentence backed by
+142 merges. Here the API returns `allow_merge_commit: true` beside squash and rebase, and the
+ruleset's `allowed_merge_methods` lists all three; linearity is enforced by
+`required_linear_history`, not by squash. **So the claim is true by convention and not by
+configuration**, and `0010_repair-prompt.md` relies on it directly. Out of scope, and named here
+so the next sweep starts with one instance already in hand rather than deriving it.
 
 **One figure here invalidates itself on sight and carries no number for that reason**: how many
 sentences in this repository still argue from a premise publication changed. The sweep that would

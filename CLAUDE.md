@@ -106,11 +106,15 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         been broken four times between them and never by carelessness.
                         **0012 what publication invalidated** — the sentences route A stopped
                         being true without touching a byte, which is why no test caught them.
-                        Its §4 F-1 is the one that matters: `0007` §6 `c9.s2` is **normative**
-                        and argues from the private index, `tools/spec.py` pins it by literal,
-                        and it is the same question as `0009` §7 row 11. Its §5 is the applied
-                        state of `0011` §7 read from the API, and its §6 is what to do with
-                        work stranded in the archive
+                        `0012` §2 is why this repository has no instrument for that class;
+                        `0012` §4 is the findings, of which **F-1 is open and normative**:
+                        `0007` §6 `c9.s2` argues from the private index, `tools/spec.py` pins
+                        it by literal, so the sentence and its pin move in one commit — and it
+                        is the same question as `0009` §7 row 11. `0012` §5 is the applied
+                        state of `0011` §7 read from the API, `0012` §6 is what to do with
+                        work stranded in the archive, and `0012` §7 names the premise the
+                        sweep did not cover — **this line ranks nothing on purpose**, because
+                        a map is read as current and a ranking outlives the row it ranks
 .github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled).
                         Its two `paths:` filters are tied to `sources.SURFACES` by a `core`
                         test, and also name `.gitignore`. **That last entry now guards

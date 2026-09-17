@@ -166,6 +166,32 @@ the defect, and correcting it only sets the next staleness date.
 
 *The test:* grep the string, not the file.
 
+### ST-4 — the premise that changed without a commit
+
+Every other `ST` shape begins with work moving and prose failing to follow. This one begins with
+nothing in the repository moving at all: a fact *about* the repository changes — its visibility,
+its name, its owner — and every sentence arguing from that fact silently changes truth value.
+
+*Defined:* [`0012`](../audit/0012_what-publication-invalidated.md) — `0011` §6 route A published
+this index on 2026-09-17 without altering a byte of `main`, and six sites were arguing from *the
+index is private*: a workflow comment still calling the decision open, `ADR-0004` §6's
+counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 `c9.s2` —
+**normative**, and pinned by literal in `tools/spec.py`, so the sentence and its pin have to move
+in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
+not, and 21 lines across the twelve submodule `CLAUDE.md`.
+
+*Recurs:* twice inside `0012`'s own pass. `0011` §7's checklist had been executed against a
+repository it does not name, its applied state surviving only in a gitignored session brief; and
+`0012` §7 records a second premise nobody has swept for — the archive's squash-merge convention,
+which `CLAUDE.md` states as *"never will be"* and which the published repository enforces with
+`required_linear_history` beside `allow_merge_commit: true`.
+
+*The test:* **sweep for the premise, not for the fact.** The fact lives in the settings and has
+no occurrences in the tree; the premise is a word — here `private` — and the corpus is every
+tracked file *outside* the dated record. Both halves are claims: `0012` F-10 sat inside a declared
+scope and the run still came back one file short, and nothing an instrument prints distinguishes
+that from a clean sweep.
+
 ---
 
 ## FG — a figure with no instrument

@@ -384,10 +384,10 @@ None of this is reachable from code, and all of it belongs **before** the visibi
 > §9 rule 2 keeps this document as written, and a tick here would claim a state for the wrong
 > repository. **The state that was actually applied, read back from the API rather than from
 > anyone's memory, is [`0012`](0012_what-publication-invalidated.md) §5**, which also records the
-> three items this list does not name, the two it names and nobody answered, and the one it asks
-> for that had to be set differently because GitHub forbids a solo owner approving their own pull
-> request. A reader wanting to know how `main` is protected should go there; this section is the
-> requirement, not the record.
+> three items this list does not name, the one it names that nobody had answered, and the one it
+> asks for that had to be set differently because GitHub forbids a solo owner approving their own
+> pull request. A reader wanting to know how `main` is protected should go there; this section is
+> the requirement, not the record.
 
 **`Settings → Code security and analysis`**
 - [ ] Secret scanning → Enable
