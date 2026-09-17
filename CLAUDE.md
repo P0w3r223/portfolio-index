@@ -8,6 +8,15 @@ The **private** index of a twelve-repository portfolio. It is not a package: not
 installed, imported by a sibling, or published — `pyproject.toml` exists so `pytest` finds the
 checker, and says so in its first line.
 
+**That first word is now conditional, and this file is where a reader meets it first.**
+`0011` §6 step 0 is an open decision between publishing *this* repository and publishing a clean
+clone of its `main`. Under the recommended route this repository stays private and the public
+artefact is a different repository; under the other it becomes public and the word above, plus the
+argument at "The public landing surface" below, both stop being true. Neither has happened. This
+paragraph is dated rather than rewritten because `0011` §5 records that a sentence *preceding* its
+state is the same defect as one outliving it — and the audit caught one of each in its own first
+draft.
+
 Two things live here and nowhere else, and they are the reason a session starts here at all:
 
 - **The page specification.** `docs/audit/0007_divergence-and-the-page-spec.md` §5 is normative

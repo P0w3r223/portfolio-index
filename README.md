@@ -4,10 +4,16 @@
 > from data acquisition, through models, to deployed applications and their evaluation.
 > Targeting AI Engineer and Data Scientist roles (open to Junior Python / ML Engineer).
 
-This repository is the **index** of my portfolio, and it is **private**. The public landing
-page is the profile README at [github.com/P0w3r223](https://github.com/P0w3r223), a separate
-repository — said here because everything below reads as though it were addressed to a
-recruiter, and a recruiter cannot open this page. It is for me, and for anyone I hand access to.
+This repository is the **index** of my portfolio, and the working record behind it — what was
+decided, what was measured, and what is still open. The **landing page is elsewhere**: the profile
+README at [github.com/P0w3r223](https://github.com/P0w3r223), a separate repository. That is said
+here because everything below reads as though it were addressed to a recruiter, and this page is
+not where a recruiter arrives.
+
+<sub>Several documents under `docs/audit/` describe this repository as private. They record the state
+on their own date and are not retrofitted;
+[`docs/audit/0011`](docs/audit/0011_the-pre-publication-security-audit.md) is the security audit
+that precedes the visibility change, and §6 there is what that change is waiting on.</sub>
 
 Each project below lives in its own repository with a dedicated README, tests, and (where
 relevant) CI. The projects are ordered as a deliberate progression: each one adds a new layer
