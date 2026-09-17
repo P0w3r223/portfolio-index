@@ -914,12 +914,24 @@ identical to `origin/main`, twelve pointers matching their own `origin/main`, no
 uncommitted, no open portfolio pull request. **Five axes**, E being E0 and E2's third-party
 half.
 
-*This row was written on a local branch and published by nothing.* The operator's standing
-instruction for the session was that no work reaches a remote — no push, no pull request, no
-issue touched — with read-only `git fetch` and `gh` permitted so the entry state and axis D
-could be answered at all. The scan prompt's *"commit and push the index audit branch"* is
-therefore half-executed by design, and the row says so rather than letting a later reader
-infer a merge that never happened.
+*This row was written on a local branch in the repository that has since become the archive,
+and it reaches a reader by transplant.* The operator's standing instruction for the session was
+that no work reaches a remote — no push, no pull request, no issue touched — with read-only
+`git fetch` and `gh` permitted so the entry state and axis D could be answered at all. The scan
+prompt's *"commit and push the index audit branch"* was therefore half-executed by design.
+**Its second half is executed by the pull request carrying this line, and against a different
+repository**: the three commits were cherry-picked onto `portfolio-index`, because by then
+`current_projects` accepted no commits. *The sentence this replaces said the row was "published
+by nothing" — which its own merge falsifies. `ST-1`, committed inside the one paragraph written
+to stop a reader inferring a publication state that did not hold, and caught by reading the
+paragraph before pushing it rather than by any instrument.*
+
+**The measurements above and below are unchanged and stay frozen at the HEAD they name**, which
+§4's header requires. Both SHAs they cite resolve in the published index — `467a92d` is an
+ancestor of its `main` and `8fe2e02` is the gitlink — because route A cloned `main` without
+rewriting history, so a transplanted row cites commits that exist for its new reader. *That is
+a property of route A and not of this row*: it would not hold under `0011` §6's route B, where
+every SHA changes and this paragraph would have had to re-derive both.
 
 **E0 — `finding` · metadata, and it is R-1's.** Three identities and no fourth:
 `P0w3r223 <p0w3r2243@gmail.com>` 101 fields, GitHub's noreply 16, and
