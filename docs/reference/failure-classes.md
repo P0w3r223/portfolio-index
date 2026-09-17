@@ -175,10 +175,17 @@ its name, its owner — and every sentence arguing from that fact silently chang
 *Defined:* [`0012`](../audit/0012_what-publication-invalidated.md) — `0011` §6 route A published
 this index on 2026-09-17 without altering a byte of `main`, and six sites were arguing from *the
 index is private*: a workflow comment still calling the decision open, `ADR-0004` §6's
-counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 `c9.s2` —
+counter-argument, `ADR-0009` §1.1's note on an unresolvable citation, `0007` §6 `c9.s2` —
 **normative**, and pinned by literal in `tools/spec.py`, so the sentence and its pin have to move
 in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
 not, and 21 lines across the twelve submodule `CLAUDE.md`.
+
+*The normative site is closed.* [`ADR-0010`](../adr/0010_the-authorship-test.md) rewrote `0007`
+§6's limit to rest on the clause's own scope rather than on anyone's access, and moved the pin in
+the same commit — proven by a battery that reddens on each half alone. **The class is not retired
+and no tally stands in this line**: the other sites are open, one of them is `0012` F-7 and is now
+unblocked, and a count in prose beside a list that keeps changing is what `ST-3` two entries above
+is about.
 
 *Recurs:* **on a second premise of the same event, and that is what makes it a class rather than
 an incident.** Route A changed the index's *identity* as well as its visibility, and two artefacts

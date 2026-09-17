@@ -80,16 +80,26 @@ docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the 
                         registry, 0006 the gate registry and the twelfth surface, 0007 S8a's
                         design, 0008 the ground of a usage site and why S13 is a census
                         before it is a verdict, 0009 why the ledger is addressed rather than
-                        partitioned. **An ADR number is not an audit number**, and
-                        **three numbers are now taken twice**: `ADR-0007` is the text layers
-                        against bare `0007` the page spec, `ADR-0008` is the contrast
-                        ground against bare `0008` the rollout ledger, and `ADR-0009` is the
-                        ledger decision against bare `0009` the whole-system review — that
-                        third one arrived deliberately, with its own reasoning and the
-                        refused alternative, in `ADR-0009` §0. A bare number in this
-                        repository means the audit document. *This line said **two** until
-                        2026-09-11, which is the sentence outliving the state it describes
-                        for the third time in this file*
+                        partitioned, **0010 the authorship test** — a clause may be asked of
+                        a surface only where the portfolio writes the bytes that decide the
+                        verdict, and the criterion has an instrument: a verdict that moved
+                        with no commit in the portfolio belongs to the host. It answers
+                        `0012` F-1, `0009` §7 row 11 and `0012` F-8 at once.
+                        **An ADR number is not an audit number**, and
+                        **numbers are taken twice, and no count stands here**: `ADR-0007`
+                        is the text layers against bare `0007` the page spec, `ADR-0008`
+                        the contrast ground against bare `0008` the rollout ledger,
+                        `ADR-0009` the ledger decision against bare `0009` the whole-system
+                        review, and `ADR-0010` the authorship test against bare `0010` the
+                        portfolio audit. The last two arrived deliberately, each with its
+                        reasoning and its refused alternative, in that ADR's own §0.
+                        **A bare number in this repository means the audit document.**
+                        *This line carried a figure and it was wrong twice — **two** until
+                        2026-09-11, **three** until 2026-09-17. The figure is removed
+                        rather than corrected a third time, which is `ST-3`'s own remedy
+                        and the fix `#125` used on two other counts: a number in prose
+                        beside a directory that answers it only sets the next staleness
+                        date. Count `docs/adr/` against the audit series if you need one*
 docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 0008 the plan,
                         0009 the whole-system review and what the passes since got wrong,
                         **0010 the portfolio audit — the plan work is taken from now**, with

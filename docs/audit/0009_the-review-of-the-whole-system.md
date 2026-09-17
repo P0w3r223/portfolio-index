@@ -709,9 +709,25 @@ Row 11 says *"at minimum a `Surface` read by `--fetch` in `live`"*. Fetched
 | anchors ending at the profile | **10** |
 | grouped figures | 0 |
 
-**Adding that surface to `SURFACES` today reddens the `live` job on its first run**, on four
-gated clauses at once: `4 title` (leads with the identity), `4 h1` (equals the profile name),
-`4 eyebrow` (absent) and `6 back-link` (the clause asks for exactly one; there are ten).
+**Adding that surface to `SURFACES` today reddens the `live` job on its first run**, on three
+gated clauses at once: `4 title` (leads with the identity), `4 eyebrow` (absent) and
+`6 back-link` (the clause asks for exactly one; there were ten).
+
+> **Corrected 2026-09-17: this said *four* and named `4 h1` as the fourth.** `clause_4_opening`
+> fails `4 h1` only where the folded headline **equals** the folded repository name, and
+> `_fold("Piotr Cząstkiewicz P0w3r223")` is `piotr czastkiewicz p0w3r223`, which is not
+> `p0w3r223`. The clause returned `undecided` on 2026-09-08 and returns `undecided` today, where
+> the headline folds to `p0w3r223 p0w3r223`. The figure was **reasoned rather than run**, in the
+> section whose own §14.3 is about figures going stale unnoticed — asked directly, the instrument
+> answers `[4 eyebrow fail, 4 h1 undecided, 4 title fail]`.
+>
+> **And two of the three readings have themselves moved, which is the stronger half of this
+> erratum.** The profile's `<title>` and headline no longer carry the real name, and the anchor
+> count read **10** then and **2** on 2026-09-17 — with no commit in this portfolio touching it,
+> which is why `back-link`'s parenthetical above is now in the past tense. That movement is the
+> evidence [`ADR-0010`](../adr/0010_the-authorship-test.md) §2 rests on: a gated clause cannot
+> hang on a surface a third party renders, so this row's prescription is **refused rather than
+> deferred**, and the value §14.2 and §14.3 measure moves to an instrument of its own.
 
 And every one of those four is a property of **GitHub's chrome, not of the README**. The title,
 the header, the navigation and nine of the ten profile links are markup this portfolio does not
