@@ -166,6 +166,33 @@ the defect, and correcting it only sets the next staleness date.
 
 *The test:* grep the string, not the file.
 
+### ST-4 — the premise that changed without a commit
+
+Every other `ST` shape begins with work moving and prose failing to follow. This one begins with
+nothing in the repository moving at all: a fact *about* the repository changes — its visibility,
+its name, its owner — and every sentence arguing from that fact silently changes truth value.
+
+*Defined:* [`0012`](../audit/0012_what-publication-invalidated.md) — `0011` §6 route A published
+this index on 2026-09-17 without altering a byte of `main`, and six sites were arguing from *the
+index is private*: a workflow comment still calling the decision open, `ADR-0004` §6's
+counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 `c9.s2` —
+**normative**, and pinned by literal in `tools/spec.py`, so the sentence and its pin have to move
+in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
+not, and 21 lines across the twelve submodule `CLAUDE.md`.
+
+*Recurs:* **on a second premise of the same event, and that is what makes it a class rather than
+an incident.** Route A changed the index's *identity* as well as its visibility, and two artefacts
+were written against the repository it stopped being: `0010`'s session queue, which named the
+archive as the repository a session commits in, and `0011` §7's checklist, executed against a
+repository it does not name and whose applied state survived only in a gitignored session brief.
+Neither was predicted by the privacy half — a sweep for the word `private` returns neither.
+
+*The test:* **sweep for the premise, not for the fact.** The fact lives in the settings and has
+no occurrences in the tree; the premise is a word — here `private` — and the corpus is every
+tracked file *outside* the dated record. Both halves are claims: `0012` F-10 sat inside a declared
+scope and the run still came back one file short, and nothing an instrument prints distinguishes
+that from a clean sweep.
+
 ---
 
 ## FG — a figure with no instrument

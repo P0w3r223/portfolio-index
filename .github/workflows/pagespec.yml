@@ -72,10 +72,14 @@ permissions:
 # Every `uses:` below is pinned to a commit SHA with its tag in a trailing comment, and the comment
 # is the only thing that says which version it is. A tag is a moving pointer the action's owner can
 # repoint; a SHA is the bytes that ran. Both actions here are GitHub's own, so this buys less than
-# it would against a third-party action — it is done anyway because this workflow is about to be
-# read publicly, and a public workflow is read as an example of how to write one. `0011` §5 is the
-# finding. *"is about to be", not "is": `0011` §6 step 0 is still an open decision, and under its
-# recommended route this repository stays private while a clean clone becomes the public one.*
+# it would against a third-party action — it is done anyway because this workflow **is** read
+# publicly, and a public workflow is read as an example of how to write one. `0011` §5 is the
+# finding. *This said "is about to be", not "is", and argued that `0011` §6 step 0 was an open
+# decision under which this repository would stay private while a clean clone became the public
+# one. It was closed the same day and this file is in that clone: route A was taken, the clone is
+# `P0w3r223/portfolio-index`, and it is the repository you are reading. Corrected 2026-09-17 by
+# `0012`, which also records why the correction did not arrive on its own — `README.md`'s
+# non-retrofit notice covers `docs/audit/` and reaches neither `.github/` nor `tools/`.*
 #
 # To bump: read the new SHA with `gh api repos/actions/<name>/git/ref/tags/<tag>` and change both
 # the SHA and its comment together. A SHA whose comment has gone stale is worse than a bare tag,

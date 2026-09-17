@@ -244,3 +244,14 @@ none is in a test.
   **The cost recorded here was real and it was paid down by stages doing other work**, which is worth noting:
   each of those three got its test because a stage needed a carrier the index checker could not be, not
   because anyone set out to close this gap.
+
+  *Amended 2026-09-17: the premise of the cost is gone, and what survives it is smaller and different in
+  kind.* `0011` §6 route A published this index as `P0w3r223/portfolio-index`, so the word **private** in the
+  bullet above stopped being true — and with it the reason a reader of `mini-traceroute` could not see the
+  rule. The spec, the checker and the conformance table now sit at a public URL any sibling's README can
+  link. **What is left is not visibility but locality**: `mini-traceroute` still carries no assertion of its
+  own, holds no Python at all, and remains the one surface the index checker guards alone, so a reader who
+  clones *that* repository and runs *its* tests still learns nothing about the page spec. That is K-c's
+  actual residual cost, and it was always the smaller half of the two this bullet conflated. *Recorded
+  rather than struck, because the bullet is part of the reasoning K-c was accepted on: a decision whose
+  stated cost has quietly expired is a decision nobody can re-examine. `0012` §2 names the class.*
