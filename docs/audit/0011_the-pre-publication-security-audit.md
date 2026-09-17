@@ -91,12 +91,21 @@ first exception). The sweep used four hand-built pattern families instead:
 
 Families 1, 2 and 3 returned **zero blobs** across all 731. Family 4 is where §4 comes from.
 
-### 3.3 The two false positives, recorded because a later reader will re-derive them
+### 3.3 The three false positives, recorded because a later reader will re-derive them
 
 - **`33857055959`** matches the PESEL shape exactly — eleven digits. It is a GitHub Actions run
   identifier, cited in `0003` §11 and `0006` and verified by reading three lines of context around
   every occurrence. A shape-based sweep for national identifiers will hit this every time it runs.
 - **`200 404 500`** in `0009` matches a Polish phone pattern. They are HTTP status codes.
+- **This document matches the credential sweep.** §3.2 lists what was searched for, so the strings
+  `sk-ant-`, `AIza`, `ghp_`, `xox` and `BEGIN ... PRIVATE KEY` are all present in `0011` itself.
+  Re-running the sweep after the move to the published repository returned two blobs, and both
+  were versions of this file. *Found on 2026-09-17 while verifying the new repository — and the
+  reason it fired there and not in the original audit is instructive: the verification pass used a
+  shortened pattern without the length quantifiers (`sk-ant-` rather than
+  `sk-ant-[A-Za-z0-9_-]{20,}`). The full pattern distinguishes a token from the name of a token's
+  prefix; the short one cannot. The original sweep was right, and the check on the check was what
+  was wrong — which is this section's whole subject, arriving one level up.*
 
 A third near-miss is worth more than either. A first pass tested for binary files with
 `grep -qa $'\x00'`, which in bash expands to an **empty pattern** — matching every blob in the
