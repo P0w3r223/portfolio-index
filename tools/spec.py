@@ -560,10 +560,18 @@ CLAUSES: tuple[Clause, ...] = (
     Clause(
         id="c9.s2",
         cite="0007 §6, clause 9's enforcement limit",
-        quote="That two pages agree cannot be checked without coupling two public "
-              "repositories to a private index, so it is a review item",
-        carriers=_human("the clause states its own limit; this row records that the absence "
-                        "of an index check is the decision and not a gap"),
+        quote="That two pages agree cannot be gated, because which figures this clause "
+              "reaches is a judgement no instrument makes: an index may report the figures "
+              "two surfaces share as a census and may never refuse on one",
+        carriers=_human("review — the clause states its own limit, and the limit is c9.s1b's "
+                        "judgement: no instrument decides which figures this clause reaches"),
+        note="Reworded 2026-09-17 with `ADR-0010`. What was pinned here until then rested the "
+             "limit on the index being private, which `0011` §6 route A ended without changing "
+             "a byte of the sentence — `0012` F-1, class `ST-4`. The limit is now stated from "
+             "the clause's own scope, which no publication can move. The wording also says "
+             "*census* rather than *review item*, because `report-only` is what this "
+             "repository's gate already calls that — `served` and `contrast marks` are the "
+             "precedent.",
     ),
 )
 

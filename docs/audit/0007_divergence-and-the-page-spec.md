@@ -1,7 +1,7 @@
 # The divergence, measured — and the page spec it turns out to describe
 
 Date: 2026-09-04
-Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement. **§5 amended four times: clause 1's role sentence 2026-09-05, clause 1's interaction state and clause 2's convergence note in S7, and §5.1 struck 2026-09-06** with the role sentence — see the note below
+Status: accepted in part — §5, §5.1 and §6's clause 9 are normative; §9 and §5.2 are superseded; every other section is frozen at its 2026-09-04 measurement. **§5 amended four times: clause 1's role sentence 2026-09-05, clause 1's interaction state and clause 2's convergence note in S7, and §5.1 struck 2026-09-06** with the role sentence — see the note below. **§6's clause 9 enforcement limit reworded 2026-09-17** with [`ADR-0010`](../adr/0010_the-authorship-test.md): the limit now rests on the clause's own scope rather than on the index being private, a premise `0011` §6 route A ended without changing a byte of the sentence
 Author: Piotr Cząstkiewicz + Claude
 Related to: [0006_session3-4-presentation-block.md](0006_session3-4-presentation-block.md) B2 and B3,
 [0003_portfolio-review-plan.md](0003_portfolio-review-plan.md) §3 (Session 4) and §4 (the two families),
@@ -630,9 +630,23 @@ headline, so it is the strongest instance of what clause 9 is for.
 > ignored.* Not one number: the two measurements answer different questions and unifying them would
 > delete a real distinction. What is forbidden is a reader meeting both with no bridge.
 
-Enforcement is honest about its limit: a within-repo test can assert *this page names its measurement*,
-which is checkable. That two pages agree cannot be checked without coupling two public repositories to a
-private index, so it is a review item — carried in §8's list, not asserted as automatic.
+Enforcement is honest about its limit, and the limit is this clause's own scope rather than anyone's
+access. A within-repo test can assert *this page names its measurement*, which is checkable and is
+carried from both sides of the pair. That two pages agree cannot be gated, because which figures this
+clause reaches is a judgement no instrument makes: an index may report the figures two surfaces share
+as a census and may never refuse on one. The judgement stays a review item; §7 is where this document
+carries it, and `0008` carries the pair's rollout.
+
+*Until 2026-09-17 this paragraph read that the check would require "coupling two public repositories
+to a private index".* [`0011`](0011_the-pre-publication-security-audit.md) §6 route A published the
+index and the premise went with it, while the sentence stayed byte-identical —
+[`0012`](0012_what-publication-invalidated.md) F-1, failure class `ST-4`. The limit above is stated
+from the clause instead of from the world, so it cannot expire the same way;
+[`ADR-0010`](../adr/0010_the-authorship-test.md) is the decision and §2 there is the reasoning. *The
+phrase that closed it also cited "§8's list", where §8 is this document's correction log and holds no
+such list* — the carrier is §7's bullet below, and the list the phrase meant is §9 row 3, moved to
+`0008` by `ADR-0004` §5. `tools/citations.py` called that resolved for nine days, because the section
+it named exists.
 
 ## 7. What this spec does not check
 
