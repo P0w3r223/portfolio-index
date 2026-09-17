@@ -63,9 +63,14 @@ blob in the object database** — `git cat-file --batch-all-objects`, 731 blobs 
 back to its path and reachability afterwards. That is a strictly larger set than any commit walk,
 and it is what found R-9: a blob holding an internal hostname verbatim, reachable from nothing.
 
-Read in full: 731 blobs, 533 commits across every ref including `refs/pull/*` and the reflog, 25
-`origin` branches, 0 tags, 0 stash entries, the working tree, and the commit messages themselves
-as a separate corpus.
+Read in full: 731 blobs, 533 commits across every ref including `refs/pull/*` and the reflog, **25
+remote-tracking refs under `refs/remotes/origin` — which turned out to be a statement about this
+clone and not about `origin`, where there are two branches; §10.1**, 0 tags, 0 stash entries, the
+working tree, and the commit messages themselves as a separate corpus.
+
+*Kept with the correction inline rather than silently reduced to two, because the 25 refs really
+were read — the sweep's coverage was not smaller than claimed. What was wrong is the label on the
+set, and a reader checking this audit's reach deserves both halves.*
 
 ### 3.2 What it was read for
 
@@ -189,7 +194,7 @@ history; and no national-identifier, IBAN, NIP or payment-card value.
 | `pull_request_target` | never used |
 | Third-party actions | `actions/checkout@v7` and `actions/setup-python@v7`, **pinned to a tag, not a SHA** |
 | Runners | `ubuntu-latest` only; no `self-hosted` |
-| Stale branches | **23** merged working branches still on `origin` — of 25 branches total, the other two being `main` and `archive/legacy-games`, which the row below is about |
+| Stale branches | ~~23~~ ~~25~~ — **none. `origin` holds two branches: `main` and `archive/legacy-games`.** This row was wrong twice, and §10's sixth entry is why the second way is worse than the first |
 | `archive/legacy-games` | its README links to a `master` branch that does not exist, and `hangman.py` contains tic-tac-toe |
 
 ### 5.1 What this pull request adds, and what it deliberately does not
@@ -301,15 +306,14 @@ also ship a file listing them.
   whose owner forgot; a later reader finding no `LICENSE` should find this sentence instead of
   re-opening the question.
 - **R-2** — redact, or accept as the price of a record that explains itself.
-- **The 23 stale branches** — `gh api -X DELETE repos/P0w3r223/current_projects/git/refs/heads/<name>`,
-  one call each; `git push --delete` is blocked in this environment. **Derive the list, do not
-  count it:** `git for-each-ref refs/remotes/origin` minus `HEAD`, `main` and
-  `archive/legacy-games`. This bullet said 25 in the first draft, which is the total number of
-  branches — feeding *that* set to the command above would have deleted the archive branch the
-  row above asks you to look at, and asked GitHub to delete the default branch. `%(refname:short)`
-  renders `refs/remotes/origin/HEAD` as plain `origin`, so a filter matching `origin/HEAD` misses
-  it and the count comes out one too high; `CLAUDE.md`'s rule about hand-counts is the rule this
-  broke.
+- ~~**The 23 stale branches**~~ — **closed 2026-09-17: there were none.** `origin` holds `main`
+  and `archive/legacy-games`, and has for some time. Nothing to delete, so the
+  `gh api -X DELETE` this bullet used to carry is gone with it. **The instrument is
+  `git ls-remote --heads origin`**, which asks the server. The
+  `git for-each-ref refs/remotes/origin` this bullet recommended one revision ago reads the
+  *local remote-tracking cache*, and `git fetch --all` does not prune it — so 23 branches deleted
+  from `origin` weeks ago were still sitting in this clone, and the audit counted them. §10's
+  sixth entry is the class.
 
 ## 7. The GitHub checklist
 
@@ -435,3 +439,38 @@ Three things follow, and the third is the one worth carrying:
    time a `code-reviewer` pass has caught a class the mutation battery is structurally blind to
    (`0010` §5 records the first). A document has no mutants. What it has is claims, and the only
    instrument that reads a claim against the thing it describes is another reader.
+
+### 10.1 The sixth, found after the merge, and it is the one that matters
+
+**The stale-branch row was wrong a second time, and the second way is worse.** It said 25, the
+review corrected it to 23, and both numbers are fiction: `origin` holds **two** branches, `main`
+and `archive/legacy-games`. There was never anything to delete.
+
+The first error was a bad filter. The second was reading the wrong thing entirely. Every count
+came from `git for-each-ref refs/remotes/origin` — the **local remote-tracking cache**, which is
+not `origin`. Branches deleted from the server weeks ago sit in a clone indefinitely, because
+`git fetch --all` does not prune. It was found only when `git fetch --prune` ran as part of
+cleaning up after the merge, and printed the deletions of branches this audit had listed as
+present.
+
+Three things make this the most useful entry in the document:
+
+1. **It is the audit's own central finding, turned around.** §1's whole argument is that a
+   repository keeps text in layers, and that the layer a reader checks locally is not the layer
+   that decides. The stale-branch row failed for exactly that reason, in the document making the
+   argument. The `refs/pull/*` analysis was correct because it was verified against `origin`;
+   this row was not, and nothing in the method distinguished them.
+2. **`CLAUDE.md` warns about this, in its last section, in these words**: *`origin/main` is a
+   local file a session inherits and nothing refreshes on its own.* That section exists because
+   two sessions reached the same false conclusion from a stale ref on 2026-09-07. This is the
+   third, and the first to survive both a review and a merge.
+3. **The review confirmed 23 — because it read the same cache.** A second reader is not an
+   independent instrument when both readers query the same stale source. §10's own conclusion
+   ("the only instrument that reads a claim against the thing it describes is another reader")
+   needs that qualification: *against the thing it describes*, not against the same local copy of
+   it. The correction is not "get a reviewer", it is **name the source each figure came from**,
+   and prefer the one that can answer for the server.
+
+The mechanical rule that follows, and it is cheap: **`git ls-remote` for anything that is a claim
+about `origin`.** `for-each-ref` answers a question about this clone, which is a different
+question and almost never the one being asked.
