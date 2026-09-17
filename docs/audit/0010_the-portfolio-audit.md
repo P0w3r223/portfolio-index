@@ -938,10 +938,10 @@ Written down so a repair acting on R-1 does not sweep content R-1 was never abou
 none.** That sentence is the difference from A-2 and A-3 and it decides the repair, so it comes
 before the evidence.
 
-*The committed data artifacts are seven files and every one is invented.* Five JSONL under
-`data/fixtures/labeling_qa/` (three train, two test, plus `proposals.jsonl` and
-`human_gold.jsonl`) carry `offer_id` `fx-001`…`fx-005` and `url`
-`https://example.test/o/fx-00N`; `data/fixtures/offer_sample.html` is a synthetic
+*The committed data artifacts are six files and every one is invented.* **Four** JSONL under
+`data/fixtures/labeling_qa/` — `processed/train.jsonl` holding three records,
+`processed/test.jsonl` two, plus `proposals.jsonl` and `human_gold.jsonl` — carry `offer_id`
+`fx-001`…`fx-005` and `url` `https://example.test/o/fx-00N`; `data/fixtures/offer_sample.html` is a synthetic
 `__NEXT_DATA__` page whose employer is `Acme Sp. z o.o.` and whose id is `fixture-001`, and its
 own first comment says *"Not real data"*; `data/normalization/tech_aliases.yaml` is a
 vocabulary. No real posting prose, no employer, no person, in any of them. That directory's own
@@ -960,7 +960,7 @@ number beside it. `dataset/hf_dataset.py`:66 calls
 and when it runs, is private by construction rather than by remembering.
 
 *The closest thing to third-party content in the tree was read.*
-`docs/research/f6-data-availability.md`:29 names one live offer by a generic title and city —
+`docs/research/f6-data-availability.md`:26 names one live offer by a generic title and city —
 *Analityk systemowo-biznesowy*, Warszawa — and quotes **no prose**, only per-section character
 counts. No employer, nothing identifiable to a person.
 
@@ -1049,9 +1049,12 @@ reflects the gitignored `results/eval/predictions/` they were computed from. Not
 can prove that, which is the same boundary `ADR-0004` draws in the index.
 
 **The `0010` §5 loop shape was looked for and is not here — recorded because a negative from a
-sweep is worth more than an unasked question.** Both module constants the page guard iterates
-fail **closed**: emptying `ARTIFACTS` makes `_figures(_artifact_text())` empty, so every figure
-on the page becomes unsourced and the test goes red; emptying `TILE_SOURCES` trips
+sweep is worth more than an unasked question, and measured because this row's own first draft
+asserted the direction from reading.** Both module constants the page guard iterates fail
+**closed**, run as §3.6 asks with a collected-green baseline and the mutation applied in
+memory: unmutated, both tests pass; with `ARTIFACTS` emptied the provenance test goes **red**
+(*"the page prints ['0', '0.01', …]"* — every figure becomes unsourced), and with
+`TILE_SOURCES` emptied the tile test goes **red** on
 `assert len(tiles) == len(TILE_SOURCES)` against the page's own four tiles. `test_agreement.py`:116's
 `for b_name in BUCKETS` iterates a vocabulary the module defines and the assertions around it
 name buckets literally. This is the first of the four scanned repositories where that shape is
@@ -1127,13 +1130,18 @@ design catches the third.
 a naive sweep only by accident.** README:113–115 states *"800 offers fetched → 710 records (90
 reposts deduplicated by id and prose hash), split 568 train / 142 test … title & work-mode
 100 %, seniority 99 %, expected-tech 76 %, salary 31 %"*. The artifact that produces those
-counts is `data/processed/manifest.json`, which `.gitignore`:33 keeps out of the tree. Of the
-eight figures, `800` and `710` are in `ADR-0002`, `568` in `configs/config.yaml`:109 and
-`ADR-0006`, `142` in `results/eval/report.json`, and `31 %` in `ADR-0006`:94. **`76 %` is
-printed by nothing**, and `90` and `99` are "printed" only because `ADR-0006`:114 and
-`configs/config.yaml`:110 write `p90` and `p99` about token-length percentiles — a tokeniser
-reads the digits and cannot read the `p`. So the reposts count and the seniority coverage are
-unverifiable and *look* verifiable, which is worse than either.
+counts is `data/processed/manifest.json`, which `.gitignore`:34 keeps out of the tree. Of the
+eight figures only **three** are checkable as the thing the sentence claims: `710` in
+`ADR-0002`:71, `568` in `configs/config.yaml`:109 and `ADR-0006`, and `142` in
+`results/eval/report.json`. **`76 %` is printed by nothing at all.** The other four survive a
+sweep on a technicality, in two different ways. `90` and `99` are "printed" only because
+`ADR-0006`:114 and `configs/config.yaml`:110 write `p90` and `p99` about token-length
+percentiles — a tokeniser reads the digits and cannot read the `p`. And `800` is worse, because
+it resolves to something that *looks* like its subject and is not: `ADR-0002`:12 asks for
+*"400–800 examples"* and `configs/config.yaml`:119 sets `sitemap_offers_sample: 800`, so a
+reader checking *"800 offers fetched"* finds the **target** twice and the fetched count never.
+So the reposts count, the seniority coverage and the fetch itself are unverifiable and *look*
+verifiable, which is worse than either.
 
 *And this is where **A**'s finding lands.* The whole `800 → 710` gap is attributed to
 deduplication. `collect.py`:195 drops a `RequestException` into that same gap without recording
@@ -1157,16 +1165,18 @@ see — A-3's D row was the first, and the guard written there folds each line w
 exactly this.
 
 **B-4. `ADR-0004`'s amendment retired Colab, named the two classes of site it had fixed, and
-twelve sites outside those two classes still say Colab.** The amendment is honest and its claim
+fourteen lines outside those two classes still say Colab.** The amendment is honest and its claim
 is **true as written**: *"The docstrings and README that said 'Colab' now say hosted GPU"* — a
 grep for `Colab` across `src/` returns nothing, and the README's two remaining hits are both
-retrospective. What no sentence covered is everything else. **Eight live sites in five files a
-contributor acts on**: `pyproject.toml`:17 (the dependency-split rule, *"installed ONLY on
-Colab"*, which `CLAUDE.md` restates as a hard rule) and `:60`; `.github/workflows/ci.yml`:16;
-`.gitignore`:9; `configs/config.yaml`:87 (*"Colab-only trainer"*) and `:98`
-(*"free-Colab T4/P100"*); `requirements-train.txt`:4 and `:5`. **And four sentences in two
-sibling ADRs**: `ADR-0003`:35, and `ADR-0006`:17, `:18`, `:36`, `:63` — plus a step heading
-`## Colab Step 0` at `ADR-0006`:104 that a reader on Kaggle would follow.
+retrospective. What no sentence covered is everything else. **Eight lines in five files a contributor acts
+on**: `pyproject.toml`:17 (the dependency-split rule, *"installed ONLY on Colab"*, which
+`CLAUDE.md` restates as a hard rule) and `:60`; `.github/workflows/ci.yml`:16; `.gitignore`:9;
+`configs/config.yaml`:87 (*"Colab-only trainer"*) and `:98` (*"free-Colab T4/P100"*);
+`requirements-train.txt`:4 and `:5`. **And six lines across two sibling ADRs**: `ADR-0003`:35,
+and `ADR-0006`:17, `:18`, `:36`, `:63` and `:104` — the last a step heading, `## Colab Step 0`,
+that a reader on Kaggle would follow. **The unit is the line and not the sentence**, because
+`ADR-0006`:17–:18 is one sentence carrying two of them; `git grep -c` counts lines, and a count
+given in sentences is a count no instrument reproduces.
 
 This is `0010` §5's newest shape — *an amended ADR is a fan-out* — on its **second** repository,
 and it sharpens the entry: in `it-job-radar` the fan-out reached GitHub metadata a commit cannot
@@ -1175,7 +1185,7 @@ perfectly well and which no sweep was run over. The amendment names *docstrings 
 defect is that naming the classes you fixed reads, to the next reader, as naming all the classes
 there are.
 
-**B-5. Two smaller claims the tree does not hold.** `.gitignore`:40 says *"only the numbers-only
+**B-5. Two smaller claims the tree does not hold.** `.gitignore`:38 says *"only the numbers-only
 `report.{json,md}` under `results/labeling_qa/` is versioned"* — **nothing under
 `results/labeling_qa/` is tracked**, and `git log --all` over that path is empty, while the same
 sentence is true of `results/eval/`. And the census in `tests/test_docs_page.py`:~205 —
@@ -1249,11 +1259,14 @@ prints, so the page guard still passes.*
 | | |
 |---|---|
 | h1 today | *The best available model recovers 94% of what the input makes recoverable* |
-| proposed | *A frontier API recovers 94 % of what the postings actually contain — the ceiling is 0.28* |
+| proposed | *A frontier API reaches 94 % of a model-free 0.28 ceiling* |
 
-The replacement is two words shorter, names **whose** 94 % it is, and puts `0.28` — the
-model-free ceiling, which is this repository's genuinely original measurement and currently
-sits in a tile below the fold — beside it. Then move the sub's third sentence (*"A QLoRA
+The replacement is **11 words against 12, and 56 characters against 73** — measured, because
+the first draft of this row claimed *two words shorter* for a replacement that was five words
+longer, which is the defect B-1 is about, committed inside the paragraph proposing the repair.
+It names **whose** 94 % it is, and puts `0.28` — the model-free ceiling, this repository's
+genuinely original measurement, currently in a tile below the fold — beside it. Both figures are
+in the guard's admitted set, so the page test still passes. Then move the sub's third sentence (*"A QLoRA
 fine-tune of a small Polish LLM that turns job-posting prose into structured JSON…"*) to first,
 where the `description` meta already has it, and give `og:title` the same `— pl-jobs-lora`
 suffix `<title>` carries.
@@ -1321,6 +1334,32 @@ workflows, `.github/workflows/ci.yml` and `dynamic/pages/pages-build-deployment`
 `active`**, and the first is the only workflow file the tree holds. What is left un-falsified is
 narrower: this session never confirmed that the homepage actually answers 200 — §3.3 puts this
 repository outside `--fetch`, so the surface was judged from the committed file.
+
+**A-4 errata, 2026-09-17 — seven corrections, all found by this row's own closing review, and
+six of them are the defect the row is about.** Recorded rather than quietly fixed, because
+`CLAUDE.md` says to and because *what* was wrong is the point: the row spent its B axis on a
+hand pass over a table and a figure frozen into prose, and then hand-counted three times.
+
+| what it said | what it says now | how it was wrong |
+|---|---|---|
+| *"the committed data artifacts are **seven** files… **five** JSONL"* | six files, **four** JSONL | a hand count. `git ls-files data/` returns nine paths, two of them `.gitkeep` and one that directory's `README.md`; *"three train, two test"* counts **records** and was read back as files |
+| `f6-data-availability.md`:29 | `:26` | a line number read off a `sed` window's offset instead of `grep -n` |
+| `.gitignore`:33 | `:34` | the same, twice: `:33` is `data/dataset_slice.json` |
+| `.gitignore`:40 | `:38` | `:40` is `results/labeling_qa/review_queue.jsonl` |
+| *"**twelve** sites… **four** sentences in two sibling ADRs"* | **fourteen lines**, six of them in the ADRs | a hand count in a unit the enumeration did not use. `git grep -c` counts lines; `ADR-0006`:17–:18 is one sentence over two of them, so *sentences* and *lines* disagree and the row mixed them |
+| *"the replacement is **two words shorter**"* | 11 words against 12 | the proposal as first drafted was **five words longer** than the headline it replaced — an unmeasured comparative inside the paragraph proposing a repair for unmeasured figures |
+| *"both fail **closed**"*, asserted from reading | the same verdict, now measured | §3.6's battery, applied in memory: green unmutated, red with each constant emptied. The claim was right; the method was not |
+
+*The generalisable half, and it is not flattering.* The scan prompt's standing rules already
+say **figures come from an instrument, never a hand count**, and this row cites that sentence
+in its own B-1. Every one of the six was produced by reading output that was already on screen
+rather than by asking a command the question — which is the cheaper failure mode than
+carelessness and the harder one to notice, because the number *looks* derived. The fix that
+would have caught all six is mechanical: a count that appears in a row has to be pasted from a
+command in the same breath, and a line number has to come from `grep -n` and never from
+arithmetic on a window. **Nothing in the five verdicts moved**, and that is the one thing this
+table is not evidence for: seven corrections to the prose left `E2 clear`, `A finding`,
+`B finding`, `C finding` and `D clear` exactly where the measurements put them.
 
 **One thing the scan prompt says about this repository that is true and incomplete.** §3.3's
 axis-A paragraph reads *"Ten repositories carry `.codegraph/`; `doc-extract` and `pl-jobs-lora`
@@ -1678,10 +1717,10 @@ construction; this section and §2's baselines are where patterns accumulate.
   **Second occurrence, and it moves the shape from *watch* to *rule* — with the amendment's own
   wording as the mechanism.** `pl-jobs-lora` (B-4): `ADR-0004`'s 2026-08-21 amendment retired
   Colab for Kaggle and wrote *"The docstrings and README that said 'Colab' now say hosted
-  GPU"* — a sentence that is **true**, and that names the two classes it fixed. Twelve sites in
+  GPU"* — a sentence that is **true**, and that names the two classes it fixed. Fourteen lines in
   neither class still say Colab: `pyproject.toml`:17 and :60, `.github/workflows/ci.yml`:16,
-  `.gitignore`:9, `configs/config.yaml`:87 and :98, `requirements-train.txt`:4 and :5, and four
-  sentences plus a step heading across `ADR-0003` and `ADR-0006`. So the two instances differ in
+  `.gitignore`:9, `configs/config.yaml`:87 and :98, `requirements-train.txt`:4 and :5, and six
+  more across `ADR-0003` and `ADR-0006`, the last of them a step heading. So the two instances differ in
   exactly the way that matters for the sweep: `it-job-radar`'s fan-out reached GitHub metadata,
   which no commit carries, while this one reached **packaging, CI and the ignore file**, which a
   commit carries perfectly. And the mechanism is now visible — *naming the classes you fixed
@@ -1704,7 +1743,11 @@ construction; this section and §2's baselines are where patterns accumulate.
   stating it, so the commit that changes what a figure means cannot land green. `0008` §4.11
   and `0007` §3 are the same lesson from the other end — there, a measurement in a normative
   document; here, a measurement in a comment attached to the code that produces it, which is the
-  place it is *least* expected to rot.
+  place it is *least* expected to rot. **And the class is not the repositories' alone**:
+  `0010` A-4's own errata records six hand counts inside the row that raised this bullet,
+  found by its closing review before it was proposed as merged work. A rule that has to be
+  applied to prose by the person writing the prose is a rule with no carrier, here as much as
+  in any tree the audit judges.
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
