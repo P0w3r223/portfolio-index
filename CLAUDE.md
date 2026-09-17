@@ -25,11 +25,17 @@ Two things live here and nowhere else, and they are the reason a session starts 
   from the submodule working trees and one from its live URL, prints a conformance table, and
   since `0008` S-gate **refuses** when a clause in `GATED` fails.
 
-**The public landing surface is not this repository's `README.md`.** This repository is private;
-the surface a recruiter reaches is the profile README at `github.com/P0w3r223`, which is a
-separate public repository (`P0w3r223/P0w3r223`) and is **carried by nothing here** — no clause,
-no test, no row of `SURFACES`. `README.md` in this repository is an internal index that happens
-to be written in a recruiter's register. Do not repair one and assume the other moved.
+**The public landing surface is not this repository's `README.md`.** *This paragraph used to
+argue from privacy — a recruiter could not open the index, so the profile was the only surface.
+Both are public since 2026-09-17 and that reason is gone. The conclusion is not:*
+`github.com/P0w3r223` is the address that gets handed out, and this repository is reached
+**from** it — since 2026-09-17 by an explicit link in the profile's closing section, which also
+points the profile's "measured rather than asserted" claim at the place it can be checked.
+The profile README is a separate repository (`P0w3r223/P0w3r223`) and is still **carried by
+nothing here** — no clause, no test, no row of `SURFACES` — which `0009` §7 row 11 has held open
+since before the move and which the move made more expensive, not less: the profile now sends
+readers here, and an edit to it is still one nothing checks. `README.md` in this repository is
+an index written in a recruiter's register. Do not repair one and assume the other moved.
 
 ## Architecture
 
@@ -92,7 +98,12 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         data. **`0008` has one open row and it is not work**: S8c is a refusal
                         on measurement — available, unscheduled, costed as its own project —
                         so a session asking *what next* reads `0010` §3.1 and §4, not
-                        `0008` §3
+                        `0008` §3. **0011 the pre-publication security audit** — what became
+                        readable when this repository stopped being private, the route A that
+                        produced it, and §10 on the six defects found in the audit itself.
+                        Its §9 states three redaction rules and §3.3 three false positives;
+                        **run its grep before extending it**, because all three rules have
+                        been broken four times between them and never by carelessness
 .github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled).
                         Its two `paths:` filters are tied to `sources.SURFACES` by a `core`
                         test, and also name `.gitignore`. **That last entry now guards
