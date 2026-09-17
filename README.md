@@ -14,7 +14,12 @@ not where a recruiter arrives.
 [`docs/audit/0011`](docs/audit/0011_the-pre-publication-security-audit.md) §6 route A: a clone of
 `main` alone, which is why there are no pull requests here and the history starts mid-stream. The
 original keeps its 142 pull requests and stays private. Documents under `docs/audit/` that call
-this repository private record the state on their own date and are not retrofitted.</sub>
+this repository private record the state on their own date and are not retrofitted — **and that
+exemption is theirs alone.** A dated record is meant to read as it was written; a comment in
+`.github/`, a docstring in `tools/`, an argument in `docs/adr/` or a normative sentence in
+`0007` §5–§6 is read as current, so those are corrected instead.
+[`0012`](docs/audit/0012_what-publication-invalidated.md) is that correction and its list, and it
+exists because this sentence was read for one day as covering the whole tree.</sub>
 
 Each project below lives in its own repository with a dedicated README, tests, and (where
 relevant) CI. The projects are ordered as a deliberate progression: each one adds a new layer

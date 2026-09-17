@@ -379,6 +379,16 @@ also ship a file listing them.
 
 None of this is reachable from code, and all of it belongs **before** the visibility switch.
 
+> **This checklist was executed on 2026-09-17, against `P0w3r223/portfolio-index` and not against
+> the repository this document was written in.** The boxes below are left unticked on purpose —
+> §9 rule 2 keeps this document as written, and a tick here would claim a state for the wrong
+> repository. **The state that was actually applied, read back from the API rather than from
+> anyone's memory, is [`0012`](0012_what-publication-invalidated.md) §5**, which also records the
+> three items this list does not name, the two it names and nobody answered, and the one it asks
+> for that had to be set differently because GitHub forbids a solo owner approving their own pull
+> request. A reader wanting to know how `main` is protected should go there; this section is the
+> requirement, not the record.
+
 **`Settings → Code security and analysis`**
 - [ ] Secret scanning → Enable
 - [ ] **Push protection** → Enable — the only control here that prevents rather than reports

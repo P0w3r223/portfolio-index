@@ -103,7 +103,14 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         produced it, and §10 on the six defects found in the audit itself.
                         Its §9 states three redaction rules and §3.3 three false positives;
                         **run its grep before extending it**, because all three rules have
-                        been broken four times between them and never by carelessness
+                        been broken four times between them and never by carelessness.
+                        **0012 what publication invalidated** — the sentences route A stopped
+                        being true without touching a byte, which is why no test caught them.
+                        Its §4 F-1 is the one that matters: `0007` §6 `c9.s2` is **normative**
+                        and argues from the private index, `tools/spec.py` pins it by literal,
+                        and it is the same question as `0009` §7 row 11. Its §5 is the applied
+                        state of `0011` §7 read from the API, and its §6 is what to do with
+                        work stranded in the archive
 .github/workflows/    pagespec.yml — core (no submodules), surfaces (gates), live (scheduled).
                         Its two `paths:` filters are tied to `sources.SURFACES` by a `core`
                         test, and also name `.gitignore`. **That last entry now guards

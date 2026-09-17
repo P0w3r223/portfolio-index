@@ -134,7 +134,7 @@ recorded third-party content rather than an E1 one.
 |---|---------|------|
 | 0 | this document | done |
 | 1–12 | one submodule each | scan |
-| 13 | `current_projects` — `tools/`, `tests/`, `docs/`, **and the tracked files at the root** | scan |
+| 13 | **this repository** — `tools/`, `tests/`, `docs/`, **and the tracked files at the root** | scan |
 | 13b | `P0w3r223/P0w3r223` — the profile README | scan |
 | 13c | `infra-docker`, `infra-docker-powiadomienia-teams`, `infra-docker-workmate`, `student-wellbeing-pwr` | secrets only |
 | R1…Rn | repair sessions, driven by §4 | repair |
@@ -143,6 +143,20 @@ recorded third-party content rather than an E1 one.
 workflow are tracked, are this repository's, and fell outside all three named directories. The
 audit repairs that class of disagreement elsewhere, and had just created one of its own. The
 clause named a fourth file, the identifier template, which was deleted 2026-09-11 with §3.2.*
+
+***Session 13's subject changed repository on 2026-09-17, and the denominator did not.*** The
+row read `current_projects` until then. `0011` §6 route A published this index as
+`P0w3r223/portfolio-index` and left `current_projects` private as the archive, so session 13
+scans **this** repository — the one holding the checker the audit's axis C runs. The archive is
+deliberately **outside the corpus and outside the queue**: its audit of record is `0011`, which
+read every blob in its object database and 533 commits across every ref including `refs/pull/*`,
+which is a stronger answer on axes E0 and E1 than a scan session could reach, and nothing in it
+will change again. **Fifteen sessions, not sixteen.** *The alternative considered and refused was
+a session 13d for the archive: it would have re-asked with a weaker instrument the questions
+`0011` had already closed, and §3.4 would then have owed a verdict on a repository no repair can
+touch.* §2.1's corpus row still names the archive and still holds its figures, because §2 is the
+state this audit was **opened** against and re-measuring it would be the practice §4's header
+refuses; `0012` §3 is where that is recorded rather than patched.
 
 Order for 1–12: `auth-log-scan` (pilot — small, all five axes), `apply-scout`,
 `it-job-radar`, `pl-jobs-lora`, `doc-extract`, `ab-lab`, `mlops-car-price`, `car-price-ml`,
@@ -183,7 +197,7 @@ Four of the fifteen sessions cannot run the obvious one. Verified 2026-09-10.
 | repo | surface key(s) | page command | tests |
 |---|---|---|---|
 | `token-budget` | none | — `--only token-budget` exits 2, `no surface named` | `pytest` |
-| `current_projects` | none | full `pagespec --detail`, which is the census run | `pytest` |
+| the index itself | none | full `pagespec --detail`, which is the census run | `pytest` |
 | `car-price-ml` | `car-price-ml`, `car-price-ml/app` | **two runs**, one per key | `pytest` |
 | `wroclaw-air-insights` | `wroclaw-air-insights` | **`--fetch` required** — without it the run exits 0 having read nothing | `pytest` |
 | `mini-traceroute` | `mini-traceroute` | `--only mini-traceroute` | **CTest, not pytest** — no Python at all; `pytest` collects nothing and exits 5 |
@@ -2042,3 +2056,4 @@ question rather than as a defect.
 | 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
 | 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
+| 2026-09-17 | **v3.0**, both prompts | both prompts, and §3.1's and §3.3's own rows, named `current_projects` as the repository a session branches and commits in — and `0011` §6 route A made it the archive that same day, where a commit reaches no reader at all. **Session 4 is the worked instance**: it was scanned, reviewed and twice errata'd on a branch in a repository that by evening accepted no commits, and it reached a reader only by transplant | **The index is `P0w3r223/portfolio-index`**, and that is where a session branches, commits, and opens its pull request. The archive is outside the queue and outside the corpus: `0011` is its audit of record — every blob in its object database and 533 commits across every ref, which no scan session can better — §3.1's note carries the reasoning, and **the denominator stays fifteen**. A session that finds an unpushed branch in the archive should read `0012` §4 before doing anything with it: route A rewrote no history, so the branch's base survives under the same SHA and a cherry-pick applies, and two commands settle in advance whether it can conflict |
