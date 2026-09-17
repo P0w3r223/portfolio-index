@@ -280,6 +280,7 @@ when the first closure landed and the header read literally as a list of what is
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
 | 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
 | 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 · R-1 stands | the notebook end to end, two ADRs as arguments, the report's rows |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -906,6 +907,654 @@ value** — which is the E2 observation above and is the one gap in this row tha
 finding rather than merely defer one. And `constraints.txt` was read for `duckdb` alone; the
 other pins are unverified against anything.
 
+### A-4 — `pl-jobs-lora`, session 4
+
+Scanned 2026-09-17 at index `467a92d`, gitlink `8fe2e02`, entry state clean: index `HEAD`
+identical to `origin/main`, twelve pointers matching their own `origin/main`, nothing
+uncommitted, no open portfolio pull request. **Five axes**, E being E0 and E2's third-party
+half.
+
+*This row was written on a local branch in the repository that has since become the archive,
+and it reaches a reader by transplant.* The operator's standing instruction for the session was
+that no work reaches a remote — no push, no pull request, no issue touched — with read-only
+`git fetch` and `gh` permitted so the entry state and axis D could be answered at all. The scan
+prompt's *"commit and push the index audit branch"* was therefore half-executed by design.
+**Its second half is executed by the merge of the pull request carrying this line, and against a
+different repository**: the three commits were cherry-picked onto `portfolio-index`, because by then
+`current_projects` accepted no commits. *The sentence this replaces said the row was "published
+by nothing" — which its own merge falsifies. `ST-1`, committed inside the one paragraph written
+to stop a reader inferring a publication state that did not hold, and caught by reading the
+paragraph before pushing it rather than by any instrument.*
+
+**The measurements above and below are unchanged and stay frozen at the HEAD they name**, which
+§1 requires of every figure in this document and §4 repeats for the axis cells. `467a92d` is an
+ancestor of this repository's `main`, and `8fe2e02` is the gitlink this row's own tree records,
+so both resolve for a reader holding the published index — which they do because route A cloned
+`main` without rewriting history. *That is a property of the route and not of this row*: under
+`0011` §6's route B, `467a92d` would have had to be re-derived. **The gitlink would not.** Route
+B rewrites this repository's history and not the sibling's, so *"every SHA changes"* is simply
+false about a submodule pointer. *This sentence said both would have to move, which is the
+review of the transplant catching the transplant's own paragraph overreaching about the route
+it was written to explain.*
+
+*And the `Index SHA` cell means the archive's HEAD at scan time, not this repository's.* §4
+defines that column as `git rev-parse HEAD` **of this repository**, which `portfolio-index` did
+not satisfy on 2026-09-17: it stood at `d7d107d`. The entry state quoted above has the same
+shape, measured by a `tools/entry_state.py` whose `INDEX` still named `current_projects`. Both
+cells are correct as measurements and neither meets the definition a reader of *this* repository
+will apply to them, which is what a transplanted row owes saying rather than leaving a later
+reader to derive the mismatch and file it.
+
+**E0 — `finding` · metadata, and it is R-1's.** Three identities and no fourth:
+`P0w3r223 <p0w3r2243@gmail.com>` 101 fields, GitHub's noreply 16, and
+`Piotr Cząstkiewicz <p0w3r2243@gmail.com>` 9. **9 of 63** commits carry the real name,
+reproducing R-1's table cell exactly by R-1's own method — counting commits, not fields.
+`git rev-list --all --count` and `git rev-list main --count` both read 63, so no unmerged
+history is hiding a fourth identity.
+
+*The real name also stands in eight tracked files, and that is not R-1.* `LICENSE`:3's
+copyright line, the `Author:` field of all six ADRs, and `docs/research/f6-data-availability.md`:5.
+That is deliberate authorship on the owner's own CV portfolio — the same shape `apply-scout`
+carries in thirteen files and `it-job-radar` in eight — and no earlier session raised it.
+Written down so a repair acting on R-1 does not sweep content R-1 was never about.
+
+**E2 — `clear` · third-party data, and the reason is structural: this repository publishes
+none.** That sentence is the difference from A-2 and A-3 and it decides the repair, so it comes
+before the evidence.
+
+*The committed data artifacts are six files and every one is invented.* **Four** JSONL under
+`data/fixtures/labeling_qa/` — `processed/train.jsonl` holding three records,
+`processed/test.jsonl` two, plus `proposals.jsonl` and `human_gold.jsonl` — carry `offer_id`
+`fx-001`…`fx-005` and `url` `https://example.test/o/fx-00N`; `data/fixtures/offer_sample.html` is a synthetic
+`__NEXT_DATA__` page whose employer is `Acme Sp. z o.o.` and whose id is `fixture-001`, and its
+own first comment says *"Not real data"*; `data/normalization/tech_aliases.yaml` is a
+vocabulary. No real posting prose, no employer, no person, in any of them. That directory's own
+`README.md` states the exemption and `ADR-0005` carries the reasoning.
+
+*The two committed result artifacts are aggregates and were read rather than assumed.*
+`results/eval/report.json` holds `metadata`, four `variants`, `bootstrap` and `ceilings` — counts,
+F1 means, confidence intervals and token caps. **No `offer_id`, no `url`, no `prose` key anywhere
+in the structure**, and `results/eval/report.md` is its rendering.
+
+*The derived dataset never reaches git, and where it does go the code makes it private.*
+`.gitignore` excludes `data/raw/`, `data/processed/`, `data/dataset_slice.json`,
+`results/eval/predictions/` and the three labeling-QA JSONL that echo prose. **Three of those
+five groups name the ADR that decided them** — `:15` ADR-0002, `:37` ADR-0005, `:43` ADR-0003 —
+and the S2 block at `:32`, which carries `data/dataset_slice.json` and `data/processed/`, names
+none. `dataset/hf_dataset.py`:66 calls
+`api.create_repo(repo_id, repo_type="dataset", private=True, exist_ok=True)` — so the freeze, if
+and when it runs, is private by construction rather than by remembering.
+
+*The closest thing to third-party content in the tree was read.*
+`docs/research/f6-data-availability.md`:26 names one live offer by a generic title and city —
+*Analityk systemowo-biznesowy*, Warszawa — and quotes **no prose**, only per-section character
+counts. No employer, nothing identifiable to a person.
+
+**What this is not, stated so a repair does not copy A-3's E-3 remedy into a repository that
+does not need it.** `LICENSE` is MIT with no carve-out and there is no `NOTICE` — which in
+`it-job-radar` was exactly the finding. Here that is correct, because the MIT grant covers no
+third-party data: none is committed. The attribution sentence — *"Attribution: theprotocol.it,
+reused via `it-job-radar`"* — stands in `README.md`:376 and `docs/index.html`:239 and **no test
+holds either**, but it is a courtesy statement about data this repository does not distribute,
+not a term withholding a right the licence grants. A `NOTICE` here would carve nothing out of
+nothing.
+
+*The cheapest observation that would falsify this `clear`.* `git grep -nI 'offer_id' -- data/
+results/` returning an id outside `fx-`/`fixture-`, or `results/eval/report.md` turning out to
+hold a per-record table rather than the four-variant aggregate it is. Both are one command and
+neither was left to inference.
+
+**A — `finding`, and it is one narrow defect against an otherwise strong module.** The
+numbers first, from the instrument and not from reading: **233 tests pass** — in 2.64 s on this
+machine, and a wall-clock second is the one figure in this row no reader can reproduce — and
+`ruff check .` reports *All checks passed!*, both under the repository's own
+`.venv/Scripts/python.exe`, which carries the editable install CI produces with
+`pip install -e ".[dev]"`. §6's 2026-09-14 correction did not bite here — the install path
+existed, so no `PYTHONPATH` was needed, and this row says which was used because that row
+says to.
+
+Error handling is the strong half: across **30 modules** in `src/` there are
+**zero bare `except`, zero `except Exception`, zero `except BaseException` and zero `Any`
+annotations**, and all six `except` handlers name their type. An AST walk finds
+**four functions over `good-practices.md`'s fifty lines** — `train/qlora.py`:122
+`run_training` 94, `eval/bootstrap.py`:141 `bootstrap_variants` 72,
+`inference/predict_gguf.py`:52 `run_gguf_predictions` 56 and `eval/bootstrap.py`:265
+`render_markdown` 51 — and the largest module, `dataset/labeling_qa.py`, is 391 lines.
+Nothing approaches the 800 ceiling.
+
+**The finding is `dataset/collect.py`:195, and it is the same shape A-3 cleared in the sibling
+for precisely the opposite reason.** Inside `_fetch_examples`:
+
+```python
+except requests.RequestException:
+    continue
+```
+
+Nothing is recorded. `it-job-radar`'s `collect/theprotocol.py`:193 is the same handler over
+the same platform and A-3 cleared it explicitly *because* `state` is initialised to
+`FETCH_FAILED` before the `try` and a `finally` writes the outcome into the frame, leaving the
+URL eligible for retry. Here the URL is dropped and the only signal a run emits is
+`print(f"[collect] {len(urls)} urls -> {len(out)} usable")` at `:207` and `:223` — one gap
+folding **three** different causes: a request that failed, a page `parse_offer_page` returned
+`None` for, and an offer dropped by `data.min_prose_chars`. `good-practices.md` §3 names this
+by its name, and §3's own remedy applies without redesign: the loop is right to drop a bad URL,
+so the fix is a counter, not a raise.
+
+*What makes it worth a row rather than a note is what the README does with that gap* — see
+**B**, where the whole `800 → 710` difference is attributed to deduplication, and this is the
+handler that can also produce it.
+
+**And that path is exercised by nothing, measured rather than assumed.** A stdlib call-tracer
+over the suite — `sys.settrace`, no dependency installed — reports **51 of 201 functions in
+`src/` are never called**, and `collect.py`'s entire network half is six of them: `_session`,
+`fetch_sitemap_urls`, `_spread_sample`, `_fetch_examples`, `collect_dev_slice` and
+`collect_dataset`. `tests/test_collect.py` holds five tests and every one of them enters
+through `parse_offer_page` over the synthetic fixture; `git grep` for `RequestException`,
+`raise_for_status` or `status_code` across `tests/` returns **nothing**.
+
+*Most of the 51 are defensible and this row says so before naming the four that are not.* They
+are the I/O boundary the architecture isolates on purpose — model loading, HF Hub push/pull,
+MLflow, the CLI `main`s, the paid API client. **Four are pure functions with branches:**
+`collect.py`:175 `_spread_sample`, whose `n >= len(urls)` short-circuit and
+`step = max(1, len(urls) // n)` guard are exactly the arithmetic a sampler gets wrong;
+`eval/report.py`:80 `best_recall`, whose `None`-filter decides what a ceiling is compared
+against; and the two `as_dict` serialisers at `eval/bootstrap.py`:71 and `eval/ceiling.py`:59.
+A pure function is the cheapest thing in this repository to test and these four are the ones
+the split does not excuse.
+
+**The artifact the page stands on is verified by nothing in the suite — and it currently
+holds.** `tests/test_docs_page.py` is the **only** test that opens the committed
+`results/eval/report.{md,json}`, and it opens them as the *source of truth* the page is checked
+against, never as an artifact to validate; `tests/test_eval_report.py`'s 283 lines build
+synthetic reports in `tmp_path`, and `write_report` is in the never-called list above. So the
+chain is page → `report.md` → nothing. **This session closed the loop by hand**: reconstructing
+`ComparisonReport` from the committed `report.json` and calling `render_markdown()` reproduces
+the committed `report.md` **byte for byte**, and `as_dict()` round-trips the JSON exactly. The
+finding is therefore not a divergence but a carrier — one test, and the property is held.
+*Its limit, stated:* this proves the two committed files agree with each other, not that either
+reflects the gitignored `results/eval/predictions/` they were computed from. Nothing committed
+can prove that, which is the same boundary `ADR-0004` draws in the index.
+
+**The `0010` §5 loop shape was looked for and is not here — recorded because a negative from a
+sweep is worth more than an unasked question, and measured because this row's own first draft
+asserted the direction from reading.** Both module constants the page guard iterates fail
+**closed**, run as §3.6 asks with a collected-green baseline and the mutation applied in
+memory: unmutated, both tests pass; with `ARTIFACTS` emptied the provenance test goes **red**
+(*"the page prints ['0', '0.01', …]"* — every figure becomes unsourced), and with
+`TILE_SOURCES` emptied the tile test goes **red** on
+`assert len(tiles) == len(TILE_SOURCES)` against the page's own four tiles. `test_agreement.py`:116's
+`for b_name in BUCKETS` iterates a vocabulary the module defines and the assertions around it
+name buckets literally. This is the first of the four scanned repositories where that shape is
+absent rather than mitigated.
+
+**One citation inside a guard resolves to nothing, and it is `CLAUDE.md`'s own warning in a
+sibling's tree.** `tests/test_docs_page.py` cites `ADR-0012` twice — at `:39` for the rule that
+admits a committed non-generated source, and at `:192` as the authority for the whole
+provenance test. **This repository's ADRs run 0001–0006**, and the index's run
+0001–0009; `ADR-0012` exists only as `apply-scout/docs/decisions/0012_the_page_quotes_the_artifacts.md`.
+The same file qualifies its other cross-repository citation — *"`ADR-0004` (in the private
+index)"* at `:3` — so the convention is known and applied once out of twice. And `ADR-0004` is the
+sharp case: **this repository holds its own `docs/decisions/0004-training-infra.md`**, so a
+reader who drops the qualifier lands on a training-infra document. **The index already has
+the instrument and it is pointed the wrong way**: `python -m tools.citations` classifies
+`docs/audit/0007`:528's own `ADR-0012 §2` as `foreign` — *names a document this index does not
+carry*. It reads the index's 69 tracked files and no submodule's, so the same citation two
+directories down is invisible to it.
+
+*And the sentence above falsified itself as it was written, three times, which is a better
+finding than the one it was trying to make.* Its first draft said `foreign` held *"exactly one
+such row"* — and writing that sentence quoted the reference, which made it two; correcting the
+figure in the errata below quoted it again, which made it three. **The instrument cannot tell a
+citation from a quotation of one**, so a census of foreign references is not stable under being
+described, and every figure typed into this paragraph is a figure this paragraph invalidates.
+
+**No count is given here on purpose.** `python -m tools.citations` prints the current one, and
+the index reaches the same conclusion for the same reason in `tools/pagespec/__main__.py`'s
+`GATE` — *"the surviving count is printed above rather than typed here"*, where *above* is the
+run's own `gate policy` block. `CLAUDE.md` says it twice in its own words and not in these.
+*This quotation was attributed to `CLAUDE.md` until the review of the transplant: the sentence
+is in neither its `467a92d` nor its current text, and "printed above" would mean nothing in a
+file that prints nothing. A quotation resolving to the wrong file is the class named on
+2026-09-17 — `tools/citations.py` answers whether a section exists, never whether it holds
+what the citing line says it holds — and this one names no section at all, so no instrument
+here could have been the one to ask.* Nothing gates either way: only
+`unresolved` does, and it is 0. **Found by the `code-reviewer` pass, not by this session's
+battery** — the third time that pass has caught a class the battery structurally cannot, after
+the two `0010` §5 already records, and the first time the class was *self-reference* rather than
+staleness.
+
+**The two integers that reach that divisor are the two `config.py` does not validate.**
+`_validate_train`, `_validate_eval` and `_validate_labeling_qa` are called at load and between
+them raise on twenty-odd out-of-range values — `lora_r` positive, `dev_fraction` within (0, 1),
+`latency_percentiles` within [0, 100], `human_sample_size` positive. **`data` and `probe` get
+no validator at all**, beyond `:145`'s *"the base-model probe needs at least two candidates"*.
+So `data.sitemap_offers_sample` and `probe.dev_slice_size` — the two knobs that become
+`_spread_sample`'s `n` — are the unchecked ones, and a `0` in `configs/config.yaml` surfaces as
+`ZeroDivisionError: integer division or modulo by zero` from inside the collector rather than as
+a configuration error at load. *Verified, not reasoned:* `_spread_sample(["a","b","c"], 0)`
+raises it. `good-practices.md` §2 is the rule — validate at the boundary, and make the interior
+trust what it is given — and this file follows it for three sections of five.
+
+*The cheapest observation that would falsify the rest of this axis.* Run the never-called census
+against a **mutated** suite — delete `tests/test_docs_page.py` and confirm the count moves — since
+a tracer that silently attached to nothing would report the same 51 for the wrong reason. And for
+the byte-identity above: regenerate nothing, but change one digit in the committed `report.json`
+and confirm the round-trip stops matching; a comparison that passes on any input proves as little
+as a guard that cannot fail.
+
+**B — `finding`.** Five, ordered by what a reader loses. The axis was bound by artifact rather
+than by file, as the prompt says: every figure, flag and platform name the docs claim, against
+whatever in the repository still produces it.
+
+**B-1. The README reproduces the evaluation table with three cells rounded away from what
+`results/eval/report.md` prints — and the commit that corrected four other cells of that same
+table is the one titled *"the README is a surface too"*.**
+
+| README `:246`–`:247` | `results/eval/report.md` | |
+|---|---|---|
+| `102.6` | `102.58` | a figure no artifact prints |
+| `2.5` | `2.47` | a figure no artifact prints |
+| `4.7` | `4.68` | a figure no artifact prints |
+| `67.9` | `67.90` | **legal** — `0007` §5.0 calls a trailing zero typography |
+
+`305f4e2` (2026-09-06, #15) went through that table by hand and fixed **four cells in two
+rows** — `21.4`→`21.43`, `103.0`→`103.02`, `2.3`→`2.25`, `4.1`→`4.13` — and left the other two
+rows exactly as they were. **No guard was added in that commit or since**: a `git grep` for
+`README` across `tests/` is empty, so the README is read by nothing, while `docs/index.html`
+has 327 lines of `tests/test_docs_page.py` over it. This is `CLAUDE.md`'s own standing rule
+arriving from outside — a hand pass over a table is a hand count, and a hand count in this
+portfolio has produced 15, 18 and 19 against a true 20.
+
+*Measured, and the measurement's own blind spot named.* The README's figures were swept
+against **all 81 committed non-README files** — `git ls-files` returns 82, which is §2.1's own
+inventory figure for this repository, still current, as is its `63` commits — using the
+repository's own `_canonical` and `_NUMBER` from `tests/test_docs_page.py`, over a README body
+with fenced code blocks and markdown link targets removed: **96 figures, 3 that nothing else
+prints** — `76`, `4.7`, `102.6`. *The first run of this sweep quoted **76 files**, which was its
+own filter's selection and not the corpus*: it dropped `.gitignore`, `.mcp.json`, `CLAUDE.md`,
+`LICENSE` and the notebook. Re-run over all 81 the three unsourced figures are identical, so the
+verdict never depended on it — but a sweep reported as *all* when it was a subset is the defect
+this row raises against other people's figures.
+**`2.5` is not among them and is wrong all the same**, because `configs/config.yaml`:10 and
+`ADR-0001`:42–43 spell the model key `qwen2.5-1.5b` in lower case, which donates a bare `2.5`
+to the source side. The page guard's exemption for that shape is case-sensitive **and applied
+only to the page side**, never to the artifacts. It was found by reading the two tables against
+each other, which is the observation: the sweep caught two of three, and no sweep of this
+design catches the third.
+
+**B-2. The build census is carried by a file `.gitignore` excludes, and two of its figures pass
+a naive sweep only by accident.** README:113–115 states *"800 offers fetched → 710 records (90
+reposts deduplicated by id and prose hash), split 568 train / 142 test … title & work-mode
+100 %, seniority 99 %, expected-tech 76 %, salary 31 %"*. The artifact that produces those
+counts is `data/processed/manifest.json`, which `.gitignore`:34 keeps out of the tree. The
+sentence carries **nine** figures — `800, 710, 90, 568, 142, 100, 99, 76, 31` — and of those
+only **four** are checkable as the thing the sentence claims: `710` in `ADR-0002`:71, `568` in
+`configs/config.yaml`:109 and `ADR-0006`, `142` in `results/eval/report.json`, and `31 %` in
+`ADR-0006`:94. **`76 %` is printed by nothing at all.** Of the remaining four, `100` resolves
+honestly enough elsewhere, and the other three survive a sweep on a technicality, in two
+different ways. `90` and `99` are "printed" only because
+`ADR-0006`:114 and `configs/config.yaml`:110 write `p90` and `p99` about token-length
+percentiles — a tokeniser reads the digits and cannot read the `p`. And `800` is worse, because
+it resolves to something that *looks* like its subject and is not: `ADR-0002`:12 asks for
+*"400–800 examples"* and `configs/config.yaml`:119 sets `sitemap_offers_sample: 800`, so a
+reader checking *"800 offers fetched"* finds the **target** twice and the fetched count never.
+So the reposts count, the seniority coverage and the fetch itself are unverifiable and *look*
+verifiable, which is worse than either.
+
+*And this is where **A**'s finding lands.* The whole `800 → 710` gap is attributed to
+deduplication. `collect.py`:195 drops a `RequestException` into that same gap without recording
+it, so the sentence's arithmetic is not merely uncheckable — its *explanation* is one the code
+can silently falsify.
+
+**B-3. The freeze on the HF Hub is stated as done on the published page and as deferred in the
+README, and the page's copy is invisible to a single-line grep.** `docs/index.html`:237–238 —
+*"the processed dataset is frozen | on the Hugging Face Hub"* — against README:109,
+*"freezing them on HF Hub (`--push`, needs `HF_TOKEN`) is **deferred** until the dataset repo is
+provisioned"*, with README:374 taking the page's side **265 lines below** README:109 — the
+same file contradicting itself, not two documents disagreeing. The
+repository's code agrees with README:109: `configs/config.yaml`:122 reads *"push deferred (needs
+HF token)"* and `dataset/hf_dataset.py`'s first docstring says the push is *"intentionally not
+run during S2"*. Whichever way the owner resolves it, **one of two published sentences is false
+today**, and a recruiter reads the page.
+
+*Recorded as a method note as much as a finding:* a grep for the page's sentence returns
+nothing, because the claim wraps across a line break between `frozen` and `on`. That is the
+second repository in which a finding's own text was the thing a single-line grep could not
+see — A-3's D row was the first, and the guard written there folds each line with the next for
+exactly this.
+
+**B-4. `ADR-0004`'s amendment retired Colab, named the two classes of site it had fixed, and
+fifteen lines outside those two classes still say Colab.** The amendment is honest and its claim
+is **true as written**: *"The docstrings and README that said 'Colab' now say hosted GPU"* — a
+grep for `Colab` across `src/` returns nothing, and the README's two remaining hits are both
+retrospective. What no sentence covered is everything else. **Nine lines in five files a contributor acts
+on**: `pyproject.toml`:17 (the dependency-split rule, *"installed ONLY on Colab"*, which
+`CLAUDE.md` restates as a hard rule) and `:60`; `.github/workflows/ci.yml`:16; `.gitignore`:9;
+`configs/config.yaml`:87 (*"Colab-only trainer"*) and `:98` (*"free-Colab T4/P100"*);
+`requirements-train.txt`:1, `:4` and `:5`. *This read **eight** through two rounds of errata,
+against an enumeration that has always listed nine and against the fifteen the same errata
+corrected `fourteen` into. The instrument is `git grep -ci colab` per file — 2/1/1/2/3 at
+`8fe2e02`, which is the nine — and it was never run for this figure because the figure was
+never doubted.* **And six lines across two sibling ADRs**:
+`ADR-0003`:35, and `ADR-0006`:17, `:18`, `:36`, `:63` and `:104` — the last a step heading,
+`## Colab Step 0`, that a reader on Kaggle would follow. **The unit is the line and not the
+sentence**, because `ADR-0006`:17–:18 is one sentence carrying two of them; `git grep -c` counts
+lines, and a count given in sentences is a count no instrument reproduces.
+
+*This count was wrong twice before it was right, and the second time is the instructive one.*
+The first draft hand-counted twelve. The correction measured fourteen with `git grep -c 'Colab'`
+— **case-sensitively**, which silently dropped `requirements-train.txt`:**1**,
+`# COLAB-ONLY training dependencies — DO NOT \`pip install\` these locally.`, the loudest line in
+the file and the first thing a reader of it meets. A vocabulary sweep that is case-sensitive is
+a sweep that trusts the writer to have been consistent, which is the assumption the finding
+itself refutes.
+
+*And the third time is instructive too, because the command named here did not produce the
+figure beside it.* `git grep -ci colab` at `8fe2e02` reads **34 lines in ten files**. The
+fifteen is what survives three exclusions the paragraph had not written down: `ADR-0004`
+itself, which is the decision under discussion and carries 14 of the 34; `CLAUDE.md`'s 3, which
+state the *rule* — hosted GPU is Kaggle, not Colab — and are therefore not residue; and the
+README's 2 retrospective hits. 34 − 19 = 15, and 15 = the nine manuals plus the six ADR lines
+enumerated above, so the figure was right and its stated instrument was not. *This is the §5
+shape below — a figure from an instrument whose granularity or scope is not the claim's — and
+its tell here is the one that bullet names: the exclusions were the interesting part and they
+lived only in the reader's head.* The commands that do reproduce are per file: 2/1/1/2/3 for
+the nine, and `git grep -ci colab -- docs/decisions/0003-*.md docs/decisions/0006-*.md` for
+the six.
+
+This is `0010` §5's newest shape — *an amended ADR is a fan-out* — on its **second** repository,
+and it sharpens the entry: in `it-job-radar` the fan-out reached GitHub metadata a commit cannot
+carry, and here it reaches the packaging, the CI and the ignore file, which a commit carries
+perfectly well and which no sweep was run over. The amendment names *docstrings and README*; the
+defect is that naming the classes you fixed reads, to the next reader, as naming all the classes
+there are.
+
+**B-5. Two smaller claims the tree does not hold.** `.gitignore`:38 says *"only the numbers-only
+`report.{json,md}` under `results/labeling_qa/` is versioned"* — **nothing under
+`results/labeling_qa/` is tracked**, and `git log --all` over that path is empty, while the same
+sentence is true of `results/eval/`. And the census in `tests/test_docs_page.py`:~205 —
+*"262 figures admitted, 39 of them bare one- or two-digit integers"* — **was exactly right when
+it was written** and went stale **one commit later**: recomputed at `879b5df` with `879b5df`'s
+own tokeniser it is 262. **It took two commits and two unrelated causes to reach today's
+251, and the row's first draft credited both to one.** `305f4e2` added `_canonical`, folding ten
+trailing-zero duplicates → **252**; `36524c4`, the `Author:` migration, replaced the handle
+`P0w3r223` in the two ADRs on the artifact list and took the figure **`223`** with it → **251**.
+That last one is the detail worth keeping: the figure the artifact set lost is the one the same
+test file's `_META_CONTENT` comment names by hand — *"reading them as claims makes the account
+handle's `223` a figure the page has to source"*. The `39` survives both, because a bare integer
+has no trailing zero to fold. **And the same comment's other figure is stale too, unremarked
+until the review**: it says *"56 of the **59** figures this page prints"*, and the page prints
+**58** today. *Recorded as a correction to the record's own practice
+rather than as sloppiness*: the figure came from an instrument, and the commit that changed what
+the instrument counts did not re-run it — which is `0008`'s rule about a measurement frozen into
+prose, four lines from the code that produces it.
+
+**Flags: the flag bullet's fourth repository, and the sweep's second new occurrence.** The
+per-(module, flag) sweep ported from `apply-scout` reports **8 flags argparse defines that no
+documented command line shows**, and **0 the docs show that argparse does not define**. Two
+matter. `--fresh` (*"recompute every record instead of resuming from the predictions file"*) is
+defined **twice** — `inference/predict_gguf.py`:141 and `inference/predict_hf.py`:207 — and
+README:220 shows it under `predict_gguf` only; `predict_hf` is the **hosted-GPU** entrypoint,
+where re-running is the expensive one. And `probe.py`:266's `--candidates` appears in **neither**
+`README.md` nor `CLAUDE.md` in any form. The remaining six are `--limit` on five further modules
+and `dataset/run.py`'s `--push`, both of which the README documents in prose for one module and
+in no command line for the others.
+
+*The cheapest observation that would falsify this axis.* For **B-1**: regenerate
+`results/eval/report.md` and confirm the three cells still differ — if a re-run moves the report
+rather than the README being stale, the finding inverts and the README is the accurate one. For
+**B-4**: read `notebooks/train_qlora.ipynb` end to end rather than by grep; it is the one file
+that would settle whether any *executable* step still assumes Colab, and this session read only
+its imports and its secrets cell.
+
+**C — `finding`, and the checker is not the one that found it.** §3.3's command first, as the
+prompt requires: `python -m tools.pagespec --only pl-jobs-lora` reads
+
+> `pl-jobs-lora   clear, 3 undecided`
+
+and exits 0. The three are `4 h1` (a headline the checker cannot judge), `contrast marks`
+(*no site; 75 outside D5's obligation*) and `contrast ground` (*0 sites without a resolved
+ground*). Every gated clause passes, `contrast text` measures **34 of 34 sites, worst 5.17:1
+against a 4.5:1 threshold**, and clause 1 declares eleven tokens with both schemes present.
+**§2.2's baseline says *"4 or 5 undecided each"* and this run says 3** — §6's warning row, working
+exactly as written: the marks census moved under `ADR-0008` §10 and the row quotes the run the
+session made.
+
+**The figure an auditor would flag first is the one thing here that is completely correct, and
+it is recorded because the check cost something.** The h1 claims **94 %** — a ratio, and `0007`
+§5.0 forbids a re-derivation as firmly as it forbids a rounding. It is neither:
+`results/eval/report.md`:36 prints the sentence itself — *"`tech_expected`: 0.27 of a ceiling of
+0.28 — **94 % of what the input makes recoverable**"* — so the page quotes the artifact's own
+words, and `0.2657 / 0.2823 = 0.9412` reproduces it from `report.json` besides. The page
+computes nothing.
+
+**The finding is what that headline is about.** *"The best available model"* is
+`claude-haiku-4-5`, few-shot — a purchased API baseline. The project's own row, `QLoRA (ours)`,
+is still `–` across every column, which the status card says plainly three lines below. So the
+page's largest claim, its `<title>`, and its `og:title` are a figure about **someone else's
+model**, and `og:title` carries it without even the `— pl-jobs-lora` suffix the `<title>` has:
+a link pasted into Slack or LinkedIn renders as a bare boast with no subject and no project
+name. That is the one surface fragment a recruiter meets before deciding whether to click.
+
+*Three smaller things in the same sixty seconds.* The h1 **names no field**: the 94 % is
+`tech_expected` recall against a model-free ceiling, and read alone it is an overall-accuracy
+claim, where overall field F1 is 0.51. The sub's **first** sentence — *"A field scored 0.01 for
+every model, the frontier baseline included — which is usually not a measurement of the
+model."* — needs two readings: it withholds the field's name, offers `0.01` with no scale, and
+turns on a double negative. And **what the project is** arrives in the sub's third sentence,
+about seventy words in; the first screen runs 120 words before the status card.
+
+*Proposed wording, shorter and not more generic — every figure in it is one an artifact already
+prints, so the page guard still passes.*
+
+| | |
+|---|---|
+| h1 today | *The best available model recovers 94% of what the input makes recoverable* |
+| proposed | *A frontier API reaches 94 % of a model-free 0.28 ceiling* |
+
+The replacement is **11 words against 12, and 56 characters against 73** — measured, because
+the first draft of this row claimed *two words shorter* for a replacement that was five words
+longer, which is the defect B-1 is about, committed inside the paragraph proposing the repair.
+It names **whose** 94 % it is, and puts `0.28` — the model-free ceiling, this repository's
+genuinely original measurement, currently in a tile below the fold — beside it. Both figures are
+in the guard's admitted set, so the page test still passes. Then move the sub's third sentence (*"A QLoRA
+fine-tune of a small Polish LLM that turns job-posting prose into structured JSON…"*) to first,
+where the `description` meta already has it, and give `og:title` the same `— pl-jobs-lora`
+suffix `<title>` carries.
+
+**What is right here, said because a row of findings misrepresents this page.** The status card
+is the best in the portfolio at its job — *"in progress — baselines measured, fine-tune
+pending… its two rows are shown empty rather than estimated"*. The two `note` paragraphs refuse
+two easy overclaims by name: the local rows are priced `–` and **not** `$0` because no marginal
+cost was recorded, and their latency is CPU time and *"not comparable to the API's"*. And there
+is a whole section headed *"Correction: the salary numbers published before 2026-08-18 were
+wrong"*, with the withdrawn figures struck rather than deleted — the behaviour `0008`'s errata
+sections exist to encourage, on a public page, unprompted.
+
+*The cheapest observation that would falsify this axis.* Open the page at 360 px and check
+whether `.table-wrap` actually scrolls the eight-column table — clause 3 reports the scroller is
+**declared**, which is not the same as reading it in a viewport, and this session judged the
+markup and never rendered it. That is not this session's invention: `python -m tools.spec` lists
+`c3.s2` — *"The wrapper must actually have somewhere to scroll when the table needs it"* — among
+the sentences **carried by nothing**, with `ADR-0004` §4 recording the decision to defer it. So
+the falsifier for this row and the portfolio's open geometry question are one measurement.
+
+**D — `clear`, and it is the cleanest of the four scanned so far.** `gh issue list --state open`
+returns **nothing**, and `--state all --limit 30` also returns nothing — this repository has
+**never had an issue**, so A-3's own falsifier for a clean D (a *closed* issue describing code
+that has since moved) has no subject here. `gh api .../branches` lists exactly `main`: no stale
+branch. The last CI run, `34334073914` on 2026-09-09, is `success`, and so is the
+`pages-build-deployment` beside it. `licenseInfo` reads `mit`, matching `LICENSE` and
+`pyproject.toml`'s `license = "MIT"`. `homepageUrl` is
+`https://p0w3r223.github.io/pl-jobs-lora/`, which is the surface `sources.SURFACES` reads.
+
+**A finding was written and then withdrawn, and the withdrawal is the useful half.** The
+repository description read, through `gh repo view --json description` piped into this session's
+console, *"an honest accuracy `Ă—` cost `Ă—` latency comparison"* — which is exactly what a UTF-8
+`×` looks like after a CP1250 round trip, on the repository's front door, twice. Fetched as bytes
+instead — `gh api repos/... --jq .description` written to a file and decoded explicitly — the
+description holds **one non-ASCII codepoint, `U+00D7 MULTIPLICATION SIGN`, twice, and both are
+correct**.
+The mojibake was this session's pipeline and never GitHub's.
+
+*This is the second instance in two sessions of one class*, and §6 gains its entry: session 3
+nearly raised 18 `ModuleNotFoundError` collection errors as a repository finding when they were
+an environment verdict. **An instrument's own encoding is part of the instrument.** A `gh`
+reading that shows mojibake in this environment has to be re-taken as bytes before it is a
+finding, and the cost of not doing so would have been a correction filed against a repository
+that is correct.
+
+*Two things checked and deliberately not raised, so a repair does not raise them from the
+row.* **The eight GitHub topics and `pyproject.toml`'s five `keywords` diverge in both
+directions** — `llm`, `nlp`, `polish`, `python`, `structured-outputs` are topics only;
+`polish-nlp` and `structured-extraction` are keywords only. `apply-scout`'s `CLAUDE.md` states
+the rule that would make this a defect — *"`pyproject.toml`'s `keywords` lead; the GitHub topics
+copy them"* — and **this repository's `CLAUDE.md` does not carry it**, exactly as A-3 found for
+`it-job-radar`. That is now **two of four** scanned repositories without the rule, which promotes
+it from a per-repository observation to the single cross-repo sweep A-3 asked for. And the
+description's *"QLoRA fine-tune turning Polish IT job-posting prose into structured JSON"* is in
+the present tense for a fine-tune that has not run — but unlike A-3's D-3, which advertised a
+technology an ADR had **dropped**, this advertises the project's stated goal under the project's
+own name, and the page's status card says *"fine-tune pending"* in its heading. Naming a goal is
+not the same defect as advertising a retirement.
+
+*The observation that would have falsified this `clear` was run rather than written down.*
+`gh run list` cannot distinguish *CI passes* from *CI passes on the one workflow still enabled*,
+because a **disabled** workflow never appears in a run listing.
+`gh api repos/P0w3r223/pl-jobs-lora/actions/workflows` answers the question directly: two
+workflows, `.github/workflows/ci.yml` and `dynamic/pages/pages-build-deployment`, **both
+`active`**, and the first is the only workflow file the tree holds. What is left un-falsified is
+narrower: this session never confirmed that the homepage actually answers 200 — §3.3 puts this
+repository outside `--fetch`, so the surface was judged from the committed file.
+
+**A-4 errata, 2026-09-17 — three rounds, and the rounds found different classes.** Recorded
+rather than quietly fixed, because `CLAUDE.md` says to and because *what* was wrong is the
+point: the row spent its B axis on a hand pass over a table and a figure frozen into prose, and
+then hand-counted three times. **Round one was this session's own battery** — seven corrections,
+six of them hand counts, every one findable by re-reading. **Round two was the `code-reviewer`
+pass** — ten more, and not one of them was re-readable: each needed a command re-run against a
+state the row had already moved past. **Round three was the `code-reviewer` pass over the
+transplant**, recorded at the end of this section. *That division is the row's most portable
+result.* `0010` §5 records that this pass has twice caught a class the battery structurally
+cannot; rounds two and three are the third and fourth, and now with a stated mechanism — **a
+battery checks whether a figure is right, and a second reader checks whether it is still right,
+and about the thing it names.**
+
+*No total is written here, and the header carried one until round three.* It read **eighteen**,
+which was seven plus eleven, and the eleven counted a row whose own middle cell says
+`unchanged` — *"both fail closed"* → *"measured"*, round one's fix confirmed independently,
+which is a confirmation and not a correction. A hand count of a table, inside an erratum about
+hand counts, in a document whose standing rule is that figures come from an instrument. The
+derivation, for a reader who wants a number: count the rows below whose middle cell is not
+`unchanged`. That keeps answering after round four; a typed total does not.
+
+| what it said | what it says now | how it was wrong |
+|---|---|---|
+| *"the committed data artifacts are **seven** files… **five** JSONL"* | six files, **four** JSONL | a hand count. `git ls-files data/` returns nine paths, two of them `.gitkeep` and one that directory's `README.md`; *"three train, two test"* counts **records** and was read back as files |
+| `f6-data-availability.md`:29 | `:26` | a line number read off a `sed` window's offset instead of `grep -n` |
+| `.gitignore`:33 | `:34` | the same, twice: `:33` is `data/dataset_slice.json` |
+| `.gitignore`:40 | `:38` | `:40` is `results/labeling_qa/review_queue.jsonl` |
+| *"**twelve** sites… **four** sentences in two sibling ADRs"* | **fourteen lines**, six of them in the ADRs | a hand count in a unit the enumeration did not use. `git grep -c` counts lines; `ADR-0006`:17–:18 is one sentence over two of them, so *sentences* and *lines* disagree and the row mixed them |
+| *"the replacement is **two words shorter**"* | 11 words against 12 | the proposal as first drafted was **five words longer** than the headline it replaced — an unmeasured comparative inside the paragraph proposing a repair for unmeasured figures |
+| *"both fail **closed**"*, asserted from reading | the same verdict, now measured | §3.6's battery, applied in memory: green unmutated, red with each constant emptied. The claim was right; the method was not |
+
+
+*Round two — found by the `code-reviewer` pass, against `cfa38e4` and its corrections.*
+
+| what it said | what it says now | how it was wrong |
+|---|---|---|
+| *"one of exactly one such row in **1 975** references"* | no figure at all, and the reason given | **the sentence falsified itself as it was written, three times over**: quoting `ADR-0012 §2` made `tools.citations` count a second foreign reference, and correcting the figure in this very table made it a third. The instrument cannot tell a citation from a quotation of one, so the count is unstable under description and the row now refuses to carry it |
+| *"the **next** commit added `_canonical`… and the sentence now reads 251"* | 262 → **252** (`305f4e2`) → **251** (`36524c4`) | two commits and two unrelated causes credited to one. The second is the `Author:` migration taking the figure `223` out of the artifact set — the very figure that test file's own comment names |
+| *"**fourteen** lines still say Colab"* | **fifteen** | the correction was measured with `git grep -c 'Colab'`, case-sensitively, which drops `requirements-train.txt`:1's `COLAB-ONLY` — the loudest line in the file |
+| *"swept against **all 76** committed non-README files"* | all **81**; 76 was the filter's selection | a subset reported as a corpus. Re-run over all 81 the three unsourced figures are identical, so no verdict moved |
+| *"of the **eight** figures… the other **four**"*, naming three | **nine** figures, four checkable | the sentence carries `100` and `31` too; the split lost `31 %` between the count and the enumeration |
+| *"thirty lines from the README's own"* | 265 lines below README:109 | a clause with no noun and a distance that was never measured |
+| *"each with the ADR number beside it"* | three of the five groups do | an overreach: the S2 block at `.gitignore`:32 names none |
+| *"one non-ASCII **character**"* | one codepoint, **twice** | the same paragraph says *"twice"* two sentences earlier |
+| *"233 tests pass in 2.64 s"* | 233 tests pass, 2.64 s on this machine | a wall-clock second is the one figure in the row no reader can reproduce |
+| *"56 of the 59 figures this page prints"*, unremarked | the page prints **58** | the guard comment's *second* stale figure, which round one did not notice while correcting its first |
+| *"both fail closed"* → *"measured"* | unchanged | round one's own fix, confirmed independently |
+
+*The generalisable half, and it is not flattering.* The scan prompt's standing rules already
+say **figures come from an instrument, never a hand count**, and this row cites that sentence
+in its own B-1. Every one of the six was produced by reading output that was already on screen
+rather than by asking a command the question — which is the cheaper failure mode than
+carelessness and the harder one to notice, because the number *looks* derived. The fix that
+would have caught all six is mechanical: a count that appears in a row has to be pasted from a
+command in the same breath, and a line number has to come from `grep -n` and never from
+arithmetic on a window. **Nothing in the five verdicts moved**, across both rounds, and that is the
+one thing these tables are not evidence for: eighteen corrections to the prose left
+`E2 clear`, `A finding`, `B finding`, `C finding` and `D clear` exactly where the measurements
+put them. The findings were measured; the sentences around them were not.
+
+**One thing the scan prompt says about this repository that is true and incomplete.** §3.3's
+axis-A paragraph reads *"Ten repositories carry `.codegraph/`; `doc-extract` and `pl-jobs-lora`
+do not."* Correct — and this repository carries a **different** index, `.code-review-graph/`,
+declared in a tracked `.mcp.json` and present on disk, with `CLAUDE.md` naming both the MCP
+server and the `uvx code-review-graph` fallback. A session reading the prompt's sentence as *no
+index here* would leave a working instrument unused. Not a finding against the repository; a
+note for whoever scans `doc-extract`, which may or may not be the same case.
+
+**Not checked.** `notebooks/train_qlora.ipynb` was read for its imports, its secrets cell and its
+output state (**zero outputs, every `execution_count` null**) and **not end to end** — which is
+the one gap that could turn B-4 from a documentation finding into a code one. The six ADRs were
+read where a citation, a figure or a platform name pointed into them; `ADR-0003` and `ADR-0006`
+were not read as arguments. `results/eval/report.json` was read by structure and by the four
+tile cells the page quotes, **never row by row**. The GGUF and HF inference paths were measured
+by the call-tracer and never executed, and nothing that costs money or a GPU was run. E1 was not
+re-swept: §2.3's portfolio pass stands, and the targeted sweep this session ran over tracked
+files found only the word *token* in its LLM sense, secret **names** rather than values, and
+`kaggle_secrets` used correctly. The live page was not fetched — §3.3 puts this repository
+outside `--fetch`, so axis C is the committed file's verdict.
+
+**Round three, 2026-09-17 — the `code-reviewer` pass over the transplant.** Its subject was not
+the scan: it was whether a row measured in one repository still reads correctly to a reader
+holding another. Two of the rows below are the transplant paragraph's own and the rest are the
+scan's prose, and **not one is an axis verdict, a table cell or an E-, A-, B-, C- or D-axis
+figure** — the measurements reproduced to the digit when re-run against `8fe2e02`.
+
+*No total is typed here either, and the first draft of this paragraph typed one: it said
+**eight** over a table of nine rows.* One paragraph after mandating the derivation that prevents
+exactly that, in the round whose subject is figures that do not survive their own description.
+The derivation is the same one: count the rows.
+
+| what it said | what replaces it | why |
+|---|---|---|
+| §5: *"It went stale at the **next** commit: `305f4e2` added `_canonical`… and the sentence now reads 251"* | two commits, two unrelated causes: 262 → **252** (`305f4e2`) → **251** (`36524c4`) | §4's round-two table corrects this exact sentence, and the correction was never carried into §5 — `ST-3`, in the bullet arguing that a census goes stale four lines from its instrument. The arithmetic said so unaided: 262 − 10 is 252 |
+| *"**Eight** lines in five files a contributor acts on"* | **nine** | the enumeration under it has always listed nine, and the `fifteen` the same errata corrected `fourteen` into is nine plus the six ADR lines. `git grep -ci colab` per file reads 2/1/1/2/3 at `8fe2e02`; it was never run for this figure, because the figure was never doubted |
+| a quotation attributed to *"this repository's `CLAUDE.md`"* | `tools/pagespec/__main__.py`'s `GATE`, with *above* naming the run's own `gate policy` block | the sentence is in `CLAUDE.md` neither at `467a92d` nor today, and *"printed above"* means nothing in a file that prints nothing. The class named on 2026-09-17 — the resolver answers whether a section exists, never whether it holds what the citing line says — and this citation names no section at all, so no instrument here could have asked |
+| *"`git grep -ci colab` reads fifteen"* | the bare command reads **34 lines in ten files**; fifteen is what survives three exclusions, now written down | the named command did not produce the figure beside it, and a reader re-running it had no route to fifteen. 34 − 14 (`ADR-0004` itself) − 3 (`CLAUDE.md`'s rule lines) − 2 (the README's retrospective hits) = 15 |
+| §5's flag bullet: *"three repositories, three sessions"* | no count in the lead, and the reason | the paragraph appended under it **in this same session** documents a fourth, `pl-jobs-lora`'s `--candidates`. Every session so far has added one, so a lead figure there is stale by the next reader and is the sentence everyone quoting the shape carries |
+| this section's header: *"**eighteen** corrections, in two rounds"* | three rounds, no total, and the derivation beside it | seven plus eleven, where the eleven counts a row whose middle cell reads `unchanged`. A hand count of a table, in an erratum about hand counts |
+| the transplant paragraph: *"every SHA changes and this paragraph would have had to re-derive **both**"* | only `467a92d`; **the gitlink would not** | route B rewrites this repository's history and not the sibling's, so *"every SHA changes"* is false about a submodule pointer. A claim about `0011` §6 that §6 does not make |
+| the transplant paragraph: nothing about what the `Index SHA` cell means after a transplant | says whose HEAD the cell and the entry state are, and that neither meets §4's definition for a reader of this repository | §4 defines the column as `git rev-parse HEAD` **of this repository**, which `portfolio-index` did not satisfy on 2026-09-17. Correct as measurements, mismatched against the definition a new reader applies |
+| *"the **private** index's ADRs run 0001–0009"* | *"the index's"* | the fact survived the move and the label did not. Nine ADRs is still right; the index a reader holds is public |
+
+**Two of the eight are in the paragraph written to stop exactly this**, which is the round's
+most portable result and the argument for the pass rather than for more care. A transplant is a
+generator of the `ST` family by construction: every sentence whose premise is *this repository*,
+*the private index*, or an entry state changes truth value without changing a byte, and the
+paragraph that says so is not exempt. What no instrument here can do is ask the question —
+`tools/citations.py` resolves a `§N` to a heading and stops, and `tools/spec.py` pins normative
+sentences by literal, so a premise that rots inside otherwise-correct prose is reachable by
+reading and by nothing else.
+
+*Three findings from the pass are deliberately not taken.* The errata block sits as prose inside
+the row rather than as its own `###`, unlike A-2's, so it is the one erratum unreachable from a
+heading list — **left as it is, and the first reason offered for that was wrong.** It was that a
+moved block would invalidate line citations into the row; `git grep -nE '0010:[0-9]+'` returns
+nothing anywhere in the tree, including inside this document, because `0010` is cited by section
+and only `0008` is ever cited by line. *Written down because it is this round's own instance of
+the class the round is about: a reason that reads as derived and was not.* The reason that
+survives measurement is smaller — the errata block is followed by A-4's *not checked* closing,
+which belongs to the row and not to the errata, so a heading here needs that paragraph moved
+too. Worth doing when A-5 lands and the section moves anyway. The `tests/`
+citation of a submodule's own `ADR-0012` is a fourth occurrence of §5's last bullet and is not
+added there, because that bullet asks for a link checker whose design is `architect`'s and a
+fourth tally does not change the ask. And *"the index's 69 tracked files"* is left at 69: the
+freezing rule covers it, `python -m tools.citations` prints 71 today, and re-deriving a frozen
+figure is the practice §4's header exists to refuse.
+
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
 *Placed after the row and not inside it.* The first edition put this heading between A-2's
@@ -1148,8 +1797,12 @@ construction; this section and §2's baselines are where patterns accumulate.
 
 - **§2.3, E1 across all thirteen: clean.** Sweeping once rather than thirteen times is what
   made the three matches cheap to read together and dismiss together.
-- **A flag the CLI accepts and no document names — three repositories, three sessions, and
-  the shape has a second half nobody had measured.** `auth-log-scan`'s
+- **A flag the CLI accepts and no document names — and the shape has a second half nobody had
+  measured.** *No count stands in this lead, on purpose.* Every session so far has added an
+  instance, and the lead said *three repositories, three sessions* while the paragraph appended
+  directly under it documented a fourth — `pl-jobs-lora`'s `--candidates`, named in no document
+  at all. A lead figure in a bullet the queue keeps extending is stale by the next session and
+  is read by everyone who quotes the shape; the instances below are the count. `auth-log-scan`'s
   `--min-success-failures` (A-1), `apply-scout`'s `run --model`, `--max-steps`, `--max-cost`
   (B-2), and `it-job-radar`'s `verify --dataset` (B-3). **The second half is a flag documented
   under the wrong subcommand**, which a whole-corpus sweep reports as documented: `apply-scout`'s
@@ -1181,6 +1834,15 @@ construction; this section and §2's baselines are where patterns accumulate.
   first shape worth a portfolio-wide sweep rather than a per-repository finding**, and the
   sweep is cheap: every repository with an `argparse` parser can be asked the same question
   without being scanned.
+  **Fourth repository, and the instrument's second new occurrence — this time on a flag
+  defined twice.** `pl-jobs-lora` (A-4): `probe.py`'s `--candidates` is named in no document at
+  all, and `--fresh` is defined by **both** `inference/predict_gguf.py`:141 and
+  `inference/predict_hf.py`:207 while `README.md`:220 shows it under `predict_gguf` only. That
+  is the *wrong-subcommand* half arriving in a new form: not a flag credited to the wrong
+  sibling, but one genuinely documented for a module and silently missing for a **second module
+  that defines it too** — and the missing one is the **hosted-GPU** entrypoint, where re-running
+  is the expensive operation the flag controls. The sweep needed no adaptation to find it, which
+  is three trees in three sessions on one instrument.
 - **A guard whose every assertion sits inside a loop, protected by a pin in a different
   test.** `auth-log-scan`'s `tests/test_site.py`:263 against `:240`'s `len(bands) == 2`, and
   `apply-scout`'s `tests/test_retrieval.py`:188 against `:68`'s
@@ -1196,6 +1858,19 @@ construction; this section and §2's baselines are where patterns accumulate.
   `0008` §5's carried README row meeting the audit from the other side: the row says no
   carrier exists, and what session 2 adds is that in at least one repository **the carrier
   already exists and the README simply sits outside it**.
+  **Third repository, and the sharpest form yet: the repository said the README was a surface,
+  in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-1) holds
+  `tests/test_docs_page.py`, 327 lines enforcing `0007` §5.0 over `docs/index.html` — and the
+  README reproduces the same evaluation table with **three cells rounded away** from what
+  `results/eval/report.md` prints. The commit that corrected four *other* cells of that table,
+  `305f4e2`, is titled *"the README is a surface too, and the guard was stricter than the
+  spec"*: it acted on the first clause by hand and left the second clause's machinery pointed
+  where it already was. **A hand pass over a table is a hand count**, and this portfolio's hand
+  counts have read 15, 18 and 19 against a true 20. What makes it worth a sweep rather than a
+  row is that the carrier here is not merely nearby — it is in the same directory, imports
+  cleanly, and this session reused its `_canonical` and `_NUMBER` against the README in nine
+  lines. The question to ask of every repository with a page guard is simply *what else does
+  this repository publish that the guard does not read*.
 - **A decision the repository reversed, still stated as fact by everything downstream of the
   document that reversed it.** `it-job-radar`'s `ADR-0001` dropped DuckDB-WASM, recorded the
   measurement that killed it, and says *"The interactive layer is dropped"* — and the GitHub
@@ -1217,6 +1892,49 @@ construction; this section and §2's baselines are where patterns accumulate.
   decision. The exclusions are the other half: a dated record is supposed to still read as it
   was written, so `docs/adr|plan|ideas|research` are outside the sweep and the *manuals* are
   inside it.
+  **Second occurrence, and it moves the shape from *watch* to *rule* — with the amendment's own
+  wording as the mechanism.** `pl-jobs-lora` (B-4): `ADR-0004`'s 2026-08-21 amendment retired
+  Colab for Kaggle and wrote *"The docstrings and README that said 'Colab' now say hosted
+  GPU"* — a sentence that is **true**, and that names the two classes it fixed. Fifteen lines in
+  neither class still say Colab: `pyproject.toml`:17 and :60, `.github/workflows/ci.yml`:16,
+  `.gitignore`:9, `configs/config.yaml`:87 and :98, `requirements-train.txt`:1, :4 and :5, and
+  six more across `ADR-0003` and `ADR-0006`, the last of them a step heading. **Run the sweep
+  case-insensitively**: `git grep -c 'Colab'` misses `requirements-train.txt`:1's `COLAB-ONLY`,
+  which is the loudest line in that file, and a retired vocabulary is exactly the thing a tree
+  spells inconsistently. So the two instances differ in
+  exactly the way that matters for the sweep: `it-job-radar`'s fan-out reached GitHub metadata,
+  which no commit carries, while this one reached **packaging, CI and the ignore file**, which a
+  commit carries perfectly. And the mechanism is now visible — *naming the classes you fixed
+  reads, to the next reader, as naming all the classes there are*, so the sweep must be run by
+  an instrument against the retired vocabulary and never inferred from the amendment's prose.
+  The exclusion list above needs one amendment of its own: `docs/adr` is outside the sweep
+  because a dated record should still read as written, but a **step heading a reader follows** —
+  `ADR-0006`:104's `## Colab Step 0` — is a manual wearing an ADR's number.
+- **A census that came from an instrument, frozen into prose four lines from the instrument.**
+  `pl-jobs-lora`'s `tests/test_docs_page.py` states its own limit honestly — *"262 figures
+  admitted, 39 of them bare one- or two-digit integers"* — and that is **exactly right at the
+  commit that wrote it**, reproduced here by running the same tokeniser against the same four
+  artifacts at `879b5df`. It went stale over **two** commits with two unrelated causes:
+  `305f4e2` added `_canonical`, folding ten trailing-zero duplicates to 252, and `36524c4`'s
+  `Author:` migration then took the figure `223` out of the artifact set, leaving 251.
+  *This bullet credited both to one commit until the review of the transplant. §4's errata had
+  already corrected that exact sentence, and the correction was not carried into the section a
+  reader comes to for patterns — `ST-3`, in the bullet arguing that a census goes stale four
+  lines from the instrument that produces it. The arithmetic said so unaided: 262 − 10 is 252.*
+  Distinct from every
+  other figure defect this audit has collected, because nothing was hand-counted and nothing
+  was careless — the number was measured, correctly, and then the definition underneath it
+  moved. The `39` survives, which is the tell: a bare integer has no trailing zero to fold, so
+  half the sentence is still true and the half that is not looks identical. **The remedy is one
+  line and it is already the repository's own house style**: assert the census instead of
+  stating it, so the commit that changes what a figure means cannot land green. `0008` §4.11
+  and `0007` §3 are the same lesson from the other end — there, a measurement in a normative
+  document; here, a measurement in a comment attached to the code that produces it, which is the
+  place it is *least* expected to rot. **And the class is not the repositories' alone**:
+  `0010` A-4's own errata records six hand counts inside the row that raised this bullet,
+  found by its closing review before it was proposed as merged work. A rule that has to be
+  applied to prose by the person writing the prose is a rule with no carrier, here as much as
+  in any tree the audit judges.
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
@@ -1323,3 +2041,4 @@ question rather than as a defect.
 | 2026-09-14 | **v3.0**, scan | §3.3 gives `pytest` for the nine repositories in its *the rest* row, and for `it-job-radar` a bare `pytest` in an environment without the package installed produces **18 collection errors**, every one `ModuleNotFoundError` — which reads exactly like §3.4's `blocked` and would have sent a clean repository back to the queue | **An import error is an environment verdict, not a repository one, until the repository's own install path is read.** `pyproject.toml` declares no `pythonpath`, `requirements.txt` is `-e .[dev]`, and CI installs before running — so the README's command is correct. Run `PYTHONPATH=src python -m pytest`, which changes no file, or install as CI does; and say in the row which was used. *Nearly written up as a finding in session 3; what caught it was reading `requirements.txt` rather than assuming* |
 | 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
+| 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
