@@ -64,8 +64,11 @@ that states it. `0011` §10 runs a third count that agrees with neither.*
 
 **The class is [`ST-4`](../reference/failure-classes.md)**, entered with this document: `docs/`
 is where a shape goes once it has occurred twice and the second occurrence was not predicted by
-the first, and §4 below lists six. Its test is the one sentence of this section worth carrying —
-**sweep for the premise, not for the fact.**
+the first. §4 below carries **six sites arguing from the index being private** — F-1, F-2, F-3,
+F-7, F-8 and F-10 — and **two arguing from its identity**, which is the second occurrence: F-4's
+queue and F-9's checklist were each written against a repository that stopped being the one they
+meant, and neither was predicted by the privacy half. Its test is the one sentence of this section
+worth carrying — **sweep for the premise, not for the fact.**
 
 ## 3. What was read, and what was deliberately not
 
@@ -94,7 +97,7 @@ and the twelve trees have gitignored build output no clone has.
 | F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — the repository is mid-scan |
 | F-8 | 21 lines across the twelve submodule `CLAUDE.md` say *the private portfolio index* | medium | open — needs a decision on where the carrier lives |
 | F-9 | `0011` §7's applied state lived only in a gitignored session brief | medium | **recorded here**, §5 |
-| F-10 | `ADR-0009` §1's note on an unresolvable citation argued from the index being private | medium | **corrected here** — the conclusion survived, the ground moved |
+| F-10 | `ADR-0009` §1.1's note on an unresolvable citation argued from the index being private | medium | **corrected here** — and it is the one row whose conclusion did not survive |
 
 ### F-1 — the normative sentence, and why it is the whole of §6
 
@@ -152,12 +155,15 @@ session following the queue branched and committed where a commit reaches no rea
 the worked instance and this document's §6 is what it needed.
 
 *The prompts themselves are clean, and the first draft of this finding said otherwise.*
-`git grep -c current_projects` over both returns **zero**: they name the **role** — *"the index
-audit branch"*, *"in the index"* — and the role moved with route A, so those sentences stayed
-true. The new §6 row still binds them, because §6 outranks a prompt from its named version onward
-and is the one section a session reaches unconditionally; what it corrects is the two rows and the
-background assumption, not the prompt text. **A reading that indicts a file has to survive being
-taken by a second route**, which is a bullet this document cites `0010` §5 for elsewhere. The
+`git grep -c current_projects` over both returns **zero**, and they are clean for two different
+reasons: `0010_scan-prompt.md` names the **role** — *"the index audit branch"*, *"in the index"* —
+and the role moved with route A, while `0010_repair-prompt.md` never names the index at all,
+saying *"this repository"* deictically. *A second draft credited one mechanism to both.* The new
+§6 row binds them anyway, because §6 outranks a prompt from its named version onward and is the
+one section a session reaches unconditionally; what it corrects is the two rows and the background
+assumption, not the prompt text. **A reading that indicts a file has to survive being taken by a
+second route** — stated in `0010` §6's own row of 2026-09-17, *one row above the row this finding
+adds*, and attributed by that same second draft to a `0010` §5 bullet which does not carry it. The
 queue's denominator stays
 **fifteen**: the archive is outside the corpus and outside the queue, because `0011` is its audit
 of record on the axes a scan session could have asked about, and it will not change again.
@@ -172,15 +178,20 @@ exemption is the reason nobody swept `.github/`, `tools/` or `docs/adr/` after t
 ### F-6 — a dated measurement under an open row, with a same-day edit to its subject
 
 `0009` §14.1 gives *anchors ending at the profile* as **10**, measured 2026-09-08, and §14.2 splits
-the twelve into six carrying a profile link and six not. The profile README was edited by hand on
-2026-09-17 to link the published index. **The measurement is therefore dated across an edit to its
-own subject, and a stage closing `0009` §7 row 11 has to re-take it for that reason alone.**
+the twelve into six carrying a **repository** link and six reachable only by a bare Pages URL.
+The profile README was edited by hand on 2026-09-17 to link the published index. **The measurement
+is therefore dated across an edit to its own subject, and a stage closing `0009` §7 row 11 has to
+re-take it for that reason alone.**
 
 *The first draft of this row claimed more than that, and the extra was false — recorded rather
 than removed, because §2 is about exactly this.* It said the anchor figure was "at least one low"
 and the split had "moved". Neither survives measurement. **The split is unchanged element for
 element**: `ab-lab`, `apply-scout`, `car-price-ml`, `doc-extract`, `mlops-car-price` and
-`token-budget` carry a link, the other six do not. The 2026-09-17 edit added two anchors to
+`token-budget` carry a repository link, and the other six are reachable by their Pages URL —
+*which is §14.2's own erratum of 2026-09-09 and the second thing this row got wrong.* An earlier
+draft said the six "do not" carry a link, the precise reading §14.2 retracted when it measured
+that **all twelve are reachable** and the profile *demotes* half rather than omitting it. The
+2026-09-17 edit added two anchors to
 `portfolio-index` — a thirteenth repository, which that split does not divide. And the anchor
 figure is clause 6's: `tools/pagespec/clauses.py` counts only anchors whose **path equals** the
 profile, which excludes every repository URL by construction, and the profile README's source
@@ -188,9 +199,10 @@ carries no bare profile link at all. The edit could not have moved either number
 
 **What survives is the reason, and it is sufficient.** §14 asks for a scope decision before row 11
 is taken, and taking it on a figure measured before an edit to its subject would be `FG-2` — a
-figure read from a document rather than from an instrument — inside the document that names the
-class; §14.3 already says so about itself. Re-measuring here produces a second frozen figure the
-stage must re-take anyway. **The correction is the sharper half of this row**: an inference written
+figure read from a document rather than from an instrument. §14.3 makes the general point that the
+profile's figures go stale silently; the caveat about §14's *own* measurement is §14.2's erratum
+of 2026-09-09, which is the half that says it about itself. Re-measuring here produces a second
+frozen figure the stage must re-take anyway. **The correction is the sharper half of this row**: an inference written
 as a fact, inside a finding whose subject is a figure that stopped being current, caught by a
 reader and by nothing else.
 
@@ -246,23 +258,30 @@ F-3's residual cost paid on the side a reader can see.
 claim about the index without twelve new guards, and the index cannot assert a sentence in a file
 it does not edit. This repository re-points submodules; it does not edit them.
 
-### F-10 — a conclusion that outlived its ground, in a file this document said it had read
+### F-10 — the one row here whose conclusion did not survive its ground
 
-`ADR-0009` §1 records a published page citing `0007` `§4.1`, with the note that *"a published
-public page carries a section number of a document in a private repository. A reader of that page
-cannot resolve it."* Publication removed the privacy and left the conclusion standing: the page
-cites `§4.1` bare, naming neither the document nor a repository, so **a reader still cannot
-resolve it — for a different reason, with a different remedy.** It was *make the document
-reachable*; it is now *make the citation name what it cites*. Amended there rather than rewritten.
+`ADR-0009` §1.1 records a published page citing `0007` `§4.1` — the site is
+`pl-jobs-lora/docs/index.html`:83 — with the note that *"a published public page carries a section
+number of a document in a private repository. A reader of that page cannot resolve it."*
 
-**What makes this the most instructive row in §4 is who found it.** §3 declares this sweep as
-*every tracked file outside `docs/audit/` for the premise private index*. This file is tracked, is
-outside `docs/audit/`, and contains the word — so it was inside the declared scope and the sweep
-did not return it. Re-run afterwards, `git grep -in private -- . ':!docs/audit'` finds exactly two
-sites under `docs/adr/`: `0004` §6, which is F-3, and this one. **A sweep's scope is a claim like
-any other, and so is its execution.** `0010` §5 states the first half about guards; the second is
-this row's contribution — the scope was right, the run was one file short, and nothing an
-instrument prints distinguishes that from a clean sweep.
+**Publication removed the privacy, and this is the only row in §4 where the conclusion went with
+it.** `0007` is public, the citation names its document — §1.1 says so itself, two paragraphs
+above — and the sibling's own `CLAUDE.md` names the index, so a reader who wants that section can
+now reach it. What the line still does not name is the **repository**, so resolving it costs a
+step a link would not; and the renumbering hazard is untouched, because nothing binds the number
+to anything. *So the durable half of that note is the renumbering hazard, and its "cannot resolve"
+half is spent.* One more thing its reader should know: line 83 is a CSS comment inside `<style>`,
+so the *"reader of that page"* it speaks of is a reader of the source.
+
+**What makes this the most instructive row in §4 is that it took two reviews.** §3 declares the
+sweep as *every tracked file outside `docs/audit/` for the premise private index*; this file is
+tracked, outside it, and carries the word, so it was in scope and the run did not return it —
+`git grep -in private -- . ':!docs/audit'` finds exactly two sites under `docs/adr/`, `0004` §6
+which is F-3, and this one. Then the first draft of *this row* said the page cites `§4.1` bare,
+naming neither document nor repository: a claim about a file, contradicted by the file and by the
+ADR paragraph it was amending. **A sweep's scope is a claim, its execution is a claim, and so is
+every sentence written about what it found.** `0010` §5 states the first of those three about
+guards; the other two are this row's.
 
 ## 5. The repository state, read from the API
 
@@ -342,11 +361,13 @@ including the two the round produced while being written.
 `0011` §9's rules apply unchanged and are not restated. R-2's four private repository names are
 cited by section and not repeated. **The ordinal rule 2 used for that argument is not reusable,
 and the first draft here reused it.** Rule 2 said a repetition would be *"a fifth site"*; `0011`
-§10 then corrected the population to six files; and `git grep -lE '<R-2's two name stems>' -- . |
-wc -l` reads **seven** in this tree — five under `docs/audit/`, plus `tools/entry_state.py` and
-`tests/test_entry_state.py`. The next site would be the eighth. The figure keeps moving because
-two of the seven are code, so the rule is what gets cited and the count is what gets measured,
-every time. R-1's literals appear nowhere: the shape §6 describes is stated as *the machine name*,
+§10 corrected that to six **for the string it was measuring**; and
+`git grep -lE '<both of R-2's name stems>' -- . | wc -l` reads **seven** in this tree — five under
+`docs/audit/`, plus `tools/entry_state.py` and `tests/test_entry_state.py`. The next site would be
+the eighth. *The figure moves with the pattern, not with the tree*: seven is stable across the
+last eight commits of `main`, and six to seven is a wider `-E` rather than a new site. So what
+gets cited is the rule, and what gets measured — with its pattern written beside it — is the
+count. R-1's literals appear nowhere: the shape §6 describes is stated as *the machine name*,
 which is what it is.
 
 **What this document cannot verify**, stated so a later reader does not assume it was checked.
@@ -357,14 +378,25 @@ no file of this tree, but the check's **name** is not independently confirmed, b
 returns 404 for that workflow's runs.
 
 **What the sweep deliberately did not cover, and where its next instance already sits.** §3 scopes
-this document to the premise *the index is private*. The move changed a second premise that nobody
-has swept for — **the archive's pull requests**. `CLAUDE.md` says *"This repository squash-merges.
-A branch commit is never reachable from `main` and never will be."* That was a sentence backed by
-142 merges. Here the API returns `allow_merge_commit: true` beside squash and rebase, and the
-ruleset's `allowed_merge_methods` lists all three; linearity is enforced by
-`required_linear_history`, not by squash. **So the claim is true by convention and not by
-configuration**, and `0010_repair-prompt.md` relies on it directly. Out of scope, and named here
-so the next sweep starts with one instance already in hand rather than deriving it.
+this document to the premise *the index is private*. A second premise moved on the same day and
+nobody has swept for it: **the archive's pull-request history**. `CLAUDE.md` says *"This repository
+squash-merges. A branch commit is never reachable from `main` and never will be."* — a sentence
+that had a body of merges standing behind it and has none here.
+
+*The first draft of this paragraph argued the wrong half of that, and is corrected rather than
+removed.* It said the published repository enforces linearity by configuration where the archive
+left it to convention, which is backwards in both directions: the archive allows merge, squash and
+rebase exactly as this repository does, and — private on a free plan — it could carry no ruleset at
+all, where `gh api repos/…/rulesets` answers `403`. Publication did not weaken the claim's
+configuration; it **added** `required_linear_history` to it. **What publication removed is the
+evidence**: the practice that made the sentence true lives in pull requests this clone does not
+have, and `0010_repair-prompt.md` relies on the sentence directly.
+
+Out of scope, and named so the next sweep starts from an instance rather than deriving one — with
+the caution that the obvious figure for *"a body of merges"* is not the pull-request count.
+`gh pr list --state merged` and `--state all` disagree by four on the archive, and counting `(#N)`
+suffixes on its `main` gives a third answer again; `CLAUDE.md`'s **142** is pull requests, which is
+none of the three.
 
 **One figure here invalidates itself on sight and carries no number for that reason**: how many
 sentences in this repository still argue from a premise publication changed. The sweep that would

@@ -180,11 +180,12 @@ counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 
 in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
 not, and 21 lines across the twelve submodule `CLAUDE.md`.
 
-*Recurs:* twice inside `0012`'s own pass. `0011` §7's checklist had been executed against a
-repository it does not name, its applied state surviving only in a gitignored session brief; and
-`0012` §7 records a second premise nobody has swept for — the archive's squash-merge convention,
-which `CLAUDE.md` states as *"never will be"* and which the published repository enforces with
-`required_linear_history` beside `allow_merge_commit: true`.
+*Recurs:* **on a second premise of the same event, and that is what makes it a class rather than
+an incident.** Route A changed the index's *identity* as well as its visibility, and two artefacts
+were written against the repository it stopped being: `0010`'s session queue, which named the
+archive as the repository a session commits in, and `0011` §7's checklist, executed against a
+repository it does not name and whose applied state survived only in a gitignored session brief.
+Neither was predicted by the privacy half — a sweep for the word `private` returns neither.
 
 *The test:* **sweep for the premise, not for the fact.** The fact lives in the settings and has
 no occurrences in the tree; the premise is a word — here `private` — and the corpus is every
