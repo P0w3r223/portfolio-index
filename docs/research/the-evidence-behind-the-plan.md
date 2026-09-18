@@ -554,10 +554,17 @@ and writable only through a web form.
 
 2. **The bio is filled, and is now narrower than the README beside it.** The correction above
    established that the field is not empty. What the same re-reading did not ask is whether it
-   *agrees* with the profile README — and since `P0w3r223/P0w3r223` `c75b2b8` it does not. The
-   README opens on three tracks, AI Engineer · Data Scientist · Data Engineer; the bio names two
-   of them and spells the pair with a stray space. **The bio is the field §2.6's sieve reads and
-   the README is not**, so the narrower of the two is the one doing the work, and the wider one
+   *agrees* with the profile README, and it does not. The README opens on three tracks, AI
+   Engineer · Data Scientist · Data Engineer; the bio names **one** of them, closing on *Open to
+   AI/ ML engineer* — where `ML Engineer` is the separate junior role the README lists fourth,
+   not `Data Scientist` and not `Data Engineer`, and the pair carries a stray space.
+   **`c75b2b8` widened this gap rather than opening it**: the README read *AI Engineer / Data
+   Scientist* before it, and the bio did not name the second of those either. *The first draft
+   of this paragraph said the bio named two of the three and dated the disagreement to that
+   commit — both wrong to one `gh api users/P0w3r223 --jq .bio`, in the subsection whose whole
+   subject is a claim about this field that a one-command re-read refutes.* **The bio is the
+   field §2.6's sieve reads and the README is not**, so the narrower of the two is the one
+   doing the work, and the wider one
    is invisible to the filter it was written for. The field holds 129 characters against a limit
    of 160, so carrying all three costs a sentence and no project.
 

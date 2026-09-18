@@ -2772,7 +2772,15 @@ well and answers `beyond the gitlink`; `unpinned_closures()` pairs that verdict 
 cells claim no open work, which is the shape this repair arrived as. Printed by the module and
 **refused** by `tests/test_queue.py` — the split the census's own docstring argues for, and it
 survives that argument: adjacency can misattribute a line and therefore cannot gate, but *the
-pointer is either bumped or it is not* is true whichever row the citation belongs to. §4's
+pointer is either bumped or it is not* is true whichever row the citation belongs to.
+
+**Where that refusal happens, because the sentence above is not a claim about the build.** The
+state assertion over §4's real rows reads the sibling working trees, so `core` deselects it and
+`surfaces` and `live` check out shallow and skip it: **no CI job runs it**, and it refuses in a
+working session — which is the position `sibling_citations()` already argues for itself, and
+changing it would buy the adjacency heuristic a job. The *pairing* underneath it needs no git
+and does run in `core`, which is where the logic is actually held. Found by the review of this
+stage, over a first draft that said `refused` and left a reader to assume CI. §4's
 *`declined` and `pending` have no instance today* still holds literally, no cell having carried
 the word.
 
