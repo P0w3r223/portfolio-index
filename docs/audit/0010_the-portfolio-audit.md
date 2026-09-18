@@ -349,7 +349,7 @@ defect this paragraph is already about.* Reported by the review of this stage, w
 | 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
 | 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
 | 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
-| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 open · B-4a open · B-4b open · B-4c open · B-4d open · B-4e open · C-4 open · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
+| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 closed · B-4a closed · B-4b closed · B-4c closed · B-4d closed · B-4e closed · C-4 closed · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
 | 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 open · E-5a open · E-5b open · E-5c open · B-5d open · B-5e open · C-5 open · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
 | 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 deferred · D-6 closed · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
@@ -2599,6 +2599,59 @@ commit returns six lines and **the one the row actually names is not among them*
 found by reading. The guard folds each line with the next for exactly this, and that is not a
 hypothetical: it is how the row's own site behaves.
 
+### A-4 repair, 2026-09-18 — row 4 closed whole, in two sibling pull requests
+
+`pl-jobs-lora` `fa26842` (#19) and `64959c4` (#20), pointer bumped in the commit carrying this
+line. Entry state clean at the scan's gitlink `8fe2e02`; §3.3's command reads
+`pl-jobs-lora   clear, 3 undecided` before and after. The repository's suite went **233 → 247**
+and `ruff check .` stayed clean, run with `PYTHONPATH=src` in a fresh clone with no editable
+install — §6's row of 2026-09-14 is why that is said rather than assumed.
+
+**A-4.** The collector stopped folding its drops: `_fetch_examples` returns a breakdown in the
+shape `build_dataset` already used, and a run prints `N urls -> M usable (F fetch failed,
+U unusable page)`. `probe.dev_slice_size` and `data.sitemap_offers_sample` — the two knobs that
+reach `_spread_sample`'s divisor — are validated at load instead of surfacing as a
+`ZeroDivisionError` three modules away. The four untested pure functions have tests. And the
+artifact the page stands on has a carrier: the report is rebuilt from the committed JSON and
+required to render the committed markdown, byte for byte.
+
+**B-4a's carrier was vacuous twice before a battery made it bite, and that is the row's most
+portable result.** `tests/test_readme.py` refuses a README figure no artifact prints — and its
+own docstring quotes `102.6`, `2.5` and `4.7`, the three it exists to catch, so with `tests/`
+in the source corpus it sourced them to itself. The index records the identical shape in
+`tools/citations.py`, whose docstring says prose about a broken citation may not write one.
+Then the model-key exemption turned out to be case-sensitive: the config spells `qwen2.5-1.5b`
+and `CLAUDE.md`, `ADR-0001` and the page all write `Qwen2.5-1.5B`, so three files donated a
+bare `2.5` — enough to source a rounded latency cell, which is one of the three defects. Both
+were found by mutation, neither by reading, and the exemption now carries a test of its own
+because no mutation from outside can reach it.
+
+**B-4b, B-4c, B-4e.** The build census came out of the README rather than being corrected. Only
+one of its figures is unsourced outright — `76 %`, zero donors — and the rest are worse than
+that: they resolve to something that is not their subject. `90` has four donors and `99` five,
+none of them a repost count or a coverage figure; `800` has six, of which the nearest are the
+*target* in `configs/config.yaml` and `ADR-0002` and the fetched count in none of them.
+*The row's first edition said* **only `p90`/`p99`** *and* **twice** *— two hand counts inside a
+paragraph about a hand count, corrected by the review that ran the sweep.* The HF Hub
+freeze now reads as deferred on the page, in the README and in `.gitignore`, which is the
+owner's call between two published sentences of which one was false. `.gitignore`'s claim about
+`results/labeling_qa/` was true of `results/eval/`. And `test_docs_page.py`'s census is asserted
+rather than stated — 251, 39 and 58 today against the 262, 39 and 59 it carried.
+
+**B-4d** is the second instrument for a retired vocabulary, ported from `it-job-radar`'s
+`tests/test_decisions.py` with the two changes §5 asked for: case-insensitive, because
+`requirements-train.txt`'s loudest line was `COLAB-ONLY`, and **headings inside decision
+documents swept while their bodies are not**. `ADR-0004`'s own headings are exempt and the
+guard says so — its title and its amendment are the two places the retired name has to appear.
+
+**C-4** took the wording the row proposed and the owner approved, with one deviation the page
+itself settles: the row wrote `94 %` and the page writes `94%`, `100%` and `16%` everywhere
+else, so its own typography won.
+
+*What this repair did not touch.* The notebook, the two ADRs read as arguments, and the report's
+rows end to end — §4's `Not checked` cell for this row still holds, and closing a finding is not
+re-scanning the repository.
+
 ### A-6 repair, 2026-09-18 — D-6 closed, C-6 deferred, A-6 measured and left open
 
 Entry state: `ab-lab` `HEAD`, its `origin/main` and the index's gitlink are all `9864e73`, the
@@ -2773,6 +2826,15 @@ construction; this section and §2's baselines are where patterns accumulate.
   that silently do not work: a top-level `from … import` binds the name before any fixture runs,
   and patching `numpy.random.Generator` is a no-op because `default_rng` constructs the C-level
   type directly.
+  **Closed 2026-09-18, and the close is a counter-example to the reframing above.** `ab-lab`
+  answered *generate the README*; `pl-jobs-lora` took the other route and had it **checked** —
+  `tests/test_readme.py`, `0007` §5.0 over the second surface, reusing the page guard's own
+  `_canonical` and `_NUMBER`. Both close the bullet and they are not the same answer: a
+  generated README cannot drift and needs no provenance guard, a checked one can and does, and
+  the choice belongs to whether the document is an output of a build or a thing a person
+  writes. *So the question is not only* **is the README generated** *— it is which of the two a
+  repository is willing to be.* The fifth repository's carrier also went vacuous twice before a
+  mutation made it bite, which is in `0010` §4's A-4 repair and is the cheaper half to copy.
   **Third repository, and the sharpest form yet: the repository said the README was a surface,
   in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-4a) holds
   `tests/test_docs_page.py`, 327 lines enforcing `0007` §5.0 over `docs/index.html` — and the
