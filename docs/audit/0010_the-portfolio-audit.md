@@ -63,6 +63,13 @@ Index `2cb5d45` on `main`, level with origin, twelve pointers matching their own
 anyone can still fetch. This portfolio squash-merges, which is what puts every branch commit
 there. §3.4's E1 fetches them first for that reason.
 
+*The second sentence is true of the portfolio as it has committed since a date between
+2026-08-14 and 2026-09-03 and false of everything before it, where all thirteen repositories
+merged their pull requests — 24 such commits on this index's own `main`. The figure above stands:
+it was measured against `refs/pull/*`, which holds the heads whether the merge squashed them or
+not. §6's row of 2026-09-18 and A-6's errata are the correction; this note is here because §2 is
+the state the audit was opened against and is corrected rather than rewritten.*
+
 ### 2.2 The surfaces
 
 `python -m tools.pagespec --detail`, the run `--only` cannot take because it suppresses both
@@ -288,14 +295,63 @@ a `B` cell reading `finding` beside an `Open` cell reading `A-1 closed` is a sca
 beside a repair's, not a contradiction. The row body says which. *Written on review, 2026-09-11,
 when the first closure landed and the header read literally as a list of what is still open.*
 
+**Since 2026-09-18 the `Open` column is a vocabulary rather than prose**, and the argument for
+it is this document's own first rule. *What next* was answered by reading 2 800 lines and
+counting by hand, in a repository whose standing rule is that a figure comes from an instrument
+and whose three hand counts of one population read 15, 18 and 19 against a true 20.
+`python -m tools.queue` reads this column now. Each item is a row id, one state word, and
+`·` between items:
+
+- `open` — raised, not acted on, and actionable by a repair session today.
+- `closed` — acted on, with the commit **on `main`** in the row body. *Amended 2026-09-18 by
+  the first closure that has none*: where the repair changes no file — an issue closed, a
+  repository's metadata moved — the row body cites the **outward artefact a reader can
+  resolve** instead, and says why there is no commit. `D-6` is that case whole, and `D-3` was
+  half of one on 2026-09-14. The clause is here rather than in the row because a definition a
+  row quietly departs from is a definition that stops being read.
+- `declined` — deliberately not repaired, the reason in the row body. Without this state a
+  refusal and a backlog item are the same cell, and a queue that cannot say *no* grows a
+  ceiling no reader can see.
+- `deferred` — nothing a session may do closes it: it waits on a decision the owner owns
+  (`R-1`), or on a capability neither session type has — `C-3`, whose repair would have a
+  repair session read the raw data it may not, and `D-2`, which is that rule in the mirror.
+- `pending` — the repair exists and is not on `main` yet: an open pull request, or a pointer
+  not bumped. `tests/test_queue.py` exempts it from the ancestor check, which is the whole
+  reason the state is named.
+
+*`declined` and `pending` have no instance today.* Declaring them ahead of the first one is
+deliberate: both are produced by work already scheduled, and adding a state on the day it
+arrives moves the parser, both prompts and this paragraph inside a commit busy being about
+something else.
+
+**The ids are not a uniform scheme and this column does not pretend otherwise.** `A-4` names
+row 4 *and* that row's A-axis finding, because the row heading took the letter first; rows 5
+and 6 work around it in prose, and §5 writes “(C in A-5)” and “(B in A-6)” for
+exactly that reason. **Four findings had no address at all and were given one on 2026-09-18**
+— `C-4`, `C-5`, `C-6`, `D-6` — because a column cannot index what has no id. No verdict
+moved and nothing was renumbered: repairing the `A-N` collision would move 25 sites for `A-4`
+alone, and this record has already paid once for an identifier renumbering, in A-4's errata,
+where five ids collided with a scheme in which `B-2` was taken.
+
+**An id addresses a paragraph by convention, and the convention is written down here rather
+than stamped onto six rows.** `<axis>-<session>` is the axis paragraph under that session's row
+heading — `C-6` is *“**C — `finding`, and it is the first surface I have scanned that the
+checker fails**”* under `### A-6`. A suffixed id — `B-4a`, `E-5c` — is a labelled paragraph and
+carries its literal, because a sub-finding has no axis heading to sit under. *The alternative was
+to stamp the four new ids onto their paragraphs; it was refused because the other rows' axis
+paragraphs carry no literal either, and a document with two notations for one address is the
+defect this paragraph is already about.* Reported by the review of this stage, which grepped
+`C-6` and found the announcement and the cell.
+
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
-| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
-| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
-| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
-| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 · R-1 stands | the notebook end to end, two ADRs as arguments, the report's rows |
-| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 · R-1 stands | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 deferred | — |
+| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
+| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 closed · B-4a closed · B-4b closed · B-4c closed · B-4d closed · B-4e closed · C-4 closed · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
+| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 open · E-5a open · E-5b open · E-5c open · B-5d open · B-5e open · C-5 open · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 deferred · D-6 closed · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -610,10 +666,10 @@ Eight surfaces report a non-zero count, which is the set the struck phrase named
 Read at a recruiter's pace, the first screen does its job: the eyebrow says what this is in
 one line, and the `h1` — *“This agent's retriever finds the evidence for 8 of the 27
 requirements a repository can prove”* — carries a figure, a denominator and a claim. It is
-also the only headline in the portfolio that leads with the project's **own weakest number**,
+also the only headline the audit has read that leads with the project's **own weakest number**,
 which is a deliberate and defensible choice: the page's argument is that the one link nothing
 scored was the one every other metric depended on. The attack section is the strongest writing
-on any of the twelve — it publishes **`exfiltrate` → succeeded every time** in both arms,
+the audit has read — it publishes **`exfiltrate` → succeeded every time** in both arms,
 explains why (*“an allowlist bounds where a request may go, not what it carries”*), and states
 that every run first removes the guard and **requires** the attack to land before the table is
 written. A positive control inside the artifact, which is what §3.6 asks of a guard.
@@ -633,7 +689,7 @@ this one.*
    stops going back to the `h1` to find the referent.
 
 **D — `finding`, and it is the issue tracker describing code that moved.** Hygiene is
-otherwise the best in the portfolio: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
+otherwise the best the audit has measured: MIT detected by GitHub from `LICENSE`, **eighteen topics**,
 homepage set to the Pages URL, a description carrying the same claim as the page, `main` the
 only branch, CI green on its last three runs.
 
@@ -1378,7 +1434,7 @@ where the `description` meta already has it, and give `og:title` the same `— p
 suffix `<title>` carries.
 
 **What is right here, said because a row of findings misrepresents this page.** The status card
-is the best in the portfolio at its job — *"in progress — baselines measured, fine-tune
+is the best the audit has seen at its job — *"in progress — baselines measured, fine-tune
 pending… its two rows are shown empty rather than estimated"*. The two `note` paragraphs refuse
 two easy overclaims by name: the local rows are priced `–` and **not** `$0` because no marginal
 cost was recorded, and their latency is CPU time and *"not comparable to the API's"*. And there
@@ -2081,11 +2137,19 @@ altogether** after it read six, then seven, and a reviewer counting path express
 the negative it establishes is stable and the count is not.
 
 *The same pass corrected A-4, and those corrections are not in this file.* They were made on the
-archive's branch, and the copy of A-4 published here is a **third party's transplant with its own
-review round**, which independently found several of the same defects and wrote them up in its own
-words. Two it did not find are applied by the commit carrying this line — the axis-B identifier
-collision and the keywords tally — and the rest are deliberately left, because reconciling two
-errata narratives over one row is an editorial decision and not a correction.
+archive's branch, and the copy of A-4 published here is a **third party's transplant of the
+corrected archive row, with a third review round on top**. *The first edition of this paragraph
+said that round had independently found several of the same defects. It had not: rounds one and
+two were inherited whole, and the claim was made without the measurement that would have settled
+it — seventeen corrections checked one by one against the published copy, sixteen already
+present.* What round three did is two different things, and the distinction is the argument for
+reviewing a transplanted row at all. It **propagated** corrections to sites the round that made
+them could not see — §5 still carried a census history §4's table had already fixed, which is
+`ST-3` rather than a re-finding — and it **found nine that were new**, two of them inside the
+transplant paragraph its own author had written. **Not to re-check the measurements, which
+reproduce**, but to sweep the sections that argue from a corrected figure. One correction of mine
+reached neither and is applied by the commit carrying this line, together with the axis-B
+identifier collision and the keywords tally.
 
 *And one class survived both per-row passes and was caught only by sweeping the file.* A finding
 lives in three places — the §4 row, the §5 bullet derived from it, and the session brief — and
@@ -2119,6 +2183,186 @@ of M7 are taken from their committed reports.
 local branch `fix/the-tile-counts-the-result` is four squash-merged commits that never had their
 branch deleted. Deleting it is housekeeping on a developer's machine, not repository work, and it
 is invisible to every clone.
+
+### A-6 — `ab-lab`, session 6
+
+Scanned 2026-09-17 against `portfolio-index` `d79d821`, gitlink `9864e73`, entry state clean:
+`ab-lab` `HEAD` identical to its `origin/main`, working tree clean. **Five axes**, E being E0 and
+E2's third-party half. *The first session scanned in the published index rather than the archive*,
+and one thing had to be established before axis C could mean anything: `tools/pagespec` is
+**byte-identical** between the two repositories — `tools/` differs in exactly one file,
+`entry_state.py`, repointed at the published home by the move — so the checker that answers below
+is the one both repositories hold.
+
+**E0 — `finding` · metadata, and it is R-1's.** Three identities and no fourth:
+`P0w3r223 <p0w3r2243@gmail.com>` 102 fields, GitHub's noreply 23, and
+`Piotr Cząstkiewicz <p0w3r2243@gmail.com>` 9. **9 of 67** commits, reproducing R-1's cell exactly.
+The name also stands in twelve tracked files — `LICENSE` and all eleven ADR `Author:` lines —
+which is the deliberate authorship A-4 recorded for the portfolio and not R-1's subject.
+
+*This repository is the first scanned that **merges** rather than squashes*, and that changes what
+a citation can do here: `main` carries `Merge pull request #10/#11/#12`, so a branch commit **is**
+reachable and the unresolvable-SHA class A-5 raised has no purchase. It also produced the session's
+one withdrawn finding. `git rev-list --all --not main` reads **23**, and all three release tags
+resolve to commits that `git merge-base --is-ancestor` says are **not** on `main` — which reads as
+three published releases orphaned from the published branch. **It is not.** Every tagged *tree* is
+reproduced exactly by a commit that is on `main`: `v0.2.0`'s by `0d301bf`, `v0.3.0`'s by `f7684ef`,
+`v0.4.0`'s by `bac953b`. The released code is right; only the commit objects are parallel, and
+`git describe` is the only thing that suffers. *Recorded because the first reading was wrong twice:
+`git merge-base --is-ancestor v0.4.0 main` compares the **annotated tag object** and always fails —
+`v0.4.0^{}` is the question — and a stale `origin/` ref survived `git fetch --all`, which does not
+prune, showing a remote branch `git ls-remote` says does not exist.*
+
+**E2 — `clear`, and the corpus is arithmetic.** This is a statistics package whose data is
+**simulated**: `git grep` for `read_csv`, `load_dataset`, `requests.`, `urlopen` or an `http` URL
+across `src/` and `examples/` returns **nothing**, so no third party's data enters the repository at
+any point. Exactly **one** committed data artifact, `docs/data/findings.json` — three keys,
+`findings`, `schema_version`, `validation` — which is the record the page and the README are
+generated from. No personal data, no scraped content, no licence question. *The cheapest
+observation that would falsify it:* read `examples/*.py` for an embedded literal table rather than
+grepping for loaders, since a pasted dataset needs no reader.
+
+**A — `finding`, and it is the first breach of a hard ceiling the audit has measured.** **294 tests pass
+and 5 deselect in 159.6 s**, `ruff check .` reports *All checks passed!* Error handling is
+vacuously perfect and worth stating as such: across 12 modules there are **zero `except` clauses of
+any kind**, zero `print`, and two `Any` — a closed-form numerical library that raises rather than
+recovers.
+
+**`src/ab_lab/simulate.py` is 893 lines against `good-practices.md`'s 800 maximum.** It is the only
+file over 800 in the six repositories scanned so far, and it is not a near miss. *That sentence
+said "in the portfolio" in this row's first edition — written into the same commit that rescopes
+four such claims elsewhere in this document, and caught by the string sweep that commit's message
+recommends. Six of twelve is not the portfolio, and the seventh repository is where a running
+maximum stops being one.* Inside it: 31 top-level
+functions and one class, the longest `clustered_ratio_draw` at 97 lines. The module's density is
+the axis's second half — **14 functions exceed fifty lines across 12 modules and 3 704 lines**,
+against `doc-extract`'s nine across 77 modules and 14 523. `cluster.py`:235
+`cluster_robust_t_test` at 98 is the longest in the repository.
+
+*Against that, the execution census is the best measured yet*: the stdlib call-tracer reports
+**7 of 133 functions never called — 5.3 %**, and six of the seven are `results.py` properties and a
+`__str__`.
+
+**The five deselected tests were chased and they run.** `pyproject.toml`:64 sets
+`addopts = "-q -m 'not slow'"`, so the documented `pytest` never runs them, and `ci.yml` runs bare
+`pytest` on every push and pull request. They are not orphaned: `.github/workflows/refresh.yml`
+runs `pytest -m slow -q` **weekly**, and its header explains the split — *"The cheap guards on
+every pull request cannot catch that: they replay two cells at a tenth of their size… This job
+re-measures everything at full size once a week."* A designed division, documented where it is
+made. *Not a finding, and recorded because `0010` §3.6's second observation is that a skip is a
+pass and five silent deselections on every pull request look exactly like one.*
+
+**B — `clear`, and it is the answer two earlier rows were looking for.** `pl-jobs-lora` (B-4a) and
+`doc-extract` (B-5d) both found a guarded page beside an unguarded README, and §5's bullet about
+the published figure and its artifact being one `diff` apart has been asking since session 2 why
+nobody takes the step. **`ab-lab` takes it.** `sitegen/build.py`:64 generates `README.md` *and*
+`docs/index.html` from one record, and `tests/test_site_committed.py`'s G1 is parametrised over
+`sorted(build.build())` — **every artefact the generator produces** — asserting byte-equality with
+the committed file: *"a hand-edited page, README table or chart turns the pull request red."*
+
+*And its second guard is a shape this audit has not seen.* G3 enforces an **import budget**:
+`sitegen` may use the closed-form parts of `ab_lab` and may not simulate. Its docstring records why
+the obvious implementation fails twice over — `from … import` binds the name before any fixture
+runs, and patching `numpy.random.Generator` is a no-op because `default_rng` constructs the C-level
+type directly — so the build runs in a subprocess with `default_rng` replaced, and the proof is
+that `ab_lab.simulate` never entered `sys.modules`.
+
+*What is left unguarded is small and named.* By the distinct-figure-bearing-line measure used in
+A-5: `docs/index.html` 186 and `README.md` 70 are generated and byte-checked; `CLAUDE.md` (8) and
+five ADRs — `0002` (16), `0004` (4), `0005` (10), `0010` (33), `0011` (25) — total **96 lines**
+that no test opens. Against `doc-extract`'s 785 that is a different order of problem, and the six
+other ADRs are cited by the generated documents and so travel with them.
+
+**C — `finding`, and it is the first surface I have scanned that the checker fails.**
+`python -m tools.pagespec --only ab-lab` reads
+
+> `ab-lab   1 fail, 2 undecided`
+
+and **exits 0**, because `contrast marks` is `report-only`. The failure is real:
+**99 mark sites, 93 measured, 2 below threshold, worst 1.27:1 against 3.0:1 at a `<rect>` fill**,
+with 150 outside D5's obligation of which 21 are structure paint. Everything else passes — eleven
+tokens with both schemes, five tables all in `.table-wrap`, `contrast text` 44 of 44 measured at
+worst 4.85:1, clause 8 satisfied with three `U+202F`. The two undecided are `4 h1` and
+`contrast ground` (6 sites without a resolved ground, 1 selector unread).
+
+*This is `CLAUDE.md`'s own sentence arriving in a row rather than in a policy block*: **a run that
+prints `FAIL` and exits 0**, where the only thing saying why is the `gate policy` text. A reader of
+the exit code learns nothing. The repair is a design question about two SVG marks and belongs to
+`0009` §7 row 12's family, not to a repair pass on this repository.
+
+**D — `finding`, and it is `apply-scout`'s D-2 shape four times over.** **Four issues are open and
+all four are done**, each verified against the tree rather than against a claim:
+
+| issue | asks for | in the tree |
+|---|---|---|
+| #1 | cluster-robust variance | `src/ab_lab/cluster.py`, exported from `__init__.py`, `ADR-0008` |
+| #2 | CUPED variance reduction | `src/ab_lab/cuped.py`, exported, merged as PR #10 (v0.4.0), `ADR-0011` |
+| #3 | worked e-commerce case study | `examples/ecommerce_case_study.py` |
+| #4 | multiple-comparison control | `src/ab_lab/multiplicity.py`, exported, `ADR-0009` |
+
+The README and the page both describe all four as built — *Cluster-robust*, *CUPED*,
+*Benjamini-Hochberg* — so the repository contradicts its own tracker on its own front page. All
+four were opened 2026-07-21 as a scoping exercise and none was closed when the work landed.
+**`gh issue list --state all` returns the same four**, so there is no closed-issue half and no
+tracker history to reconcile: the whole tracker is four completed items presented as open work.
+
+*The rest of D is clean.* Description accurate and **pure ASCII**, read as bytes per §6's
+2026-09-17 row; homepage set to the Pages URL; `mit` matching `LICENSE`; one branch; both
+workflows `active`. **Seven topics against six `keywords`** in `pyproject.toml`, differing by
+`python` alone — and this is the **first of six scanned that declares keywords at all**, which
+sharpens A-5's cross-repo question: the rule `apply-scout` states is followed here without being
+written down.
+
+**Not checked.** The **eleven ADRs** were read where a figure or a citation pointed into them and
+nowhere else; `0006` alone carries 94 figure-bearing lines and is unread as an argument. The
+**`examples/` scripts** were read for data loaders and not executed — three of them produce the
+tables the page quotes, and re-running them is the `refresh.yml` job's work rather than a scan's.
+The **`slow` suite** was not run: `pytest -m slow` is the weekly job and the session ran the
+default. The **failing marks** were taken from the checker's own report and never inspected in a
+rendered page. And `docs/data/findings.json` was read by structure, not by value.
+
+### A-6 errata, 2026-09-18 — two figures that do not reproduce, and a scope
+
+Written by the stage that added `tools/queue.py`, which asks `git` the questions this row
+asked and gets different answers. **The subject is identical**: `ab-lab` is still pinned at
+`9864e73`, its working tree is clean, and nothing in it has moved — so this is not a page
+changing under a row, which is the case §4's header protects.
+
+**The scope.** *"This repository is the first scanned that **merges** rather than squashes"*
+is true of `ab-lab` and equally true of the five scanned before it.
+`git rev-list --merges --count origin/main`: `auth-log-scan` **3**, `apply-scout` **26**,
+`it-job-radar` **21**, `pl-jobs-lora` **7**, `doc-extract` **4**, `ab-lab` **8** — and **24**
+in this index, whose own `CLAUDE.md` says a branch commit is never reachable from `main`.
+Every repository in the portfolio merged pull requests until a date between 2026-08-14 and
+2026-09-03 and squashes since. What the row found is a portfolio-wide fact about a policy that
+changed, and it is §6's row of 2026-09-18.
+
+**`git rev-list --all --not main` reads 23 in the row and 0 today, and the difference is the
+session's own refs.** The scan prompt's E1 sends a session to fetch `refs/pull/*/head` into
+`refs/remotes/pr/*` before sweeping. With those refs fetched, the same command against the
+same gitlink in a fresh clone reads **34**; with them pruned it reads **0**. A number that
+moves with what the reader fetched is not a statement about the repository, and the row states
+it as one — *third instance in four days of `0010` §6's environment class*, after session 3's
+18 `ModuleNotFoundError` collection errors and session 4's CP1250 `gh` reading. §5 now carries
+the shape.
+
+**The three release tags are on `main`, under both conditions.**
+`git merge-base --is-ancestor v0.2.0^{} main` and its two siblings all succeed, with the PR
+refs fetched and without them. The row records the right question — it names `v0.4.0^{}`
+against the annotated tag object as the trap its first reading fell into — and then keeps the
+conclusion the wrong question produced. So *"the released code is right; only the commit
+objects are parallel"* has no subject: the tagged commits **are** commits on `main`, and
+`0d301bf`, `f7684ef` and `bac953b` are not reproductions of the tagged trees but, in the case
+of the last two, the merge commits themselves.
+
+**What reproduces, and it is the row's verdict.** E0's numerator: `9` commits carrying the
+owner's name, which is R-1's cell for this repository. Its denominator moves with the same
+refs as everything else in this paragraph — `--all` reads 44 commits in a clone with no PR
+refs and `0010` §2.1 recorded 67 — so the fraction is not wrong so much as unstated. **No
+verdict moves**: E0 stays `finding` · metadata and it is still R-1's.
+
+*What this errata does not do is re-measure the row's other axes.* A, B, C and D were taken by
+instruments this stage did not run, and a correction is not a re-scan.
 
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
@@ -2355,6 +2599,153 @@ commit returns six lines and **the one the row actually names is not among them*
 found by reading. The guard folds each line with the next for exactly this, and that is not a
 hypothetical: it is how the row's own site behaves.
 
+### A-4 repair, 2026-09-18 — row 4 closed whole, in two sibling pull requests
+
+`pl-jobs-lora` `fa26842` (#19) and `64959c4` (#20), pointer bumped in the commit carrying this
+line. Entry state clean at the scan's gitlink `8fe2e02`; §3.3's command reads
+`pl-jobs-lora   clear, 3 undecided` before and after. The repository's suite went **233 → 247**
+and `ruff check .` stayed clean, run with `PYTHONPATH=src` in a fresh clone with no editable
+install — §6's row of 2026-09-14 is why that is said rather than assumed.
+
+**A-4.** The collector stopped folding its drops: `_fetch_examples` returns a breakdown in the
+shape `build_dataset` already used, and a run prints `N urls -> M usable (F fetch failed,
+U unusable page)`. `probe.dev_slice_size` and `data.sitemap_offers_sample` — the two knobs that
+reach `_spread_sample`'s divisor — are validated at load instead of surfacing as a
+`ZeroDivisionError` three modules away. The four untested pure functions have tests. And the
+artifact the page stands on has a carrier: the report is rebuilt from the committed JSON and
+required to render the committed markdown, byte for byte.
+
+**B-4a's carrier was vacuous twice before a battery made it bite, and that is the row's most
+portable result.** `tests/test_readme.py` refuses a README figure no artifact prints — and its
+own docstring quotes `102.6`, `2.5` and `4.7`, the three it exists to catch, so with `tests/`
+in the source corpus it sourced them to itself. The index records the identical shape in
+`tools/citations.py`, whose docstring says prose about a broken citation may not write one.
+Then the model-key exemption turned out to be case-sensitive: the config spells `qwen2.5-1.5b`
+and `CLAUDE.md`, `ADR-0001` and the page all write `Qwen2.5-1.5B`, so three files donated a
+bare `2.5` — enough to source a rounded latency cell, which is one of the three defects. Both
+were found by mutation, neither by reading, and the exemption now carries a test of its own
+because no mutation from outside can reach it.
+
+**B-4b, B-4c, B-4e.** The build census came out of the README rather than being corrected. Only
+one of its figures is unsourced outright — `76 %`, zero donors — and the rest are worse than
+that: they resolve to something that is not their subject. `90` has four donors and `99` five,
+none of them a repost count or a coverage figure; `800` has six, of which the nearest are the
+*target* in `configs/config.yaml` and `ADR-0002` and the fetched count in none of them.
+*The row's first edition said* **only `p90`/`p99`** *and* **twice** *— two hand counts inside a
+paragraph about a hand count, corrected by the review that ran the sweep.* The HF Hub
+freeze now reads as deferred on the page, in the README and in `.gitignore`, which is the
+owner's call between two published sentences of which one was false. `.gitignore`'s claim about
+`results/labeling_qa/` was true of `results/eval/`. And `test_docs_page.py`'s census is asserted
+rather than stated — 251, 39 and 58 today against the 262, 39 and 59 it carried.
+
+**B-4d** is the second instrument for a retired vocabulary, ported from `it-job-radar`'s
+`tests/test_decisions.py` with the two changes §5 asked for: case-insensitive, because
+`requirements-train.txt`'s loudest line was `COLAB-ONLY`, and **headings inside decision
+documents swept while their bodies are not**. `ADR-0004`'s own headings are exempt and the
+guard says so — its title and its amendment are the two places the retired name has to appear.
+
+**C-4** took the wording the row proposed and the owner approved, with one deviation the page
+itself settles: the row wrote `94 %` and the page writes `94%`, `100%` and `16%` everywhere
+else, so its own typography won.
+
+**The review round, `5ceb95b` (#21), and it is the half worth reading.** Both sibling pull
+requests were merged **without** the `code-reviewer` pass `CLAUDE.md` requires before work is
+proposed — recorded here rather than quietly repaired, because the pass then found six things
+and one of them was load-bearing. `test_the_shipped_config_passes_both_new_validators` called
+itself *"load is the assertion"* and asserted two properties of `configs/config.yaml`: deleting
+**both** validator calls from `load_config` left all 247 tests green, so the clause this repair
+is about — *validated at load* — had no carrier at all. The divisor also had a **third** path
+neither validator can see, `--limit` from argparse, where a negative silently collects
+`len(urls) - 1` offers. And the Colab sweep cited eight lines holding no marker, because it
+detected over a line pair and reported the first half.
+
+*The battery found the seventh, by doing it.* The test written for that third path was one
+mutation away from **scraping production**: with the guard removed it went through `_session`
+into a live fetch of `theprotocol.it` and ran ten minutes before it was killed. It now replaces
+the session with a refusal, so it asserts the order rather than only the raise.
+
+*What this repair did not touch.* The notebook, the two ADRs read as arguments, and the report's
+rows end to end — §4's `Not checked` cell for this row still holds, and closing a finding is not
+re-scanning the repository.
+
+### A-6 repair, 2026-09-18 — D-6 closed, C-6 deferred, A-6 measured and left open
+
+Entry state: `ab-lab` `HEAD`, its `origin/main` and the index's gitlink are all `9864e73`, the
+working tree clean. §3.3's command before and after reads `ab-lab   1 fail, 2 undecided` — the
+`contrast marks` failure A-6 recorded, unchanged, because **this pass edits no file in
+`ab-lab`**.
+
+**A-6 stays `open`, and the reason the plan gave for closing it does not survive a
+measurement.** The architecture pass that opened this phase recommended `declined` on the
+grounds that a closed-form numerical library has no boundary to split on. It has three, and
+they are written in the module's own docstrings: **seven** draws — `binary_draw` through
+`covariate_draw`, **308** lines — ten **adapters** of 3 to 14 lines, nine of them opening
+*"Adapter: …"* and the tenth *"Adapter factory: …"*, and seven **runners**
+(`run_experiments`, `run_clustered_experiments`, `run_metric_suite`, `run_with_peeking`,
+`peeking_curve` and two more). *This read* **eight draws, about 290 lines** *in the first
+edition — a hand count inside the sentence that says the boundary comes from the module's own
+docstrings, found by the review. The eighth was `poisson_cluster_size`, which returns a
+function that gives cluster sizes and draws no experiment.* Re-measured here rather than
+carried from the row, **every size figure the split rests on reproduces**: `simulate.py`
+**893** lines against `good-practices.md`'s 800, 31 top-level functions and one class, longest
+`clustered_ratio_draw` at **97**, and **14** functions over fifty across 12 modules and
+**3 704** lines. *Only those.* A-6's A axis also carries a test count, a `ruff` run, a wall
+time and an execution census, and this pass re-ran none of them — §4's errata above says as
+much about the other axes and the same holds inside this one.
+
+So the finding is real and the refusal would have been false — **`SC-1`**, a planned item
+costed from a description that is wrong about what is there, arriving against a plan this
+session commissioned itself. What A-6 is instead is
+**second-column work** under §3.5: a new module is outside a one-pass repair by definition, and
+here the blast radius is not the module. `sitegen/build.py` generates `README.md` and
+`docs/index.html` from one record, G1 byte-checks every artefact the generator produces, and G3
+proves an import budget in a subprocess. *Two things the stage that takes it need not
+re-derive.* **G3 refuses on the exact string `ab_lab.simulate`** — `tests/test_site_committed.py`
+prints every `ab_lab*` name the subprocess imported and then asserts that one is not among them
+— so a `simulate/` **package keeping that name** leaves the guard biting, because importing
+`ab_lab.simulate.draws` puts `ab_lab.simulate` in `sys.modules` exactly as the module does.
+**Renaming it anywhere else leaves G3 green over nothing**: the assertion is a literal, so a package called `ab_lab/sim/` makes it trivially true. That is `SG-2`'s shape reached from the naming side rather than from a tool's default — the assertion stays correct, and its answer is always the one it wants. *The first edition
+of this note said the guard reads names beginning `ab_lab`; that describes the line that
+prints the probe, not the line that refuses, and the difference is the whole value of the note
+to its reader.*
+
+**And the boundary is not where a split would naturally cut.** The module is laid out by
+mechanism rather than by type: `clustered_ratio_draw` is followed by its two adapters and then
+`run_ratio_experiments`, `covariate_draw` by `cuped_test`, `unadjusted_test` and
+`run_cuped_experiments`, and so on — which is why `covariate_draw` sits after the ratio
+adapters instead of beside the other draws. So draws / adapters / runners is a split **by
+type**, and `good-practices.md` §1, the same file this row quotes for the 800-line ceiling,
+asks for feature or domain instead. Both readings are recorded because the stage that takes
+A-6 has to choose between them, and neither is derivable from a line count.
+
+**C-6 → `deferred`.** Two `<rect>` marks at 1.27:1 against 3.0:1 under a `report-only` key.
+A-6 already routes it: this is `0009` §7 row 12's family and a design question about what a
+mark drawn on another mark is worth, not a repair pass on this repository. Nothing a session
+may do closes it, which is what the state word says.
+
+**D-6 → `closed`, on the owner's explicit instruction, and the sequence is the point.** Four
+issues were open and all four were done. This pass re-checked the artefacts against the tree
+rather than against the row — `src/ab_lab/cluster.py`, `src/ab_lab/cuped.py`,
+`src/ab_lab/multiplicity.py` and `examples/ecommerce_case_study.py`, with twelve lines in
+`__init__.py` naming them, and `gh` returning the same four numbers and titles A-6 recorded.
+Then it **stopped and asked**, because closing an issue is outward-facing, and it acted when
+the instruction came: `ab-lab` #1, #2, #3 and #4 closed 2026-09-18, each with a comment naming
+the file that answers it and, **where one exists**, the ADR that decided it — #3's does not,
+because the worked case study has no ADR and A-6's own table says so. `gh issue list --state all` now returns
+four `CLOSED` and nothing open, so the repository has stopped contradicting its own tracker on
+its own front page.
+
+**No file changed and no pull request exists**, which is why this closure cites issue numbers
+rather than a commit on `main`: the whole repair lives in GitHub state. Two things follow that
+a later reader should not have to re-derive. **It needed no issue body** — the row was the
+source, which is `0010` §3.1's scan/repair split doing exactly what it was built for, and the
+counter-example is `D-2`, still `deferred`, where the repair *is* an edit to the bodies.
+And **the precedent that shaped the pause is §4's A-3 repair**, where this repository's own
+metadata moved only on an explicit instruction. The standing reminder that reasoning past a
+rule to reach an easy action is the practice `CLAUDE.md` forbids by name is **§6's repair row
+of 2026-09-14** — the one about `D-2`'s issue bodies, not its sibling of the same date, which
+is about a bare `pytest` in session 3.
+
 ## 5. Cross-cutting
 
 What recurred rather than happened once. A per-repository split cannot see a pattern by
@@ -2435,8 +2826,33 @@ construction; this section and §2's baselines are where patterns accumulate.
   `0008` §5's carried README row meeting the audit from the other side: the row says no
   carrier exists, and what session 2 adds is that in at least one repository **the carrier
   already exists and the README simply sits outside it**.
+  **Session 6 answers it.** `ab-lab` (B in A-6) **generates the README**: `sitegen/build.py`:64
+  writes `README.md` and `docs/index.html` from one record, and `tests/test_site_committed.py`'s
+  G1 is parametrised over *every artefact the generator produces*, asserting byte-equality — *"a
+  hand-edited page, README table or chart turns the pull request red."* The step this bullet has
+  asked about since session 2 costs one `parametrize` over the build's own output, and the
+  repository that took it stopped treating the README as prose beside a generated page and started
+  treating it as a second output of one build. **That reframes the bullet for the repositories
+  still in the queue**: the question is not *is the README checked* but *is it generated*, because
+  a README nobody hand-edits needs no provenance guard at all.
+  *And its second guard is a shape this audit has no other instance of.* G3 enforces an **import
+  budget** — `sitegen` may use the closed-form parts of `ab_lab` and may not simulate — in a
+  subprocess with `numpy.random.default_rng` replaced, proving the constraint by
+  `ab_lab.simulate` never entering `sys.modules`. Its docstring records the two in-process versions
+  that silently do not work: a top-level `from … import` binds the name before any fixture runs,
+  and patching `numpy.random.Generator` is a no-op because `default_rng` constructs the C-level
+  type directly.
+  **Closed 2026-09-18, and the close is a counter-example to the reframing above.** `ab-lab`
+  answered *generate the README*; `pl-jobs-lora` took the other route and had it **checked** —
+  `tests/test_readme.py`, `0007` §5.0 over the second surface, reusing the page guard's own
+  `_canonical` and `_NUMBER`. Both close the bullet and they are not the same answer: a
+  generated README cannot drift and needs no provenance guard, a checked one can and does, and
+  the choice belongs to whether the document is an output of a build or a thing a person
+  writes. *So the question is not only* **is the README generated** *— it is which of the two a
+  repository is willing to be.* The fifth repository's carrier also went vacuous twice before a
+  mutation made it bite, which is in `0010` §4's A-4 repair and is the cheaper half to copy.
   **Third repository, and the sharpest form yet: the repository said the README was a surface,
-  in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-1) holds
+  in a commit title, and did not extend the carrier.** `pl-jobs-lora` (B-4a) holds
   `tests/test_docs_page.py`, 327 lines enforcing `0007` §5.0 over `docs/index.html` — and the
   README reproduces the same evaluation table with **three cells rounded away** from what
   `results/eval/report.md` prints. The commit that corrected four *other* cells of that table,
@@ -2624,6 +3040,21 @@ construction; this section and §2's baselines are where patterns accumulate.
   repair, from a reader who happened to open the paragraph. Three repositories, three
   sessions, and not one of the three found by an instrument.
 
+- **An instrument whose answer is about the reader's environment rather than about the
+  subject, and the third instance is the one that makes it a rule.** Session 3's bare `pytest`
+  produced 18 `ModuleNotFoundError` collection errors that read exactly like §3.4's `blocked`;
+  session 4's `gh repo view` through a CP1250 console produced mojibake on a repository's front
+  door and was written up as a D finding before it was withdrawn; and session 6's
+  `git rev-list --all` produced a count of commits *"orphaned from the published branch"* that
+  is **0** in a clone with no PR refs and **34** in one that ran the scan prompt's own E1
+  fetch. The first two are §6 rows because they indict a repository; this one is different in a
+  way worth keeping: **the prompt creates the condition**, in a step four sections above the
+  one that quotes the number. So the rule is not *check your environment* — it is that a
+  command whose result set is `--all`, `--remotes` or any glob over refs is reporting on a
+  clone, and the figure has to name the ref set beside it or ask a named ref instead.
+  `0010` R-1's denominators and §2.1's commit column are both `--all` readings, which is why
+  this belongs here rather than in one row's errata.
+
 ## 6. Corrections, and which prompt version they bind
 
 The scan and repair prompts carry a version stamp. A correction here **outranks the prompt**
@@ -2650,3 +3081,5 @@ question rather than as a defect.
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
 | 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
 | 2026-09-17 | **v3.0**, both prompts | §3.1's session 13 and §3.3's command row named `current_projects` as the repository a session branches and commits in — and `0011` §6 route A made it the archive that same day, where a commit reaches no reader at all. *The prompts' own text is clean and they are bound anyway*: `git grep -c current_projects` over both returns zero, for two different reasons — the scan prompt names the **role** (*"the index audit branch"*, *"in the index"*), which moved with the route, and the repair prompt never names the index at all, saying *"this repository"*. So a session reading only a prompt is not misled and a session reading the queue is, which is why the correction lives here. **Session 4 is the worked instance**: it was scanned, reviewed and twice errata'd on a branch in a repository that by evening accepted no commits, and it reached a reader only by transplant | **The index is `P0w3r223/portfolio-index`**, and that is where a session branches, commits, and opens its pull request. The archive is outside the queue and outside the corpus: `0011` is its audit of record — every blob in its object database and 533 commits across every ref, which no scan session can better — §3.1's note carries the reasoning, and **the denominator stays fifteen**. A session that finds an unpushed branch in the archive should read `0012` §4 before doing anything with it: route A rewrote no history, so the branch's base survives under the same SHA and a cherry-pick applies, and two commands settle in advance whether it can conflict |
+| 2026-09-18 | **v2.0**, repair, and `CLAUDE.md`'s entry-state section | the closing rule sends a session to cite the commit **on `main`** and gives one reason for it — *“this repository squash-merges, so a branch SHA exists for no later reader”*. The reason is true of this repository **today** and false of its history, and false of all twelve siblings' too: `git rev-list --merges --count origin/main` reads **24** here and between **1 and 26** in every one of the twelve. Every repository in the portfolio merged its pull requests until some date between 2026-08-14 and 2026-09-03 and has squashed since, so a branch commit from that era is reachable from `main` permanently. `0010` A-6 built a finding on the same premise read the other way round, and its errata is in §4 | **Cite what a reader can resolve, and ask rather than remember.** `git merge-base --is-ancestor <sha> origin/main` answers it in one command per repository, and `python -m tools.queue` now asks it of every `Index SHA` in §4 and prints the sibling commits the rows cite. What the rule asks for does not change — everything committed since 2026-09-03 is squashed and a branch SHA written today resolves for nobody — but its reason is a policy with a date on it rather than a property of the repository, and a session that knows which is which can check |
+| 2026-09-18 | **v2.0**, repair | closing step 1 reads *“Set the row's state to `closed` … and cite the commit **on `main`**”*, and assumes a repair always produces one. `D-6`'s repair is four issues closed on GitHub: it changes no file, so there is no commit to cite and no pull request to open, and a session following the step literally either invents a citation or leaves a done row `open`. §4's own definition of `closed` had the same gap and is amended in the same commit | **Cite the outward artefact instead, and say that is what you are doing.** Issue numbers with their closing date, or the metadata field and its new value — whatever a reader can resolve without this repository. The commit rule is unchanged wherever a file moves, which is every other closure in §4 so far. *`D-3`'s repair of 2026-09-14 was half this shape and did not raise it, because the other half carried a commit and the row read as normal* |
