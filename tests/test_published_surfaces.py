@@ -445,7 +445,8 @@ def test_a_stylesheet_the_wire_dropped_skips_the_fetching_sweep(
         _sweep(allow_fetch=True)
 
 
-def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(monkeypatch):
+def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(
+        monkeypatch, committed_pages_on_disk):
     """The row's whole subject, as an assertion rather than as a mode flag.
 
     `wroclaw-air-insights` commits no HTML, so the fetchless sweep reads eleven and the gate
@@ -457,6 +458,9 @@ def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(m
     try:
         fetched, statuses = _sweep(allow_fetch=True)
     except pytest.skip.Exception as incomplete:
+        # With the fixture requested, a skip reaching here is about the wire rather than about
+        # a checkout that was never populated — which is what this branch has always assumed
+        # and, until the fixture, was true only because the fetchless sweep above ran first.
         # **A skip is a pass, and that is what makes this branch necessary.** Every other
         # assertion here is reached only if the sweep returns, so a mode that never arrives at
         # `sources.load` takes the wire away from all twelve surfaces, marks the corpus
