@@ -8,8 +8,8 @@ does not contain, and an `Index SHA` no reader can resolve.
 
 **The ancestry guard has a precondition and this file asserts it twice.** `git merge-base`
 cannot answer in a shallow checkout, and `actions/checkout` is shallow by default — so the
-guard would have skipped in CI for ever, which is a pass. `test_the_core_job_can_answer_an_
-ancestry_question` reads the workflow and refuses a `core` job without `fetch-depth: 0`. That
+guard would have skipped in CI for ever, which is a pass. `test_the_core_job_runs_the_queue_and_can_answer_an_ancestry_question` reads the workflow and
+refuses a `core` job without `fetch-depth: 0`. That
 is the same shape as `0012` §8's finding one file over: the guard was well built and its
 precondition was unasserted.
 """
@@ -25,6 +25,8 @@ from conftest import ROOT
 from tools import queue
 
 WORKFLOW = ROOT / ".github" / "workflows" / "pagespec.yml"
+PROMPTS = ROOT / "docs" / "audit"
+AUDIT = PROMPTS / "0010_the-portfolio-audit.md"
 
 
 def test_the_order_sentence_names_exactly_the_submodules_the_index_carries():
@@ -48,17 +50,22 @@ def test_every_session_the_queue_names_carries_a_kind_the_document_defines():
         f"words to answer what is left")
 
 
-def test_the_queue_and_the_rows_partition_the_twelve():
-    """Every submodule is either scanned or remaining, and never both.
+def test_the_queue_and_the_rows_account_for_every_submodule_the_index_carries():
+    """The twelve are each either scanned or remaining, counted against `.gitmodules`.
 
-    The arithmetic is the guard. `0010` §5's own bullet about a census going stale four lines
-    from the instrument that produced it is the argument for asserting this rather than
-    printing it.
+    *This guard asserted something weaker until the review of the stage that wrote it*: that
+    `scanned()` and `remaining()` do not overlap, which they cannot — `remaining()` is defined
+    by subtracting one from the other, so the assertion was a tautology dressed as a statement
+    about the record. The arithmetic below is anchored outside both functions, which is the
+    only version of this that can fail.
     """
-    scanned = queue.scanned()
-    left = {one.subject for one in queue.remaining()}
-    assert not (scanned & left)
-    assert scanned | (left & set(queue.order())) == set(queue.order())
+    declared = {name.strip() for name in
+                re.findall(r"^\s*path = (.+)$", (ROOT / ".gitmodules").read_text(encoding="utf-8"),
+                           flags=re.MULTILINE)}
+    scanned_repos = {row.repo for row in queue.rows() if row.repo in declared}
+    left_repos = {one.subject for one in queue.remaining() if one.subject in declared}
+    assert scanned_repos | left_repos == declared
+    assert len(scanned_repos) + len(left_repos) == len(declared)
 
 
 def test_the_row_numbers_follow_the_order_the_method_sets():
@@ -93,6 +100,29 @@ def test_every_open_item_is_an_id_and_a_state_word():
 # already covers both halves. Two tests over one property is `0009` §15.4's duplicate class, and
 # the deletion is recorded here rather than left silent because the file would otherwise look
 # like it protects two things.
+
+
+def test_the_state_vocabulary_answers_to_the_document_and_to_both_prompts():
+    """`STATES` against the four places that spell it, which is the half a registry forgets.
+
+    `malformed()` refuses a cell using a word outside `STATES`. Nothing refused the opposite
+    direction until the review measured it: adding a sixth state to the tuple, renaming a
+    bullet in §4's header, and rewriting the list in the scan prompt were **all three green**,
+    while the guard above it claimed in its own docstring that the vocabulary is defined in the
+    document rather than in the code. `order()` against `.gitmodules` is the pattern this
+    borrows — a registry has to answer to something outside its own file, `0010` §5.
+    """
+    section = AUDIT.read_text(encoding="utf-8").split("## 4. The rows")[1]
+    declared = re.findall(r"^- `([a-z]+)` — ", section.split("\n| # | Repo |")[0],
+                          flags=re.MULTILINE)
+    assert set(declared) == set(queue.STATES), (
+        f"§4's header defines {sorted(declared)} and `tools/queue.py` carries "
+        f"{sorted(queue.STATES)}")
+    spelled = " · ".join(queue.STATES)
+    for prompt in (PROMPTS / "0010_scan-prompt.md", PROMPTS / "0010_repair-prompt.md"):
+        assert spelled in prompt.read_text(encoding="utf-8"), (
+            f"{prompt.name} no longer spells the vocabulary as `{spelled}`, so a session "
+            f"reading the prompt and a session reading §4 would write different cells")
 
 
 def test_no_row_cites_an_index_sha_a_reader_cannot_resolve():

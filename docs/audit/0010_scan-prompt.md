@@ -55,8 +55,8 @@ are what `git grep` reads; authorship is not a blob. See `0010` R-1.
 
 **E1, if you re-run it** — fetch what the remote will still serve first:
 `git fetch origin '+refs/pull/*/head:refs/remotes/pr/*'`, then sweep
-`git rev-list --all --remotes=pr`. GitHub keeps those refs indefinitely and this portfolio
-squash-merges; 209 such commits across the twelve are invisible to `rev-list --all` alone.
+`git rev-list --all --remotes=pr`. GitHub keeps those refs indefinitely and this portfolio has
+squashed since a date between 2026-08-14 and 2026-09-03 — before it, every repository here merged, and those branch commits are on `main`. 209 such commits across the twelve are invisible to `rev-list --all` alone.
 Count hits before reading them, and do not pipe the sweep through `head`.
 
 **E2 — third-party data.** Read the committed data artifacts and ask of each: whose data, under

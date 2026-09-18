@@ -202,9 +202,11 @@ def rows() -> tuple[Row, ...]:
     """§4's table, one `Row` per line, with the `Open` cell parsed into items."""
     found: list[Row] = []
     inside = False
+    width = 0
     for line in _lines():
         if line.startswith("| # | Repo | Index SHA"):
             inside = True
+            width = len(_cells(line))
             continue
         if not inside:
             continue
@@ -215,8 +217,25 @@ def rows() -> tuple[Row, ...]:
         if not line.startswith("|"):
             break
         cells = _cells(line)
-        if len(cells) < 9 or set(cells[0]) <= {"-"}:
+        if set(cells[0]) <= {"-"}:
             continue
+        # **A malformed row is loud, and the reason is the answer it would otherwise give.**
+        # Dropping a row silently takes its number out of `scanned()` and puts the session back
+        # into `remaining()` — so the queue answers *scan this again* about work already done,
+        # which costs a session. Every other bound in this module raises; this one returned
+        # `continue` until the review of the stage that wrote it measured what the silence
+        # produced.
+        #
+        # **The width comes from the header rather than from a literal**, and the difference is
+        # not cosmetic: written as `< 9` against a ten-column table, this admitted a row with a
+        # column missing, shifted every cell after the gap by one, and read the `Not checked`
+        # prose as the `Open` cell. The mutation that removed a column went green and the
+        # battery said so — which is `0010` §3.6 working, one observation later than it should
+        # have been needed.
+        if len(cells) != width:
+            raise AssertionError(
+                f"{AUDIT.name}: §4's header declares {width} column(s) and a row carries "
+                f"{len(cells)}: {line[:60]}...")
         items = []
         for raw in cells[8].split("·"):
             text = raw.strip().strip("*")
@@ -238,17 +257,24 @@ def malformed(found: tuple[Row, ...] | None = None) -> tuple[Item, ...]:
 
 
 def scanned(found: tuple[Row, ...] | None = None) -> frozenset[str]:
-    """The repositories §4 already holds a row for."""
-    names = set(order())
-    return frozenset(row.repo for row in (found if found is not None else rows())
-                     if row.repo in names)
+    """The **session numbers** §4 already holds a row for.
+
+    Keyed on the number rather than on the repository, and that is not a detail. Three of the
+    fifteen sessions have no submodule as their subject — 13 is this repository, 13b the
+    profile README, 13c four repositories outside the portfolio — so a set of repository names
+    can never contain them and they would sit in `remaining()` for ever, with no instruction in
+    either prompt telling anyone how to take them out. Found by the review of the stage that
+    wrote this function, which asked how sessions 13 to 13c ever close.
+    """
+    return frozenset(row.number for row in (found if found is not None else rows())
+                     if row.number and not set(row.number) <= {"\u2014", "-"})
 
 
 def remaining() -> tuple[Session, ...]:
     """Every session with no row, in §3.1's order. The answer to *what next*."""
     done = scanned()
     return tuple(one for one in sessions()
-                 if one.kind not in {"done", "repair"} and one.subject not in done)
+                 if one.kind not in {"done", "repair"} and one.number not in done)
 
 
 def shallow(cwd: Path | None = None) -> bool:
@@ -258,6 +284,12 @@ def shallow(cwd: Path | None = None) -> bool:
 
 def ancestry() -> tuple[tuple[Row, str], ...]:
     """Each row's `Index SHA` against the checkout this runs in.
+
+    **The question is asked of `HEAD` and not of `origin/main`**, which is a choice with a
+    cost: a row citing a commit on the branch under review is an ancestor of `HEAD` there and
+    stops being one once the squash lands, so that defect is refused on `main` rather than in
+    the pull request. `origin/main` is not a ref every checkout has — `actions/checkout` fetches
+    the ref it was asked for — and a guard that skipped in CI would refuse nothing at all.
 
     Four answers. `ancestor` is the good one. `unresolved` means no such commit exists here,
     which is the transplant class: a row written in the archive citing a commit this
@@ -272,7 +304,11 @@ def ancestry() -> tuple[tuple[Row, str], ...]:
     for row in rows():
         sha = row.index_sha
         if not sha or not re.fullmatch(r"[0-9a-f]{7,40}", sha):
-            out.append((row, "none"))
+            # A numbered row with no readable SHA is a row whose scan cannot be reproduced;
+            # the portfolio-wide row legitimately has none. The two were one verdict until the
+            # review, and `none` printed nowhere — a state declared with no instance and no
+            # carrier, which is the shape §4's header had just named about `declined`.
+            out.append((row, "none" if not row.number[:1].isdigit() else "missing"))
         elif _git("cat-file", "-e", f"{sha}^{{commit}}").code != 0:
             out.append((row, "unresolved"))
         elif _git("merge-base", "--is-ancestor", sha, "HEAD").code != 0:
@@ -313,6 +349,13 @@ def sibling_citations() -> tuple[tuple[str, str, str, str], ...]:
     its own line, and a token with no repository on the line is dropped rather than credited
     to the nearest one. A wrong attribution resolves green, which is worse than no reading.
 
+    **In CI this census says nothing and that is by design.** `core` checks out no submodule,
+    so every verdict is `not checked out`; `surfaces` checks them out at the depth
+    `actions/checkout` chooses, so every verdict is `shallow`. It is an instrument for a
+    working session, and the guard over it asserts only that its vocabulary holds — giving
+    `surfaces` a full history to make it speak would buy a heuristic a job, which is the wrong
+    order.
+
     Printed and never gated, and that is a measurement rather than modesty: the attribution is
     a heuristic over a population small enough to read, and this portfolio has already
     convicted one source-text heuristic for punishing the better pattern — `0010` §5, closed
@@ -341,6 +384,20 @@ def sibling_citations() -> tuple[tuple[str, str, str, str], ...]:
     return tuple(out)
 
 
+def _state_block(found: tuple[Row, ...], items: list[Item],
+                 counted: dict[str, int]) -> list[str]:
+    """The tally, with every declared state printed including the empty ones.
+
+    An empty bucket that prints nothing is a state that exists only in a document, which is
+    what §4's header says `declined` and `pending` must not become.
+    """
+    lines = [f"  rows         {len(items)} item(s) across {len(found)} row(s)"]
+    for state in STATES:
+        note = "" if counted[state] else "   — declared, no instance yet"
+        lines.append(f"    {state:<10} {counted[state]}{note}")
+    return lines
+
+
 def report() -> list[str]:
     found = rows()
     # `done` is session 0, this document, and `repair` is `R1…Rn`, which is not a queue but a
@@ -351,8 +408,8 @@ def report() -> list[str]:
     items = [item for row in found for item in row.items]
     counted = {state: sum(1 for item in items if item.state == state) for state in STATES}
 
-    lines = [f"queue — {len(queue)} session(s) in `0010` §3.1, {len(scanned(found))} with "
-             f"a row in §4, {len(left)} to go", ""]
+    lines = [f"queue — {len(queue)} session(s) in `0010` §3.1, "
+             f"{len(queue) - len(left)} with a row in §4, {len(left)} to go", ""]
     def _name(one: Session) -> str:
         """A session's subject, short enough for a queue line. §3.1 writes three of them as a
         sentence with its scope attached, and the scope belongs in §3.1 rather than here."""
@@ -364,10 +421,7 @@ def report() -> list[str]:
         lines.append("  remaining    "
                      + " · ".join(f"{one.number} {_name(one)}" for one in left))
     lines.append("")
-    lines.append(f"  rows         {len(items)} item(s) across {len(found)} row(s)")
-    for state in STATES:
-        note = "" if counted[state] else "   — declared, no instance yet"
-        lines.append(f"    {state:<10} {counted[state]}{note}")
+    lines.extend(_state_block(found, items, counted))
 
     for state in STATES:
         by_row = [(row, [one for one in row.items if one.state == state]) for row in found]
@@ -394,7 +448,7 @@ def report() -> list[str]:
     good = sum(1 for _, how in verdicts if how == "ancestor")
     lines.append(f"  index SHAs   {len(verdicts)} cited, {good} reachable from HEAD")
     for row, how in verdicts:
-        if how not in {"ancestor", "none"}:
+        if how != "ancestor":
             lines.append(f"      row {row.number}: `{row.index_sha}` — {how}")
 
     cited = sibling_citations()

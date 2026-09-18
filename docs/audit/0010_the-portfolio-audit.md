@@ -63,6 +63,13 @@ Index `2cb5d45` on `main`, level with origin, twelve pointers matching their own
 anyone can still fetch. This portfolio squash-merges, which is what puts every branch commit
 there. §3.4's E1 fetches them first for that reason.
 
+*The second sentence is true of the portfolio as it has committed since a date between
+2026-08-14 and 2026-09-03 and false of everything before it, where all thirteen repositories
+merged their pull requests — 24 such commits on this index's own `main`. The figure above stands:
+it was measured against `refs/pull/*`, which holds the heads whether the merge squashed them or
+not. §6's row of 2026-09-18 and A-6's errata are the correction; this note is here because §2 is
+the state the audit was opened against and is corrected rather than rewritten.*
+
 ### 2.2 The surfaces
 
 `python -m tools.pagespec --detail`, the run `--only` cannot take because it suppresses both
@@ -320,6 +327,16 @@ exactly that reason. **Four findings had no address at all and were given one on
 moved and nothing was renumbered: repairing the `A-N` collision would move 25 sites for `A-4`
 alone, and this record has already paid once for an identifier renumbering, in A-4's errata,
 where five ids collided with a scheme in which `B-2` was taken.
+
+**An id addresses a paragraph by convention, and the convention is written down here rather
+than stamped onto six rows.** `<axis>-<session>` is the axis paragraph under that session's row
+heading — `C-6` is *“**C — `finding`, and it is the first surface I have scanned that the
+checker fails**”* under `### A-6`. A suffixed id — `B-4a`, `E-5c` — is a labelled paragraph and
+carries its literal, because a sub-finding has no axis heading to sit under. *The alternative was
+to stamp the four new ids onto their paragraphs; it was refused because the other rows' axis
+paragraphs carry no literal either, and a document with two notations for one address is the
+defect this paragraph is already about.* Reported by the review of this stage, which grepped
+`C-6` and found the announcement and the cell.
 
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
