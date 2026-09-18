@@ -2765,10 +2765,16 @@ pointer not bumped* — which is exactly what stood between `766203a` and this c
 cells read `closed`. That is a second defect of that push, different from the one §6 already
 records. **No instrument objected, and one of them looked**: `sibling_citations()` verdicts a
 cited commit against the *submodule's* `origin/main` and never against the gitlink the index
-pins, so a commit merged in the sibling and not yet pointed at reads `on main`. The gap is named
-here and not closed — closing it is an instrument change and this commit is a record change — and
-§4's *`declined` and `pending` have no instance today* still holds literally, no cell having
-carried the word.
+pins, so a commit merged in the sibling and not yet pointed at reads `on main`.
+
+**Closed one commit later, in this same pull request.** `sibling_citations()` asks the gitlink as
+well and answers `beyond the gitlink`; `unpinned_closures()` pairs that verdict with a row whose
+cells claim no open work, which is the shape this repair arrived as. Printed by the module and
+**refused** by `tests/test_queue.py` — the split the census's own docstring argues for, and it
+survives that argument: adjacency can misattribute a line and therefore cannot gate, but *the
+pointer is either bumped or it is not* is true whichever row the citation belongs to. §4's
+*`declined` and `pending` have no instance today* still holds literally, no cell having carried
+the word.
 
 *What this repair did not touch.* R-1 stays deferred, here as everywhere. §4's `Not checked` cell
 for this row still holds — the 79 result reports end to end, the attack payload text,

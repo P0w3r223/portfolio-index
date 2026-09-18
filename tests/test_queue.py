@@ -188,4 +188,60 @@ def test_the_sibling_citation_census_is_computable_and_says_only_what_it_can_see
     sentence rather than a defect.
     """
     verdicts = {how for _, _, _, how in queue.sibling_citations()}
-    assert verdicts <= {"on main", "off main", "unresolved", "shallow", "not checked out"}
+    assert verdicts <= {"on main", "off main", "unresolved", "shallow", "not checked out",
+                        "beyond the gitlink"}
+
+
+@pytest.mark.submodules
+def test_a_commit_past_the_pin_reads_beyond_the_gitlink_and_the_pin_itself_reads_on_main():
+    """Both branches of the gitlink question, against a pin supplied rather than read.
+
+    **The pin is injected on purpose, and the alternative is a guard that skips.** Every
+    gitlink in this repository is level with its sibling's `origin/main` whenever the
+    portfolio is at rest, so a test looking for a real commit past a real pin finds none and
+    passes by skipping — which `0010` §3.6 has already convicted once. Seeding `pins` exercises
+    the comparison itself: the tip against its own parent as the pin is *beyond*, and the tip
+    against itself is not.
+
+    The defect this covers is `0010` §4's A-5 repair: between `766203a` and its correction the
+    row read seven × `closed` while the gitlink held none of the repairs, and the census called
+    that `on main` because it never asked this question.
+    """
+    if queue.shallow():
+        pytest.skip("a shallow checkout cannot answer an ancestry question")
+    exercised = 0
+    for name in queue.order():
+        tree = ROOT / name
+        if not (tree / ".git").exists() or queue.shallow(tree):
+            continue
+        tip = queue._git("rev-parse", "origin/main", cwd=tree).out.strip()
+        parent = queue._git("rev-parse", "origin/main^", cwd=tree).out.strip()
+        if not tip or not parent:
+            continue
+        assert queue._against_the_pin(name, tip, tree, {name: parent}) == "beyond the gitlink", (
+            f"{name}: `{tip[:7]}` is one commit past the pin `{parent[:7]}` and the census "
+            f"called it something else")
+        assert queue._against_the_pin(name, tip, tree, {name: tip}) == "on main", (
+            f"{name}: `{tip[:7]}` pinned exactly by the gitlink is not `beyond` it")
+        exercised += 1
+    assert exercised, ("no submodule answered the gitlink question, so this guard proved "
+                       "nothing — which is the shape it exists to refuse")
+
+
+@pytest.mark.submodules
+def test_no_row_claims_closed_over_a_commit_this_repository_does_not_pin():
+    """§4's `pending` read by an instrument instead of by a reader who happens to look.
+
+    Printed by `tools.queue` and refused here, which is the split this file's docstring
+    describes: the census cannot gate, because its attribution is adjacency on a line, but a
+    row that claims **no open work at all** while citing a repair the gitlink predates is the
+    one shape where a wrong attribution still leaves a real question — the pointer is either
+    bumped or it is not, and `0010` §4 has a word for the answer.
+    """
+    if queue.shallow():
+        pytest.skip("a shallow checkout cannot answer an ancestry question")
+    bad = queue.unpinned_closures()
+    assert not bad, "\n".join(
+        f"§4 row {row.number} ({row.repo}) reads {states} and cites `{sha}`, which is merged "
+        f"in the sibling and past the gitlink this repository pins — §4 calls that `pending`"
+        for row, sha, states in bad)

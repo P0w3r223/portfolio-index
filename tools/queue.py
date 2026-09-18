@@ -282,6 +282,19 @@ def shallow(cwd: Path | None = None) -> bool:
     return _git("rev-parse", "--is-shallow-repository", cwd=cwd).out.strip() == "true"
 
 
+def gitlink(name: str) -> str | None:
+    """The commit this repository pins for a submodule, read from `HEAD`'s tree.
+
+    **`HEAD:` and not the checkout**, and the difference is the whole reason this exists: the
+    working tree is what a session may have moved a minute ago, and the gitlink is what a
+    reader who clones `main` actually gets. A submodule the index does not pin returns `None`
+    rather than raising — `0010` §3.1's session 13b and 13c name repositories outside the
+    twelve, and a row may legitimately cite one.
+    """
+    done = _git("rev-parse", f"HEAD:{name}")
+    return done.out.strip() if done.code == 0 else None
+
+
 def ancestry() -> tuple[tuple[Row, str], ...]:
     """Each row's `Index SHA` against the checkout this runs in.
 
@@ -362,6 +375,7 @@ def sibling_citations() -> tuple[tuple[str, str, str, str], ...]:
     at `apply-scout` `78d9899`.
     """
     repos = set(order())
+    pins: dict[str, str | None] = {}
     out = []
     for row, body in _bodies().items():
         for line in body:
@@ -379,8 +393,54 @@ def sibling_citations() -> tuple[tuple[str, str, str, str], ...]:
                 elif _git("merge-base", "--is-ancestor", sha, "origin/main", cwd=tree).code != 0:
                     how = "off main"
                 else:
-                    how = "on main"
+                    how = _against_the_pin(names[0], sha, tree, pins)
                 out.append((row, names[0], sha, how))
+    return tuple(out)
+
+
+def _against_the_pin(name: str, sha: str, tree: Path,
+                     pins: dict[str, str | None]) -> str:
+    """`on main` splits in two once the question is asked of the gitlink as well.
+
+    A commit merged in the sibling and not yet pointed at is on that repository's `main` and
+    invisible to every reader of this one — which is exactly `0010` §4's definition of
+    `pending`, and what let `766203a` write seven × `closed` over a pointer still holding none
+    of the repairs. The old reading called that `on main` and said nothing.
+    """
+    if name not in pins:
+        pins[name] = gitlink(name)
+    pin = pins[name]
+    if pin is None:
+        return "on main"
+    return ("on main" if _git("merge-base", "--is-ancestor", sha, pin, cwd=tree).code == 0
+            else "beyond the gitlink")
+
+
+def unpinned_closures() -> tuple[tuple[Row, str, str], ...]:
+    """Rows claiming no open work while citing a commit this repository does not pin yet.
+
+    **Printed, never gated, and for the same measured reason as the census it reads.** The
+    attribution underneath is adjacency on a line; a wrong one here would redden a build over
+    a sentence. What it buys is that the state has a name in the report instead of being
+    invisible — the defect this closes was not that the row was wrong but that no instrument
+    could say so.
+
+    A row is only paired with a citation **in its own repository**: a row body citing some
+    other sibling's commit is ordinary cross-reference and says nothing about this row's
+    pointer.
+    """
+    by_repo = {row.repo: row for row in rows()}
+    out: list[tuple[Row, str, str]] = []
+    for _, repo, sha, how in sibling_citations():
+        if how != "beyond the gitlink":
+            continue
+        row = by_repo.get(repo)
+        if row is None:
+            continue
+        states = {item.state for item in row.items}
+        if states & {"open", "pending"}:
+            continue
+        out.append((row, sha, " · ".join(sorted(states))))
     return tuple(out)
 
 
@@ -459,11 +519,21 @@ def report() -> list[str]:
         lines.append(f"  sibling SHAs {len(cited)} cited in row bodies — "
                      + ", ".join(f"{count} {how}" for how, count in sorted(tally.items())))
         for row, repo, sha, how in cited:
-            if how in {"unresolved", "off main"}:
+            if how in {"unresolved", "off main", "beyond the gitlink"}:
                 lines.append(f"      {row}: {repo} `{sha}` — {how}")
         lines.append("      attributed by adjacency, printed and never gated: a wrong")
         lines.append("      attribution resolves green, and this population is small enough")
         lines.append("      for a reader to take the list apart by hand")
+
+        unpinned = unpinned_closures()
+        if unpinned:
+            lines.append(f"  unpinned     {len(unpinned)} row(s) claiming no open work over a "
+                         "commit this repository does not pin")
+            for row, sha, states in unpinned:
+                lines.append(f"      row {row.number} {row.repo}: `{sha}` — cells read "
+                             f"{states}, which §4 defines as `pending`")
+            lines.append("      the repair is merged in the sibling and the gitlink still")
+            lines.append("      predates it, so no reader of this repository can see it")
     return lines
 
 
