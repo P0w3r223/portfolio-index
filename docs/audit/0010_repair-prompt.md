@@ -52,10 +52,17 @@ Rows blocked on a decision go to `architect` first, not into a commit.
 
 ## Closing
 
-1. Mark each row closed in §4, citing the commit **on `main`** — this repository
-   squash-merges, so a branch SHA exists for no later reader.
-2. A row you decided not to repair stays open with the reason. Closing a row you did not act
-   on is how the ledger stops being true.
+1. Set the row's state to `closed` in §4's `Open` column — the vocabulary is
+   `open · closed · declined · deferred · pending` and §4's header defines it — and cite the
+   commit **on `main`**. **Ask which commit that is rather than remembering**: every repository
+   here merged pull requests until a date between 2026-08-14 and 2026-09-03 and squashes since,
+   so a branch SHA from the merge era resolves for ever and one written this week resolves for
+   nobody. `git merge-base --is-ancestor <sha> origin/main` per repository, and
+   `python -m tools.queue` asks it of every `Index SHA` already in §4.
+2. A row you decided not to repair stays in the table with the reason: `declined` where the
+   decision is not to repair it, `deferred` where nothing a session may do closes it. Closing a
+   row you did not act on is how the ledger stops being true, and marking a refusal `open` is
+   how a queue grows a ceiling no reader can see.
 3. Pattern rather than incident → §5. Contradicted this prompt → §6, version `v2.0`.
 4. Session brief to `.claude/sessions/<YYYY-MM-DD>.md`.
 

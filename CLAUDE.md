@@ -69,6 +69,10 @@ tools/spec.py         every normative sentence of 0007 §5-§6, and what carries
 tools/citations.py    every §N reference in the index, and whether the section it names
                         exists. Four states; only `unresolved` gates, via tests/. ADR-0009
                         §3 step 1 — the answer to nothing in `tools/` reading 0008 at all
+tools/queue.py        the queue: which sessions of 0010 §3.1 have a row in §4, what state
+                        each item carries, which repository is next, and whether the commits
+                        the rows cite resolve in the checkout reading them. Prints and exits 0;
+                        tests/ refuses a malformed cell and an unresolvable Index SHA
 tools/entry_state.py  0008 §6's two repository-state rows, at two depths
 tests/                the guards; fixtures/ are reductions of record, see its README
 docs/reference/       failure-classes.md — the defect shapes this project keeps finding in
@@ -149,6 +153,11 @@ python -m tools.spec                     # every normative sentence, and what ca
                                          #   Prints and exits 0 — the uncarried rows are the
                                          #   point, and no instrument can tell an open item
                                          #   from a decision
+
+python -m tools.queue                    # what next: the sessions with a row, the one that
+                                         #   is next in §3.1's order, every Open item's state,
+                                         #   and every Index SHA §4 cites against this
+                                         #   checkout. Prints and exits 0
 
 python -m tools.pagespec                 # the conformance table; exits 1 if a GATED clause fails
 python -m tools.pagespec --detail        # every finding, which is what CI runs
@@ -297,9 +306,19 @@ docstring names which.
   index as unmerged with no pull request open — which is exactly what a stale ref plus a
   *closed* (not never-opened) pull request looks like. Three signals agreed with the false
   hypothesis at once.
-- **This repository squash-merges.** A branch commit is never reachable from `main` and never
-  will be. Cite the commit on `main`; a cell citing the branch SHA is citing a commit that does
-  not exist for any reader. `0008` §4.12 records the S-gate row doing it.
+- **This repository squash-merges *now*, and its history does not.**
+  `git rev-list --merges --count origin/main` reads **24** here and between **1 and 26** in
+  every one of the twelve: the whole portfolio merged pull requests until a date between
+  2026-08-14 and 2026-09-03 and has squashed since. So a branch commit from that era **is**
+  reachable from `main` and always will be, and one written this week is reachable from
+  nothing. Cite the commit on `main` — a cell citing this week's branch SHA cites a commit that
+  exists for no reader — and **ask rather than remember**:
+  `git merge-base --is-ancestor <sha> origin/main`, which `python -m tools.queue` runs over
+  every `Index SHA` in `0010` §4. `0008` §4.12 records the S-gate row doing it.
+  *This bullet read* **“A branch commit is never reachable from `main` and never will be”**
+  *until 2026-09-18 — a policy with a date stated as a property of the repository, in the
+  section of this file that exists to be checked before anything is said. `0010` A-6 read the
+  same premise from the other end and built a finding on it.*
 - **Check the working tree before quoting the checker.** A submodule on a fix branch, or a
   round of uncommitted edits, means `python -m tools.pagespec` is reading pages nobody has
   published. That has happened, for an hour, across twelve `CLAUDE.md` and eight `README.md`.

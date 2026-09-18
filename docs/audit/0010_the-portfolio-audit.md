@@ -63,6 +63,13 @@ Index `2cb5d45` on `main`, level with origin, twelve pointers matching their own
 anyone can still fetch. This portfolio squash-merges, which is what puts every branch commit
 there. §3.4's E1 fetches them first for that reason.
 
+*The second sentence is true of the portfolio as it has committed since a date between
+2026-08-14 and 2026-09-03 and false of everything before it, where all thirteen repositories
+merged their pull requests — 24 such commits on this index's own `main`. The figure above stands:
+it was measured against `refs/pull/*`, which holds the heads whether the merge squashed them or
+not. §6's row of 2026-09-18 and A-6's errata are the correction; this note is here because §2 is
+the state the audit was opened against and is corrected rather than rewritten.*
+
 ### 2.2 The surfaces
 
 `python -m tools.pagespec --detail`, the run `--only` cannot take because it suppresses both
@@ -288,15 +295,58 @@ a `B` cell reading `finding` beside an `Open` cell reading `A-1 closed` is a sca
 beside a repair's, not a contradiction. The row body says which. *Written on review, 2026-09-11,
 when the first closure landed and the header read literally as a list of what is still open.*
 
+**Since 2026-09-18 the `Open` column is a vocabulary rather than prose**, and the argument for
+it is this document's own first rule. *What next* was answered by reading 2 800 lines and
+counting by hand, in a repository whose standing rule is that a figure comes from an instrument
+and whose three hand counts of one population read 15, 18 and 19 against a true 20.
+`python -m tools.queue` reads this column now. Each item is a row id, one state word, and
+`·` between items:
+
+- `open` — raised, not acted on, and actionable by a repair session today.
+- `closed` — acted on, with the commit **on `main`** in the row body.
+- `declined` — deliberately not repaired, the reason in the row body. Without this state a
+  refusal and a backlog item are the same cell, and a queue that cannot say *no* grows a
+  ceiling no reader can see.
+- `deferred` — nothing a session may do closes it: it waits on a decision the owner owns
+  (`R-1`), or on a capability neither session type has — `C-3`, whose repair would have a
+  repair session read the raw data it may not, and `D-2`, which is that rule in the mirror.
+- `pending` — the repair exists and is not on `main` yet: an open pull request, or a pointer
+  not bumped. `tests/test_queue.py` exempts it from the ancestor check, which is the whole
+  reason the state is named.
+
+*`declined` and `pending` have no instance today.* Declaring them ahead of the first one is
+deliberate: both are produced by work already scheduled, and adding a state on the day it
+arrives moves the parser, both prompts and this paragraph inside a commit busy being about
+something else.
+
+**The ids are not a uniform scheme and this column does not pretend otherwise.** `A-4` names
+row 4 *and* that row's A-axis finding, because the row heading took the letter first; rows 5
+and 6 work around it in prose, and §5 writes “(C in A-5)” and “(B in A-6)” for
+exactly that reason. **Four findings had no address at all and were given one on 2026-09-18**
+— `C-4`, `C-5`, `C-6`, `D-6` — because a column cannot index what has no id. No verdict
+moved and nothing was renumbered: repairing the `A-N` collision would move 25 sites for `A-4`
+alone, and this record has already paid once for an identifier renumbering, in A-4's errata,
+where five ids collided with a scheme in which `B-2` was taken.
+
+**An id addresses a paragraph by convention, and the convention is written down here rather
+than stamped onto six rows.** `<axis>-<session>` is the axis paragraph under that session's row
+heading — `C-6` is *“**C — `finding`, and it is the first surface I have scanned that the
+checker fails**”* under `### A-6`. A suffixed id — `B-4a`, `E-5c` — is a labelled paragraph and
+carries its literal, because a sub-finding has no axis heading to sit under. *The alternative was
+to stamp the four new ids onto their paragraphs; it was refused because the other rows' axis
+paragraphs carry no literal either, and a document with two notations for one address is the
+defect this paragraph is already about.* Reported by the review of this stage, which grepped
+`C-6` and found the announcement and the cell.
+
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
-| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
-| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
-| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
-| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 · R-1 stands | the notebook end to end, two ADRs as arguments, the report's rows |
-| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 · R-1 stands | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
-| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 · R-1 stands | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
+| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 deferred | — |
+| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
+| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 open · B-4a open · B-4b open · B-4c open · B-4d open · B-4e open · C-4 open · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
+| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 open · E-5a open · E-5b open · E-5c open · B-5d open · B-5e open · C-5 open · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 open · D-6 open · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -2266,6 +2316,49 @@ The **`slow` suite** was not run: `pytest -m slow` is the weekly job and the ses
 default. The **failing marks** were taken from the checker's own report and never inspected in a
 rendered page. And `docs/data/findings.json` was read by structure, not by value.
 
+### A-6 errata, 2026-09-18 — two figures that do not reproduce, and a scope
+
+Written by the stage that added `tools/queue.py`, which asks `git` the questions this row
+asked and gets different answers. **The subject is identical**: `ab-lab` is still pinned at
+`9864e73`, its working tree is clean, and nothing in it has moved — so this is not a page
+changing under a row, which is the case §4's header protects.
+
+**The scope.** *"This repository is the first scanned that **merges** rather than squashes"*
+is true of `ab-lab` and equally true of the five scanned before it.
+`git rev-list --merges --count origin/main`: `auth-log-scan` **3**, `apply-scout` **26**,
+`it-job-radar` **21**, `pl-jobs-lora` **7**, `doc-extract` **4**, `ab-lab` **8** — and **24**
+in this index, whose own `CLAUDE.md` says a branch commit is never reachable from `main`.
+Every repository in the portfolio merged pull requests until a date between 2026-08-14 and
+2026-09-03 and squashes since. What the row found is a portfolio-wide fact about a policy that
+changed, and it is §6's row of 2026-09-18.
+
+**`git rev-list --all --not main` reads 23 in the row and 0 today, and the difference is the
+session's own refs.** The scan prompt's E1 sends a session to fetch `refs/pull/*/head` into
+`refs/remotes/pr/*` before sweeping. With those refs fetched, the same command against the
+same gitlink in a fresh clone reads **34**; with them pruned it reads **0**. A number that
+moves with what the reader fetched is not a statement about the repository, and the row states
+it as one — *third instance in four days of `0010` §6's environment class*, after session 3's
+18 `ModuleNotFoundError` collection errors and session 4's CP1250 `gh` reading. §5 now carries
+the shape.
+
+**The three release tags are on `main`, under both conditions.**
+`git merge-base --is-ancestor v0.2.0^{} main` and its two siblings all succeed, with the PR
+refs fetched and without them. The row records the right question — it names `v0.4.0^{}`
+against the annotated tag object as the trap its first reading fell into — and then keeps the
+conclusion the wrong question produced. So *"the released code is right; only the commit
+objects are parallel"* has no subject: the tagged commits **are** commits on `main`, and
+`0d301bf`, `f7684ef` and `bac953b` are not reproductions of the tagged trees but, in the case
+of the last two, the merge commits themselves.
+
+**What reproduces, and it is the row's verdict.** E0's numerator: `9` commits carrying the
+owner's name, which is R-1's cell for this repository. Its denominator moves with the same
+refs as everything else in this paragraph — `--all` reads 44 commits in a clone with no PR
+refs and `0010` §2.1 recorded 67 — so the fraction is not wrong so much as unstated. **No
+verdict moves**: E0 stays `finding` · metadata and it is still R-1's.
+
+*What this errata does not do is re-measure the row's other axes.* A, B, C and D were taken by
+instruments this stage did not run, and a correction is not a re-scan.
+
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
 *Placed after the row and not inside it.* The first edition put this heading between A-2's
@@ -2786,6 +2879,21 @@ construction; this section and §2's baselines are where patterns accumulate.
   repair, from a reader who happened to open the paragraph. Three repositories, three
   sessions, and not one of the three found by an instrument.
 
+- **An instrument whose answer is about the reader's environment rather than about the
+  subject, and the third instance is the one that makes it a rule.** Session 3's bare `pytest`
+  produced 18 `ModuleNotFoundError` collection errors that read exactly like §3.4's `blocked`;
+  session 4's `gh repo view` through a CP1250 console produced mojibake on a repository's front
+  door and was written up as a D finding before it was withdrawn; and session 6's
+  `git rev-list --all` produced a count of commits *"orphaned from the published branch"* that
+  is **0** in a clone with no PR refs and **34** in one that ran the scan prompt's own E1
+  fetch. The first two are §6 rows because they indict a repository; this one is different in a
+  way worth keeping: **the prompt creates the condition**, in a step four sections above the
+  one that quotes the number. So the rule is not *check your environment* — it is that a
+  command whose result set is `--all`, `--remotes` or any glob over refs is reporting on a
+  clone, and the figure has to name the ref set beside it or ask a named ref instead.
+  `0010` R-1's denominators and §2.1's commit column are both `--all` readings, which is why
+  this belongs here rather than in one row's errata.
+
 ## 6. Corrections, and which prompt version they bind
 
 The scan and repair prompts carry a version stamp. A correction here **outranks the prompt**
@@ -2812,3 +2920,4 @@ question rather than as a defect.
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
 | 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
 | 2026-09-17 | **v3.0**, both prompts | §3.1's session 13 and §3.3's command row named `current_projects` as the repository a session branches and commits in — and `0011` §6 route A made it the archive that same day, where a commit reaches no reader at all. *The prompts' own text is clean and they are bound anyway*: `git grep -c current_projects` over both returns zero, for two different reasons — the scan prompt names the **role** (*"the index audit branch"*, *"in the index"*), which moved with the route, and the repair prompt never names the index at all, saying *"this repository"*. So a session reading only a prompt is not misled and a session reading the queue is, which is why the correction lives here. **Session 4 is the worked instance**: it was scanned, reviewed and twice errata'd on a branch in a repository that by evening accepted no commits, and it reached a reader only by transplant | **The index is `P0w3r223/portfolio-index`**, and that is where a session branches, commits, and opens its pull request. The archive is outside the queue and outside the corpus: `0011` is its audit of record — every blob in its object database and 533 commits across every ref, which no scan session can better — §3.1's note carries the reasoning, and **the denominator stays fifteen**. A session that finds an unpushed branch in the archive should read `0012` §4 before doing anything with it: route A rewrote no history, so the branch's base survives under the same SHA and a cherry-pick applies, and two commands settle in advance whether it can conflict |
+| 2026-09-18 | **v2.0**, repair, and `CLAUDE.md`'s entry-state section | the closing rule sends a session to cite the commit **on `main`** and gives one reason for it — *“this repository squash-merges, so a branch SHA exists for no later reader”*. The reason is true of this repository **today** and false of its history, and false of all twelve siblings' too: `git rev-list --merges --count origin/main` reads **24** here and between **1 and 26** in every one of the twelve. Every repository in the portfolio merged its pull requests until some date between 2026-08-14 and 2026-09-03 and has squashed since, so a branch commit from that era is reachable from `main` permanently. `0010` A-6 built a finding on the same premise read the other way round, and its errata is in §4 | **Cite what a reader can resolve, and ask rather than remember.** `git merge-base --is-ancestor <sha> origin/main` answers it in one command per repository, and `python -m tools.queue` now asks it of every `Index SHA` in §4 and prints the sibling commits the rows cite. What the rule asks for does not change — everything committed since 2026-09-03 is squashed and a branch SHA written today resolves for nobody — but its reason is a policy with a date on it rather than a property of the repository, and a session that knows which is which can check |
