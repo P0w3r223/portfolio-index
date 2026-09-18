@@ -343,6 +343,23 @@ anything they do not themselves verify, and it must not touch the checker, the g
    "Data" is 10.8–12.4% of postings against AI's 3.9%, and the two data-engineering projects are
    currently the least represented thing in the positioning.
 
+   **Executed 2026-09-18** in `P0w3r223/P0w3r223`. `apply-scout` took the AI Engineer line,
+   `it-job-radar` the new Data Engineer one, the two overlapping tables became one index, and
+   every project line now quotes its own page's opening claim — ten of eleven byte-exact against
+   the checker's parser, the two exceptions declared in the file.
+
+   **And one residual, recorded as a decision rather than left as an omission.** The Data
+   Engineer track **rests visibly on one project**. §2.7 describes Polish "Data" as
+   *"overwhelmingly data engineering — Spark, Databricks, Airflow, Snowflake"*, and the stack
+   block offers ETL pipelines, DuckDB / Parquet, SQLite and data contracts — all of which the
+   repositories genuinely carry, and **none of which is one of those four**. The second data
+   project, `wroclaw-air-insights`, reads in the index as forecasting rather than as a pipeline.
+   So the track is honest and defensible on `it-job-radar` alone, and it will not match the
+   keyword filter it was added in response to. Closing that gap is a Tier 3 decision about what
+   to build, not a Tier 1 edit — it belongs beside item 10's cloud question, and it is written
+   down here so the next reader meets it as a known cost of the track rather than as a gap
+   nobody noticed.
+
 ### Tier 2
 
 5. **A `results` and a `limitations` section in the five flagships** — not in all twelve. §4:
