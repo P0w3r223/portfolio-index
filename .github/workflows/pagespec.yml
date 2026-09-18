@@ -91,6 +91,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # The whole history, because `tests/test_queue.py` asks whether the commits `0010`
+          # §4 cites are reachable from this checkout, and `actions/checkout` clones at depth
+          # 1 by default. In a shallow clone `git merge-base` cannot answer, the guard skips,
+          # and a skip is a pass — `0010` §3.6 observation 2. A guard in this file is what keeps
+          # this line from being removed quietly.
+          fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
@@ -112,6 +119,14 @@ jobs:
         # legitimate citation of a sibling repository's decision document. The gating half is
         # `tests/test_citations.py`, which ran in the suite step and refuses an `unresolved`.
         run: python -m tools.citations
+      - name: The queue, and what is left of it
+        # `CLAUDE.md` sends a session asking *what next* to `0010` §3.1 and §4, which is 2 800
+        # lines answered by hand until 2026-09-18. Printed and never gated, on the same
+        # argument as the two steps above: no instrument can tell a row that is open from a
+        # row somebody repaired and forgot to mark. The gating half is `tests/test_queue.py`,
+        # which ran in the suite step and refuses a malformed cell or an unresolvable
+        # `Index SHA`.
+        run: python -m tools.queue
 
   surfaces:
     name: checker over the published surfaces
