@@ -357,7 +357,37 @@ def _from_disk(url: str) -> bytes:
     return b"<html><head><title>x</title></head><body><h1>x</h1></body></html>"
 
 
-def test_a_wire_failure_skips_the_fetching_sweep_rather_than_reddening_it(monkeypatch):
+@pytest.fixture
+def committed_pages_on_disk():
+    """The precondition the three guards below assert *on* and did not assert *for*.
+
+    Each wraps `_sweep` in `pytest.raises(pytest.skip.Exception, match=...)` and reads the
+    skip's reason. `_sweep` can skip for a second reason those guards were never written to
+    meet: `require_submodule` fires first where a sibling is not checked out, the `raises`
+    catches that skip, the `match` does not, and the failure reads as though the wire
+    degradation were broken. A `git worktree` is exactly that environment — `git worktree add`
+    populates no submodule — so the isolation protocol every session here works under turned
+    three green guards red. `0012` §8 is the finding; `0010` §6's row of 2026-09-14 is the
+    class, an environment verdict presenting as a repository one.
+
+    Requesting this fixture moves that skip out of the `raises` and into the test's own
+    declaration, where a skip is a skip again. **The `match=` is what kept this a false red
+    rather than a false green**: without it each guard would have swallowed the wrong skip and
+    passed while proving nothing, which is family `SG`. So the repair asserts the precondition
+    and leaves the assertion alone.
+
+    **Any guard asserting on the reason `_sweep` skipped belongs on this fixture**, and that
+    sentence has no carrier. The only available check reads this file's own source for
+    `pytest.raises`, and a source-text heuristic is what `0010` §5 records being tried and
+    convicted one repository over — it convicted the two artifacts read *through* a registry
+    rather than by literal, punishing the better pattern.
+    """
+    for surface in COMMITTED:
+        require_submodule(surface.repo, surface.path)
+
+
+def test_a_wire_failure_skips_the_fetching_sweep_rather_than_reddening_it(
+        monkeypatch, committed_pages_on_disk):
     """A DNS blip is not a statement about a page, and the ratchet must not read it as one.
 
     Both halves assert a count that follows the mode, so an unreachable twelfth takes `read`
@@ -373,7 +403,8 @@ def test_a_wire_failure_skips_the_fetching_sweep_rather_than_reddening_it(monkey
         _sweep(allow_fetch=True)
 
 
-def test_a_fetch_that_fell_back_to_the_committed_file_skips_it_too(monkeypatch):
+def test_a_fetch_that_fell_back_to_the_committed_file_skips_it_too(
+        monkeypatch, committed_pages_on_disk):
     """The quiet half, and the one no count catches.
 
     When *one* of the eleven cannot be fetched, `sources.load` falls back to its committed
@@ -393,7 +424,8 @@ def test_a_fetch_that_fell_back_to_the_committed_file_skips_it_too(monkeypatch):
         _sweep(allow_fetch=True)
 
 
-def test_a_stylesheet_the_wire_dropped_skips_the_fetching_sweep(monkeypatch):
+def test_a_stylesheet_the_wire_dropped_skips_the_fetching_sweep(
+        monkeypatch, committed_pages_on_disk):
     """The dangerous one, because it makes a failing clause read *clean*.
 
     `_undecided_where_the_stylesheet_is_incomplete` rewrites every clause-1 and clause-3
@@ -413,7 +445,8 @@ def test_a_stylesheet_the_wire_dropped_skips_the_fetching_sweep(monkeypatch):
         _sweep(allow_fetch=True)
 
 
-def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(monkeypatch):
+def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(
+        monkeypatch, committed_pages_on_disk):
     """The row's whole subject, as an assertion rather than as a mode flag.
 
     `wroclaw-air-insights` commits no HTML, so the fetchless sweep reads eleven and the gate
@@ -425,6 +458,9 @@ def test_the_fetching_sweep_reads_the_twelfth_surface_the_fetchless_one_cannot(m
     try:
         fetched, statuses = _sweep(allow_fetch=True)
     except pytest.skip.Exception as incomplete:
+        # With the fixture requested, a skip reaching here is about the wire rather than about
+        # a checkout that was never populated — which is what this branch has always assumed
+        # and, until the fixture, was true only because the fetchless sweep above ran first.
         # **A skip is a pass, and that is what makes this branch necessary.** Every other
         # assertion here is reached only if the sweep returns, so a mode that never arrives at
         # `sources.load` takes the wire away from all twelve surfaces, marks the corpus
