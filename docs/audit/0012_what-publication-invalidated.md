@@ -94,7 +94,7 @@ and the twelve trees have gitignored build output no clone has.
 | F-4 | `0010` §3.1 and §3.3 named the archive as the working repository, and §6 had no row binding the prompts to the new one | high | **corrected here** |
 | F-5 | `README.md`'s non-retrofit notice read as covering the whole tree | medium | **corrected here** |
 | F-6 | `0009` §14's profile measurement predates the profile edit of 2026-09-17 | medium | open — it is F-1's input |
-| F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — the repository is mid-scan |
+| F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — **unblocked at `d79d821`**; its only row in `0010` |
 | F-8 | 21 lines across the twelve submodule `CLAUDE.md` say *the private portfolio index* | medium | open — needs a decision on where the carrier lives |
 | F-9 | `0011` §7's applied state lived only in a gitignored session brief | medium | **recorded here**, §5 |
 | F-10 | `ADR-0009` §1.1's note on an unresolvable citation argued from the index being private | medium | **corrected here** — and it is the one row whose conclusion did not survive |
@@ -218,17 +218,43 @@ its docstring says the same. `doc-extract/docs/build_index.py` repeats the premi
 fan-out shape reached from a new direction: there the retired claim survived in prose the ADR could
 not reach; here it survives inside the guard's own explanation of itself.
 
-**Not repaired, for two reasons that agree.** `doc-extract` is session 5's subject and a scan
-session may not act (`0010` §3.1); and a guard should not be repaired in the window it is carrying
-a stage — a rule `0009` §7 row 13b states and acts on, while attributing it to §13.6, **which
-does not say it**: §13.6 is *"the remediation displaced three times"*, about a repair inheriting
-the blast radius of what it repairs. This document's first draft carried that attribution twice,
-inherited rather than checked, which is the resolver's named blind spot arriving through a
-citation of a citation. The rule is right and its home is row 13b.
+**Not repaired when this was written, for two reasons that agreed** — and *both had already been
+overtaken when the sentence was typed.* They were that `doc-extract` is session 5's subject and a scan session may not act
+(`0010` §3.1), and that a guard should not be repaired in the window it is carrying a stage — a
+rule `0009` §7 row 13b states and acts on, while attributing it to §13.6, **which does not say
+it**: §13.6 is *"the remediation displaced three times"*, about a repair inheriting the blast
+radius of what it repairs. This document's first draft carried that attribution twice, inherited
+rather than checked, which is the resolver's named blind spot arriving through a citation of a
+citation. The rule is right and its home is row 13b.
 
-F-7 also raises a question this document cannot settle: with the index public, the page *could*
-link it, so the guard may be asserting the wrong thing rather than merely explaining itself
-wrongly.
+**Session 5 closed at `d79d821`, so F-7 is now unblocked work and not a blocked row.** The scan is
+on the record as A-5 and the window it held is over. Two things a session taking it should know.
+**A-5 reads that guard and does not report this** — `tests/test_site_committed.py` is cited in that
+row for what the page renders and for a SHA that resolves, and the private-index premise is in none
+of those places. *That is the shape rather than an oversight, and the precise version is narrower
+than the obvious one*: the axes do read docstrings — A-5's own E-5c convicts a docstring's claim
+about its corpus, and its axis A convicts a docstring citing a SHA no clone resolves. What no axis
+sweeps is a guard's **justification** for truth. Axis B's corpus is the documents, which a test's
+docstring is not, and axis A asks whether a guard can see its subject and whether its citations
+resolve — both of which this guard passes. So F-7 is this guard's only row in `0010`'s ledger, and
+a repair driven by `0010` §4's table alone will not find it.
+
+And the repair is not obviously a one-line reason swap: with the index public the page *could* link
+it, so the guard may be asserting the wrong thing rather than merely explaining itself wrongly.
+Sharper still, the false half of its justification is probably **identity and not privacy** — the
+docstring says *"`P0w3r223/current_projects`, the index repository, which is private"*, and
+`current_projects` is still private; what it stopped being is the index. That is a decision about
+what `doc-extract`'s page should say, and it belongs to a repair session for that repository.
+
+*The state above was written with the pull request that invalidated it already open.* Session 5's
+opened at 12:07:38Z, this document's branch was created at 12:11:15Z, it merged at 12:24:44Z, and
+`d79d821` landed at 12:29:32Z — **four minutes and forty-eight seconds** after the row claiming
+those reasons hold reached `main`. *An earlier draft of this paragraph said "about four hours",
+which no available anchor supports and which the commit subject carried too; the figure is removed
+rather than corrected, per `ST-3`.* The expiry itself is ordinary `ST-1` in the §4 cell and `ST-2`
+in the paragraph — a status outliving its work, moved by a commit on this repository's `main`.
+**It is not `ST-4`**, whose whole point is a premise that moves with no commit at all; `ST-4` is
+what F-7 *is* about, not how its state went stale.
 
 ### F-8 — twenty-one lines in twelve manuals
 
@@ -371,8 +397,10 @@ count. R-1's literals appear nowhere: the shape §6 describes is stated as *the 
 which is what it is.
 
 **What this document cannot verify**, stated so a later reader does not assume it was checked.
-Whether `doc-extract`'s guard should now assert the *opposite* is session 5's repair to settle and
-not a finding this document may close. And §5's `update-pip-graph` line is the one item in that
+Whether `doc-extract`'s guard should now assert the *opposite* is a repair session for that
+repository to settle and not a finding this document may close — *and this sentence said "session
+5's repair" while session 5 was a scan, which is a session kind this audit keeps separate on
+purpose.* And §5's `update-pip-graph` line is the one item in that
 section not read from the API: the managed `Dependency Graph` workflow is confirmed present and in
 no file of this tree, but the check's **name** is not independently confirmed, because the API
 returns 404 for that workflow's runs.
