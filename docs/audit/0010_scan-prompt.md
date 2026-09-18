@@ -105,7 +105,10 @@ repositories were clean. Also topics, homepage, stale branches, CI, `LICENSE`.
 
 ## Closing
 
-1. Row complete in `0010` §4, including **what you did not check**.
+1. Row complete in `0010` §4, including **what you did not check**, and its `Open` cell
+   written in §4's vocabulary: `<id> <state>`, where the state is one of
+   `open · closed · declined · deferred · pending`. `tests/test_queue.py` refuses anything
+   else, and `python -m tools.queue` is the queue read back to you.
 2. Pattern rather than incident → §5.
 3. Anything contradicting this prompt → §6, version `v3.0`.
 4. Session brief to `.claude/sessions/<YYYY-MM-DD>.md`.
@@ -117,6 +120,11 @@ verdict nobody can attack is a verdict nobody checked.
 
 ## Standing rules
 
+- **A `git` command reading `--all` or a ref glob answers about your clone, not about the
+  repository.** E1 above fetches `refs/pull/*/head`; every `--all` count taken afterwards
+  includes them, and `ab-lab` reads 0 against `main` unfetched and 34 fetched, for one command
+  at one gitlink. `0010` A-6 recorded the fetched number as a property of the repository and
+  its errata is the correction. Name the ref set beside the figure, or ask `origin/main`.
 - Figures come from an instrument, never a hand count. Three hand counts here produced 15,
   18 and 19 against a true 20; a fourth read 111 where counting commits rather than fields
   gives 113.

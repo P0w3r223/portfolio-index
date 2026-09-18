@@ -2299,6 +2299,49 @@ The **`slow` suite** was not run: `pytest -m slow` is the weekly job and the ses
 default. The **failing marks** were taken from the checker's own report and never inspected in a
 rendered page. And `docs/data/findings.json` was read by structure, not by value.
 
+### A-6 errata, 2026-09-18 — two figures that do not reproduce, and a scope
+
+Written by the stage that added `tools/queue.py`, which asks `git` the questions this row
+asked and gets different answers. **The subject is identical**: `ab-lab` is still pinned at
+`9864e73`, its working tree is clean, and nothing in it has moved — so this is not a page
+changing under a row, which is the case §4's header protects.
+
+**The scope.** *"This repository is the first scanned that **merges** rather than squashes"*
+is true of `ab-lab` and equally true of the five scanned before it.
+`git rev-list --merges --count origin/main`: `auth-log-scan` **3**, `apply-scout` **26**,
+`it-job-radar` **21**, `pl-jobs-lora` **7**, `doc-extract` **4**, `ab-lab` **8** — and **24**
+in this index, whose own `CLAUDE.md` says a branch commit is never reachable from `main`.
+Every repository in the portfolio merged pull requests until a date between 2026-08-14 and
+2026-09-03 and squashes since. What the row found is a portfolio-wide fact about a policy that
+changed, and it is §6's row of 2026-09-18.
+
+**`git rev-list --all --not main` reads 23 in the row and 0 today, and the difference is the
+session's own refs.** The scan prompt's E1 sends a session to fetch `refs/pull/*/head` into
+`refs/remotes/pr/*` before sweeping. With those refs fetched, the same command against the
+same gitlink in a fresh clone reads **34**; with them pruned it reads **0**. A number that
+moves with what the reader fetched is not a statement about the repository, and the row states
+it as one — *third instance in four days of `0010` §6's environment class*, after session 3's
+18 `ModuleNotFoundError` collection errors and session 4's CP1250 `gh` reading. §5 now carries
+the shape.
+
+**The three release tags are on `main`, under both conditions.**
+`git merge-base --is-ancestor v0.2.0^{} main` and its two siblings all succeed, with the PR
+refs fetched and without them. The row records the right question — it names `v0.4.0^{}`
+against the annotated tag object as the trap its first reading fell into — and then keeps the
+conclusion the wrong question produced. So *"the released code is right; only the commit
+objects are parallel"* has no subject: the tagged commits **are** commits on `main`, and
+`0d301bf`, `f7684ef` and `bac953b` are not reproductions of the tagged trees but, in the case
+of the last two, the merge commits themselves.
+
+**What reproduces, and it is the row's verdict.** E0's numerator: `9` commits carrying the
+owner's name, which is R-1's cell for this repository. Its denominator moves with the same
+refs as everything else in this paragraph — `--all` reads 44 commits in a clone with no PR
+refs and `0010` §2.1 recorded 67 — so the fraction is not wrong so much as unstated. **No
+verdict moves**: E0 stays `finding` · metadata and it is still R-1's.
+
+*What this errata does not do is re-measure the row's other axes.* A, B, C and D were taken by
+instruments this stage did not run, and a correction is not a re-scan.
+
 ### A-2 errata, 2026-09-11 — twenty corrections, in three rounds
 
 *Placed after the row and not inside it.* The first edition put this heading between A-2's
@@ -2819,6 +2862,21 @@ construction; this section and §2's baselines are where patterns accumulate.
   repair, from a reader who happened to open the paragraph. Three repositories, three
   sessions, and not one of the three found by an instrument.
 
+- **An instrument whose answer is about the reader's environment rather than about the
+  subject, and the third instance is the one that makes it a rule.** Session 3's bare `pytest`
+  produced 18 `ModuleNotFoundError` collection errors that read exactly like §3.4's `blocked`;
+  session 4's `gh repo view` through a CP1250 console produced mojibake on a repository's front
+  door and was written up as a D finding before it was withdrawn; and session 6's
+  `git rev-list --all` produced a count of commits *"orphaned from the published branch"* that
+  is **0** in a clone with no PR refs and **34** in one that ran the scan prompt's own E1
+  fetch. The first two are §6 rows because they indict a repository; this one is different in a
+  way worth keeping: **the prompt creates the condition**, in a step four sections above the
+  one that quotes the number. So the rule is not *check your environment* — it is that a
+  command whose result set is `--all`, `--remotes` or any glob over refs is reporting on a
+  clone, and the figure has to name the ref set beside it or ask a named ref instead.
+  `0010` R-1's denominators and §2.1's commit column are both `--all` readings, which is why
+  this belongs here rather than in one row's errata.
+
 ## 6. Corrections, and which prompt version they bind
 
 The scan and repair prompts carry a version stamp. A correction here **outranks the prompt**
@@ -2845,3 +2903,4 @@ question rather than as a defect.
 | 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
 | 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
 | 2026-09-17 | **v3.0**, both prompts | §3.1's session 13 and §3.3's command row named `current_projects` as the repository a session branches and commits in — and `0011` §6 route A made it the archive that same day, where a commit reaches no reader at all. *The prompts' own text is clean and they are bound anyway*: `git grep -c current_projects` over both returns zero, for two different reasons — the scan prompt names the **role** (*"the index audit branch"*, *"in the index"*), which moved with the route, and the repair prompt never names the index at all, saying *"this repository"*. So a session reading only a prompt is not misled and a session reading the queue is, which is why the correction lives here. **Session 4 is the worked instance**: it was scanned, reviewed and twice errata'd on a branch in a repository that by evening accepted no commits, and it reached a reader only by transplant | **The index is `P0w3r223/portfolio-index`**, and that is where a session branches, commits, and opens its pull request. The archive is outside the queue and outside the corpus: `0011` is its audit of record — every blob in its object database and 533 commits across every ref, which no scan session can better — §3.1's note carries the reasoning, and **the denominator stays fifteen**. A session that finds an unpushed branch in the archive should read `0012` §4 before doing anything with it: route A rewrote no history, so the branch's base survives under the same SHA and a cherry-pick applies, and two commands settle in advance whether it can conflict |
+| 2026-09-18 | **v2.0**, repair, and `CLAUDE.md`'s entry-state section | the closing rule sends a session to cite the commit **on `main`** and gives one reason for it — *“this repository squash-merges, so a branch SHA exists for no later reader”*. The reason is true of this repository **today** and false of its history, and false of all twelve siblings' too: `git rev-list --merges --count origin/main` reads **24** here and between **1 and 26** in every one of the twelve. Every repository in the portfolio merged its pull requests until some date between 2026-08-14 and 2026-09-03 and has squashed since, so a branch commit from that era is reachable from `main` permanently. `0010` A-6 built a finding on the same premise read the other way round, and its errata is in §4 | **Cite what a reader can resolve, and ask rather than remember.** `git merge-base --is-ancestor <sha> origin/main` answers it in one command per repository, and `python -m tools.queue` now asks it of every `Index SHA` in §4 and prints the sibling commits the rows cite. What the rule asks for does not change — everything committed since 2026-09-03 is squashed and a branch SHA written today resolves for nobody — but its reason is a policy with a date on it rather than a property of the repository, and a session that knows which is which can check |
