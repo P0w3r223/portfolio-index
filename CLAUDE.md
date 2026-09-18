@@ -80,6 +80,12 @@ docs/reference/       failure-classes.md — the defect shapes this project keep
                         **No document number**, and ADR-0009 §0 is why: three are taken
                         twice already. Cite a class by its id; the file cites *into* 0008
                         rather than moving it
+docs/research/        evidence gathered from outside this portfolio, with its sources. One
+                        document: what a recruiter-facing portfolio is worth on the evidence,
+                        and what this one still needs. **It replaced three planning documents**
+                        — both stage PDFs and the 2026-07 backlog — which were never tracked
+                        here and are deleted; its §5 records what they asked for, so the files
+                        are the only thing lost. Not a conformance measurement: that is `0010`
 docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the clause
                         registry, 0006 the gate registry and the twelfth surface, 0007 S8a's
                         design, 0008 the ground of a usage site and why S13 is a census
