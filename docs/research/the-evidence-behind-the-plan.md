@@ -159,8 +159,16 @@ against **42%** for the US. Swapping the location from PL to US raised the candi
 recruitment probability from 64% to 70% (p < 0.05).
 
 The actionable half is not the bias — it is that **the profile bio is a separate communication
-surface, it is read by the sieve, and ours is empty.** Writing *AI Engineer · LLM evaluation ·
-MLOps* into it costs a minute and is cheaper than any project.
+surface and it is read by the sieve.** ~~And ours is empty: writing *AI Engineer · LLM
+evaluation · MLOps* into it costs a minute and is cheaper than any project.~~ **The bio has been
+filled since 2026-09-03 and this document measured it wrong**; §9 is the correction.
+
+What the re-measurement found instead is sharper, because it is about this same paragraph's
+premise. **The sieve reads three fields and this profile supplies two.** `location` is empty,
+and every figure above is stated of *a profile located in Poland* — the 76%, the 12% against
+42%, and the 64% → 70% swap all condition on a field the sieve cannot read here. Whether an
+absent location reads to that model as Poland, as nothing, or as the US default is **not
+something this research measured**, so §8's rule applies and no direction is claimed.
 
 **An AI assistant in a project's history is not a flag here — the verification layer is the
 differentiator.** 87% of Polish developers use AI daily (AWS *DevHorizon Poland 2026*, n = 500),
@@ -224,7 +232,9 @@ link to this index.
 | | measured |
 |---|---|
 | custom social-preview image | **0 of 14 repositories** — every link pasted into LinkedIn or an ATS renders as GitHub's grey default card |
-| profile bio | **empty** — the one field §2.6's sieve reads |
+| ~~profile bio~~ | ~~**empty** — the one field §2.6's sieve reads~~ **Wrong, and corrected in §9.** Filled since 2026-09-03, 129 characters, closed as a finding in `0004` §6.1 |
+| profile `location` | **empty** — the *second* field §2.6's sieve reads, and the one that document's figures are conditioned on. Found by the re-measurement that overturned the row above |
+| profile `name` | the bare handle `P0w3r223` — `0003` and `0004` both record it set to the legal name on 2026-09-03, so **the field moved back** and nothing in the record says why. §9 |
 | `roadmap`-labelled issues | **2 of 12** repositories have any open (`apply-scout` 5, `mlops-car-price` 7) |
 | animated demo | **1 of 12** (`apply-scout`) |
 | README against the stage-2 definition of done | by section headings, only `apply-scout` carries all seven; `car-price-ml` is missing five, `wroclaw-air-insights` and `pl-review-sense` four each |
@@ -306,8 +316,12 @@ anything they do not themselves verify, and it must not touch the checker, the g
 
 1. **A 1280×640 social preview for all twelve, topics filled toward the 20 allowed, and a
    profile bio.** The preview is the only surface that renders *outside* GitHub — in a LinkedIn
-   card, in a message, in an ATS — and 0 of 14 have one. The bio is the field §2.6's automated
-   sieve reads, and it is empty.
+   card, in a message, in an ATS — and 0 of 14 have one. ~~The bio is the field §2.6's automated
+   sieve reads, and it is empty.~~ **The bio half of this item was already done before the item
+   was written** — §9. What replaces it is the field beside it: **`location` is empty**, it is
+   the second of the three §2.6's sieve reads, and it is the one that document's figures are
+   conditioned on. It is also the owner's to set and nobody else's, for the same reason the bio
+   was: the token carries no `user` scope (`0008` §6 records that boundary).
 2. **One sentence of *why this exists* and *whether it is maintained* at the top of every
    README.** §2.4: it is the documented systemic gap, and it is one line per repository.
 3. **A defence document for the three flagships, kept privately and not committed.** Per
@@ -365,10 +379,19 @@ repositories rather than a monorepo (twelve verifiable activity traces instead o
 audit that holds the pages to a written specification.
 
 **Two sequencing corrections, not a new programme.** Tier 1 goes **before** scan sessions 7–12,
-because those sessions verify what exists and will never produce a social preview or a bio, and
-because it costs hours. And the profile README, the bio and the social previews belong on the
-list of surfaces the audit covers — which is `0009` §7 row 11, already being answered
-elsewhere, so this widens that row's scope rather than opening a new one.
+because those sessions verify what exists and will never produce a social preview or an account
+field, and because it costs hours. And the profile README, the account fields and the social
+previews belong on the list of surfaces the audit covers — which is `0009` §7 row 11, already
+being answered elsewhere, so this widens that row's scope rather than opening a new one.
+
+**§9 is the argument for that second half, not an illustration of it.** The three fields §2.6's
+sieve reads were re-read hours after this document was accepted, and they came back in three
+different states: one **measured wrong here** (`bio`), one **standing against a finding two
+audit documents record as closed** (`name`), and one **never covered by anything** (`location`).
+No instrument in this repository reads any of the three, so none of those three states could
+announce itself; each had to be found by a person deciding to look. That is what putting them on
+the audit's list of surfaces would change, and it is why the widening is the point rather than
+the footnote.
 
 ## 8. What this research could not establish
 
@@ -390,3 +413,69 @@ Stated so a later reader does not mistake absence for a finding.
   (user-agent block and 403 respectively, with no Wayback snapshots for the latter). The
   anonymous Polish practitioner voice is absent from this document, and closing that gap needs
   a person with a browser.
+- **Whether GitHub's automated readers treat an absent `location` as Poland, as nothing, or as
+  a US default.** Added 2026-09-18 with §9. The source study varied the field between two
+  values and never left it empty, so the paper cannot answer it and neither can this document.
+
+## 9. Errata, 2026-09-18 — the inventory row that was wrong, and the two fields beside it
+
+Raised hours after this document was accepted, at the start of the session that was to execute
+§6 Tier 1. **The whole of §6 Tier 1 item 1 was to be done first, so its three sub-items were
+re-read from the API before being acted on** — which is the only reason the row was caught at
+all. A reader who had trusted §3 would have spent the minute §2.6 costs writing a field that
+already said something.
+
+### The correction
+
+**§3's table said the profile bio is empty. It is not, and it has not been since 2026-09-03.**
+The API returns 129 characters. Two audit documents record the field being filled and the
+finding closed on that date — `0004` §6.1 (*"~~`bio` null~~ — **set**; its wording is the
+author's and settled"*) and `0003` §9, the reconciliation that closed it, which quotes the
+published text's closing clause verbatim as *"Open to AI/ ML engineer"* and, a hundred lines
+further down the same section, names **the bio's stray space**. The live field today ends in
+that clause, with that space.
+
+Corrected at three sites — §2.6's actionable half, §3's table row, §6 Tier 1 item 1 — because
+`0010` §5 records four instances of a correction landing in one site and leaving the sentence
+that argues from it standing.
+
+### What cannot be established, and is therefore not asserted
+
+**Whether the bio's opening sentence is older than this document.** The owner's recollection is
+that they wrote the bio after reading the research; the record shows the field filled fifteen
+days earlier, and the live text ends in a clause `0003` quotes. Both can be true — the field may
+have been **extended** on 2026-09-18 and `0003`'s clause kept. **GitHub publishes no history for
+a profile field**, so no command settles it and this document does not choose. What the
+disagreement does settle is the only thing §3 needed: the field was **not empty**, so the row
+was wrong when it was written and not merely overtaken.
+
+*Recorded rather than resolved in the owner's favour, and recorded rather than resolved against
+them.* `0010` §5 has the shape from the other direction — a true measurement with a false
+sentence around it. This is a sentence that has two readings and one measurement, and the
+measurement only reaches as far as one of them.
+
+### The two fields the re-reading found beside it
+
+Neither was in §3, because §3 measured the bio alone of the three §2.6 names.
+
+- **`name` reads `P0w3r223` — the bare handle.** `0004` §6.1 and `0003` §9 both record it set
+  to the legal name on 2026-09-03, and `0004` names the bare handle as *"the specific complaint
+  above"* that setting it answered. The most likely explanation is deliberate and is not a
+  regression: `0011` §4's R-1 is about non-public identity metadata, and the move to this
+  repository was made to leave some of it behind. **But nothing in the record says so** — no
+  §, no errata, no brief — and a closed finding that has quietly come undone reads identically
+  to one that was undone on purpose. *This paragraph states the likely reason and refuses to
+  state it as fact, which is the distinction `0010` A-6 got wrong in the other direction.*
+- **`location` is empty, and §2.6 is conditioned on it.** The study §2.6 rests on showed its
+  model *login, bio and location* and nothing else; every figure quoted there — the 76%, the 12%
+  against 42%, the 64% → 70% swap — is stated of **a profile located in Poland**. This profile
+  states no location, so the paragraph's own premise is unmet on the surface it is about. §8
+  now carries what that means as an open question rather than a direction.
+
+### What it costs, and who can act
+
+All three fields are the owner's alone: the token carries `repo`, `workflow`, `gist`,
+`read:org` and `delete_repo`, and **no `user` scope**, which `0008` §6 records as a standing
+boundary. So this errata changes no field. It changes what §6 Tier 1 item 1 asks the owner for —
+`location`, not the bio — and it adds the three fields to what `0009` §7 row 11 should cover,
+which §7 above now argues directly.
