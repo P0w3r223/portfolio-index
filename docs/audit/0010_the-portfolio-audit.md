@@ -2648,6 +2648,22 @@ guard says so — its title and its amendment are the two places the retired nam
 itself settles: the row wrote `94 %` and the page writes `94%`, `100%` and `16%` everywhere
 else, so its own typography won.
 
+**The review round, `5ceb95b` (#21), and it is the half worth reading.** Both sibling pull
+requests were merged **without** the `code-reviewer` pass `CLAUDE.md` requires before work is
+proposed — recorded here rather than quietly repaired, because the pass then found six things
+and one of them was load-bearing. `test_the_shipped_config_passes_both_new_validators` called
+itself *"load is the assertion"* and asserted two properties of `configs/config.yaml`: deleting
+**both** validator calls from `load_config` left all 247 tests green, so the clause this repair
+is about — *validated at load* — had no carrier at all. The divisor also had a **third** path
+neither validator can see, `--limit` from argparse, where a negative silently collects
+`len(urls) - 1` offers. And the Colab sweep cited eight lines holding no marker, because it
+detected over a line pair and reported the first half.
+
+*The battery found the seventh, by doing it.* The test written for that third path was one
+mutation away from **scraping production**: with the guard removed it went through `_session`
+into a live fetch of `theprotocol.it` and ran ten minutes before it was killed. It now replaces
+the session with a refusal, so it asserts the order rather than only the raise.
+
 *What this repair did not touch.* The notebook, the two ADRs read as arguments, and the report's
 rows end to end — §4's `Not checked` cell for this row still holds, and closing a finding is not
 re-scanning the repository.
