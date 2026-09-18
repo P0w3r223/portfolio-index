@@ -295,6 +295,27 @@ def test_the_gitlink_is_read_from_the_commit_and_not_from_the_working_tree(monke
     assert got == "a" * 40
 
 
+def test_gitlink_answers_only_for_a_path_this_repository_pins_as_a_commit():
+    """`160000` is the whole check, and nothing in the module's own call path reaches it.
+
+    `sibling_citations()` filters names to `order()` before it asks, and every one of those is
+    a gitlink — so dropping the mode test entirely left the suite green and the branch
+    unguarded, which is why this exists. A real directory is the case that matters: `docs`
+    resolves to a **tree** under `HEAD`, and an ancestry question asked of a tree is a verdict
+    about nothing.
+
+    Reads this repository only, so it runs in `core` alongside the pairing guard below.
+    """
+    assert queue.gitlink("docs") is None, (
+        "`HEAD:docs` is a tree; answering with its hash would put a verdict on an object that "
+        "is not a commit")
+    assert queue.gitlink("no-such-path-here") is None
+
+    pinned = queue.gitlink("doc-extract")
+    assert pinned and re.fullmatch(r"[0-9a-f]{40}", pinned), (
+        f"a submodule this repository pins must answer with its commit, not {pinned!r}")
+
+
 def test_unpinned_closures_names_a_row_over_a_stale_pin_and_leaves_the_others_alone():
     """The pairing itself, against an injected census — no git, no submodules, runs in `core`.
 
