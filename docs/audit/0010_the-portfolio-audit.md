@@ -288,15 +288,48 @@ a `B` cell reading `finding` beside an `Open` cell reading `A-1 closed` is a sca
 beside a repair's, not a contradiction. The row body says which. *Written on review, 2026-09-11,
 when the first closure landed and the header read literally as a list of what is still open.*
 
+**Since 2026-09-18 the `Open` column is a vocabulary rather than prose**, and the argument for
+it is this document's own first rule. *What next* was answered by reading 2 800 lines and
+counting by hand, in a repository whose standing rule is that a figure comes from an instrument
+and whose three hand counts of one population read 15, 18 and 19 against a true 20.
+`python -m tools.queue` reads this column now. Each item is a row id, one state word, and
+`·` between items:
+
+- `open` — raised, not acted on, and actionable by a repair session today.
+- `closed` — acted on, with the commit **on `main`** in the row body.
+- `declined` — deliberately not repaired, the reason in the row body. Without this state a
+  refusal and a backlog item are the same cell, and a queue that cannot say *no* grows a
+  ceiling no reader can see.
+- `deferred` — nothing a session may do closes it: it waits on a decision the owner owns
+  (`R-1`), or on a capability neither session type has — `C-3`, whose repair would have a
+  repair session read the raw data it may not, and `D-2`, which is that rule in the mirror.
+- `pending` — the repair exists and is not on `main` yet: an open pull request, or a pointer
+  not bumped. `tests/test_queue.py` exempts it from the ancestor check, which is the whole
+  reason the state is named.
+
+*`declined` and `pending` have no instance today.* Declaring them ahead of the first one is
+deliberate: both are produced by work already scheduled, and adding a state on the day it
+arrives moves the parser, both prompts and this paragraph inside a commit busy being about
+something else.
+
+**The ids are not a uniform scheme and this column does not pretend otherwise.** `A-4` names
+row 4 *and* that row's A-axis finding, because the row heading took the letter first; rows 5
+and 6 work around it in prose, and §5 writes “(C in A-5)” and “(B in A-6)” for
+exactly that reason. **Four findings had no address at all and were given one on 2026-09-18**
+— `C-4`, `C-5`, `C-6`, `D-6` — because a column cannot index what has no id. No verdict
+moved and nothing was renumbered: repairing the `A-N` collision would move 25 sites for `A-4`
+alone, and this record has already paid once for an identifier renumbering, in A-4's errata,
+where five ids collided with a scheme in which `B-2` was taken.
+
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
-| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 | — |
-| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | **A-1 closed** · R-1 stands | §5's cross-repo half |
-| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | **E-2 and B-2 closed** · D-2 part-closed · R-1 stands | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | **E-3, B-3 and D-3 closed** · C-3 open · R-1 stands | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
-| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 · R-1 stands | the notebook end to end, two ADRs as arguments, the report's rows |
-| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 · R-1 stands | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
-| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 · R-1 stands | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
+| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 deferred | — |
+| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
+| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
+| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 open · B-4a open · B-4b open · B-4c open · B-4d open · B-4e open · C-4 open · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
+| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 open · E-5a open · E-5b open · E-5c open · B-5d open · B-5e open · C-5 open · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 open · D-6 open · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
