@@ -188,4 +188,159 @@ def test_the_sibling_citation_census_is_computable_and_says_only_what_it_can_see
     sentence rather than a defect.
     """
     verdicts = {how for _, _, _, how in queue.sibling_citations()}
-    assert verdicts <= {"on main", "off main", "unresolved", "shallow", "not checked out"}
+    assert verdicts <= {"on main", "off main", "unresolved", "shallow", "not checked out",
+                        "beyond the gitlink", "pin unreadable"}
+
+
+@pytest.mark.submodules
+def test_a_commit_past_the_pin_reads_beyond_the_gitlink_and_the_pin_itself_reads_on_main():
+    """Both branches of the gitlink question, against a pin supplied rather than read.
+
+    **The pin is injected on purpose, and the alternative is a guard that skips.** Every
+    gitlink in this repository is level with its sibling's `origin/main` whenever the
+    portfolio is at rest, so a test looking for a real commit past a real pin finds none and
+    passes by skipping — which `0010` §3.6 has already convicted once. Seeding `pins` exercises
+    the comparison itself: the tip against its own parent as the pin is *beyond*, and the tip
+    against itself is not.
+
+    The defect this covers is `0010` §4's A-5 repair: between `766203a` and its correction the
+    row read seven × `closed` while the gitlink held none of the repairs, and the census called
+    that `on main` because it never asked this question.
+
+    **Scope, stated because the first draft of this guard did not state it.** `core` deselects
+    `submodules`, and `surfaces` and `live` check out at `actions/checkout`'s default depth, so
+    `queue.shallow()` is true and this skips: **no CI job runs it.** That is the same position
+    `sibling_citations()` argues for itself — an instrument for a working session — and giving
+    `surfaces` a full history to change it would buy the adjacency heuristic a job, which that
+    docstring calls the wrong order. The two guards below need no git and do run in `core`.
+    """
+    if queue.shallow():
+        pytest.skip("a shallow checkout cannot answer an ancestry question")
+    exercised = 0
+    for name in queue.order():
+        tree = ROOT / name
+        if not (tree / ".git").exists() or queue.shallow(tree):
+            continue
+        tip = queue._git("rev-parse", "origin/main", cwd=tree).out.strip()
+        parent = queue._git("rev-parse", "origin/main^", cwd=tree).out.strip()
+        if not tip or not parent:
+            continue
+        assert queue._against_the_pin(name, tip, tree, {name: parent}) == "beyond the gitlink", (
+            f"{name}: `{tip[:7]}` is one commit past the pin `{parent[:7]}` and the census "
+            f"called it something else")
+        assert queue._against_the_pin(name, tip, tree, {name: tip}) == "on main", (
+            f"{name}: `{tip[:7]}` pinned exactly by the gitlink is not `beyond` it")
+        # **A pin the clone cannot resolve is not a verdict.** `merge-base --is-ancestor`
+        # answers 1 for *not an ancestor* and errors with everything else — 128 here — and
+        # reading the error as `beyond the gitlink` would hand the gated guard a checkout
+        # problem dressed as a record defect.
+        assert queue._against_the_pin(name, tip, tree, {name: "dead" * 10}) == "pin unreadable", (
+            f"{name}: an unresolvable pin must read as unanswerable, not as a finding")
+        exercised += 1
+    assert exercised, ("no submodule answered the gitlink question, so this guard proved "
+                       "nothing — which is the shape it exists to refuse")
+
+
+@pytest.mark.submodules
+def test_no_row_claims_closed_over_a_commit_this_repository_does_not_pin():
+    """§4's `pending` read by an instrument instead of by a reader who happens to look.
+
+    Printed by `tools.queue` and refused here, which is the split this file's docstring
+    describes: the census cannot gate, because its attribution is adjacency on a line, but a
+    row that claims **no open work at all** while citing a repair the gitlink predates is the
+    one shape where a wrong attribution still leaves a real question — the pointer is either
+    bumped or it is not, and `0010` §4 has a word for the answer.
+
+    **This one skips in every CI job too**, for the reason the guard above states, and it is a
+    state assertion over a record that is currently clean — so the pairing it rests on is
+    guarded separately and without git in
+    `test_unpinned_closures_names_a_row_over_a_stale_pin_and_leaves_the_others_alone`.
+    """
+    if queue.shallow():
+        pytest.skip("a shallow checkout cannot answer an ancestry question")
+    bad = queue.unpinned_closures()
+    assert not bad, "\n".join(
+        f"§4 row {row.number} ({row.repo}) reads {states} and cites `{sha}`, which is merged "
+        f"in the sibling and past the gitlink this repository pins — §4 calls that `pending`"
+        for row, sha, states in bad)
+
+
+def test_the_gitlink_is_read_from_the_commit_and_not_from_the_working_tree(monkeypatch):
+    """`gitlink()`'s argv, pinned — because the thing it promises is invisible to a comparison.
+
+    The gitlink and the submodule's checked-out `HEAD` are the same commit whenever the
+    portfolio is at rest, so a guard that compares them passes over the one mutation that
+    matters: reading the working tree instead of the commit. Replacing the body with
+    `rev-parse HEAD` in the submodule left the whole suite green — which is `0008`'s
+    shipped-green-over-its-own-defect shape, and the reason this asserts the call rather than
+    the answer. In the scenario the feature exists for, a session that has moved a sibling
+    forward would get `on main` out of the mutated reading and miss the unbumped pointer.
+
+    It also pins *how* the gitlink is told from an ordinary directory — the tree entry's mode,
+    `160000`, because `HEAD:docs` resolves perfectly well to a tree and `cat-file -t` cannot be
+    the check: the commit a gitlink names is not in this repository's object database at all.
+    """
+    seen: list[tuple[tuple[str, ...], object]] = []
+
+    def fake(*args: str, cwd=None):
+        seen.append((args, cwd))
+        return queue.Run(f"160000 commit {'a' * 40}\t{args[-1]}\n", 0)
+
+    monkeypatch.setattr(queue, "_git", fake)
+    got = queue.gitlink("doc-extract")
+
+    assert seen[0] == (("ls-tree", "HEAD", "--", "doc-extract"), None), (
+        "the gitlink must be read from this repository's own commit, with no `cwd`: "
+        f"{seen[0]} asks something else")
+    assert got == "a" * 40
+
+
+def test_gitlink_answers_only_for_a_path_this_repository_pins_as_a_commit():
+    """`160000` is the whole check, and nothing in the module's own call path reaches it.
+
+    `sibling_citations()` filters names to `order()` before it asks, and every one of those is
+    a gitlink — so dropping the mode test entirely left the suite green and the branch
+    unguarded, which is why this exists. A real directory is the case that matters: `docs`
+    resolves to a **tree** under `HEAD`, and an ancestry question asked of a tree is a verdict
+    about nothing.
+
+    Reads this repository only, so it runs in `core` alongside the pairing guard below.
+    """
+    assert queue.gitlink("docs") is None, (
+        "`HEAD:docs` is a tree; answering with its hash would put a verdict on an object that "
+        "is not a commit")
+    assert queue.gitlink("no-such-path-here") is None
+
+    pinned = queue.gitlink("doc-extract")
+    assert pinned and re.fullmatch(r"[0-9a-f]{40}", pinned), (
+        f"a submodule this repository pins must answer with its commit, not {pinned!r}")
+
+
+def test_unpinned_closures_names_a_row_over_a_stale_pin_and_leaves_the_others_alone():
+    """The pairing itself, against an injected census — no git, no submodules, runs in `core`.
+
+    **The guard above it is a state assertion over a record that is currently clean**, so it
+    passes over any implementation: `return ()` as the first line of `unpinned_closures()`
+    keeps this file green, and so does inverting the state filter. This one refuses both.
+    """
+    found = queue.rows()
+    settled = [row for row in found
+               if row.items and not {item.state for item in row.items} & {"open", "pending"}]
+    assert settled, "§4 carries no row with all its work settled, so this guard proved nothing"
+    row = settled[0]
+
+    named = queue.unpinned_closures((("A-0", row.repo, "0123456", "beyond the gitlink"),), found)
+    assert [got.number for got, _, _ in named] == [row.number], (
+        f"a commit past the pin in `{row.repo}` must name row {row.number}, whose cells are "
+        "settled")
+
+    assert queue.unpinned_closures((("A-0", row.repo, "0123456", "on main"),), found) == (), (
+        "a commit the gitlink already contains is not a finding")
+
+    with_work = [r for r in found if any(item.state == "open" for item in r.items)]
+    if with_work:
+        open_row = with_work[0]
+        assert queue.unpinned_closures(
+            (("A-0", open_row.repo, "0123456", "beyond the gitlink"),), found) == (), (
+            f"row {open_row.number} still declares open work, so an unbumped pointer is the "
+            "ordinary state and not a claim of closure")

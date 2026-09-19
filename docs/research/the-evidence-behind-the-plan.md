@@ -539,3 +539,48 @@ what re-measured it here — and cannot be **written** through one, REST or Grap
 form. So §3's hardest-looking row is the one the API answers cleanly, and the field that turned
 out wrong is one of the easy ones. Which is the argument for the widening, not against it: the
 difficulty of reading a field predicts nothing about whether anybody read it.
+
+### What is waiting for the owner, and where it is — read 2026-09-18, after that day's merges
+
+Three things, and **no session can do any of them**. The reason is one for the first two and a
+different one for the third, and both are already established above: `gh auth status` reports
+`delete_repo`, `gist`, `read:org`, `repo` and `workflow` and **no `user` scope**, so the profile
+fields are read-only to every instrument here; and the social preview is readable through GraphQL
+and writable only through a web form.
+
+1. **`location` — still empty.** Re-read from the API after `c75b2b8`, `b5106dc`, `766203a` and
+   `e9e2c22` landed: the field is `null`. Nothing in this repository has moved it, nothing can,
+   and every figure §2.6 states is conditioned on a profile that states one.
+
+2. **The bio is filled, and is now narrower than the README beside it.** The correction above
+   established that the field is not empty. What the same re-reading did not ask is whether it
+   *agrees* with the profile README, and it does not. The README opens on three tracks, AI
+   Engineer · Data Scientist · Data Engineer; the bio names **one** of them, closing on *Open to
+   AI/ ML engineer* — where `ML Engineer` is the separate junior role the README lists fourth,
+   not `Data Scientist` and not `Data Engineer`, and the pair carries a stray space.
+   **`c75b2b8` widened this gap rather than opening it**: the README read *AI Engineer / Data
+   Scientist* before it, and the bio did not name the second of those either. *The first draft
+   of this paragraph said the bio named two of the three and dated the disagreement to that
+   commit — both wrong to one `gh api users/P0w3r223 --jq .bio`, in the subsection whose whole
+   subject is a claim about this field that a one-command re-read refutes.* **The bio is the
+   field §2.6's sieve reads and the README is not**, so the narrower of the two is the one
+   doing the work, and the wider one
+   is invisible to the filter it was written for. The field holds 129 characters against a limit
+   of 160, so carrying all three costs a sentence and no project.
+
+3. **Thirteen 1280×640 cards exist, and none is uploaded.** Rendered 2026-09-18, headlines read
+   off the published pages by the checker's own parser. **Thirteen against this document's
+   denominator of fourteen**, and the missing one is the profile repository — which is also the
+   surface `0009` §7 row 11 has held open since before publication, so the gap is the same gap
+   and not a new one. They live **outside every repository in this portfolio**, beside it, with
+   their generator, a README and the record of the topic decisions; the path is deliberate and
+   this document does not reproduce their contents. Uploading is one web form per repository —
+   thirteen manual actions, verifiable afterwards by `usesCustomOpenGraphImage` and by nothing
+   before.
+
+**Why this list is here and not in `0010` §4.** None of the three is a finding against a
+repository: no row owns them, no scan produced them, and no repair session can close them —
+`0010` §3.1's sessions verify what exists. They are the residual of §6 Tier 1 item 1, which is
+where the work was scheduled and where a reader will look for it. *And the reason a residual
+needs writing down at all is that one named only in a session transcript is a residual nobody
+inherits* — which is the same argument §5 makes about the three plans this document replaced.

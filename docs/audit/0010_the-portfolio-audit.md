@@ -2668,6 +2668,127 @@ the session with a refusal, so it asserts the order rather than only the raise.
 rows end to end — §4's `Not checked` cell for this row still holds, and closing a finding is not
 re-scanning the repository.
 
+### A-5 repair, 2026-09-18 — row 5 closed whole, and an id that held two findings
+
+`doc-extract` `e9e2c22` (#16), pointer moved from `7ae9c84` in the commit carrying this line.
+Entry state: the index level with its `origin/main`, and `doc-extract` `HEAD`, its `origin/main`
+and the index's gitlink all `7ae9c84`, working tree clean. §3.3's command reads
+`clear, 3 undecided` at both gitlinks, the same three keys either side. The
+repository's suite went **800 → 802**, 34 skipped at both, run with `PYTHONPATH=src` in a fresh
+clone with no editable install and no `data/`; `ruff check .` clean. On this side 666 pass, the
+gate exits 0, and `tools.citations` reports nothing unresolved.
+
+**A-5 holds two findings and one id, and that is this row's most portable result.** The first is
+the one the row labels: `eval/scorer.py`'s `score` was a wrapper forwarding to `judge` that
+nothing called — nine modules import from that module and every import pulls something else, and
+`ruff` cannot see it, because an unused module-level function is not an unused import. It is gone,
+with a comment standing where it was naming `judge` as the entry point; the evaluation CLI's
+`score` subcommand is a different function in a different module and is untouched. The finding was
+never the dead line but where it sat.
+
+**The second is unlabelled, and it is why §6 gained a rule on the same day.** A guard's docstring
+cited `9f4bd21`, which `git cat-file -t` rejects in every clone; it cites `05ed544` now, verified
+an ancestor of `main`. A suffixed id is only minted when a second finding on an axis needs one, so
+this one lived under the bare row id and was invisible to a session reading §4's `Open` column —
+which closed `A-5` over it and **pushed the row**, while the resolvable SHA for the very same
+commit sat in that session's own C-5 commit body. Caught by a `code-reviewer` pass that re-read
+the audit section rather than the diff, which is the one reading that can see an item the diff
+never mentions.
+
+**E-5a.** The vendored font `LICENSE` was the one pinned file the artifacts guard excluded, on the
+reasoning that it bears on no rendered byte or parsed schema — true, and the wrong test, because
+the licence requires its notice to travel with the fonts. Measured before repairing: deleting the
+file left both tests green. The repair then carried a second defect and caught it — `declared()`
+recomputed the directory downstream from the extension, which was correct only while the one
+extensionless file was excluded, so adding it under that rule would have reported the file missing
+rather than wrong. `declared()` carries the path now, and both branches were proven red.
+
+**E-5b.** `schemas/PROVENANCE.md` recorded source, publisher, dates, digest and the complete import
+closure, and said nothing about terms — for 268 kB of ministry XSD sitting under a root `LICENSE`
+granting MIT over the tree. It carries a `Licence` row now, with Article 4 of the Polish copyright
+act written down as a reading rather than as settled law, and explicit that it is **not** a grant
+and **not** MIT. The carve-out had lived only in prose while every automated reader saw MIT, so
+`LICENSE` gained a *Third-party components* section naming both directories.
+
+**E-5c.** `synth/pools.py` called *no real taxpayer appears in the corpus* a requirement rather
+than a courtesy, on provenance alone — and *not copied from a register* cannot establish *not in
+one*. The line below it showed the author knew the difference, because the IBANs use bank prefixes
+drawn from ranges no bank uses. Recomputed here by residue DP over `_NIP_WEIGHTS`: **810 000 001**
+constructible values against 891 000 000 shape-valid prefixes. The docstring now says that, says
+what a collision costs — a NIP is public business data, so it identifies no person — and says what
+would fix it. **Whether a prefix range assigned to no tax office exists is not answered**, because
+inventing one would replace a measured overclaim with an unmeasured one.
+
+**B-5d.** Most of the 785-against-153 gap is not closable — a figure sourced to a committed run
+cannot be checked without re-deriving the run — but one part of it is mechanical, and it is the
+part that has actually gone wrong across this portfolio: the same claim written into two
+documents, corrected in one, left stale in the other. There is a guard now, and it is the whole of
+the suite's **+2**: the check, and its own vacuity test. It sources no figure to itself — it
+asserts only that where two documents say almost the same thing they say the same numbers — so it
+cannot go vacuous by quoting the values it checks, which is how a sibling's README guard was
+vacuous twice. Three traps are kept in the module because each caught it: the unit is a passage
+and not a line, since comparing hard-wrapped lines measures the wrapping; the rule is a conflict
+and not an inequality, since one document declining to state a count is an omission; and
+`difflib`'s `autojunk` applies to `seq2` only, so the verdict moved with argument order until it
+was turned off.
+
+**B-5e.** The recipe-book register is legitimate, is kept, and is now **declared**, with `--help`
+named in both documents the row said were silent about it — verified on all five CLIs and per
+subcommand. **No count is published.** The audit's 31 is a per-`(package, flag)` pair count; the
+README restated it as accepted flags and then subtracted names from pairs. Every sweep run at
+this population has returned its own answer, because the key is a choice none of them stated —
+flag name or pair, one document or two, subcommand parsers enumerated or not. **No number of
+sweeps is given here either**: `README.md` says three and does not count the review pass that
+caught its own restatement, which is the disagreement a reader would otherwise find between two
+documents and have no way to settle. The count of flags stays in the audit, which is where the
+unit is written down.
+
+**C-5.** The page's first line stops carrying a fraction. It reads *what is not built is named at
+the foot of this page* — true, pointing at a generated table, and unable to drift. The repair
+follows the repository's own reasoning rather than picking a winner: `05ed544` deleted a `5 / 7`
+KPI tile from this same page for being a hardcoded fraction derived from nothing, and the eyebrow
+was that defect one element over. **Deliberately not adjudicated: whether the seventh milestone is
+finished.** The table and the README disagree, it is a copy decision and not a measurement, and
+the new wording is true under either.
+
+**And the substitution was applied to the generator and to the page rather than regenerated.**
+`python docs/build_index.py` in a fresh clone deletes 64 lines of the published page: the
+corpus-dependent blocks need `data/scanned/`, and `data/` is 116 MB and gitignored, so no clone
+has it and neither does CI. The page's byte-diff guard strips exactly those blocks before
+comparing — a one-directional allowance the workflow documents — so a blind rebuild is green,
+reviews clean, and quietly unpublishes a measurement. §6's row of the same date is the rule this
+cost, and it was found by running the generator rather than by reading it.
+
+**And this row was `pending` for the length of a review without the word ever being written.**
+§4 defines the state as *the repair exists and is not on `main` yet: an open pull request, or a
+pointer not bumped* — which is exactly what stood between `766203a` and this commit, while the
+cells read `closed`. That is a second defect of that push, different from the one §6 already
+records. **No instrument objected, and one of them looked**: `sibling_citations()` verdicts a
+cited commit against the *submodule's* `origin/main` and never against the gitlink the index
+pins, so a commit merged in the sibling and not yet pointed at reads `on main`.
+
+**Closed one commit later, in this same pull request.** `sibling_citations()` asks the gitlink as
+well and answers `beyond the gitlink`; `unpinned_closures()` pairs that verdict with a row whose
+cells claim no open work, which is the shape this repair arrived as. Printed by the module and
+**refused** by `tests/test_queue.py` — the split the census's own docstring argues for, and it
+survives that argument: adjacency can misattribute a line and therefore cannot gate, but *the
+pointer is either bumped or it is not* is true whichever row the citation belongs to.
+
+**Where that refusal happens, because the sentence above is not a claim about the build.** The
+state assertion over §4's real rows reads the sibling working trees, so `core` deselects it and
+`surfaces` and `live` check out shallow and skip it: **no CI job runs it**, and it refuses in a
+working session — which is the position `sibling_citations()` already argues for itself, and
+changing it would buy the adjacency heuristic a job. The *pairing* underneath it needs no git
+and does run in `core`, which is where the logic is actually held. Found by the review of this
+stage, over a first draft that said `refused` and left a reader to assume CI. §4's
+*`declined` and `pending` have no instance today* still holds literally, no cell having carried
+the word.
+
+*What this repair did not touch.* R-1 stays deferred, here as everywhere. §4's `Not checked` cell
+for this row still holds — the 79 result reports end to end, the attack payload text,
+`findings.md` as an argument, and the merged pull request bodies — and closing eight findings
+under seven ids is not re-scanning the repository.
+
 ### A-6 repair, 2026-09-18 — D-6 closed, C-6 deferred, A-6 measured and left open
 
 Entry state: `ab-lab` `HEAD`, its `origin/main` and the index's gitlink are all `9864e73`, the
@@ -2811,6 +2932,13 @@ construction; this section and §2's baselines are where patterns accumulate.
   package: 31 and 0. Add to the specification: **key on the name the documentation invokes**, and
   treat a sweep that reports errors in both directions at once as an instrument fault until proven
   otherwise.
+  **Closed 2026-09-18 at `doc-extract` `e9e2c22`, and the mitigating half is what survived.**
+  The register was declared rather than converted to a manual: `README.md` and `CLAUDE.md` both
+  name `--help` now, so *neither mentions it* reads as of the scan and not as of today. The
+  **31** stays in this bullet because this is where its unit is written down — a
+  per-`(package, flag)` pair count — and the repair deliberately publishes no figure, having
+  watched this one restated as a count of flags in the sibling's own README and caught in
+  review.
 - **A guard whose every assertion sits inside a loop, protected by a pin in a different
   test.** `auth-log-scan`'s `tests/test_site.py`:263 against `:240`'s `len(bands) == 2`, and
   `apply-scout`'s `tests/test_retrieval.py`:188 against `:68`'s
@@ -2878,6 +3006,15 @@ construction; this section and §2's baselines are where patterns accumulate.
   have.** Those documents deliberately keep superseded figures — a gate table captioned *"Left: as
   M7e reported it. Right: after M7g"* — so a provenance guard of the kind `pl-jobs-lora` needs
   would be **wrong by design** there, reddening on the repository's own errata practice.
+  **Closed 2026-09-18 at `doc-extract` `e9e2c22`, and the repair answers this objection rather
+  than working around it.** What was added is not a provenance guard: it asserts that where two
+  documents say almost the same thing they say the same numbers, which is immune to
+  deliberately superseded figures by construction — a retired figure and its replacement do not
+  stand in near-identical passages, they stand in a table that contrasts them. So *reached by
+  no test by any route* is no longer true of the five documents: all five are read. **It is
+  still true of most of the 785 lines**, because the guard checks documents against each other
+  and not a line against the artifact behind it, which is the half `pl-jobs-lora` needs and
+  this repository still does not have.
 - **A decision the repository reversed, still stated as fact by everything downstream of the
   document that reversed it.** `it-job-radar`'s `ADR-0001` dropped DuckDB-WASM, recorded the
   measurement that killed it, and says *"The interactive layer is dropped"* — and the GitHub
@@ -2958,6 +3095,11 @@ construction; this section and §2's baselines are where patterns accumulate.
   answer to the same problem and no submodule has one. The cheap version is a test: when a commit
   says *deliberately not fixed*, pin the thing it declined to fix, so the deferral fails loudly if
   someone later assumes it was done.
+  **Closed 2026-09-18 at `doc-extract` `e9e2c22` — the contradiction, not the defect this
+  bullet is about.** The eyebrow stopped carrying the fraction, so the page no longer disagrees
+  with itself in its first line. The repair did not adjudicate the milestone and said so, which
+  leaves the deferral recorded in prose and in a commit message exactly as this bullet
+  describes: **the ledger it asks for still exists in no submodule.**
 - **Two repositories carry a deliberate attack corpus** — `apply-scout/src/apply_scout/attack/`
   and `doc-extract/results/attack-*/`. Both are self-authored, non-adaptive, and versioned;
   neither is content an outsider controls. Sessions 2 and 5 will read them, which is why
