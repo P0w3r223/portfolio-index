@@ -164,12 +164,17 @@ evaluation · MLOps* into it costs a minute and is cheaper than any project.~~ *
 filled since 2026-09-03 and this document measured it wrong**; §9 is the correction.
 
 What the re-measurement found instead is sharper, because it is about this same paragraph's
-premise. **The sieve reads three fields and this profile supplies two.** `location` is empty,
-and every figure above is stated of *a profile that states a location* — the 76% and the 12%
-of a Poland-located one, the 42% and the 70% of a US-located one. The study varied that field;
-it never emptied it. Whether an absent location reads to the model as Poland, as nothing, or as
-some default is **not something this research measured**, so §8's rule applies and no direction
-is claimed.
+premise. ~~**The sieve reads three fields and this profile supplies two.**~~ **It supplies all
+three since 2026-09-24: `location` reads `Wroclaw`**, set by the owner after §9 was written —
+§10. So every figure above is stated of *a profile that states a location* — the 76% and the
+12% of a Poland-located one, the 42% and the 70% of a US-located one — and this profile is now
+one of the cases the study actually ran rather than one it never did. **What the field buys is
+that those figures apply as stated rather than by assumption, and that includes the 76%**: the
+study's comparison was PL against US, never either against absent, so no reading here says the
+field was better left empty and none says otherwise. Whether an absent location reads to the
+model as Poland, as nothing, or as some default is still **not something this research
+measured**, so §8's rule applies and no direction is claimed — it is now a gap in the
+literature rather than a statement about this profile.
 
 **An AI assistant in a project's history is not a flag here — the verification layer is the
 differentiator.** 87% of Polish developers use AI daily (AWS *DevHorizon Poland 2026*, n = 500),
@@ -232,10 +237,10 @@ link to this index.
 
 | | measured |
 |---|---|
-| custom social-preview image | **0 of 14 repositories** — every link pasted into LinkedIn or an ATS renders as GitHub's grey default card |
+| custom social-preview image | **0 of 14 repositories** — every link pasted into LinkedIn or an ATS renders as GitHub's grey default card. **This counts what is *uploaded*, not what exists**: thirteen cards are rendered and waiting, §9's third waiting item and §10 |
 | ~~profile bio~~ | ~~**empty** — the one field §2.6's sieve reads~~ **Wrong, and corrected in §9.** Filled since 2026-09-03, 129 characters, closed as a finding in `0004` §6.1 |
-| profile `location` | **empty** — the *third* field §2.6's sieve reads, after `login` and `bio`, and the one that document's figures are conditioned on. Found by the re-measurement that overturned the row above |
-| profile `name` | the bare handle `P0w3r223` — `0003` §9 and `0004` §6.1 both record it set to the legal name on 2026-09-03, so **the field moved back**. §9 has the likely reason, stated as likely. The sieve does not read this field |
+| profile `location` | ~~**empty**~~ — **`Wroclaw` since 2026-09-24, §10.** The *third* field §2.6's sieve reads, after `login` and `bio`, and the one that document's figures are conditioned on. Found empty by the re-measurement that overturned the row above, and moved by the owner rather than by anything here — no instrument in this repository reads the field, so the change announced itself to nobody |
+| profile `name` | the bare handle `P0w3r223` — `0003` §9 and `0004` §6.1 both record it set to the legal name on 2026-09-03, so **the field moved back**. §9 stated the reason as likely; **the owner confirmed it 2026-09-24 — deliberate, and gives R-5 as the reason; §10 checks what R-5's own row names and finds the field does not reach it**. The sieve does not read this field |
 | `roadmap`-labelled issues | **2 of 12** repositories have any open (`apply-scout` 5, `mlops-car-price` 7) |
 | animated demo | **1 of 12** (`apply-scout`) |
 | README against the stage-2 definition of done | by section headings, only `apply-scout` carries all seven; `car-price-ml` is missing five, `wroclaw-air-insights` and `pl-review-sense` four each |
@@ -319,12 +324,22 @@ anything they do not themselves verify, and it must not touch the checker, the g
    profile `location`.** ~~…and a profile bio.~~ The preview is the only surface that renders
    *outside* GitHub — in a LinkedIn card, in a message, in an ATS — and 0 of 14 have one.
    ~~The bio is the field §2.6's automated sieve reads, and it is empty.~~ **The bio half of
-   this item was already done before the item was written** — §9. What replaces it is the field
-   beside it: **`location` is empty**, it is the third of the three §2.6's sieve reads after
-   `login` and `bio`, and it is the one that document's figures are conditioned on. It is also
+   this item was already done before the item was written** — §9. What replaced it was the field
+   beside it: ~~**`location` is empty**~~ — **set to `Wroclaw` by the owner, measured 2026-09-24,
+   §10**, so that half is closed. It is the third of the three §2.6's sieve reads after `login`
+   and `bio`, and it is the one that document's figures are conditioned on. It was also
    the owner's to set and nobody else's, for the same reason the bio was — no `user` scope;
    `0008` §5 records the boundary, though its row names `name`, `bio`, `email`, `blog`,
    `hireable` and social accounts and **not** `location`.
+
+   **What is left of this item is the preview half, and it is not a design task.** §9's third
+   waiting item records **thirteen cards already rendered** with their generator, outside every
+   repository here; `0 of 14` is a count of what is **uploaded**, which is a web form per
+   repository and no API. So the residual is thirteen uploads plus the fourteenth card, the
+   profile repository's — the same surface `0009` §7 row 11 holds open. *Read the line above as
+   a count of what exists and you cost the item a template nobody needed:* that misreading was
+   made on 2026-09-24 and caught by §9 rather than by an instrument, which is `SC-1` and is why
+   this paragraph is here.
 2. **One sentence of *why this exists* and *whether it is maintained* at the top of every
    README.** §2.4: it is the documented systemic gap, and it is one line per repository.
 3. **A defence document for the three flagships, kept privately and not committed.** Per
@@ -437,7 +452,10 @@ Stated so a later reader does not mistake absence for a finding.
 - **Whether GitHub's automated readers treat an absent `location` as Poland, as nothing, or as
   something else.** Added 2026-09-18 with §9. The source study set the field to one of four
   regions and swapped it between two; it **never left it empty**, so the paper cannot answer
-  this and neither can this document.
+  this and neither can this document. *Still unestablished, and since 2026-09-24 no longer this
+  profile's condition — the field reads `Wroclaw`, §10. It stays on this list because the next
+  profile to ask the question will not be this one, and because a gap closed by walking away
+  from it is not a gap answered.*
 
 ## 9. Errata, 2026-09-18 — the inventory row that was wrong, and the two fields beside it
 
@@ -501,12 +519,19 @@ this finding: nothing was looking for either.
   state inference as fact.* **And nothing in the record says R-5 is why** — no §, no errata,
   no brief — so the reason stays stated as likely: a closed finding that has quietly come
   undone reads identically to one that was undone on purpose.
+  ***Answered 2026-09-24: the owner states it is deliberate and is R-5's mitigation — §10.***
+  *The bullet above is left as written, because what it demonstrates is that the record could
+  not tell the two apart, and that is true of the day it was written whatever the answer
+  turned out to be.*
 - **`location` is empty, and §2.6 is conditioned on it.** The study §2.6 rests on showed its
   model *login, bio and location* and nothing else; every figure quoted there is stated of **a
   profile that states a location** — the 76% and the 12% of a Poland-located one, the 42% and
   the 70% of a US-located one. This profile states none, so the paragraph's own premise is unmet
   on the surface it is about. §8 now carries what that means as an open question rather than a
   direction.
+  ***Closed 2026-09-24 — the field reads `Wroclaw`, §10.*** *Left as written for the same reason
+  as the bullet above: it is the dated reading, and §10 is the correction rather than a rewrite
+  of it.*
 
 ### What it costs, and who can act
 
@@ -551,6 +576,10 @@ and writable only through a web form.
 1. **`location` — still empty.** Re-read from the API after `c75b2b8`, `b5106dc`, `766203a` and
    `e9e2c22` landed: the field is `null`. Nothing in this repository has moved it, nothing can,
    and every figure §2.6 states is conditioned on a profile that states one.
+   ***No longer waiting: the owner set it after this section was written, and it reads `Wroclaw`
+   on 2026-09-24 by two independent routes — §10.*** *This item is the one place in the record
+   where a thing waiting on the owner was done by the owner and the record went on saying it was
+   waiting, which is the shape §10 is about.*
 
 2. **The bio is filled, and is now narrower than the README beside it.** The correction above
    established that the field is not empty. What the same re-reading did not ask is whether it
@@ -584,3 +613,166 @@ repository: no row owns them, no scan produced them, and no repair session can c
 where the work was scheduled and where a reader will look for it. *And the reason a residual
 needs writing down at all is that one named only in a session transcript is a residual nobody
 inherits* — which is the same argument §5 makes about the three plans this document replaced.
+
+## 10. Errata, 2026-09-24 — the item that was waiting on the owner, and had stopped waiting
+
+Raised at the start of the session taking §7's sequencing correction — Tier 1 **before** scan
+sessions 7–12 — whose first question is the state of the three account fields. §9 read them on
+2026-09-18 and left one of them waiting. It is not waiting.
+
+### The correction
+
+**`location` reads `Wroclaw`.** Measured 2026-09-24 by two routes that agree:
+`gh api users/P0w3r223 --jq .location` and GraphQL's `{user(login:"P0w3r223"){location}}`. The
+value is ASCII and carries **no diacritic** — *and the prose of the session that measured it
+wrote `Wrocław` for one draft, which is `0010` §6's 2026-09-17 row arriving inverted: there a
+console's encoding corrupted a correct value into a finding, here a reader improved a correct
+value in the sentence reporting it.*
+
+§9's **first** waiting item reads *"`location` — still empty"*. **The owner states they set it
+after 2026-09-18.** GitHub publishes no history for a profile field — §9 established that
+against the bio and it cuts the same way here — so the owner's account is the only source there
+is, and this errata carries it as what it is: a statement of their own action, beside a value
+and a date that are measured.
+
+*That ordinal read "third" until the review of this section, and §9's list is `location`, the
+bio, then the thirteen cards — so one commit had the phrase "§9's third waiting item" denoting
+two different items, its likely source being the unrelated "third of the three §2.6's sieve
+reads" one screen above. The aside saying so then read "twice" until the same review counted
+**three** and named the reason a single-line grep under-reports: §6's instance breaks across
+lines under a list indent. Normalising whitespace gives four occurrences in this file, every one
+added by this commit — three using the phrase for the cards, in §3's social-preview row, §6
+Tier 1 item 1 and this section's preview bullet, and the fourth this aside quoting it. Two
+counts of one phrase, in the paragraph correcting a count of one phrase, is why the rule that
+produced the figure is written beside it.*
+
+**The sites this correction moved, listed rather than counted**: §2.6's premise paragraph; §3's
+social-preview row; §3's `location` and `name` rows, which are adjacent and which the diff
+groups into a single hunk; §6 Tier 1 item 1 in two places; §8's open question; and three dated
+passages in §9 — the `name` bullet, the `location` bullet, and waiting item 1, the site this
+section exists to correct. `git diff -U0 HEAD~1 -- docs/research/the-evidence-behind-the-plan.md
+| grep '^@@'` prints the hunks they fall into, and prints the hunk appending this section
+beside them.
+
+**No figure derived from this commit's own diff appears in this section, and that rule cost
+three reviews to arrive at.** *The class has to be stated that precisely, because the paragraph
+four above it carries a count this commit moved — and the two are not the same kind of figure.*
+A hunk count, a line total and a pointer count are moved by the act of correcting the prose that
+states them, which is what happened three times here. The count of a phrase in this file is not:
+it is re-derived from the normalisation rule written beside it, and it has read **four** across
+every edit that moved all three of the others. What this section banishes is the first kind.
+The paragraph above first carried a count of sites *"counted from the diff rather than from
+memory"* over a hand list the cited command does not produce — one hunk split in two, three §9
+passages called two, the waiting item missing altogether. Repairing that
+list then **moved the diff the list describes**, so the totals of the draft that fixed it were
+stale before they were committed. The draft after that kept the command as the authority for a
+figure the command does not return, because two offsetting terms — a merged pair of adjacent
+rows and this section's own appended hunk — made a wrong number match a right one, which is
+`FG-1`'s harder half: a figure that really is the instrument's standing beside a list that
+really is not, the two agreeing by coincidence.
+
+**Three rounds, one shape.** A figure whose subject is the commit that states it cannot be
+stated inside that commit without the statement moving it, and no amount of care in the stating
+reaches that. The nearest precedent is `docs/reference/failure-classes.md` `ST-3`, whose
+recurrence entry records `#122` correcting such a count in `CLAUDE.md` and `#125` deleting it,
+on the grounds that **a figure in prose beside an instrument that computes it is the defect, and
+correcting it only sets its next staleness date** — and what this section adds to that precedent
+is the case where correcting the prose is itself what moves the instrument's answer. So the
+enumeration survives, because what a reader needs is *which* sites moved, and the commands
+survive, because they answer everything this section now declines to write down. Every round of
+this was found by a `code-reviewer` pass and none by an instrument here, which §7 predicts and
+the paragraph below measures.
+
+**All three §9 passages are annotated and not rewritten, and that is a choice rather than an
+exemption.** `README.md`'s non-retrofit notice covers `docs/audit/` alone and does not reach this
+document. What argues for leaving the two bullets is their content: both are demonstrations that
+the record could not tell a field undone on purpose from one quietly come undone, and a rewrite
+deletes the demonstration while keeping the conclusion. What argues for leaving waiting item 1 is
+narrower and is this section's whole subject: it is the dated reading that went stale, and a
+record that edits such a reading in place can no longer show that it went stale at all.
+
+### What the answer changes, and what it does not
+
+- **§2.6's premise is met for the first time.** The sieve reads `login`, `bio` and `location`,
+  and the profile now supplies all three, so that paragraph's figures apply as stated rather
+  than by assumption — **including the 76%** with which a Poland-located profile is labelled
+  *"Junior developer"*. The study compared PL against US and never either against *absent*, so
+  nothing here says the field was better left empty and nothing says it was worse.
+- **`name` — answered as a motive, which is the half that was missing.** The owner states the
+  bare handle is deliberate and gives R-5 as the reason. §9 had to write *stated as likely*
+  because nothing in the record said so; now something does, and it is this sentence.
+  **What the answer does not establish is that the field mitigates R-5**, and §9's own paragraph
+  is the reason to check rather than assume: `0011` §4's R-5 row names `0003` §11 and `0010` §2
+  and §4, graded `in main: yes` — committed documents binding the handle to the legal name, which
+  no profile field reaches. Unsetting `name` withholds a **fourth** site R-5 does not name. *That
+  is the test §9 ran on R-1 and this bullet did not run on R-5 until the review — a mechanism
+  offered in the paragraph congratulating itself on refusing inference, for the second time in
+  one document and once in each direction.*
+- **`bio` — a decision rather than a correction, and it changes no field.** The owner asked for
+  a proposal. The field holds 129 of 160 characters and names one of the README's three tracks.
+  Candidates were **measured rather than eyeballed** — 159, 158 and 157 characters against the
+  160 limit — and the proposal keeps the owner's own wording, replaces the comma splice with a
+  colon, drops the stray space in *"AI/ ML"*, and carries all three tracks:
+  *"I build ML systems that know when they're wrong: error detection, evaluation harnesses,
+  honest baselines. Open to AI Engineer / Data Scientist / Data Engineer."* — **159 characters**.
+  No `user` scope, so the owner pastes it or does not; this document records the proposal and
+  not an outcome.
+- **The preview half of Tier 1 item 1 was misread on this same day, by a reader with §9 open.**
+  `0 of 14` counts what is **uploaded**; §9's third waiting item records **thirteen cards already
+  rendered** with their generator. The residual is thirteen web-form uploads and the fourteenth
+  card, the profile repository's. `SC-1`, and the cheap version of its test — *re-derive the
+  scope before the stage* — is what §9 supplied and what the reader nearly spent a template on.
+
+### What survives unchanged, and is stronger for today
+
+**§7's sentence calling `location` *never covered by anything* is untouched**, because its claim
+is about coverage and not about value. Today is its worked example: the field moved, every
+instrument in this repository stayed green across the change, and nothing here could have said
+so — `entry_state` clean, `pagespec --detail` byte-identical before and after, `queue` unmoved,
+and the suite green under both of CI's selections, **604** at `-m 'not submodules'` and **67**
+at `-m submodules`. *Those are the two jobs `pagespec.yml` runs; their sum is what a local run
+prints in one line and what no CI run prints at all, which an earlier draft of this sentence
+offered as "as CI runs it".*
+
+**That green proves less than it reads**, which is the same point from the other end.
+`tools/citations.py` **does** read this file — its corpus is `git ls-files` and not a list of
+directories — but the key it builds for a citation is the document stem for a path under
+`/audit/` and `ADR-<stem>` otherwise, so a reference inside `docs/research/` can never match a
+document at all. Its run files this file's `§N` references under **`unattributed`**, which never
+gates, and every one it lists for this file is a §2.x reference; no `§10` appears among them.
+Where it files such a reference as having no candidate, that is the resolver's own limit and not
+a finding about the text: §2.6 is a heading in this very file.
+
+*Three drafts have now said something false about this instrument in the paragraph whose subject
+is instruments.* The first offered `unresolved 0` as evidence about pointers it cannot see. The
+second said nothing in `tools/` reads this document, which its own output refutes. The third
+named the bucket those pointers land in, and named the wrong one — as did the review that caught
+the second. The statement that survives all three is §7's and carries no bucket and no count:
+**nothing here carries this document, and nothing here carries an account field either.**
+
+**So today is the argument for §7's widening of `0009` §7 row 11, delivered as a measurement
+rather than as a prediction** — the widening, not the row: row 11 asks for the **profile
+README**, and the account fields are on it only under the extension §7 proposes. *This sentence
+attributed the argument to the row itself until the review, which is the document being loose
+about a scope it is elsewhere careful to call proposed.* It is why this errata is written
+*before* the stage that takes that row rather than inside it: a stage arguing from a premise it
+also repaired is a stage no reader can check.
+
+### The class, and the one thing this does not establish
+
+**`ST-4`'s discriminator fits and its subject does not, and this section does not resolve
+that.** The discriminator is the one that matters here — a sentence changes truth value with
+**no commit anywhere in the tree** — and it is why the distinction against `ST-1` holds: a
+status cell outliving its work is a cell the closing stage forgot, while here the work happened
+outside the repository entirely and no stage could have carried the cell with it. But
+`docs/reference/failure-classes.md` defines `ST-4` as a fact *about the repository* — its
+visibility, its name, its owner — and an owner's account field is none of those. *Raised by the
+review of this section.* Whether the class widens to cover it is that file's decision and not
+this one's: its own rule is that a class enters on a second unpredicted occurrence and that the
+record is not moved in order to write one, so what belongs here is the instance and the
+question, and what belongs there is the answer.
+
+**Not established: when the field was set.** The owner's account places it after 2026-09-18 and
+no command settles it, which is the same limit §9 met from the opposite direction and for the
+same reason. The re-read of 2026-09-18 returning `null` is not in question — it is dated, it
+names the four commits it followed, and what moved afterwards is the world outside this tree.
