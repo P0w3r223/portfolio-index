@@ -203,7 +203,7 @@ def test_a_commit_past_the_pin_reads_beyond_the_gitlink_and_the_pin_itself_reads
     the comparison itself: the tip against its own parent as the pin is *beyond*, and the tip
     against itself is not.
 
-    The defect this covers is `0010` §4's A-5 repair: between `766203a` and its correction the
+    The defect this covers is `0010` §4's A-5 repair: between `843081d` and its correction the
     row read seven × `closed` while the gitlink held none of the repairs, and the census called
     that `on main` because it never asked this question.
 

@@ -307,7 +307,7 @@ it is an instruction.
    are a dated snapshot and not the current tree. S4 added conforming sites to both pages and two rails to
    `pl-jobs-lora` (`.status`, `.correction`), which is why re-deriving them today gives larger numbers. **Do
    not re-type a replacement here:** `python -m tools.pagespec` prints a role census on every run, and
-   `ef3d8c0` already moved one table in this document from typed to computed for exactly this reason. The
+   `8f270cb` already moved one table in this document from typed to computed for exactly this reason. The
    snapshot, across the eleven surfaces on disk and `wroclaw`'s own source: **141** declarations in those two families name a token; **11** of
    them are `color-mix()`, which clause 1's composited half already reports `undecided` and this sentence
    does not reach. Of the **130** that remain, **112** already name the house role. Every one of the

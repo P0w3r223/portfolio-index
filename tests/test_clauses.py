@@ -2141,7 +2141,7 @@ def test_a_property_merely_ending_in_src_is_not_a_font_request():
     *font* and refused the build — a **false gate** on a gated clause, which this repository
     ranks worse than a missing one.
 
-    Inherited rather than introduced: it reproduces at `aeb643a`, before any of the 2026-09-07
+    Inherited rather than introduced: it reproduces at `76e0396`, before any of the 2026-09-07
     work. Found by auditing this pattern's own repair.
     """
     page_ = page("<html></html>")

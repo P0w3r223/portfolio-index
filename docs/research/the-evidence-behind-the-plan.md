@@ -573,7 +573,7 @@ different one for the third, and both are already established above: `gh auth st
 fields are read-only to every instrument here; and the social preview is readable through GraphQL
 and writable only through a web form.
 
-1. **`location` — still empty.** Re-read from the API after `c75b2b8`, `b5106dc`, `766203a` and
+1. **`location` — still empty.** Re-read from the API after `35b5120`, `4e97768`, `843081d` and
    `e9e2c22` landed: the field is `null`. Nothing in this repository has moved it, nothing can,
    and every figure §2.6 states is conditioned on a profile that states one.
    ***No longer waiting: the owner set it after this section was written, and it reads `Wroclaw`
@@ -587,7 +587,7 @@ and writable only through a web form.
    Engineer · Data Scientist · Data Engineer; the bio names **one** of them, closing on *Open to
    AI/ ML engineer* — where `ML Engineer` is the separate junior role the README lists fourth,
    not `Data Scientist` and not `Data Engineer`, and the pair carries a stray space.
-   **`c75b2b8` widened this gap rather than opening it**: the README read *AI Engineer / Data
+   **`35b5120` widened this gap rather than opening it**: the README read *AI Engineer / Data
    Scientist* before it, and the bio did not name the second of those either. *The first draft
    of this paragraph said the bio named two of the three and dated the disagreement to that
    commit — both wrong to one `gh api users/P0w3r223 --jq .bio`, in the subsection whose whole

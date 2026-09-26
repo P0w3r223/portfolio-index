@@ -32,9 +32,9 @@ scan/repair split is what both reviews converged on independently.
 
 ## 2. The state this was opened against
 
-Index `2cb5d45` on `main`, level with origin, twelve pointers matching their own
+Index `a9c3912` on `main`, level with origin, twelve pointers matching their own
 `origin/main`, nothing uncommitted, no open portfolio pull request. S14a closed the same day
-(`1ba8975`, `a0d19cb` #32, `d440ab0` #10, `2cb5d45` #115); S14b remains open.
+(`860ca48`, `a0d19cb` #32, `d440ab0` #10, `a9c3912` #115); S14b remains open.
 
 ### 2.1 The corpus
 
@@ -84,7 +84,7 @@ reads `clear, 5 undecided` on the wire under `--fetch`. Gate exits 0.
   `--positive` 1. The `--border-control` row is S14a, landed the same day.
 
 **This baseline was taken about an hour before S14b, and a session reading it will not see
-what it says.** §2 is frozen by `ADR-0004` §5 and stays as measured — but S14b (`e3a7f31`,
+what it says.** §2 is frozen by `ADR-0004` §5 and stays as measured — but S14b (`bcd53db`,
 `#117`) gave `contrast marks` a verdict, and at that commit **five of the eleven read
 `1 fail`**: `ab-lab`, `auth-log-scan`, `car-price-ml`, `it-job-radar`, `pl-review-sense`. The
 run still exits 0 because the key is `report-only`, and the reason is printed under
@@ -93,11 +93,11 @@ sentence above is stale, not half of it**: `ab-lab` reads 2, the other ten read 
 `wroclaw` under `--fetch` reads 4 — not the 4-or-5 and 5 the line records. So a scan
 session's axis C compares its own `--only` output against the checker in front of it, never
 against this line; the number a row quotes comes from the run it made. Verified 2026-09-10 at
-`e3a7f31`: 619 tests green, gate 0, 153 marks below 3.0:1 of 739 measured, and `--fetch`
+`bcd53db`: 619 tests green, gate 0, 153 marks below 3.0:1 of 739 measured, and `--fetch`
 reports no `served` mismatch on any of the twelve.
 
 **The two censuses below are not stale, and the reason is worth stating because checking it
-misleads.** Both reproduce byte-for-byte at `e3a7f31` — S14b moved neither. But this
+misleads.** Both reproduce byte-for-byte at `bcd53db` — S14b moved neither. But this
 paragraph has just quoted a `--fetch` figure for `wroclaw` inside a block whose header names
 the *fetchless* run, and a reader who reaches for `--fetch` to check it sees `portfolio 98`
 and `--border 69` against the bullets' 95 and 60. That is the twelfth surface joining the
@@ -105,8 +105,8 @@ census, not three more moved figures: `--fetch` judges all twelve, and §2.2's o
 names `--detail` without it for exactly that reason. Found by the review of this erratum,
 which walked into it.
 
-*The gap is 54–70 minutes — `2cb5d45` merged 13:05, `69531b4` wrote this section 13:21,
-`e3a7f31` merged 14:15. The first version of this erratum said "hours", twice, in a
+*The gap is 54–70 minutes — `a9c3912` merged 13:05, `1b97805` wrote this section 13:21,
+`bcd53db` merged 14:15. The first version of this erratum said "hours", twice, in a
 correction whose entire argument is that figures come from instruments and not from a hand.*
 
 ### 2.3 Axis E1 across the whole portfolio — the shallow pass
@@ -345,13 +345,13 @@ defect this paragraph is already about.* Reported by the review of this stage, w
 
 | # | Repo | Index SHA | E | A | B | C | D | Open | Not checked |
 |---|------|-----------|---|---|---|---|---|------|-------------|
-| — | *portfolio-wide* | `2cb5d45` | `finding` · metadata | — | — | — | — | R-1 deferred | — |
-| 1 | `auth-log-scan` | `dc04541` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
-| 2 | `apply-scout` | `5278b1b` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
-| 3 | `it-job-radar` | `5664e43` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
-| 4 | `pl-jobs-lora` | `467a92d` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 closed · B-4a closed · B-4b closed · B-4c closed · B-4d closed · B-4e closed · C-4 closed · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
-| 5 | `doc-extract` | `7056430` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 closed · E-5a closed · E-5b closed · E-5c closed · B-5d closed · B-5e closed · C-5 closed · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
-| 6 | `ab-lab` | `d79d821` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 deferred · D-6 closed · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
+| — | *portfolio-wide* | `a9c3912` | `finding` · metadata | — | — | — | — | R-1 deferred | — |
+| 1 | `auth-log-scan` | `cb81cf4` | `finding` · metadata (R-1) | `clear` | `finding` | `clear` | `clear` | A-1 closed · R-1 deferred | §5's cross-repo half |
+| 2 | `apply-scout` | `0957ce1` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `clear` | `finding` | E-2 closed · B-2 closed · D-2 deferred · R-1 deferred | four ADRs, the `llm` cassette half, the judgment set |
+| 3 | `it-job-radar` | `e6e9859` | `finding` · metadata (R-1) · third-party data | `clear` | `finding` | `finding` | `finding` | E-3 closed · B-3 closed · D-3 closed · C-3 deferred · R-1 deferred | the notebook, `docs/plan/` and `docs/ideas/`, the Parquet row values |
+| 4 | `pl-jobs-lora` | `56f09ab` | `finding` · metadata (R-1) | `finding` | `finding` | `finding` | `clear` | A-4 closed · B-4a closed · B-4b closed · B-4c closed · B-4d closed · B-4e closed · C-4 closed · R-1 deferred | the notebook end to end, two ADRs as arguments, the report's rows |
+| 5 | `doc-extract` | `b4efae7` | `finding` · metadata (R-1) · third-party data | `finding` | `finding` | `finding` | `clear` | A-5 closed · E-5a closed · E-5b closed · E-5c closed · B-5d closed · B-5e closed · C-5 closed · R-1 deferred | the 79 result reports end to end, the attack payload text, `findings.md` as an argument, the merged PR bodies |
+| 6 | `ab-lab` | `9900926` | `finding` · metadata (R-1) | `finding` | `clear` | `finding` | `finding` | A-6 open · C-6 deferred · D-6 closed · R-1 deferred | the eleven ADRs as arguments, the `slow` suite, the examples re-run, the failing marks rendered |
 
 ### R-1 — the real name in commit metadata, twelve public repositories
 
@@ -410,7 +410,7 @@ still puts every assertion inside a loop that an empty match satisfies — `SG-1
 It is not vacuous today and repairing it is not a B finding; it belongs to whichever pass runs
 the mutation battery this row names as the cheapest falsifier of `A: clear`.
 
-Scanned 2026-09-11 at index `dc04541`, gitlink `50e8b6e`, entry state clean. Four axes, because
+Scanned 2026-09-11 at index `cb81cf4`, gitlink `50e8b6e`, entry state clean. Four axes, because
 §3.2's identifier half was retired the same day, so E is E0 and E2's third-party question.
 *This opened* **“Four axes”** *until 2026-09-11.* §3.1 and §3.4 both say five, this row carries
 five lettered subsections, and §4's table has five columns: §3.2 retired half of E2, not an axis.
@@ -495,7 +495,7 @@ was read from the checker's summary rather than site by site. And no artifact un
 
 ### A-2 — `apply-scout`, session 2
 
-Scanned 2026-09-11 at index `5278b1b`, gitlink `c7958eb`, entry state clean and `HEAD`
+Scanned 2026-09-11 at index `0957ce1`, gitlink `c7958eb`, entry state clean and `HEAD`
 identical to `origin/main`. **Five axes**, E being E0 and E2's third-party half — §3.2 retired
 half of E2, not an axis, and this line said *four* until 2026-09-11.
 
@@ -723,7 +723,7 @@ inspected — a wrong judgment reproduces exactly as well as a right one.
 
 ### A-3 — `it-job-radar`, session 3
 
-Scanned 2026-09-14 at index `5664e43`, gitlink `1e65bfc`, entry state clean: index `HEAD`
+Scanned 2026-09-14 at index `e6e9859`, gitlink `1e65bfc`, entry state clean: index `HEAD`
 identical to `origin/main`, twelve pointers matching, nothing uncommitted, no open portfolio
 pull request. **Five axes**, E being E0 and E2's third-party half.
 
@@ -980,7 +980,7 @@ other pins are unverified against anything.
 
 ### A-4 — `pl-jobs-lora`, session 4
 
-Scanned 2026-09-17 at index `467a92d`, gitlink `8fe2e02`, entry state clean: index `HEAD`
+Scanned 2026-09-17 at index `56f09ab`, gitlink `8fe2e02`, entry state clean: index `HEAD`
 identical to `origin/main`, twelve pointers matching their own `origin/main`, nothing
 uncommitted, no open portfolio pull request. **Five axes**, E being E0 and E2's third-party
 half.
@@ -998,11 +998,11 @@ to stop a reader inferring a publication state that did not hold, and caught by 
 paragraph before pushing it rather than by any instrument.*
 
 **The measurements above and below are unchanged and stay frozen at the HEAD they name**, which
-§1 requires of every figure in this document and §4 repeats for the axis cells. `467a92d` is an
+§1 requires of every figure in this document and §4 repeats for the axis cells. `56f09ab` is an
 ancestor of this repository's `main`, and `8fe2e02` is the gitlink this row's own tree records,
 so both resolve for a reader holding the published index — which they do because route A cloned
 `main` without rewriting history. *That is a property of the route and not of this row*: under
-`0011` §6's route B, `467a92d` would have had to be re-derived. **The gitlink would not.** Route
+`0011` §6's route B, `56f09ab` would have had to be re-derived. **The gitlink would not.** Route
 B rewrites this repository's history and not the sibling's, so *"every SHA changes"* is simply
 false about a submodule pointer. *This sentence said both would have to move, which is the
 review of the transplant catching the transplant's own paragraph overreaching about the route
@@ -1010,7 +1010,7 @@ it was written to explain.*
 
 *And the `Index SHA` cell means the archive's HEAD at scan time, not this repository's.* §4
 defines that column as `git rev-parse HEAD` **of this repository**, which `portfolio-index` did
-not satisfy on 2026-09-17: it stood at `d7d107d`. The entry state quoted above has the same
+not satisfy on 2026-09-17: it stood at `edb2638`. The entry state quoted above has the same
 shape, measured by a `tools/entry_state.py` whose `INDEX` still named `current_projects`. Both
 cells are correct as measurements and neither meets the definition a reader of *this* repository
 will apply to them, which is what a transplanted row owes saying rather than leaving a later
@@ -1184,7 +1184,7 @@ the index reaches the same conclusion for the same reason in `tools/pagespec/__m
 `GATE` — *"the surviving count is printed above rather than typed here"*, where *above* is the
 run's own `gate policy` block. `CLAUDE.md` says it twice in its own words and not in these.
 *This quotation was attributed to `CLAUDE.md` until the review of the transplant: the sentence
-is in neither its `467a92d` nor its current text, and "printed above" would mean nothing in a
+is in neither its `56f09ab` nor its current text, and "printed above" would mean nothing in a
 file that prints nothing. A quotation resolving to the wrong file is the class named on
 2026-09-17 — `tools/citations.py` answers whether a section exists, never whether it holds
 what the citing line says it holds — and this one names no section at all, so no instrument
@@ -1596,11 +1596,11 @@ The derivation is the same one: count the rows.
 |---|---|---|
 | §5: *"It went stale at the **next** commit: `305f4e2` added `_canonical`… and the sentence now reads 251"* | two commits, two unrelated causes: 262 → **252** (`305f4e2`) → **251** (`36524c4`) | §4's round-two table corrects this exact sentence, and the correction was never carried into §5 — `ST-3`, in the bullet arguing that a census goes stale four lines from its instrument. The arithmetic said so unaided: 262 − 10 is 252 |
 | *"**Eight** lines in five files a contributor acts on"* | **nine** | the enumeration under it has always listed nine, and the `fifteen` the same errata corrected `fourteen` into is nine plus the six ADR lines. `git grep -ci colab` per file reads 2/1/1/2/3 at `8fe2e02`; it was never run for this figure, because the figure was never doubted |
-| a quotation attributed to *"this repository's `CLAUDE.md`"* | `tools/pagespec/__main__.py`'s `GATE`, with *above* naming the run's own `gate policy` block | the sentence is in `CLAUDE.md` neither at `467a92d` nor today, and *"printed above"* means nothing in a file that prints nothing. The class named on 2026-09-17 — the resolver answers whether a section exists, never whether it holds what the citing line says — and this citation names no section at all, so no instrument here could have asked |
+| a quotation attributed to *"this repository's `CLAUDE.md`"* | `tools/pagespec/__main__.py`'s `GATE`, with *above* naming the run's own `gate policy` block | the sentence is in `CLAUDE.md` neither at `56f09ab` nor today, and *"printed above"* means nothing in a file that prints nothing. The class named on 2026-09-17 — the resolver answers whether a section exists, never whether it holds what the citing line says — and this citation names no section at all, so no instrument here could have asked |
 | *"`git grep -ci colab` reads fifteen"* | the bare command reads **34 lines in ten files**; fifteen is what survives three exclusions, now written down | the named command did not produce the figure beside it, and a reader re-running it had no route to fifteen. 34 − 14 (`ADR-0004` itself) − 3 (`CLAUDE.md`'s rule lines) − 2 (the README's retrospective hits) = 15 |
 | §5's flag bullet: *"three repositories, three sessions"* | no count in the lead, and the reason | the paragraph appended under it **in this same session** documents a fourth, `pl-jobs-lora`'s `--candidates`. Every session so far has added one, so a lead figure there is stale by the next reader and is the sentence everyone quoting the shape carries |
 | this section's header: *"**eighteen** corrections, in two rounds"* | three rounds, no total, and the derivation beside it | seven plus eleven, where the eleven counts a row whose middle cell reads `unchanged`. A hand count of a table, in an erratum about hand counts |
-| the transplant paragraph: *"every SHA changes and this paragraph would have had to re-derive **both**"* | only `467a92d`; **the gitlink would not** | route B rewrites this repository's history and not the sibling's, so *"every SHA changes"* is false about a submodule pointer. A claim about `0011` §6 that §6 does not make |
+| the transplant paragraph: *"every SHA changes and this paragraph would have had to re-derive **both**"* | only `56f09ab`; **the gitlink would not** | route B rewrites this repository's history and not the sibling's, so *"every SHA changes"* is false about a submodule pointer. A claim about `0011` §6 that §6 does not make |
 | the transplant paragraph: nothing about what the `Index SHA` cell means after a transplant | says whose HEAD the cell and the entry state are, and that neither meets §4's definition for a reader of this repository | §4 defines the column as `git rev-parse HEAD` **of this repository**, which `portfolio-index` did not satisfy on 2026-09-17. Correct as measurements, mismatched against the definition a new reader applies |
 | *"the **private** index's ADRs run 0001–0009"* | *"the index's"* | the fact survived the move and the label did not. Nine ADRs is still right; the index a reader holds is public |
 
@@ -1631,7 +1631,7 @@ figure is the practice §4's header exists to refuse.
 
 ### A-5 — `doc-extract`, session 5
 
-Scanned 2026-09-17 against the archive's `main` at **`7056430`**, gitlink `7ae9c84`, entry state
+Scanned 2026-09-17 against the archive's `main` at **`b4efae7`**, gitlink `7ae9c84`, entry state
 clean: `HEAD` identical to `origin/main`, twelve pointers matching, nothing uncommitted.
 **Five axes**, E being E0 and E2's third-party half.
 
@@ -1639,7 +1639,7 @@ clean: `HEAD` identical to `origin/main`, twelve pointers matching, nothing unco
 unpushed branch in the repository that has since become the archive, under the operator's standing
 instruction that no work reaches a remote, with read-only `git fetch` and `gh` permitted — so the
 working commit it was taken at is reachable from nothing and **is deliberately not cited**, which
-is this row's own axis-A finding applied to itself. `7056430` is the archive `main` its `tools/`
+is this row's own axis-A finding applied to itself. `b4efae7` is the archive `main` its `tools/`
 was byte-identical to; it is in this repository's history, and it is what a reader can check.
 **Its other half is executed by the merge of the pull request carrying this line, and against a
 different repository** — the work was ported onto `portfolio-index`, because by then the archive
@@ -2186,7 +2186,7 @@ is invisible to every clone.
 
 ### A-6 — `ab-lab`, session 6
 
-Scanned 2026-09-17 against `portfolio-index` `d79d821`, gitlink `9864e73`, entry state clean:
+Scanned 2026-09-17 against `portfolio-index` `9900926`, gitlink `9864e73`, entry state clean:
 `ab-lab` `HEAD` identical to its `origin/main`, working tree clean. **Five axes**, E being E0 and
 E2's third-party half. *The first session scanned in the published index rather than the archive*,
 and one thing had to be established before axis C could mean anything: `tools/pagespec` is
@@ -2761,7 +2761,7 @@ cost, and it was found by running the generator rather than by reading it.
 
 **And this row was `pending` for the length of a review without the word ever being written.**
 §4 defines the state as *the repair exists and is not on `main` yet: an open pull request, or a
-pointer not bumped* — which is exactly what stood between `766203a` and this commit, while the
+pointer not bumped* — which is exactly what stood between `843081d` and this commit, while the
 cells read `closed`. That is a second defect of that push, different from the one §6 already
 records. **No instrument objected, and one of them looked**: `sibling_citations()` verdicts a
 cited commit against the *submodule's* `origin/main` and never against the gitlink the index
@@ -3220,7 +3220,7 @@ question rather than as a defect.
 | 2026-09-14 | **v2.0**, repair | the prompt forbids a repair session to read issue bodies and sends a row it cannot act on any other way: `0010` D-2's repair *is* an edit to the bodies of issues #4 and #5. Its own remedy — *"send it back to a scan session rather than reading around it"* — cannot apply either, because a scan session may read them and may not act | **A correcting comment closes what a comment can close, and the row stays open for the body edit.** Repair 2 took that route with the owner's go-ahead: both issues now carry a comment stating what the tree says, written from the row and from `git`, with no body read. The body edit needs an explicit exemption or a scan/repair pair whose split this case does not fit. *Recorded rather than resolved: the rule is a guard, and reasoning about its intent to get past it is the practice `CLAUDE.md` forbids by name* |
 | 2026-09-14 | **v3.0**, scan | §3.3 gives `pytest` for the nine repositories in its *the rest* row, and for `it-job-radar` a bare `pytest` in an environment without the package installed produces **18 collection errors**, every one `ModuleNotFoundError` — which reads exactly like §3.4's `blocked` and would have sent a clean repository back to the queue | **An import error is an environment verdict, not a repository one, until the repository's own install path is read.** `pyproject.toml` declares no `pythonpath`, `requirements.txt` is `-e .[dev]`, and CI installs before running — so the README's command is correct. Run `PYTHONPATH=src python -m pytest`, which changes no file, or install as CI does; and say in the row which was used. *Nearly written up as a finding in session 3; what caught it was reading `requirements.txt` rather than assuming* |
 | 2026-09-11 | **v3.0** | the prompt names no sweep tool for axes B and D — its only `git grep` mention is about E0 — and session 2 swept axis D with `grep -r`, citing `src/apply_scout.egg-info/PKG-INFO` as evidence. `.gitignore`:4 excludes it and no clone has it | **Sweep tracked files.** `git grep` and `git ls-files`, never `grep -r` or a filesystem walk: `.egg-info/`, `eval/results/`, `reports/site/` and `.claude/sessions/` are all gitignored somewhere in this portfolio and all read as repository content to a walk. `0010` A-2's errata records the one cell it already cost |
-| 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `2cb5d45`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
+| 2026-09-10 | **v2.0**, as a warning and not a contradiction | §2.2's surface baseline was measured at `a9c3912`, about an hour before S14b gave `contrast marks` a verdict; a session quoting it would write `clear` into a row where its own run prints `1 fail`, with the `undecided` counts moved too | §2.2's erratum — axis C quotes the run the session made, and the key is `report-only`, which is why the gate still exits 0. **No count is given here on purpose**: this cell said *five of the eleven* until 2026-09-11 and was stale within hours of being written, because `ADR-0008` §10 took the marks census 88 → 26 the same evening and `it-job-radar` went clean. A warning about what a session's own run prints must not carry a figure the session's own run contradicts |
 | 2026-09-17 | **v3.0**, scan | the prompt sends axis D to `gh` and says nothing about how its output is read. In this environment `gh repo view --json … ` piped through the console renders a UTF-8 `×` as `Ă—` — a CP1250 round trip — so `pl-jobs-lora`'s repository description read as mojibake **on its front door, twice**, and was written up as a D finding before it was withdrawn | **An instrument's own encoding is part of the instrument.** Re-take any non-ASCII `gh` reading as bytes — `gh api repos/… --jq .description` to a file, decoded explicitly — before it becomes a finding; fetched that way the description holds one `U+00D7` and is correct. Second instance in two sessions of one class: session 3's 18 `ModuleNotFoundError` collection errors were an environment verdict too, and §6's 2026-09-14 row is its sibling. *The generalisation both rows share: a reading that indicts a repository has to survive being re-taken by a second route before it is written down* |
 | 2026-09-17 | **v3.0**, both prompts | §3.1's session 13 and §3.3's command row named `current_projects` as the repository a session branches and commits in — and `0011` §6 route A made it the archive that same day, where a commit reaches no reader at all. *The prompts' own text is clean and they are bound anyway*: `git grep -c current_projects` over both returns zero, for two different reasons — the scan prompt names the **role** (*"the index audit branch"*, *"in the index"*), which moved with the route, and the repair prompt never names the index at all, saying *"this repository"*. So a session reading only a prompt is not misled and a session reading the queue is, which is why the correction lives here. **Session 4 is the worked instance**: it was scanned, reviewed and twice errata'd on a branch in a repository that by evening accepted no commits, and it reached a reader only by transplant | **The index is `P0w3r223/portfolio-index`**, and that is where a session branches, commits, and opens its pull request. The archive is outside the queue and outside the corpus: `0011` is its audit of record — every blob in its object database and 533 commits across every ref, which no scan session can better — §3.1's note carries the reasoning, and **the denominator stays fifteen**. A session that finds an unpushed branch in the archive should read `0012` §4 before doing anything with it: route A rewrote no history, so the branch's base survives under the same SHA and a cherry-pick applies, and two commands settle in advance whether it can conflict |
 | 2026-09-18 | **v2.0**, repair, and `CLAUDE.md`'s entry-state section | the closing rule sends a session to cite the commit **on `main`** and gives one reason for it — *“this repository squash-merges, so a branch SHA exists for no later reader”*. The reason is true of this repository **today** and false of its history, and false of all twelve siblings' too: `git rev-list --merges --count origin/main` reads **24** here and between **1 and 26** in every one of the twelve. Every repository in the portfolio merged its pull requests until some date between 2026-08-14 and 2026-09-03 and has squashed since, so a branch commit from that era is reachable from `main` permanently. `0010` A-6 built a finding on the same premise read the other way round, and its errata is in §4 | **Cite what a reader can resolve, and ask rather than remember.** `git merge-base --is-ancestor <sha> origin/main` answers it in one command per repository, and `python -m tools.queue` now asks it of every `Index SHA` in §4 and prints the sibling commits the rows cite. What the rule asks for does not change — everything committed since 2026-09-03 is squashed and a branch SHA written today resolves for nobody — but its reason is a policy with a date on it rather than a property of the repository, and a session that knows which is which can check |

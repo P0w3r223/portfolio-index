@@ -225,7 +225,7 @@ def roles_named(value: str) -> frozenset[str]:
 #: `_LENGTH` and `_WIDTH_KEYWORD` both record the same lesson above. Unanchored,
 #: `mask-src:` matched, so a remote image in a mask read as a third-party *font* and
 #: refused the build: a false gate on a gated clause. Inherited rather than introduced —
-#: it reproduces at `aeb643a`, before any of the 2026-09-07 work — and found by auditing
+#: it reproduces at `76e0396`, before any of the 2026-09-07 work — and found by auditing
 #: this pattern's own repair.
 _REMOTE_DECLARATION = re.compile(r"(?:@import|(?<![-\w])src\s*:)([^;{}]*)",
                                  re.IGNORECASE)

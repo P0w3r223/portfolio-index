@@ -295,7 +295,7 @@ been left, that guard would have stayed green over them and the stage would have
 ### 3.2 Three mechanism notes, so the stage does not learn them on the day
 
 `README.md` is **not** in `pagespec.yml`'s `paths:` filters, so a README-only index commit gets no
-run at all — the absence is the filter working, as with `b416c83`. W3 bumps pointers, so its run
+run at all — the absence is the filter working, as with `9ed402a`. W3 bumps pointers, so its run
 fires. `token-budget` is not among the eleven filter names because it carries no `Surface`
 (`sources.py`: twelve surfaces, eleven repositories, `car-price-ml` twice), and the other pointers
 in the same commit trigger the job. And **the eleven/twelve trap does not arm here**:

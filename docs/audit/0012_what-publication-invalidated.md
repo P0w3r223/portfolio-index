@@ -94,7 +94,7 @@ and the twelve trees have gitignored build output no clone has.
 | F-4 | `0010` §3.1 and §3.3 named the archive as the working repository, and §6 had no row binding the prompts to the new one | high | **corrected here** |
 | F-5 | `README.md`'s non-retrofit notice read as covering the whole tree | medium | **corrected here** |
 | F-6 | `0009` §14's profile measurement predates the profile edit of 2026-09-17 | medium | open — it is F-1's input |
-| F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — **unblocked at `d79d821`**; its only row in `0010` |
+| F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — **unblocked at `9900926`**; its only row in `0010` |
 | F-8 | 21 lines across the twelve submodule `CLAUDE.md` say *the private portfolio index* | medium | open — needs a decision on where the carrier lives |
 | F-9 | `0011` §7's applied state lived only in a gitignored session brief | medium | **recorded here**, §5 |
 | F-10 | `ADR-0009` §1.1's note on an unresolvable citation argued from the index being private | medium | **corrected here** — and it is the one row whose conclusion did not survive |
@@ -227,7 +227,7 @@ radius of what it repairs. This document's first draft carried that attribution 
 rather than checked, which is the resolver's named blind spot arriving through a citation of a
 citation. The rule is right and its home is row 13b.
 
-**Session 5 closed at `d79d821`, so F-7 is now unblocked work and not a blocked row.** The scan is
+**Session 5 closed at `9900926`, so F-7 is now unblocked work and not a blocked row.** The scan is
 on the record as A-5 and the window it held is over. Two things a session taking it should know.
 **A-5 reads that guard and does not report this** — `tests/test_site_committed.py` is cited in that
 row for what the page renders and for a SHA that resolves, and the private-index premise is in none
@@ -248,7 +248,7 @@ what `doc-extract`'s page should say, and it belongs to a repair session for tha
 
 *The state above was written with the pull request that invalidated it already open.* Session 5's
 opened at 12:07:38Z, this document's branch was created at 12:11:15Z, it merged at 12:24:44Z, and
-`d79d821` landed at 12:29:32Z — **four minutes and forty-eight seconds** after the row claiming
+`9900926` landed at 12:29:32Z — **four minutes and forty-eight seconds** after the row claiming
 those reasons hold reached `main`. *An earlier draft of this paragraph said "about four hours",
 which no available anchor supports and which the commit subject carried too; the figure is removed
 rather than corrected, per `ST-3`.* The expiry itself is ordinary `ST-1` in the §4 cell and `ST-2`

@@ -422,7 +422,7 @@ def _against_the_pin(name: str, sha: str, tree: Path,
 
     A commit merged in the sibling and not yet pointed at is on that repository's `main` and
     invisible to every reader of this one — which is exactly `0010` §4's definition of
-    `pending`, and what let `766203a` write seven × `closed` over a pointer still holding none
+    `pending`, and what let `843081d` write seven × `closed` over a pointer still holding none
     of the repairs. The old reading called that `on main` and said nothing.
 
     **`merge-base --is-ancestor` answers 1 and errors with everything else**, and only the 1 is

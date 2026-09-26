@@ -45,7 +45,7 @@ here is exactly why.
 
 ## 1. Context
 
-Every figure below was measured at `f66b13c` on 2026-09-11, with the command beside it, and
+Every figure below was measured at `d0cb7be` on 2026-09-11, with the command beside it, and
 frozen here by `ADR-0004` §5. Each was taken with `git grep` / `git ls-files` — the filesystem
 holds gitignored content no clone has, which is how an earlier count of this same row read 81
 across 22 files with ten of them in `.claude/sessions/`.
@@ -213,7 +213,7 @@ careless. There is simply nothing to check a count against.
   expired when S14b closed and no stage is open, so length is not the live risk. The 43 lines
   pointing from `tools/` and CI into narrative are.
 - **A new guard runs in `core`, and `docs/**` enters the `paths:` filter** — so `docs/`-only
-  commits stop being CI-invisible. `0008` §3's Sx cell records `b416c83` having no run at all
+  commits stop being CI-invisible. `0008` §3's Sx cell records `9ed402a` having no run at all
   for exactly this reason, and reads it as the filter working; it is also the filter hiding
   every future docs guard.
 - **And it arms `surfaces` as well, which is the cost half of the same bullet.** `paths:` is

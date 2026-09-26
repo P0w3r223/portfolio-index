@@ -444,7 +444,7 @@ is drawn on, not from other instances of itself — and has the instrument appro
 declaration identity, on D5's precedent: *the rule is the criterion's and the partition is the
 instrument's.* `0007` §5 clause 1 carries it as `c1.s6c`.
 
-### What it moved, measured at `1760f60` before and after
+### What it moved, measured at `62499da` before and after
 
 **153 → 88 obligated mark failures**, of 739 measured. Per surface: `auth-log-scan` 101 → 36,
 and `ab-lab` 23, `pl-review-sense` 19, `car-price-ml` 7, `it-job-radar` 3 unchanged. The 65

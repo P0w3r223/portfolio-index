@@ -55,7 +55,7 @@ HEALTHY = (
 NO_PAGE = frozenset({"token-budget"})
 
 _DEFAULTS = {
-    "rev-parse --short HEAD": "80987c4\n",
+    "rev-parse --short HEAD": "95cebec\n",
     "rev-parse --abbrev-ref HEAD": "main\n",
     "rev-list --left-right --count HEAD...origin/main": "0\t0\n",
     "status --porcelain --ignore-submodules=dirty": "",
@@ -96,7 +96,7 @@ class FakeGh:
 
 def clean_state(**overrides) -> entry_state.EntryState:
     """A state with nothing wrong with it, so a test can introduce exactly one thing."""
-    base = dict(head="80987c4", branch="main", ahead=0, behind=0, uncommitted=(),
+    base = dict(head="95cebec", branch="main", ahead=0, behind=0, uncommitted=(),
                 pointers=entry_state.parse_pointers(HEALTHY), open_prs=(), foreign_prs=(),
                 full=False, unread=())
     return entry_state.EntryState(**{**base, **overrides})
