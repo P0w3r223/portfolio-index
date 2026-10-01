@@ -90,16 +90,31 @@ docs/adr/             what carries what; 0004 is the load-bearing one, 0005 the 
                         registry, 0006 the gate registry and the twelfth surface, 0007 S8a's
                         design, 0008 the ground of a usage site and why S13 is a census
                         before it is a verdict, 0009 why the ledger is addressed rather than
-                        partitioned. **An ADR number is not an audit number**, and
-                        **three numbers are now taken twice**: `ADR-0007` is the text layers
-                        against bare `0007` the page spec, `ADR-0008` is the contrast
-                        ground against bare `0008` the rollout ledger, and `ADR-0009` is the
-                        ledger decision against bare `0009` the whole-system review — that
-                        third one arrived deliberately, with its own reasoning and the
-                        refused alternative, in `ADR-0009` §0. A bare number in this
-                        repository means the audit document. *This line said **two** until
-                        2026-09-11, which is the sentence outliving the state it describes
-                        for the third time in this file*
+                        partitioned, **0010 the authorship test** — a clause may be asked of
+                        a surface only where the portfolio writes the bytes that decide the
+                        verdict, and the criterion is answerable rather than argued: a
+                        verdict that moved with no commit in the portfolio belongs to the
+                        host. It is the reasoning behind `0012` F-1's repair, which landed
+                        first and alone in `#2`; it refuses `0009` §7 row 11's prescription
+                        while keeping its value, and settles the gating half of `0012` F-8 —
+                        **where that claim's carrier lives is still open and still
+                        `architect`'s**. The comparison is made by hand from two fetches;
+                        nothing in `tools/` runs it.
+                        **An ADR number is not an audit number**, and
+                        **numbers are taken twice, and no count stands here**: `ADR-0007`
+                        is the text layers against bare `0007` the page spec, `ADR-0008`
+                        the contrast ground against bare `0008` the rollout ledger,
+                        `ADR-0009` the ledger decision against bare `0009` the whole-system
+                        review, and `ADR-0010` the authorship test against bare `0010` the
+                        portfolio audit. The last two arrived deliberately, each with its
+                        reasoning and its refused alternative, in that ADR's own §0.
+                        **A bare number in this repository means the audit document.**
+                        *This line carried a figure and it was wrong twice — **two** until
+                        2026-09-11, **three** until 2026-10-01. The figure is removed
+                        rather than corrected a third time, which is `ST-3`'s own remedy
+                        and the fix `#125` used on two other counts: a number in prose
+                        beside a directory that answers it only sets the next staleness
+                        date. Count `docs/adr/` against the audit series if you need one*
 docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 0008 the plan,
                         0009 the whole-system review and what the passes since got wrong,
                         **0010 the portfolio audit — the plan work is taken from now**, with
@@ -121,7 +136,8 @@ docs/audit/           the record: 0001-0006 earlier sessions, 0007 the spec, 000
                         2026-10-01**: `0007` §6 `c9.s2` argued from the private index and now
                         rests on the clause's own scope, its pin moved in the same commit.
                         `0009` §7 row 11 was bundled with it and is still open, taken
-                        separately; `0012` §4's table says which findings remain. `0012` §5
+                        separately — `ADR-0010` decides its route, and the instrument it
+                        names is not built; `0012` §4's table says which findings remain. `0012` §5
                         is the applied state of `0011` §7 read from the API, `0012` §6 is
                         what to do with work stranded in the archive, and `0012` §7 names
                         the premise the sweep did not cover — **this line ranks nothing on
