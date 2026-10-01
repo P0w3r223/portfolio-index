@@ -1,7 +1,7 @@
 # The clause registry
 
 Date: 2026-09-07
-Status: accepted
+Status: accepted — §6's procedural sentence widened 2026-10-01, see the note there
 Author: Piotr Cząstkiewicz
 Related to: [`0004_what-carries-the-page-spec.md`](0004_what-carries-the-page-spec.md) (the
 carrier decision this refines), [`../audit/0007_divergence-and-the-page-spec.md`](../audit/0007_divergence-and-the-page-spec.md)
@@ -103,6 +103,12 @@ clause 1's condition on the four exception shapes, clause 5's *"and a favicon"*,
 carve-out, and clause 9's scope sentence. All four are entered. The limit is real, and so is the
 carrier: this is the carrier working, not an escape from it.
 
-**Amending `0007` §5 means adding a row.** That sentence is the whole of the procedural half, and
-it belongs here rather than in `0007`, which is `accepted` and whose stability is what makes
-guard 1 affordable.
+**Amending `0007` §5 or §6 means adding a row, or changing the row that quotes the sentence
+amended, in the same commit.** That sentence is the whole of the procedural half, and it belongs
+here rather than in `0007`, which is `accepted` and whose stability is what makes guard 1
+affordable.
+
+*Until 2026-10-01 the sentence read "Amending `0007` §5 means adding a row". It reached neither
+§6, where clause 9 and its `c9.s2` row sit, nor a row rewritten in place rather than added —
+[`0012`](../audit/0012_what-publication-invalidated.md) F-1's repair was the first amendment to
+need both, and it widened the rule in the commit that used it rather than reading it wider.*
