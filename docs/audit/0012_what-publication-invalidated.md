@@ -93,7 +93,7 @@ and the twelve trees have gitignored build output no clone has.
 | F-3 | `ADR-0004` §6 still carried a cost publication amortised | high | **corrected here** |
 | F-4 | `0010` §3.1 and §3.3 named the archive as the working repository, and §6 had no row binding the prompts to the new one | high | **corrected here** |
 | F-5 | `README.md`'s non-retrofit notice read as covering the whole tree | medium | **corrected here** |
-| F-6 | `0009` §14's profile measurement predates the profile edit of 2026-09-17 | medium | open — it is F-1's input |
+| F-6 | `0009` §14's profile measurement predates the profile edit of 2026-09-17 | medium | **re-taken** for the scope decision `ADR-0010` takes — `0009` §14.1's erratum, measured 2026-09-17 and landed 2026-10-01, and `ADR-0010` §2's reading of 2026-10-01; §14.2's split is this row's own reading |
 | F-7 | `doc-extract`'s guard: correct assertion, false reason, and no instrument can see it | medium | open — **unblocked at `9900926`**; its only row in `0010` |
 | F-8 | 21 lines across the twelve submodule `CLAUDE.md` say *the private portfolio index* | medium | open — needs a decision on where the carrier lives |
 | F-9 | `0011` §7's applied state lived only in a gitignored session brief | medium | **recorded here**, §5 |
@@ -139,6 +139,10 @@ commit — two windows in which the one stable normative text is in flux, for on
 > its own amendment under `ADR-0005` §6, not a second window in this one. Row 11 stays open
 > and is taken separately. The paragraph stands as written, because it is the reasoning the
 > repair answers.
+>
+> [`ADR-0010`](../adr/0010_the-authorship-test.md) **landed after this repair and records why it
+> took this shape**: §5 refuses the other two repairs by measurement, and §4 decides row 11's
+> route — the prescription refused, the value moved to an instrument of its own.
 
 ### F-2, F-3, F-4, F-5 — corrected in this pass
 

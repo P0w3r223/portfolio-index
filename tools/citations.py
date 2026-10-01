@@ -313,7 +313,7 @@ def unknown_document(found: tuple[Citation, ...] | None = None) -> tuple[Citatio
     subtracting the other buckets from the total — so a citation whose owner is not in the
     index was in none of the named buckets and silently joined the green column. One is
     legitimate and out of scope: `0007`:528 cites `ADR-0012`, a sibling repository's decision
-    document. **Every mistyped document number is in this class too** — `0018`, `ADR-0010` —
+    document. **Every mistyped document number is in this class too** — `0018`, `ADR-0018` —
     which is the likeliest way a citation breaks at all. Printed, not gated: a legitimate
     cross-repository citation must not redden `core`.
     """

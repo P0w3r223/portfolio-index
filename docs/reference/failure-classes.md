@@ -175,7 +175,7 @@ its name, its owner — and every sentence arguing from that fact silently chang
 *Defined:* [`0012`](../audit/0012_what-publication-invalidated.md) — `0011` §6 route A published
 this index on 2026-09-17 without altering a byte of `main`, and six sites were arguing from *the
 index is private*: a workflow comment still calling the decision open, `ADR-0004` §6's
-counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 `c9.s2` —
+counter-argument, `ADR-0009` §1.1's note on an unresolvable citation, `0007` §6 `c9.s2` —
 **normative**, and pinned by literal in `tools/spec.py`, so the sentence and its pin have to move
 in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
 not, and 21 lines across the twelve submodule `CLAUDE.md`.

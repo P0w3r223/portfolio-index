@@ -5,8 +5,9 @@ profile: [github.com/P0w3r223](https://github.com/P0w3r223).
 
 ## What is here
 
-- [`docs/adr/`](docs/adr): nine decision records about the portfolio itself, such as what carries the
-  page specification and how the gate registry works.
+- [`docs/adr/`](docs/adr): architecture decision records. Each ADR describes one decision about how
+  the portfolio is checked, the options it refused and why, such as what carries the page
+  specification and how the gate registry works.
 - [`docs/audit/`](docs/audit): dated audits of how the portfolio presents itself. Each one reads as it
   was written on its date.
 - [`tools/pagespec`](tools/pagespec): a standard-library checker. It reads the published pages of the
