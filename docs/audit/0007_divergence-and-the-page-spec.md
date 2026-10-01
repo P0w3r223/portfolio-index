@@ -641,7 +641,8 @@ carries it, and `0008` carries the pair's rollout.
 to a private index".* [`0011`](0011_the-pre-publication-security-audit.md) §6 route A published the
 index and the premise went with it, while the sentence stayed byte-identical —
 [`0012`](0012_what-publication-invalidated.md) F-1, failure class `ST-4`. The limit above is stated
-from the clause instead of from the world, so it cannot expire the same way. *The phrase that closed
+from the clause instead of from the world, so it cannot expire the same way;
+[`ADR-0010`](../adr/0010_the-authorship-test.md) §5 records the repairs refused. *The phrase that closed
 it also cited "§8's list", where §8 is this document's correction log and holds no such list* — the
 carrier is §7's bullet below, and the list the phrase meant is §9 row 3, moved to `0008` by
 `ADR-0004` §5. `tools/citations.py` filed that citation under `unattributed`, the file's own section,
