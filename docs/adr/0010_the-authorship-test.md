@@ -22,7 +22,7 @@ answers), [`ADR-0004`](0004_what-carries-the-page-spec.md) §5 and K-c (what car
 
 ---
 
-## 0. The number, taken deliberately for the fourth time
+## 0. The number, taken twice deliberately
 
 `ADR-0010` collides with `docs/audit/0010`, the portfolio audit — after `ADR-0007`/`0007`,
 `ADR-0008`/`0008` and `ADR-0009`/`0009`, each of which `CLAUDE.md` names.
@@ -99,7 +99,11 @@ touching it**:
 Taken the way §14.1 says it took the original — `sources._fetch` on `https://github.com/P0w3r223`,
 parsed by `render.parse`. The README's own edit of 2026-09-17 cannot explain the anchor figure:
 `clause_6_back_link` counts only anchors whose **path equals** the profile, which excludes every
-repository URL, and the edit added repository links. **The chrome moved.** That is the test's own
+repository URL, and the edit added repository links. Nor can the checker: `clause_6_back_link` has
+compared host and path since `aa6d53e` (`#91`, 2026-09-07), a day before the first reading, and
+neither it nor `render.parse`'s anchor collection changed between the two, so both figures are the
+same code's. *§14.1's row label, "anchors ending at the profile", reads like the suffix test that
+`aa6d53e` replaced; the figure under it is not that test's.* **The chrome moved.** That is the test's own
 instrument returning a positive on its first outing, and it is why a gated clause cannot rest on a
 surface a third party renders.
 
