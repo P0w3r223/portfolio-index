@@ -180,6 +180,12 @@ counter-argument, `ADR-0009` §1's note on an unresolvable citation, `0007` §6 
 in one commit — a `doc-extract` guard whose assertion stayed true while its stated reason did
 not, and 21 lines across the twelve submodule `CLAUDE.md`.
 
+*The normative site is closed.* `0007` §6's limit was rewritten on 2026-10-01 to rest on the
+clause's own scope rather than on anyone's access, with its pin moved in the same commit and
+proven by mutating each half alone. **The class is not retired, and which sites are still open
+is `0012` §4's table to say, not this line's** — a status repeated here is a second copy to keep
+true, which is what `ST-3`, the entry directly above, is about.
+
 *Recurs:* **on a second premise of the same event, and that is what makes it a class rather than
 an incident.** Route A changed the index's *identity* as well as its visibility, and two artefacts
 were written against the repository it stopped being: `0010`'s session queue, which named the

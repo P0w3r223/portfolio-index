@@ -88,7 +88,7 @@ and the twelve trees have gitignored build output no clone has.
 
 | # | what | weight | state |
 |---|---|---|---|
-| F-1 | `0007` §6 `c9.s2` — a **normative** sentence arguing from the private index, pinned by literal in `tools/spec.py` | **highest** | open — design decision, `0009` §7 row 11 is the same question |
+| F-1 | `0007` §6 `c9.s2` — a **normative** sentence arguing from the private index, pinned by literal in `tools/spec.py` | **highest** | **closed** 2026-10-01 — the limit rests on the clause's own scope, and the pin moved in the same commit; see the note closing this row's section |
 | F-2 | `.github/workflows/pagespec.yml` said the decision was open and this repository stays private | high | **corrected here** |
 | F-3 | `ADR-0004` §6 still carried a cost publication amortised | high | **corrected here** |
 | F-4 | `0010` §3.1 and §3.3 named the archive as the working repository, and §6 had no row binding the prompts to the new one | high | **corrected here** |
@@ -127,6 +127,18 @@ Publication dissolved one of the two blockers and left the other standing. Takin
 means amending `0007` §5–§6 twice, and each amendment must move `tools/spec.py`'s pin in the same
 commit — two windows in which the one stable normative text is in flux, for one question.
 **They are one stage, and it needs `architect` before `@Plan`.**
+
+> **Closed 2026-10-01, and on the second of the three repairs named above**: clause 9 stays a
+> review item, for a reason that is still true — which figures the clause reaches is `c9.s1b`'s
+> judgement, and no instrument makes it. `0007` §6 and `tools/spec.py`'s `c9.s2` moved in one
+> commit, and `ADR-0005` §6 was widened in the same one, because its rule named §5 alone.
+>
+> **The last sentence above did not survive the repair.** It bundled the two because both
+> argued from the index being private. The limit now rests on `c9.s1b`, which says nothing
+> about the profile, so `0009` §7 row 11 can move `0007` only by adding a rule of its own —
+> its own amendment under `ADR-0005` §6, not a second window in this one. Row 11 stays open
+> and is taken separately. The paragraph stands as written, because it is the reasoning the
+> repair answers.
 
 ### F-2, F-3, F-4, F-5 — corrected in this pass
 
